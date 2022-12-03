@@ -1,4 +1,4 @@
-package com.HopIn.HopIn;
+package com.hopin.HopIn;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
