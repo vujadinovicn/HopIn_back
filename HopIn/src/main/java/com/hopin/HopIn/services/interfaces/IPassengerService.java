@@ -9,4 +9,10 @@ public interface IPassengerService {
 	public UserReturnedDTO insert(UserDTO passenger);
 	
 	public AllUsersDTO getAll();
+	
+	public UserReturnedDTO getPassenger(int id);
+	
+	public boolean Activate(int id);
+	
+	public UserReturnedDTO update(int id, UserDTO dto);
 }
