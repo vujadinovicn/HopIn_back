@@ -61,11 +61,11 @@ public class UserDTO {
 		this.address = address;
 	}
 
-	public String getPhone() {
+	public String getTelephoneNumber() {
 		return telephoneNumber;
 	}
 
-	public void setPhone(String phone) {
+	public void setTelephoneNumber(String phone) {
 		this.telephoneNumber = phone;
 	}
 

@@ -18,7 +18,7 @@ public class DriverServiceImpl implements IDriverService {
 	
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
-		Driver driver = dtoToDriver(dto);
+		Driver driver = dtoToDriver(dto, null);
 		driver.setId(currId);
 		this.allDrivers.put(currId, driver);
 		
@@ -30,20 +30,26 @@ public class DriverServiceImpl implements IDriverService {
 		return new UserReturnedDTO(this.allDrivers.get(id));
 	}
 
+	@Override
+	public UserReturnedDTO update(int id, UserDTO newData) {
+		Driver driver = this.allDrivers.get(id);
+		driver = dtoToDriver(newData, driver);
+		return new UserReturnedDTO(driver);
+	}
 	
-	private Driver dtoToDriver(UserDTO dto) {
-		Driver driver = new Driver();
+	private Driver dtoToDriver(UserDTO dto, Driver driver) {
+		if (driver == null)
+			driver = new Driver();
+		
 		driver.setName(dto.getName());
 		driver.setSurname(dto.getSurname());
 		driver.setEmail(dto.getEmail());
 		driver.setAddress(dto.getAddress());
-		driver.setTelephoneNumber(dto.getPhone());
+		driver.setTelephoneNumber(dto.getTelephoneNumber());
 		driver.setPassword(dto.getPassword());
 		driver.setProfilePicture(dto.getProfilePicture());
 		
 		return driver;
 	}
-
-
 	
 }

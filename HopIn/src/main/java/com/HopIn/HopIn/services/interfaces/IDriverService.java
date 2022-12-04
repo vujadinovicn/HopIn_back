@@ -9,4 +9,6 @@ public interface IDriverService {
 
 	public UserReturnedDTO getById(int id);
 
+	public UserReturnedDTO update(int id, UserDTO newData);
+
 }
