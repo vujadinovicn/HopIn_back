@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,14 +29,16 @@ public class PassengerController {
 	private IPassengerService service;
 	
 	
-	@PostMapping()
-	public UserReturnedDTO insertPassenger(@RequestBody UserDTO dto) {
-		return service.insert(dto);
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AllUsersDTO> getPassengers() {
+		AllUsersDTO passengers = this.service.getAll();
+		return new ResponseEntity<AllUsersDTO>(passengers, HttpStatus.OK);
 	}
 	
-	@GetMapping()
-	public AllUsersDTO getPassengers() {
-		return service.getAll();
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserReturnedDTO> insertPassenger(@RequestBody UserDTO dto) {
+		UserReturnedDTO passenger = service.insert(dto);
+		return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
 	}
 
 }
