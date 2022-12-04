@@ -1,4 +1,4 @@
-package controllers;
+package com.HopIn.HopIn.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 

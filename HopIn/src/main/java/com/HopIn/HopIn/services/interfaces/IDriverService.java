@@ -1,0 +1,10 @@
+package com.HopIn.HopIn.services.interfaces;
+
+import com.HopIn.HopIn.dtos.UserDTO;
+import com.HopIn.HopIn.dtos.UserReturnedDTO;
+
+public interface IDriverService {
+
+	public UserReturnedDTO insert(UserDTO driver);
+
+}

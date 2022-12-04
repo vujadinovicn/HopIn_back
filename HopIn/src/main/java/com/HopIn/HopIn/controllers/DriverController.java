@@ -1,14 +1,15 @@
-package controllers;
+package com.HopIn.HopIn.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dtos.UserDTO;
-import entities.Driver;
-import service.interfaces.IDriverService;
+import com.HopIn.HopIn.dtos.UserDTO;
+import com.HopIn.HopIn.dtos.UserReturnedDTO;
+import com.HopIn.HopIn.services.interfaces.IDriverService;
 
 @RestController
 @RequestMapping("/api/driver")
@@ -17,9 +18,13 @@ public class DriverController {
 	@Autowired
 	private IDriverService service;
 	
+	@GetMapping
+	public String hey() {
+		return "hey";
+	}
 	
 	@PostMapping
-	public Driver insert(@RequestBody UserDTO dto) {
+	public UserReturnedDTO insert(@RequestBody UserDTO dto) {
 		return service.insert(dto);
 	}
 	

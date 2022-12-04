@@ -1,4 +1,4 @@
-package dtos;
+package com.HopIn.HopIn.dtos;
 
 public class UserDTO {
 	private String name;
@@ -6,16 +6,19 @@ public class UserDTO {
 	private String email;
 	private String password;
 	private String address;
-	private String phone;
-	
-	public UserDTO(String name, String surname, String email, String password, String address, String phone) {
+	private String telephoneNumber;
+	private String profilePicture;
+
+	public UserDTO(String name, String surname, String email, String password, String address, String telephoneNumber,
+			String profilePicture) {
 		super();
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
 		this.password = password;
 		this.address = address;
-		this.phone = phone;
+		this.telephoneNumber = telephoneNumber;
+		this.profilePicture = profilePicture;
 	}
 
 	public String getName() {
@@ -59,10 +62,19 @@ public class UserDTO {
 	}
 
 	public String getPhone() {
-		return phone;
+		return telephoneNumber;
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.telephoneNumber = phone;
 	}
+
+	public String getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+	
 }

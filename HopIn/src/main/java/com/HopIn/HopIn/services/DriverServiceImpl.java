@@ -1,24 +1,28 @@
-package services;
+package com.HopIn.HopIn.services;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import dtos.UserDTO;
-import entities.Driver;
-import service.interfaces.IDriverService;
+import org.springframework.stereotype.Service;
 
+import com.HopIn.HopIn.dtos.UserDTO;
+import com.HopIn.HopIn.dtos.UserReturnedDTO;
+import com.HopIn.HopIn.entities.Driver;
+import com.HopIn.HopIn.services.interfaces.IDriverService;
+
+@Service
 public class DriverServiceImpl implements IDriverService {
 
 	private Map<Integer, Driver> allDrivers = new HashMap<Integer, Driver>();
 	private int currId = 0;
 	
 	@Override
-	public Driver insert(UserDTO dto) {
+	public UserReturnedDTO insert(UserDTO dto) {
 		Driver driver = dtoToDriver(dto);
 		driver.setId(currId);
 		allDrivers.put(currId, driver);
 		
-		return driver;
+		return new UserReturnedDTO(driver);
 	}
 
 	
@@ -28,8 +32,9 @@ public class DriverServiceImpl implements IDriverService {
 		driver.setSurname(dto.getSurname());
 		driver.setEmail(dto.getEmail());
 		driver.setAddress(dto.getAddress());
-		driver.setPhone(dto.getPhone());
+		driver.setTelephoneNumber(dto.getPhone());
 		driver.setPassword(dto.getPassword());
+		driver.setProfilePicture(dto.getProfilePicture());
 		
 		return driver;
 	}

@@ -1,4 +1,4 @@
-package entities;
+package com.HopIn.HopIn.entities;
 
 public class User {
 	
@@ -8,11 +8,13 @@ public class User {
 	private String email;
 	private String password;
 	private String address;
-	private String phone;
+	private String telephoneNumber;
+	private String profilePicture;
 	
 	public User() {}
 
-	public User(int id, String name, String surname, String email, String password, String address, String phone) {
+	public User(int id, String name, String surname, String email, String password, String address, String telephoneNumber,
+			String profilePicture) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -20,9 +22,11 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.address = address;
-		this.phone = phone;
+		this.telephoneNumber = telephoneNumber;
+		this.profilePicture = profilePicture;
 	}
-	
+
+
 
 	public String getPassword() {
 		return password;
@@ -31,15 +35,7 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -79,4 +75,22 @@ public class User {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	public String getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+
+	public String getTelephoneNumber() {
+		return telephoneNumber;
+	}
+
+	public void setTelephoneNumber(String telephoneNumber) {
+		this.telephoneNumber = telephoneNumber;
+	}
+	
+
 }
