@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.UserDTO;
 import com.HopIn.HopIn.dtos.UserReturnedDTO;
 import com.HopIn.HopIn.entities.Driver;
@@ -37,6 +38,12 @@ public class DriverServiceImpl implements IDriverService {
 		return new UserReturnedDTO(driver);
 	}
 	
+	@Override
+	public AllUsersDTO getAll(int page, int size) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	private Driver dtoToDriver(UserDTO dto, Driver driver) {
 		if (driver == null)
 			driver = new Driver();
@@ -51,5 +58,6 @@ public class DriverServiceImpl implements IDriverService {
 		
 		return driver;
 	}
+
 	
 }
