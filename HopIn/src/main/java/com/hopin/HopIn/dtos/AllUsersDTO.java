@@ -7,19 +7,19 @@ import java.util.Set;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.User;
 
-public class AllPassengersDTO {
+public class AllUsersDTO {
 	private int totalCount;
 	private Set<UserReturnedDTO> results;
 	
-	public AllPassengersDTO() {}
+	public AllUsersDTO() {}
 
-	public AllPassengersDTO(Map<Integer, Passenger> allPassengers) {
+	public AllUsersDTO(Map<Integer, User> allUsers) {
 		super();
-		this.totalCount = allPassengers.size();
+		this.totalCount = allUsers.size();
 		
 		this.results = new HashSet<UserReturnedDTO>();
-		for(Passenger passenger : allPassengers.values()) {
-			this.results.add(new UserReturnedDTO(passenger));
+		for(User user : allUsers.values()) {
+			this.results.add(new UserReturnedDTO(user));
 		}
 	}
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hopin.HopIn.dtos.AllPassengersDTO;
+import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.User;
@@ -31,7 +31,7 @@ public class PassengerController {
 	}
 	
 	@GetMapping()
-	public AllPassengersDTO getPassengers() {
+	public AllUsersDTO getPassengers() {
 		return service.getAll();
 	}
 
