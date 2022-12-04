@@ -1,53 +1,39 @@
-package com.hopin.HopIn.entities;
+package com.hopin.HopIn.dtos;
 
-import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.entities.User;
 
-public class User {
-	
+public class UserReturnedDTO {
 	private int id;
 	private String name;
 	private String surname;
-	private String email;
-	private String password;
-	private String address;
-	private String telephoneNumber;
 	private String profilePicture;
+	private String telephoneNumber;
+	private String email;
+	private String address;
 	
-	public User() {}
-
-	public User(int id, String name, String surname, String email, String password, String address, String telephoneNumber,
+	public UserReturnedDTO(int id, String name, String surname, String email, String address, String telephoneNumber,
 			String profilePicture) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
-		this.password = password;
 		this.address = address;
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
 	}
-	
-	public User(UserDTO dto) {
+
+	public UserReturnedDTO(User user) {
 		super();
-		this.name = dto.getName();
-		this.surname = dto.getSurname();
-		this.email = dto.getEmail();
-		this.password = dto.getPassword();
-		this.address = dto.getAddress();
-		this.telephoneNumber = dto.getTelephoneNumber();
-		this.profilePicture = dto.getProfilePicture();
+		this.id = user.getId();
+		this.name = user.getName();
+		this.surname = user.getSurname();
+		this.email = user.getEmail();
+		this.address = user.getAddress();
+		this.telephoneNumber = user.getTelephoneNumber();
+		this.profilePicture = user.getProfilePicture();
 	}
 
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
 	public int getId() {
 		return id;
 	}
@@ -88,6 +74,14 @@ public class User {
 		this.address = address;
 	}
 
+	public String getTelephoneNumber() {
+		return telephoneNumber;
+	}
+
+	public void setTelephoneNumber(String telephoneNumber) {
+		this.telephoneNumber = telephoneNumber;
+	}
+
 	public String getProfilePicture() {
 		return profilePicture;
 	}
@@ -95,13 +89,5 @@ public class User {
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
-
-	public String getTelephoneNumber() {
-		return telephoneNumber;
-	}
-
-	public void setTelephoneNumber(String telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
-	}	
-
+	
 }

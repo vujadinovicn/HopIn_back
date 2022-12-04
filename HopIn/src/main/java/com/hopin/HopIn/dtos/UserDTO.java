@@ -1,10 +1,8 @@
-package com.hopin.HopIn.entities;
+package com.hopin.HopIn.dtos;
 
-import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.entities.User;
 
-public class User {
-	
-	private int id;
+public class UserDTO {
 	private String name;
 	private String surname;
 	private String email;
@@ -12,13 +10,10 @@ public class User {
 	private String address;
 	private String telephoneNumber;
 	private String profilePicture;
-	
-	public User() {}
 
-	public User(int id, String name, String surname, String email, String password, String address, String telephoneNumber,
+	public UserDTO(String name, String surname, String email, String password, String address, String telephoneNumber,
 			String profilePicture) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
@@ -28,32 +23,15 @@ public class User {
 		this.profilePicture = profilePicture;
 	}
 	
-	public User(UserDTO dto) {
+	public UserDTO(User user) {
 		super();
-		this.name = dto.getName();
-		this.surname = dto.getSurname();
-		this.email = dto.getEmail();
-		this.password = dto.getPassword();
-		this.address = dto.getAddress();
-		this.telephoneNumber = dto.getTelephoneNumber();
-		this.profilePicture = dto.getProfilePicture();
-	}
-
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+		this.name = user.getName();
+		this.surname = user.getSurname();
+		this.email = user.getEmail();
+		this.password = user.getPassword();
+		this.address = user.getAddress();
+		this.telephoneNumber = user.getTelephoneNumber();
+		this.profilePicture = user.getProfilePicture();
 	}
 
 	public String getName() {
@@ -80,12 +58,28 @@ public class User {
 		this.email = email;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public String getAddress() {
 		return address;
 	}
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getTelephoneNumber() {
+		return telephoneNumber;
+	}
+
+	public void setTelephoneNumber(String phone) {
+		this.telephoneNumber = phone;
 	}
 
 	public String getProfilePicture() {
@@ -95,13 +89,5 @@ public class User {
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
-
-	public String getTelephoneNumber() {
-		return telephoneNumber;
-	}
-
-	public void setTelephoneNumber(String telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
-	}	
-
+		
 }
