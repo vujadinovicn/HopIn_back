@@ -7,4 +7,6 @@ public interface IDriverService {
 
 	public UserReturnedDTO insert(UserDTO driver);
 
+	public UserReturnedDTO getById(int id);
+
 }

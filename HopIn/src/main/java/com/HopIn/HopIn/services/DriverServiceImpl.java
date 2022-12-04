@@ -20,9 +20,14 @@ public class DriverServiceImpl implements IDriverService {
 	public UserReturnedDTO insert(UserDTO dto) {
 		Driver driver = dtoToDriver(dto);
 		driver.setId(currId);
-		allDrivers.put(currId, driver);
+		this.allDrivers.put(currId, driver);
 		
 		return new UserReturnedDTO(driver);
+	}
+	
+	@Override
+	public UserReturnedDTO getById(int id) {
+		return new UserReturnedDTO(this.allDrivers.get(id));
 	}
 
 	
@@ -38,4 +43,7 @@ public class DriverServiceImpl implements IDriverService {
 		
 		return driver;
 	}
+
+
+	
 }
