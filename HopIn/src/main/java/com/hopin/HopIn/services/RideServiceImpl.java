@@ -22,15 +22,21 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public RideReturnedDTO create(RideDTO dto) {
 		Ride ride = new Ride(dto, this.currId++);
+		this.allRides.put(ride.getId(), ride);
 		return new RideReturnedDTO(ride);
 	}
 	
-//	@Override
-//	public RejectedRideDTO getRide(int id) {
-//		Ride r = new Ride(id, LocalDateTime.now(), LocalDateTime.now(), 300, 5, RideStatus.PENDING, false, false, false, VehicleType.STANDARD, null, null, null, null, null);
-//		this.allRides.put(id, r);
-//		Ride ride = this.allRides.get(id);
-//		return new RejectedRideDTO(ride);
-//	}
+	@Override
+	public RideReturnedDTO getActiveRideForDriver(int id) {
+		for(Ride ride : this.allRides.values()) {
+			if(ride.getStartTime().isBefore(LocalDateTime.now()) && ride.getEndTime().isAfter(LocalDateTime.now()) 
+					&& ride.getDriver().getId() == id) {
+				return new RideReturnedDTO(ride);
+			}
+		}
+		return null;
+		
+		
+	}
 	
 }

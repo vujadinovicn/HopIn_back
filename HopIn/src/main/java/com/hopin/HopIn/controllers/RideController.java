@@ -31,19 +31,18 @@ public class RideController {
 	private IDriverService driverSrevice;
 
 	
-	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE) public
-	ResponseEntity<RideReturnedDTO> create(@RequestBody RideDTO dto) {
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RideReturnedDTO> create(@RequestBody RideDTO dto) {
 		return new ResponseEntity<RideReturnedDTO>(rideService.create(dto), HttpStatus.OK);
 	}
 	  
 	 
-//	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<RejectedRideDTO> getRide(@PathVariable int id) {
-//		RejectedRideDTO ride = rideService.getRide(id);
-//		if (ride != null) {
-//			return new ResponseEntity<RejectedRideDTO>(ride, HttpStatus.OK);
-//		}
-//		return new ResponseEntity<RejectedRideDTO>(HttpStatus.NOT_FOUND);
-//	}
-
+	@GetMapping(value = "/active/{driverId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RideReturnedDTO> getActiveRideForDriver(@PathVariable int driverId) {
+		RideReturnedDTO activeRide = rideService.getActiveRideForDriver(driverId);
+		if(activeRide != null) {
+			return new ResponseEntity<RideReturnedDTO>(activeRide, HttpStatus.OK);
+		}
+		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
+	}
 }

@@ -3,6 +3,7 @@ package com.hopin.HopIn.dtos;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleType;
@@ -14,29 +15,30 @@ public class RideReturnedDTO {
 	private UserInRideDTO driver;
 	private List<UserInRideDTO> passengers;
 	private int estimatedTimeInMinutes;
-	private RideStatus status;
-	private boolean panic;
+	private VehicleType vehicleType;
 	private boolean petTransport;
 	private boolean babyTransport;
-	private VehicleType vehicleType;
+	private List<Location> locations;
+	private RideStatus status;
+
 	
-	public RideReturnedDTO(LocalDateTime startTime, LocalDateTime endTime, double price, UserInRideDTO driver,
-			List<UserInRideDTO> passengers, int estimatedTimeInMinutes, RideStatus status, boolean panic, boolean pet,
-			boolean baby, VehicleType vehicleType) {
+	public RideReturnedDTO(LocalDateTime startTime, LocalDateTime endTime, double totalCost, UserInRideDTO driver,
+			List<UserInRideDTO> passengers, int estimatedTimeInMinutes, VehicleType vehicleType, boolean petTransport,
+			boolean babyTransport, List<Location> locations, RideStatus status) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.totalCost = price;
+		this.totalCost = totalCost;
 		this.driver = driver;
 		this.passengers = passengers;
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
-		this.status = status;
-		this.panic = panic;
-		this.petTransport = pet;
-		this.babyTransport = baby;
 		this.vehicleType = vehicleType;
+		this.petTransport = petTransport;
+		this.babyTransport = babyTransport;
+		this.setLocations(locations);
+		this.status = status;
 	}
-	
+
 	public RideReturnedDTO(Ride ride) {
 		this.startTime = ride.getStartTime();
 		this.endTime = ride.getEndTime();
@@ -45,10 +47,10 @@ public class RideReturnedDTO {
 		this.passengers = ride.getPassengers();
 		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
 		this.status = ride.getStatus();
-		this.panic = ride.isPanic();
 		this.petTransport = ride.isPet();
 		this.babyTransport = ride.isBaby();
 		this.vehicleType = ride.getVehicleType();
+		this.setLocations(ride.getLocations());
 
 	}
 
@@ -94,12 +96,6 @@ public class RideReturnedDTO {
 	public void setStatus(RideStatus status) {
 		this.status = status;
 	}
-	public boolean isPanic() {
-		return panic;
-	}
-	public void setPanic(boolean panic) {
-		this.panic = panic;
-	}
 	public boolean isPetTransport() {
 		return petTransport;
 	}
@@ -117,6 +113,14 @@ public class RideReturnedDTO {
 	}
 	public void setVehicleType(VehicleType vehicleType) {
 		this.vehicleType = vehicleType;
+	}
+
+	public List<Location> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<Location> locations) {
+		this.locations = locations;
 	}
 	
 	

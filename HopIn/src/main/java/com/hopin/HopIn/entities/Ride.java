@@ -55,7 +55,7 @@ public class Ride {
 			RideStatus status, boolean panic, boolean pet, boolean baby, VehicleType vehicleType, List<Review> reviews,
 			RejectionNotice rejectionNotice, List<UserInRideDTO> passengers, List<Location> locations, UserInRideDTO driver) {
 		super();
-		this.id = id;
+		this.setId(id);
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.totalCost = price;
@@ -74,7 +74,7 @@ public class Ride {
 
 	
 	public Ride(RideDTO dto, int id) {
-		this.id = id;
+		this.setId(id);
 		this.locations = dto.getLocations();
 		this.passengers = dto.getPassengers();
 		this.vehicleType = dto.getVehicleType();
@@ -82,8 +82,8 @@ public class Ride {
 		this.petTransport = dto.isPetTransport();
 		
 		// dummy data
-		this.startTime = LocalDateTime.now();
-		this.endTime = LocalDateTime.now();
+		this.startTime = LocalDateTime.now().minusHours(1);
+		this.endTime = LocalDateTime.now().plusHours(1);
 		this.totalCost = 2000;
 		this.estimatedTimeInMinutes = 5;
 		this.status = RideStatus.PENDING;
@@ -206,5 +206,13 @@ public class Ride {
 
 	public void setLocations(List<Location> locations) {
 		this.locations = locations;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

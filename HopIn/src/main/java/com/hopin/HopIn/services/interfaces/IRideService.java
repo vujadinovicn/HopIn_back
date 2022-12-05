@@ -7,5 +7,5 @@ public interface IRideService {
 	
 	public RideReturnedDTO create(RideDTO dto);
 	
-//	public RejectedRideDTO getRide(int id);
+	public RideReturnedDTO getActiveRideForDriver(int id);
 }
