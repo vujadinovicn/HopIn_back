@@ -18,8 +18,6 @@ import com.HopIn.HopIn.dtos.CredentialsDTO;
 import com.HopIn.HopIn.dtos.TokenDTO;
 import com.HopIn.HopIn.services.interfaces.IUserService;
 
-import jakarta.websocket.server.PathParam;
-
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -47,4 +45,14 @@ public class UserController {
 		//return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		//return new ResponseEntity<String>(HttpStatus.NOT_FOUND)
 	}
+	
+	@PutMapping(value="{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> unblock(@PathVariable int id){
+		boolean isSuccesfullyUnblocked = userService.unblock(id);
+		//if (isSuccesfullyBlocked)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		//return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		//return new ResponseEntity<String>(HttpStatus.NOT_FOUND)
+	}
+	
 }

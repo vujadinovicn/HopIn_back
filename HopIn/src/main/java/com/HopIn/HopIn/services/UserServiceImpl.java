@@ -50,6 +50,16 @@ public class UserServiceImpl implements IUserService{
 			//throw new UserNotFoundException();
 		return user;
 	}
+
+	@Override
+	public boolean unblock(int userId) {
+		User user = getById(userId);
+		if (user != null) {
+			user.setActivated(true);
+			return true;
+		}
+		return false;
+	}
 	
 	
 }

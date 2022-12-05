@@ -14,4 +14,6 @@ public interface IUserService {
 	public TokenDTO login(CredentialsDTO credentials);
 
 	public boolean block(int userId);
+	
+	public boolean unblock(int userId);
 }
