@@ -20,7 +20,7 @@ public class RideServiceImpl implements IRideService {
 	
 	@Override
 	public RejectedRideDTO getRide(int id) {
-		Ride r = new Ride(id, LocalDateTime.now(), LocalDateTime.now(), 300, 5, RideStatus.PENDING, false, false, false, VehicleType.STANDARD, null, null, null, null, null);
+		Ride r = new Ride(id, LocalDateTime.now(), LocalDateTime.now(), 300, 5, RideStatus.PENDING, false, false, false, VehicleType.STANDARDNO, null, null, null, null, null);
 		this.allRides.put(id, r);
 		Ride ride = this.allRides.get(id);
 		return new RejectedRideDTO(ride);

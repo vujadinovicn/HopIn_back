@@ -1,4 +1,7 @@
-package com.HopIn.HopIn.entities;
+package com.hopin.HopIn.entities;
+
+import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.enums.UserType;
 
 public class User {
 	
@@ -10,6 +13,8 @@ public class User {
 	private String address;
 	private String telephoneNumber;
 	private String profilePicture;
+	private boolean isActivated;
+	private UserType type;
 	
 	public User() {}
 
@@ -24,8 +29,30 @@ public class User {
 		this.address = address;
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
+		this.isActivated = false;
 	}
-
+	
+	public User(UserDTO dto) {
+		super();
+		this.name = dto.getName();
+		this.surname = dto.getSurname();
+		this.email = dto.getEmail();
+		this.password = dto.getPassword();
+		this.address = dto.getAddress();
+		this.telephoneNumber = dto.getTelephoneNumber();
+		this.profilePicture = dto.getProfilePicture();
+		this.isActivated = false;
+	}
+	
+	public void copy(UserDTO dto) {
+		this.name = dto.getName();
+		this.surname = dto.getSurname();
+		this.email = dto.getEmail();
+		this.password = dto.getPassword();
+		this.address = dto.getAddress();
+		this.telephoneNumber = dto.getTelephoneNumber();
+		this.profilePicture = dto.getProfilePicture();
+	}
 
 
 	public String getPassword() {
@@ -91,6 +118,21 @@ public class User {
 	public void setTelephoneNumber(String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
-	
 
+	public boolean isActivated() {
+		return isActivated;
+	}
+
+	public void setActivated(boolean isActivated) {
+		this.isActivated = isActivated;
+	}
+
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
+	}
+	
 }

@@ -1,6 +1,6 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
-import com.HopIn.HopIn.entities.User;
+import com.hopin.HopIn.entities.User;
 
 public class UserReturnedDTO {
 	private int id;
@@ -89,7 +89,5 @@ public class UserReturnedDTO {
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
-	
-	
 	
 }

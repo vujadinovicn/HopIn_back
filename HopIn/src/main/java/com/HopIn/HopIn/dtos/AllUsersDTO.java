@@ -1,10 +1,11 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.HopIn.HopIn.entities.User;
+import com.hopin.HopIn.entities.Passenger;
+import com.hopin.HopIn.entities.User;
 
 public class AllUsersDTO {
 	private int totalCount;
@@ -37,4 +38,6 @@ public class AllUsersDTO {
 	public void setResults(Set<UserReturnedDTO> results) {
 		this.results = results;
 	}
+	
+	
 }
