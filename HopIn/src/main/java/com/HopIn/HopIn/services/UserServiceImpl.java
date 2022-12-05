@@ -6,8 +6,12 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.HopIn.HopIn.dtos.AllUsersDTO;
+import com.HopIn.HopIn.dtos.CredentialsDTO;
+import com.HopIn.HopIn.dtos.TokenDTO;
 import com.HopIn.HopIn.entities.User;
 import com.HopIn.HopIn.services.interfaces.IUserService;
+
+import ch.qos.logback.core.subst.Token;
 
 @Service
 public class UserServiceImpl implements IUserService{
@@ -21,4 +25,11 @@ public class UserServiceImpl implements IUserService{
 		}
 		return new AllUsersDTO(this.allStudents);
 	}
+	
+	@Override
+	public TokenDTO login(CredentialsDTO credentials) {
+		return new TokenDTO(credentials.getEmail(), credentials.getPassword());
+	}
+	
+	
 }
