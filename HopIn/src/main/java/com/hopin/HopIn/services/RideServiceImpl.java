@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
+import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
+import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @Service
@@ -21,7 +21,7 @@ public class RideServiceImpl implements IRideService {
 	
 	@Override
 	public RideReturnedDTO create(RideDTO dto) {
-		Ride ride = new Ride(dto, this.currId++);
+		Ride ride = new Ride(dto, ++this.currId);
 		this.allRides.put(ride.getId(), ride);
 		return new RideReturnedDTO(ride);
 	}
@@ -35,8 +35,16 @@ public class RideServiceImpl implements IRideService {
 			}
 		}
 		return null;
-		
-		
+	}
+	
+	@Override
+	public RideReturnedWithRejectionDTO getRide(int id) {
+		for(int key: this.allRides.keySet()) {
+			if (key == id) {
+				return new RideReturnedWithRejectionDTO(this.allRides.get(key));
+			}
+		}
+		return null;
 	}
 	
 }

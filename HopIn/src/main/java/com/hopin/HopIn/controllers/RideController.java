@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
+import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -35,9 +36,18 @@ public class RideController {
 	public ResponseEntity<RideReturnedDTO> create(@RequestBody RideDTO dto) {
 		return new ResponseEntity<RideReturnedDTO>(rideService.create(dto), HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RideReturnedWithRejectionDTO> getRide(@PathVariable int id) {
+		RideReturnedWithRejectionDTO ride = rideService.getRide(id);
+		if(ride != null) {
+			return new ResponseEntity<RideReturnedWithRejectionDTO>(ride, HttpStatus.OK);
+		}
+		return new ResponseEntity<RideReturnedWithRejectionDTO>(HttpStatus.NOT_FOUND);
+	}
+	
 	  
-	 
-	@GetMapping(value = "/active/{driverId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/active/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RideReturnedDTO> getActiveRideForDriver(@PathVariable int driverId) {
 		RideReturnedDTO activeRide = rideService.getActiveRideForDriver(driverId);
 		if(activeRide != null) {

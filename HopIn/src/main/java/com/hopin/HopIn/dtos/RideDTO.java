@@ -7,13 +7,13 @@ import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.enums.VehicleType;
 
 public class RideDTO {
-	private List<Location> locations;
+	private List<LocationsDTO> locations;
 	private List<UserInRideDTO> passengers;
 	private VehicleType vehicleType;
 	private boolean babyTransport;
 	private boolean petTransport;
 	
-	public RideDTO(List<Location> locations, List<UserInRideDTO> passengers, VehicleType vehicleType,
+	public RideDTO(List<LocationsDTO> locations, List<UserInRideDTO> passengers, VehicleType vehicleType,
 			boolean babyTransport, boolean petTransport) {
 		super();
 		this.locations = locations;
@@ -23,11 +23,11 @@ public class RideDTO {
 		this.petTransport = petTransport;
 	}
 
-	public List<Location> getLocations() {
+	public List<LocationsDTO> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<Location> locations) {
+	public void setLocations(List<LocationsDTO> locations) {
 		this.locations = locations;
 	}
 
