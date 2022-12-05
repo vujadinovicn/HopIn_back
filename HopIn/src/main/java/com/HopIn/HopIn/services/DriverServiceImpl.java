@@ -1,13 +1,16 @@
 package com.HopIn.HopIn.services;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.HopIn.HopIn.dtos.AllUsersDTO;
+import com.HopIn.HopIn.dtos.DocumentDTO;
 import com.HopIn.HopIn.dtos.UserDTO;
 import com.HopIn.HopIn.dtos.UserReturnedDTO;
+import com.HopIn.HopIn.entities.Document;
 import com.HopIn.HopIn.entities.Driver;
 import com.HopIn.HopIn.services.interfaces.IDriverService;
 
@@ -16,12 +19,13 @@ public class DriverServiceImpl implements IDriverService {
 
 	private Map<Integer, Driver> allDrivers = new HashMap<Integer, Driver>();
 	private int currId = 0;
+	private int currDocId = 0;
 	
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
 		Driver driver = dtoToDriver(dto, null);
 		driver.setId(currId);
-		this.allDrivers.put(currId, driver);
+		this.allDrivers.put(currId++, driver);
 		
 		return new UserReturnedDTO(driver);
 	}
@@ -44,6 +48,36 @@ public class DriverServiceImpl implements IDriverService {
 		return null;
 	}
 	
+	@Override
+	public List<Document> getDocuments(int driverId) {
+		return this.allDrivers.get(driverId).getDocuments();
+	}
+
+	
+	@Override
+	public Document addDocument(int driverId, DocumentDTO newDocument) {
+		Driver driver = this.allDrivers.get(driverId);
+		Document document = this.dtoToDocument(newDocument, null);
+		document.setDriverId(driverId);
+		driver.getDocuments().add(document);
+		
+		return document;
+	}
+	
+	
+	private Document dtoToDocument(DocumentDTO dto, Document document) {
+		if (document == null) {
+			document = new Document();
+			document.setId(currDocId++);
+		}
+		
+		document.setName(dto.getName());
+		document.setDocumentImage(dto.getDocumentImage());
+		
+		return document;
+		
+	}
+	
 	private Driver dtoToDriver(UserDTO dto, Driver driver) {
 		if (driver == null)
 			driver = new Driver();
@@ -59,5 +93,7 @@ public class DriverServiceImpl implements IDriverService {
 		return driver;
 	}
 
+	
+	
 	
 }
