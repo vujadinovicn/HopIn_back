@@ -1,5 +1,6 @@
 package com.HopIn.HopIn.services;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
+import com.HopIn.HopIn.dtos.NoteDTO;
+import com.HopIn.HopIn.dtos.NoteReturnedDTO;
 import com.HopIn.HopIn.dtos.TokenDTO;
 import com.HopIn.HopIn.entities.User;
 import com.HopIn.HopIn.exceptions.UserNotFoundException;
@@ -60,6 +63,14 @@ public class UserServiceImpl implements IUserService{
 		}
 		return false;
 	}
-	
-	
+
+	@Override
+	public NoteReturnedDTO addNote(int userId, NoteDTO note) {
+		User user = getById(userId);
+		//if (user != null) {
+			//user.addNote();
+		return new NoteReturnedDTO(15, LocalDateTime.now(), note.getMessage());	
+		//}
+		//return null;
+	}
 }

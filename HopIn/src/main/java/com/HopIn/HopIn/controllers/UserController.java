@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
+import com.HopIn.HopIn.dtos.NoteDTO;
+import com.HopIn.HopIn.dtos.NoteReturnedDTO;
 import com.HopIn.HopIn.dtos.TokenDTO;
 import com.HopIn.HopIn.services.interfaces.IUserService;
 
@@ -24,7 +26,7 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 	
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AllUsersDTO> getAll(@RequestParam int page, @RequestParam int size) {
 		return new ResponseEntity<AllUsersDTO>(userService.getAll(page, size), HttpStatus.OK);
 	}
@@ -53,6 +55,11 @@ public class UserController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		//return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		//return new ResponseEntity<String>(HttpStatus.NOT_FOUND)
+	}
+	
+	@PostMapping(value="{id}/note", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<NoteReturnedDTO> addNote(@PathVariable int id, @RequestBody NoteDTO note){
+		return new ResponseEntity<NoteReturnedDTO>(userService.addNote(id, note), HttpStatus.OK);
 	}
 	
 }
