@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.HopIn.HopIn.dtos.AllNotesDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
 import com.HopIn.HopIn.dtos.NoteDTO;
@@ -60,6 +61,11 @@ public class UserController {
 	@PostMapping(value="{id}/note", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NoteReturnedDTO> addNote(@PathVariable int id, @RequestBody NoteDTO note){
 		return new ResponseEntity<NoteReturnedDTO>(userService.addNote(id, note), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="{id}/note", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AllNotesDTO> getNotes(@PathVariable int id, @RequestParam int page, @RequestParam int size){
+		return new ResponseEntity<AllNotesDTO>(userService.getNotes(id, page, size), HttpStatus.OK);
 	}
 	
 }

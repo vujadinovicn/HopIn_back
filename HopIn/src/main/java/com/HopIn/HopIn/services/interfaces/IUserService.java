@@ -1,5 +1,6 @@
 package com.HopIn.HopIn.services.interfaces;
 
+import com.HopIn.HopIn.dtos.AllNotesDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
 import com.HopIn.HopIn.dtos.NoteDTO;
@@ -20,4 +21,6 @@ public interface IUserService {
 	public boolean unblock(int userId);
 	
 	public NoteReturnedDTO addNote(int id, NoteDTO note);
+	
+	public AllNotesDTO getNotes(int id, int page, int size);
 }

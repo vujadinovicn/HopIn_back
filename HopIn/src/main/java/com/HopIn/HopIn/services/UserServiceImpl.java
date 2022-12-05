@@ -6,11 +6,13 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.HopIn.HopIn.dtos.AllNotesDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
 import com.HopIn.HopIn.dtos.NoteDTO;
 import com.HopIn.HopIn.dtos.NoteReturnedDTO;
 import com.HopIn.HopIn.dtos.TokenDTO;
+import com.HopIn.HopIn.entities.Note;
 import com.HopIn.HopIn.entities.User;
 import com.HopIn.HopIn.exceptions.UserNotFoundException;
 import com.HopIn.HopIn.services.interfaces.IUserService;
@@ -21,6 +23,7 @@ import ch.qos.logback.core.subst.Token;
 public class UserServiceImpl implements IUserService{
 
 	Map<Integer, User> allUsers = new HashMap<Integer, User>();
+	Map<Integer, Note> allNotes = new HashMap<Integer, Note>();
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
 		if (allUsers.size() == 0) {
@@ -70,6 +73,20 @@ public class UserServiceImpl implements IUserService{
 		//if (user != null) {
 			//user.addNote();
 		return new NoteReturnedDTO(15, LocalDateTime.now(), note.getMessage());	
+		//}
+		//return null;
+	}
+
+	@Override
+	public AllNotesDTO getNotes(int userId, int page, int size) {
+		User user = getById(userId);
+		//if (user != null) {
+			//user.addNote();
+		if (allNotes.size() == 0) {
+			Note note = new Note(15, LocalDateTime.now(), "Message is here!");
+			allNotes.put(1, note);
+		}
+		return new AllNotesDTO(this.allNotes);
 		//}
 		//return null;
 	}

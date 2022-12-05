@@ -2,6 +2,8 @@ package com.HopIn.HopIn.dtos;
 
 import java.time.LocalDateTime;
 
+import com.HopIn.HopIn.entities.Note;
+
 public class NoteReturnedDTO {
 	
 	int id;
@@ -13,6 +15,13 @@ public class NoteReturnedDTO {
 		this.id = id;
 		this.date = date;
 		this.message = message;
+	}
+	
+	public NoteReturnedDTO(Note note) {
+		super();
+		this.id = note.getId();
+		this.date = note.getDate();
+		this.message = note.getMessage();
 	}
 
 	public int getId() {
