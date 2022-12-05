@@ -6,12 +6,10 @@ import com.hopin.HopIn.enums.UserType;
 public class UserInRideDTO {
 	private int id;
 	private String email;
-	private UserType type;
 	
 	public UserInRideDTO(User user) {
 		this.id = user.getId();
 		this.email = user.getEmail();
-		this.type = user.getType();
 	}
 	
 	
@@ -20,7 +18,6 @@ public class UserInRideDTO {
 		super();
 		this.id = id;
 		this.email = email;
-		this.type = type;
 	}
 
 
@@ -40,14 +37,5 @@ public class UserInRideDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	public UserType getType() {
-		return type;
-	}
-
-	public void setType(UserType type) {
-		this.type = type;
-	}
-	
 	
 }

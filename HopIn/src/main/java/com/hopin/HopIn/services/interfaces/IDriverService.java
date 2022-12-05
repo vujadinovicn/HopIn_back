@@ -1,7 +1,5 @@
 package com.hopin.HopIn.services.interfaces;
 
-import java.util.List;
-
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;

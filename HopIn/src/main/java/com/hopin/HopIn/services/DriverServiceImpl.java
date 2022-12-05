@@ -1,10 +1,7 @@
 package com.hopin.HopIn.services;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.swing.text.Document;
 
 import org.springframework.stereotype.Service;
 
@@ -19,8 +16,6 @@ public class DriverServiceImpl implements IDriverService {
 
 	private Map<Integer, Driver> allDrivers = new HashMap<Integer, Driver>();
 	private int currId = 0;
-	private int currDocId = 0;
-	
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
 		Driver driver = dtoToDriver(dto, null);
