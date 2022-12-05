@@ -2,15 +2,18 @@ package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.hopin.HopIn.dtos.PanicRideDTO;
+import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
+import com.hopin.HopIn.entities.PanicRide;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
@@ -20,6 +23,7 @@ import com.hopin.HopIn.services.interfaces.IRideService;
 public class RideServiceImpl implements IRideService {
 	
 	private Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
+	private Set<PanicRide> allPanicRides = new HashSet<PanicRide>();
 	private int currId = 0;
 	
 	@Override
@@ -62,10 +66,12 @@ public class RideServiceImpl implements IRideService {
 	}
 	
 	@Override
-	public PanicRideDTO panicRide(int id, ReasonDTO reason) {
+	public PanicRide panicRide(int id, ReasonDTO reason) {
 		Ride ride = this.allRides.get(id);
 		if(ride != null) {
-			return new PanicRideDTO(new RideReturnedDTO(ride), reason.getReason());
+			PanicRide panicRide = new PanicRide(new RideReturnedDTO(ride), reason.getReason());
+			this.allPanicRides.add(panicRide);
+			return panicRide;
 		}
 		return null;
 	}
@@ -89,6 +95,11 @@ public class RideServiceImpl implements IRideService {
 			return new RideReturnedDTO(ride);
 		}
 		return null;
+	}
+	
+	@Override
+	public AllPanicRidesDTO getAllPanicRides() {
+		return new AllPanicRidesDTO(this.allPanicRides);
 	}
 	
 }
