@@ -1,12 +1,12 @@
-package com.HopIn.HopIn.services.interfaces;
+package com.hopin.HopIn.services.interfaces;
 
 import java.util.List;
 
-import com.HopIn.HopIn.dtos.AllUsersDTO;
-import com.HopIn.HopIn.dtos.DocumentDTO;
-import com.HopIn.HopIn.dtos.UserDTO;
-import com.HopIn.HopIn.dtos.UserReturnedDTO;
-import com.HopIn.HopIn.entities.Document;
+import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.Document;
 
 public interface IDriverService {
 

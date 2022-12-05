@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.controllers;
+package com.hopin.HopIn.controllers;
 
 import java.util.List;
 
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.HopIn.HopIn.dtos.AllUsersDTO;
-import com.HopIn.HopIn.dtos.DocumentDTO;
-import com.HopIn.HopIn.dtos.UserDTO;
-import com.HopIn.HopIn.dtos.UserReturnedDTO;
-import com.HopIn.HopIn.entities.Document;
-import com.HopIn.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.Document;
+import com.hopin.HopIn.services.interfaces.IDriverService;
 
 @RestController
 @RequestMapping("/api/driver")

@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.services;
+package com.hopin.HopIn.services;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,13 +6,13 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.HopIn.HopIn.dtos.AllUsersDTO;
-import com.HopIn.HopIn.dtos.DocumentDTO;
-import com.HopIn.HopIn.dtos.UserDTO;
-import com.HopIn.HopIn.dtos.UserReturnedDTO;
-import com.HopIn.HopIn.entities.Document;
-import com.HopIn.HopIn.entities.Driver;
-import com.HopIn.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.Document;
+import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.services.interfaces.IDriverService;
 
 @Service
 public class DriverServiceImpl implements IDriverService {
