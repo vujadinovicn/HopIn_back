@@ -13,6 +13,17 @@ public class UserInRideDTO {
 		this.email = user.getEmail();
 		this.type = user.getType();
 	}
+	
+	
+
+	public UserInRideDTO(int id, String email, UserType type) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.type = type;
+	}
+
+
 
 	public int getId() {
 		return id;

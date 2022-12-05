@@ -3,6 +3,7 @@ package com.hopin.HopIn.dtos;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleType;
 
@@ -15,8 +16,8 @@ public class RideReturnedDTO {
 	private int estimatedTimeInMinutes;
 	private RideStatus status;
 	private boolean panic;
-	private boolean pet;
-	private boolean baby;
+	private boolean petTransport;
+	private boolean babyTransport;
 	private VehicleType vehicleType;
 	
 	public RideReturnedDTO(LocalDateTime startTime, LocalDateTime endTime, double price, UserInRideDTO driver,
@@ -31,11 +32,26 @@ public class RideReturnedDTO {
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
 		this.status = status;
 		this.panic = panic;
-		this.pet = pet;
-		this.baby = baby;
+		this.petTransport = pet;
+		this.babyTransport = baby;
 		this.vehicleType = vehicleType;
 	}
 	
+	public RideReturnedDTO(Ride ride) {
+		this.startTime = ride.getStartTime();
+		this.endTime = ride.getEndTime();
+		this.totalCost = ride.getTotalCost();
+		this.driver = ride.getDriver();
+		this.passengers = ride.getPassengers();
+		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
+		this.status = ride.getStatus();
+		this.panic = ride.isPanic();
+		this.petTransport = ride.isPet();
+		this.babyTransport = ride.isBaby();
+		this.vehicleType = ride.getVehicleType();
+
+	}
+
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
@@ -84,17 +100,17 @@ public class RideReturnedDTO {
 	public void setPanic(boolean panic) {
 		this.panic = panic;
 	}
-	public boolean isPet() {
-		return pet;
+	public boolean isPetTransport() {
+		return petTransport;
 	}
-	public void setPet(boolean pet) {
-		this.pet = pet;
+	public void setPetTransport(boolean pet) {
+		this.petTransport = pet;
 	}
-	public boolean isBaby() {
-		return baby;
+	public boolean isBabyTransport() {
+		return babyTransport;
 	}
-	public void setBaby(boolean baby) {
-		this.baby = baby;
+	public void setBabyTransport(boolean baby) {
+		this.babyTransport = baby;
 	}
 	public VehicleType getVehicleType() {
 		return vehicleType;

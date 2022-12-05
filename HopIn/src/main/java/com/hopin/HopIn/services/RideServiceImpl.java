@@ -6,7 +6,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.hopin.HopIn.dtos.RejectedRideDTO;
+import com.hopin.HopIn.dtos.RideDTO;
+import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleType;
@@ -19,11 +20,17 @@ public class RideServiceImpl implements IRideService {
 	private int currId = 0;
 	
 	@Override
-	public RejectedRideDTO getRide(int id) {
-		Ride r = new Ride(id, LocalDateTime.now(), LocalDateTime.now(), 300, 5, RideStatus.PENDING, false, false, false, VehicleType.STANDARD, null, null, null, null, null);
-		this.allRides.put(id, r);
-		Ride ride = this.allRides.get(id);
-		return new RejectedRideDTO(ride);
+	public RideReturnedDTO create(RideDTO dto) {
+		Ride ride = new Ride(dto, this.currId++);
+		return new RideReturnedDTO(ride);
 	}
+	
+//	@Override
+//	public RejectedRideDTO getRide(int id) {
+//		Ride r = new Ride(id, LocalDateTime.now(), LocalDateTime.now(), 300, 5, RideStatus.PENDING, false, false, false, VehicleType.STANDARD, null, null, null, null, null);
+//		this.allRides.put(id, r);
+//		Ride ride = this.allRides.get(id);
+//		return new RejectedRideDTO(ride);
+//	}
 	
 }
