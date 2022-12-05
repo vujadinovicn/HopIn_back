@@ -30,6 +30,8 @@ public class DriverController {
 	@Autowired
 	private IDriverService service;
 	
+	public void heY() {}
+	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
 		return new ResponseEntity<UserReturnedDTO>(service.getById(id), HttpStatus.OK);
