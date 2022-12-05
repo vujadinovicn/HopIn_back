@@ -1,28 +1,20 @@
 package com.hopin.HopIn.entities;
 
-import java.security.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-enum RideStatus {
-	PENDING,
-	ACCEPTED,
-	REJECTED,
-	ACTIVE,
-	FINISHED
-}
+import com.hopin.HopIn.dtos.RideDTO;
+import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.enums.VehicleType;
 
-enum VehicleType {
-	STANDARD,
-	LUXURY,
-	VAN
-}
 
 public class Ride {
+	private int id;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private double price;
-	private Timestamp estimatedDuration;
+	private int estimatedTimeInMinutes;
 	private RideStatus status;
 	private boolean panic;
 	private boolean pet;
@@ -32,17 +24,18 @@ public class Ride {
 	private RejectionNotice rejectionNotice;
 	private List<Passenger> passengers;
 	private List<Location> locations;
+	private Driver driver;
 	
 	public Ride() {}
 
-	public Ride(LocalDateTime startTime, LocalDateTime endTime, double price, Timestamp estimatedDuration,
+	public Ride(LocalDateTime startTime, LocalDateTime endTime, double price, int estimatedDuration,
 			RideStatus status, boolean panic, boolean pet, boolean baby, VehicleType vehicleType, List<Review> reviews,
 			RejectionNotice rejectionNotice, List<Passenger> passengers, List<Location> locations) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.price = price;
-		this.estimatedDuration = estimatedDuration;
+		this.estimatedTimeInMinutes = estimatedDuration;
 		this.status = status;
 		this.panic = panic;
 		this.pet = pet;
@@ -53,6 +46,36 @@ public class Ride {
 		this.passengers = passengers;
 		this.locations = locations;
 	}
+	
+	
+	
+	public Ride(int id, LocalDateTime startTime, LocalDateTime endTime, double price, int estimatedTimeInMinutes,
+			RideStatus status, boolean panic, boolean pet, boolean baby, VehicleType vehicleType, List<Review> reviews,
+			RejectionNotice rejectionNotice, List<Passenger> passengers, List<Location> locations, Driver driver) {
+		super();
+		this.id = id;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.price = price;
+		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
+		this.status = status;
+		this.panic = panic;
+		this.pet = pet;
+		this.baby = baby;
+		this.vehicleType = vehicleType;
+		this.reviews = reviews;
+		this.rejectionNotice = rejectionNotice;
+		this.passengers = passengers;
+		this.locations = locations;
+		this.driver = driver;
+	}
+
+	/*
+	 * public Ride(RideDTO dto) { this.locations = new ArrayList<Location>(); for
+	 * (Location loc : dto.getLocations().values()) { this.locations.add(loc); }
+	 * 
+	 * }
+	 */
 
 	public LocalDateTime getStartTime() {
 		return startTime;
@@ -74,16 +97,28 @@ public class Ride {
 		return price;
 	}
 
+	public Driver getDriver() {
+		return driver;
+	}
+
+	public void setDriver(Driver driver) {
+		this.driver = driver;
+	}
+
+	public void setEstimatedTimeInMinutes(int estimatedTimeInMinutes) {
+		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
+	}
+
 	public void setPrice(double price) {
 		this.price = price;
 	}
 
-	public Timestamp getEstimatedDuration() {
-		return estimatedDuration;
+	public int getEstimatedTimeInMinutes() {
+		return estimatedTimeInMinutes;
 	}
 
-	public void setEstimatedDuration(Timestamp estimatedDuration) {
-		this.estimatedDuration = estimatedDuration;
+	public void setEstimatedTimeInMinutesDuration(int estimatedDuration) {
+		this.estimatedTimeInMinutes = estimatedDuration;
 	}
 
 	public RideStatus getStatus() {

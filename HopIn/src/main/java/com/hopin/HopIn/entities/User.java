@@ -1,6 +1,7 @@
 package com.hopin.HopIn.entities;
 
 import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.enums.UserType;
 
 public class User {
 	
@@ -13,6 +14,7 @@ public class User {
 	private String telephoneNumber;
 	private String profilePicture;
 	private boolean isActivated;
+	private UserType type;
 	
 	public User() {}
 
@@ -123,6 +125,14 @@ public class User {
 
 	public void setActivated(boolean isActivated) {
 		this.isActivated = isActivated;
+	}
+
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
 	}
 	
 }
