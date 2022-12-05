@@ -1,16 +1,16 @@
-package com.hopin.HopIn.services;
+package com.HopIn.HopIn.services;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.hopin.HopIn.dtos.AllUsersDTO;
-import com.hopin.HopIn.dtos.UserDTO;
-import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.entities.Passenger;
-import com.hopin.HopIn.entities.User;
-import com.hopin.HopIn.services.interfaces.IPassengerService;
+import com.HopIn.HopIn.dtos.AllUsersDTO;
+import com.HopIn.HopIn.dtos.UserDTO;
+import com.HopIn.HopIn.dtos.UserReturnedDTO;
+import com.HopIn.HopIn.entities.Passenger;
+import com.HopIn.HopIn.entities.User;
+import com.HopIn.HopIn.services.interfaces.IPassengerService;
 
 @Service
 public class PassengerServiceImpl implements IPassengerService {

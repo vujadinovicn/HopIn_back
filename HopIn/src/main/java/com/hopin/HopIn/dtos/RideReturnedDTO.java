@@ -1,10 +1,10 @@
-package com.hopin.HopIn.dtos;
+package com.HopIn.HopIn.dtos;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
+import com.HopIn.HopIn.enums.RideStatus;
+import com.HopIn.HopIn.enums.VehicleType;
 
 public class RideReturnedDTO {
 	private LocalDateTime startTime;

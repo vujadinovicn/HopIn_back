@@ -1,4 +1,4 @@
-package com.hopin.HopIn.services;
+package com.HopIn.HopIn.services;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -6,11 +6,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.hopin.HopIn.dtos.RejectedRideDTO;
-import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
-import com.hopin.HopIn.services.interfaces.IRideService;
+import com.HopIn.HopIn.dtos.RejectedRideDTO;
+import com.HopIn.HopIn.entities.Ride;
+import com.HopIn.HopIn.enums.RideStatus;
+import com.HopIn.HopIn.enums.VehicleType;
+import com.HopIn.HopIn.services.interfaces.IRideService;
 
 @Service
 public class RideServiceImpl implements IRideService {

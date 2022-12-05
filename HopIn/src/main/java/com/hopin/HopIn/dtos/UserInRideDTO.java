@@ -1,7 +1,7 @@
-package com.hopin.HopIn.dtos;
+package com.HopIn.HopIn.dtos;
 
-import com.hopin.HopIn.entities.User;
-import com.hopin.HopIn.enums.UserType;
+import com.HopIn.HopIn.entities.User;
+import com.HopIn.HopIn.enums.UserType;
 
 public class UserInRideDTO {
 	private int id;

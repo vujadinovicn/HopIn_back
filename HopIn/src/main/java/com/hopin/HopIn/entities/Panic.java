@@ -1,4 +1,4 @@
-package com.hopin.HopIn.entities;
+package com.HopIn.HopIn.entities;
 
 import java.time.LocalDateTime;
 

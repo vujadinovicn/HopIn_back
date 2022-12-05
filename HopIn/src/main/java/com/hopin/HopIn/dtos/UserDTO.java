@@ -1,6 +1,6 @@
-package com.hopin.HopIn.dtos;
+package com.HopIn.HopIn.dtos;
 
-import com.hopin.HopIn.entities.User;
+import com.HopIn.HopIn.entities.User;
 
 public class UserDTO {
 	private String name;

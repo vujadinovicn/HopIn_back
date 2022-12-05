@@ -1,14 +1,14 @@
-package com.hopin.HopIn.dtos;
+package com.HopIn.HopIn.dtos;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hopin.HopIn.entities.Passenger;
-import com.hopin.HopIn.entities.RejectionNotice;
-import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
+import com.HopIn.HopIn.entities.Passenger;
+import com.HopIn.HopIn.entities.RejectionNotice;
+import com.HopIn.HopIn.entities.Ride;
+import com.HopIn.HopIn.enums.RideStatus;
+import com.HopIn.HopIn.enums.VehicleType;
 
 public class RejectedRideDTO {
 	private LocalDateTime startTime;

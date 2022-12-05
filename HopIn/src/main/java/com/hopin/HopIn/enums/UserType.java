@@ -1,4 +1,4 @@
-package com.hopin.HopIn.enums;
+package com.HopIn.HopIn.enums;
 
 public enum UserType {
 	DRIVER,
