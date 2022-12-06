@@ -20,15 +20,19 @@ public class ReviewServiceImpl implements IReviewService{
 	Map<Integer, ArrayList<Review>> allDriverReviews = new HashMap<Integer, ArrayList<Review>>();
 
 	@Override
-	public AllReviewsReturnedDTO getDriverReviews() {
+	public AllReviewsReturnedDTO getDriverReviews(int driverId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public AllReviewsReturnedDTO getVehicleReviews() {
-		// TODO Auto-generated method stub
-		return null;
+	public AllReviewsReturnedDTO getVehicleReviews(int vehicleId) {
+		ArrayList<Review> currentVehicleReviews = getByVehicle(vehicleId);
+		if (currentVehicleReviews == null) {
+			currentVehicleReviews = new ArrayList<Review>();
+			currentVehicleReviews.add(new Review(1, 3, "Messy vehicle!"));
+		}
+		return new AllReviewsReturnedDTO(currentVehicleReviews);
 	}
 
 	@Override

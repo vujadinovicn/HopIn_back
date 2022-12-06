@@ -8,9 +8,9 @@ public interface IReviewService {
 	
 	//public AllReviewsReturnedDTO getRideReviews();
 	
-	public AllReviewsReturnedDTO getDriverReviews();
+	public AllReviewsReturnedDTO getDriverReviews(int driverId);
 	
-	public AllReviewsReturnedDTO getVehicleReviews();
+	public AllReviewsReturnedDTO getVehicleReviews(int vehicleId);
 	
 	public ReviewReturnedDTO addVehicleReview(int vehicleId, ReviewDTO review);
 	
