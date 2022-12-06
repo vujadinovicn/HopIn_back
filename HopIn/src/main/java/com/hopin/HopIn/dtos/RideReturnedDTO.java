@@ -3,6 +3,8 @@ package com.HopIn.HopIn.dtos;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.HopIn.HopIn.entities.Passenger;
+import com.HopIn.HopIn.entities.Ride;
 import com.HopIn.HopIn.enums.RideStatus;
 import com.HopIn.HopIn.enums.VehicleType;
 
@@ -35,6 +37,17 @@ public class RideReturnedDTO {
 		this.baby = baby;
 		this.vehicleType = vehicleType;
 	}
+	
+	/*
+	 * public RideReturnedDTO(Ride ride) { super(); this.startTime =
+	 * ride.getStartTime(); this.endTime = ride.getEndTime(); this.totalCost =
+	 * ride.getPrice(); this.driver = new UserInRideDTO(ride.getDriver()); for
+	 * (Passenger p : ride.getPassengers()) this.passengers.add(new
+	 * UserInRideDTO(p)); this.estimatedTimeInMinutes =
+	 * ride.getEstimatedTimeInMinutes(); this.status = ride.getStatus(); this.panic
+	 * = ride.isPanic(); this.pet = ride.isPet(); this.baby = ride.isBaby();
+	 * this.vehicleType = ride.getVehicleType(); }
+	 */
 	
 	public LocalDateTime getStartTime() {
 		return startTime;

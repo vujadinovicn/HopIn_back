@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.HopIn.HopIn.dtos.AllMessagesDTO;
 import com.HopIn.HopIn.dtos.AllNotesDTO;
+import com.HopIn.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
 import com.HopIn.HopIn.dtos.MessageDTO;
@@ -79,6 +80,11 @@ public class UserController {
 	@GetMapping(value="{id}/message", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AllMessagesDTO> getMessages(@PathVariable int id){
 		return new ResponseEntity<AllMessagesDTO>(userService.getMessages(id), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AllUserRidesReturnedDTO> getRides(@PathVariable int id, @RequestParam int page, @RequestParam int size, @RequestParam String sort, @RequestParam String from, @RequestParam String to){
+		return new ResponseEntity<AllUserRidesReturnedDTO>(userService.getRides(id, page, size, sort, from, to), HttpStatus.OK);
 	}
 	
 }

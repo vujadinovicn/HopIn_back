@@ -2,6 +2,7 @@ package com.HopIn.HopIn.services.interfaces;
 
 import com.HopIn.HopIn.dtos.AllMessagesDTO;
 import com.HopIn.HopIn.dtos.AllNotesDTO;
+import com.HopIn.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
 import com.HopIn.HopIn.dtos.MessageDTO;
@@ -30,4 +31,6 @@ public interface IUserService {
 	public MessageReturnedDTO sendMessage(int userId, MessageDTO sentMessage);
 	
 	public AllMessagesDTO getMessages(int userId);
+	
+	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to);
 }

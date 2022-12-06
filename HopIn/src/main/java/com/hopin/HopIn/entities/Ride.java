@@ -184,6 +184,14 @@ public class Ride {
 		this.passengers = passengers;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public List<Location> getLocations() {
 		return locations;
 	}

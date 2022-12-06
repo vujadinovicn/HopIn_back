@@ -1,6 +1,7 @@
 package com.HopIn.HopIn.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.HopIn.HopIn.dtos.AllMessagesDTO;
 import com.HopIn.HopIn.dtos.AllNotesDTO;
+import com.HopIn.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
 import com.HopIn.HopIn.dtos.MessageDTO;
@@ -15,10 +17,15 @@ import com.HopIn.HopIn.dtos.MessageReturnedDTO;
 import com.HopIn.HopIn.dtos.NoteDTO;
 import com.HopIn.HopIn.dtos.NoteReturnedDTO;
 import com.HopIn.HopIn.dtos.TokenDTO;
+import com.HopIn.HopIn.entities.Driver;
 import com.HopIn.HopIn.entities.Message;
 import com.HopIn.HopIn.entities.Note;
+import com.HopIn.HopIn.entities.Passenger;
+import com.HopIn.HopIn.entities.Ride;
 import com.HopIn.HopIn.entities.User;
 import com.HopIn.HopIn.enums.MessageType;
+import com.HopIn.HopIn.enums.RideStatus;
+import com.HopIn.HopIn.enums.VehicleType;
 import com.HopIn.HopIn.exceptions.UserNotFoundException;
 import com.HopIn.HopIn.services.interfaces.IUserService;
 
@@ -30,6 +37,7 @@ public class UserServiceImpl implements IUserService{
 	Map<Integer, User> allUsers = new HashMap<Integer, User>();
 	Map<Integer, Note> allNotes = new HashMap<Integer, Note>();
 	Map<Integer, Message> allMessages = new HashMap<Integer, Message>();
+	Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
 	
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
@@ -126,5 +134,18 @@ public class UserServiceImpl implements IUserService{
 			allMessages.put(message.getId(), message);
 		}
 		return new AllMessagesDTO(this.allMessages);
+	}
+
+	@Override
+	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to) {
+		User user = getById(userId);
+		//if (user != null) {
+			//user.addNote();
+		if (allRides.size() == 0) {
+			Ride ride = new Ride(1, LocalDateTime.now(), LocalDateTime.now(), 
+					123, 123, null, true, true, true, null, null, null, new ArrayList<Passenger>(), null, new Driver());
+			allRides.put(ride.getId(), ride);
+		}
+		return new AllUserRidesReturnedDTO(this.allRides);
 	}
 }
