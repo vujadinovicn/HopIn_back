@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.HopIn.HopIn.dtos.AllMessagesDTO;
 import com.HopIn.HopIn.dtos.AllNotesDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
@@ -14,6 +15,7 @@ import com.HopIn.HopIn.dtos.MessageReturnedDTO;
 import com.HopIn.HopIn.dtos.NoteDTO;
 import com.HopIn.HopIn.dtos.NoteReturnedDTO;
 import com.HopIn.HopIn.dtos.TokenDTO;
+import com.HopIn.HopIn.entities.Message;
 import com.HopIn.HopIn.entities.Note;
 import com.HopIn.HopIn.entities.User;
 import com.HopIn.HopIn.enums.MessageType;
@@ -27,6 +29,7 @@ public class UserServiceImpl implements IUserService{
 
 	Map<Integer, User> allUsers = new HashMap<Integer, User>();
 	Map<Integer, Note> allNotes = new HashMap<Integer, Note>();
+	Map<Integer, Message> allMessages = new HashMap<Integer, Message>();
 	
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
@@ -111,5 +114,17 @@ public class UserServiceImpl implements IUserService{
 				sentMessage.getMessage(),
 				sentMessage.getType(),
 				sentMessage.getRideId());
+	}
+
+	@Override
+	public AllMessagesDTO getMessages(int userId) {
+		User user = getById(userId);
+		//if (user != null) {
+			//user.addNote();
+		if (allMessages.size() == 0) {
+			Message message = new Message(1, 123, 123, LocalDateTime.now(), "Message is here!", MessageType.VOZNJA, 123);
+			allMessages.put(message.getId(), message);
+		}
+		return new AllMessagesDTO(this.allMessages);
 	}
 }

@@ -1,12 +1,11 @@
-package com.HopIn.HopIn.dtos;
+package com.HopIn.HopIn.entities;
 
 import java.time.LocalDateTime;
 
-import com.HopIn.HopIn.entities.Message;
 import com.HopIn.HopIn.enums.MessageType;
 
-public class MessageReturnedDTO {
-	
+public class Message {
+
 	int id;
 	LocalDateTime timeOfSending;
 	int senderId;
@@ -15,7 +14,7 @@ public class MessageReturnedDTO {
 	MessageType type;
 	int rideId;
 	
-	public MessageReturnedDTO(int id, int senderId, int receiverId, LocalDateTime timeOfSending, String message,
+	public Message(int id, int senderId, int receiverId, LocalDateTime timeOfSending, String message,
 			MessageType type, int rideId) {
 		super();
 		this.id = id;
@@ -25,17 +24,6 @@ public class MessageReturnedDTO {
 		this.message = message;
 		this.type = type;
 		this.rideId = rideId;
-	}
-	
-	public MessageReturnedDTO(Message message) {
-		super();
-		this.id = message.getId();
-		this.timeOfSending = message.getTimeOfSending();
-		this.senderId = message.getSenderId();
-		this.receiverId = message.getReceiverId();
-		this.message = message.getMessage();
-		this.type = message.getType();
-		this.rideId = message.getRideId();
 	}
 
 	public int getId() {

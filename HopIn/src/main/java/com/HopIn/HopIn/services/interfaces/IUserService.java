@@ -1,5 +1,6 @@
 package com.HopIn.HopIn.services.interfaces;
 
+import com.HopIn.HopIn.dtos.AllMessagesDTO;
 import com.HopIn.HopIn.dtos.AllNotesDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
@@ -22,9 +23,11 @@ public interface IUserService {
 	
 	public boolean unblock(int userId);
 	
-	public NoteReturnedDTO addNote(int id, NoteDTO note);
+	public NoteReturnedDTO addNote(int userId, NoteDTO note);
 	
-	public AllNotesDTO getNotes(int id, int page, int size);
+	public AllNotesDTO getNotes(int userId, int page, int size);
 	
-	public MessageReturnedDTO sendMessage(int id, MessageDTO sentMessage);
+	public MessageReturnedDTO sendMessage(int userId, MessageDTO sentMessage);
+	
+	public AllMessagesDTO getMessages(int userId);
 }
