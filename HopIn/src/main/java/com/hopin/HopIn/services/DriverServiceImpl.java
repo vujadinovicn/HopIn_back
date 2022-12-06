@@ -1,9 +1,12 @@
 package com.hopin.HopIn.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.dtos.AllUsersDTO;
@@ -11,9 +14,11 @@ import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
+import com.hopin.HopIn.dtos.WorkingHoursReturnedDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Vehicle;
+import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 
 @Service
@@ -31,6 +36,16 @@ public class DriverServiceImpl implements IDriverService {
 		this.allDrivers.put(currId++, driver);
 
 		return new UserReturnedDTO(driver);
+	}
+	
+	@Override
+	public AllUsersDTO getAllPaginated(Pageable pageable) {
+		if (allDrivers.size() == 0) {
+			Driver driver = new Driver(0, "Pera", "Peric", "pera.peric@email.com", "123", "Bulevar Oslobodjenja 74", "+381123123", "U3dhZ2dlciByb2Nrcw==");
+			allDrivers.put(driver.getId(), driver);
+		}
+		
+		return new AllUsersDTO(this.allDrivers.values());
 	}
 
 	@Override
@@ -89,6 +104,14 @@ public class DriverServiceImpl implements IDriverService {
 		
 		return vehicle;
 	}
+	
+	@Override
+	public WorkingHoursReturnedDTO getWorkingHours(int driverId, int hoursId) {
+		Driver driver = this.allDrivers.get(driverId);
+		WorkingHours workingHours = driver.getWorkingHours().stream().filter(hours -> hoursId == hours.getId()).findFirst().orElse(null);
+		return new WorkingHoursReturnedDTO(workingHours.getId(), workingHours.getStart(), workingHours.getEnd());
+	}
+
 
 	private Vehicle dtoToVehicle(VehicleDTO dto, int driverId, Vehicle vehicle) {
 		if (vehicle == null) {
@@ -136,4 +159,7 @@ public class DriverServiceImpl implements IDriverService {
 		return driver;
 	}
 
+	
+
+	
 }

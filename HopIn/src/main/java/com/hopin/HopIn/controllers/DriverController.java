@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +22,10 @@ import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
+import com.hopin.HopIn.dtos.WorkingHoursReturnedDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Vehicle;
+import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 
 @RestController
@@ -38,8 +41,8 @@ public class DriverController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Pageable> getAll(Pageable pageable) {
-		return new ResponseEntity<Pageable>(pageable, HttpStatus.OK);
+	public ResponseEntity<AllUsersDTO> getAllPaginated(Pageable pageable) {
+		return new ResponseEntity<AllUsersDTO>(service.getAllPaginated(pageable), HttpStatus.OK);
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,6 +64,12 @@ public class DriverController {
 	public ResponseEntity<Document> addDocument(@PathVariable int id, @RequestBody DocumentDTO newDocument) {
 		return new ResponseEntity<Document>(service.addDocument(id, newDocument), HttpStatus.OK);
 	}
+	
+	@DeleteMapping(value = "/{id}/documents")
+	public ResponseEntity<Document> deleteDocument(@PathVariable("id") int documentId) {
+		//TODO: kako je ovo zamisljeno
+		return new ResponseEntity<Document>(HttpStatus.NO_CONTENT);
+	}
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Vehicle> getVehicle(@PathVariable("id") int driverId) {
@@ -76,4 +85,15 @@ public class DriverController {
 	public ResponseEntity<Vehicle> updateVehicle(@PathVariable("id") int driverId, @RequestBody VehicleDTO vehicle) {
 		return new ResponseEntity<Vehicle>(service.updateVehicle(driverId, vehicle), HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/{id}/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<WorkingHoursReturnedDTO> getWorkingHours(@PathVariable("id") int driverId, @PathVariable("working-hour-id") int hoursId) {
+		return new ResponseEntity<WorkingHoursReturnedDTO>(service.getWorkingHours(driverId, hoursId), HttpStatus.OK);
+	}
+	
+//	@PostMapping(value = "/{id}/working-hours", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<WorkingHoursReturnedDTO> addWorkingHours(@PathVariable("id") int driverId) {
+//		return new ResponseEntity<WorkingHoursReturnedDTO>(service.addWorkingHours(driverId));
+//		return null;
+//	}
 }
