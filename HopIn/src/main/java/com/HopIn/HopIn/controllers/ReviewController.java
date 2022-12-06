@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.HopIn.HopIn.dtos.AllReviewsReturnedDTO;
+import com.HopIn.HopIn.dtos.AllRideReviewsDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.ReviewDTO;
 import com.HopIn.HopIn.dtos.ReviewReturnedDTO;
@@ -44,5 +45,10 @@ public class ReviewController {
 	@GetMapping(value="/driver/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AllReviewsReturnedDTO> getDriverReviews(@PathVariable int driverId){
 		return new ResponseEntity<AllReviewsReturnedDTO>(reviewService.getDriverReviews(driverId), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/s/{rideId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AllRideReviewsDTO> getRideReviews(@PathVariable int rideId){
+		return new ResponseEntity<AllRideReviewsDTO>(reviewService.getRideReviews(rideId), HttpStatus.OK);
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.hibernate.mapping.List;
 import org.springframework.stereotype.Service;
 import com.HopIn.HopIn.dtos.AllReviewsReturnedDTO;
+import com.HopIn.HopIn.dtos.AllRideReviewsDTO;
 import com.HopIn.HopIn.dtos.ReviewDTO;
 import com.HopIn.HopIn.dtos.ReviewReturnedDTO;
 import com.HopIn.HopIn.entities.Review;
@@ -69,6 +70,13 @@ public class ReviewServiceImpl implements IReviewService{
 		return new ReviewReturnedDTO(review);
 	}
 	
+	@Override
+	public AllRideReviewsDTO getRideReviews(int rideId) {
+		ArrayList<Review> reviews = new ArrayList<Review>();
+		reviews.add(new Review(1, 3, "Bad vehicle"));
+		return new AllRideReviewsDTO(reviews, reviews);
+	}
+	
 	public ArrayList<Review> getByVehicle(int vehicleId){
 		return allVehicleReviews.get(vehicleId);
 	}
@@ -80,8 +88,4 @@ public class ReviewServiceImpl implements IReviewService{
 	private Review generateReview(int id, ReviewDTO reviewDTO) {
 		return new Review(id, reviewDTO.getRating(), reviewDTO.getComment());
 	}
-
-	
-	
-
 }

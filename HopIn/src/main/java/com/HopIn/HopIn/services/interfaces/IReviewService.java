@@ -1,12 +1,13 @@
 package com.HopIn.HopIn.services.interfaces;
 
 import com.HopIn.HopIn.dtos.AllReviewsReturnedDTO;
+import com.HopIn.HopIn.dtos.AllRideReviewsDTO;
 import com.HopIn.HopIn.dtos.ReviewDTO;
 import com.HopIn.HopIn.dtos.ReviewReturnedDTO;
 
 public interface IReviewService {
 	
-	//public AllReviewsReturnedDTO getRideReviews();
+	public AllRideReviewsDTO getRideReviews(int rideId);
 	
 	public AllReviewsReturnedDTO getDriverReviews(int driverId);
 	
