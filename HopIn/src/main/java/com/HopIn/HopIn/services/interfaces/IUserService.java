@@ -3,6 +3,8 @@ package com.HopIn.HopIn.services.interfaces;
 import com.HopIn.HopIn.dtos.AllNotesDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
+import com.HopIn.HopIn.dtos.MessageDTO;
+import com.HopIn.HopIn.dtos.MessageReturnedDTO;
 import com.HopIn.HopIn.dtos.NoteDTO;
 import com.HopIn.HopIn.dtos.NoteReturnedDTO;
 import com.HopIn.HopIn.dtos.TokenDTO;
@@ -23,4 +25,6 @@ public interface IUserService {
 	public NoteReturnedDTO addNote(int id, NoteDTO note);
 	
 	public AllNotesDTO getNotes(int id, int page, int size);
+	
+	public MessageReturnedDTO sendMessage(int id, MessageDTO sentMessage);
 }

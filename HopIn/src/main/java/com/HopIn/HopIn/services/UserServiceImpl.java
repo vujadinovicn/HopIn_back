@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 import com.HopIn.HopIn.dtos.AllNotesDTO;
 import com.HopIn.HopIn.dtos.AllUsersDTO;
 import com.HopIn.HopIn.dtos.CredentialsDTO;
+import com.HopIn.HopIn.dtos.MessageDTO;
+import com.HopIn.HopIn.dtos.MessageReturnedDTO;
 import com.HopIn.HopIn.dtos.NoteDTO;
 import com.HopIn.HopIn.dtos.NoteReturnedDTO;
 import com.HopIn.HopIn.dtos.TokenDTO;
 import com.HopIn.HopIn.entities.Note;
 import com.HopIn.HopIn.entities.User;
+import com.HopIn.HopIn.enums.MessageType;
 import com.HopIn.HopIn.exceptions.UserNotFoundException;
 import com.HopIn.HopIn.services.interfaces.IUserService;
 
@@ -24,6 +27,7 @@ public class UserServiceImpl implements IUserService{
 
 	Map<Integer, User> allUsers = new HashMap<Integer, User>();
 	Map<Integer, Note> allNotes = new HashMap<Integer, Note>();
+	
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
 		if (allUsers.size() == 0) {
@@ -89,5 +93,23 @@ public class UserServiceImpl implements IUserService{
 		return new AllNotesDTO(this.allNotes);
 		//}
 		//return null;
+	}
+
+	@Override
+	public MessageReturnedDTO sendMessage(int userId, MessageDTO sentMessage) {
+		User user = getById(userId);
+		//if (user != null) {
+		//user.addMessage();
+		return createDetailedMessage(sentMessage);
+	}
+	
+	private MessageReturnedDTO createDetailedMessage(MessageDTO sentMessage) {
+		return new MessageReturnedDTO(sentMessage.getReceiverId(),
+				sentMessage.getReceiverId(),
+				sentMessage.getReceiverId(),
+				LocalDateTime.now(),
+				sentMessage.getMessage(),
+				sentMessage.getType(),
+				sentMessage.getRideId());
 	}
 }
