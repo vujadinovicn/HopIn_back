@@ -14,5 +14,5 @@ public interface IReviewService {
 	
 	public ReviewReturnedDTO addVehicleReview(int vehicleId, ReviewDTO review);
 	
-	public ReviewReturnedDTO addDriverReview();
+	public ReviewReturnedDTO addDriverReview(int driverId, ReviewDTO review);
 }

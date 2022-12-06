@@ -17,6 +17,7 @@ import com.HopIn.HopIn.services.interfaces.IReviewService;
 public class ReviewServiceImpl implements IReviewService{
 	
 	Map<Integer, ArrayList<Review>> allVehicleReviews = new HashMap<Integer, ArrayList<Review>>();
+	Map<Integer, ArrayList<Review>> allDriverReviews = new HashMap<Integer, ArrayList<Review>>();
 
 	@Override
 	public AllReviewsReturnedDTO getDriverReviews() {
@@ -45,19 +46,34 @@ public class ReviewServiceImpl implements IReviewService{
 		return new ReviewReturnedDTO(review);
 	}
 	
+	@Override
+	public ReviewReturnedDTO addDriverReview(int driverId, ReviewDTO reviewDTO) {
+		ArrayList<Review> currentDriverReviews = getByDriver(driverId);
+		int generatedId;
+		if (currentDriverReviews == null) {
+			generatedId = 1;
+			currentDriverReviews = new ArrayList<Review>();
+		} else {
+			generatedId = currentDriverReviews.size()+1;
+		}
+		Review review = generateReview(generatedId, reviewDTO);
+		currentDriverReviews.add(review);
+		return new ReviewReturnedDTO(review);
+	}
+	
 	public ArrayList<Review> getByVehicle(int vehicleId){
 		return allVehicleReviews.get(vehicleId);
+	}
+	
+	public ArrayList<Review> getByDriver(int driverId){
+		return allDriverReviews.get(driverId);
 	}
 	
 	private Review generateReview(int id, ReviewDTO reviewDTO) {
 		return new Review(id, reviewDTO.getRating(), reviewDTO.getComment());
 	}
 
-	@Override
-	public ReviewReturnedDTO addDriverReview() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	
 
 }
