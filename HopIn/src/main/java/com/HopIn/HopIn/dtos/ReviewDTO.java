@@ -1,27 +1,14 @@
-package com.HopIn.HopIn.entities;
+package com.HopIn.HopIn.dtos;
 
-public class Review {
-	private int id;
-	private int rating;
-	private String comment;
+public class ReviewDTO {
 	
-	public Review() {}
-
-	public Review(int id, int rating, String comment) {
+	int rating;
+	String comment;
+	
+	public ReviewDTO(int rating, String comment) {
 		super();
-		this.id = id;
 		this.rating = rating;
 		this.comment = comment;
-	}
-	
-	
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public int getRating() {
