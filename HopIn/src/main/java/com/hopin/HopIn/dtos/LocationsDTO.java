@@ -4,11 +4,11 @@ import com.hopin.HopIn.entities.Location;
 
 public class LocationsDTO {
 	private Location departure;
-	private Location destinations;
+	private Location destination;
 	public LocationsDTO(Location departure, Location destinations) {
 		super();
 		this.departure = departure;
-		this.destinations = destinations;
+		this.destination = destinations;
 	}
 	public Location getDeparture() {
 		return departure;
@@ -17,10 +17,10 @@ public class LocationsDTO {
 		this.departure = departure;
 	}
 	public Location getDestinations() {
-		return destinations;
+		return destination;
 	}
 	public void setDestinations(Location destination) {
-		this.destinations = destination;
+		this.destination = destination;
 	}
 	
 	

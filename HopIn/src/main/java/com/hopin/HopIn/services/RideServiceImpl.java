@@ -9,6 +9,8 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
+import com.hopin.HopIn.dtos.PassengerRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
@@ -115,6 +117,15 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public AllPanicRidesDTO getAllPanicRides() {
 		return new AllPanicRidesDTO(this.allPanicRides);
+	}
+	
+	@Override 
+	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size) {
+		AllPassengerRidesDTO allPassRides = new AllPassengerRidesDTO();
+		for(Ride ride : this.allRides.values()) {
+			allPassRides.add(new PassengerRideDTO(ride));
+		}
+		return allPassRides;
 	}
 	
 }

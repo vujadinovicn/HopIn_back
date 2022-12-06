@@ -1,6 +1,7 @@
 package com.hopin.HopIn.services.interfaces;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
@@ -28,4 +29,6 @@ public interface IRideService {
 	
 	public AllPanicRidesDTO getAllPanicRides();
 		
+	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size);
+
 }
