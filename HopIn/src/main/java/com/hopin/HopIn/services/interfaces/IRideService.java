@@ -14,6 +14,8 @@ public interface IRideService {
 	
 	public RideReturnedDTO getActiveRideForDriver(int id);
 	
+	public RideReturnedDTO getActiveRideForPassenger(int id);
+	
 	public RideReturnedWithRejectionDTO getRide(int id);
 	
 	public boolean cancelRide(int id);

@@ -13,6 +13,7 @@ import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
+import com.hopin.HopIn.dtos.UserInRideDTO;
 import com.hopin.HopIn.entities.PanicRide;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
@@ -39,6 +40,20 @@ public class RideServiceImpl implements IRideService {
 			if(ride.getStartTime().isBefore(LocalDateTime.now()) && ride.getEndTime().isAfter(LocalDateTime.now()) 
 					&& ride.getDriver().getId() == id) {
 				return new RideReturnedDTO(ride);
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public RideReturnedDTO getActiveRideForPassenger(int id) {
+		for(Ride ride : this.allRides.values()) {
+			if(ride.getStartTime().isBefore(LocalDateTime.now()) && ride.getEndTime().isAfter(LocalDateTime.now())) {
+				for(UserInRideDTO passenger : ride.getPassengers()) {
+					if(passenger.getId() == id) {
+						return new RideReturnedDTO(ride);
+					}
+				}
 			}
 		}
 		return null;

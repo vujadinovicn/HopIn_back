@@ -44,7 +44,7 @@ public class RideController {
 	}
 	
 	  
-	@GetMapping(value = "/active/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RideReturnedDTO> getActiveRideForDriver(@PathVariable int driverId) {
 		RideReturnedDTO activeRide = service.getActiveRideForDriver(driverId);
 		if(activeRide != null) {
@@ -52,6 +52,17 @@ public class RideController {
 		}
 		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
+	
+	
+	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RideReturnedDTO> getActiveRideForPassenger(@PathVariable int passengerId) {
+		RideReturnedDTO activeRide = service.getActiveRideForPassenger(passengerId);
+		if(activeRide != null) {
+			return new ResponseEntity<RideReturnedDTO>(activeRide, HttpStatus.OK);
+		}
+		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
+	}
+	
 	
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<String> cancelRide(@PathVariable int id) {
