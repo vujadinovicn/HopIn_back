@@ -40,4 +40,9 @@ public class ReviewController {
 	public ResponseEntity<AllReviewsReturnedDTO> getVehicleReviews(@PathVariable int vehicleId){
 		return new ResponseEntity<AllReviewsReturnedDTO>(reviewService.getVehicleReviews(vehicleId), HttpStatus.OK);
 	}
+	
+	@GetMapping(value="/driver/{driverId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AllReviewsReturnedDTO> getDriverReviews(@PathVariable int driverId){
+		return new ResponseEntity<AllReviewsReturnedDTO>(reviewService.getDriverReviews(driverId), HttpStatus.OK);
+	}
 }

@@ -21,8 +21,12 @@ public class ReviewServiceImpl implements IReviewService{
 
 	@Override
 	public AllReviewsReturnedDTO getDriverReviews(int driverId) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Review> currentDriverReviews = getByVehicle(driverId);
+		if (currentDriverReviews == null) {
+			currentDriverReviews = new ArrayList<Review>();
+			currentDriverReviews.add(new Review(1, 3, "Stinky driver!"));
+		}
+		return new AllReviewsReturnedDTO(currentDriverReviews);
 	}
 
 	@Override
