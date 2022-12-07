@@ -1,6 +1,6 @@
-package com.HopIn.HopIn.entities;
+package com.hopin.HopIn.entities;
 
-import com.HopIn.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserDTO;
 
 public class Passenger extends User {
 	

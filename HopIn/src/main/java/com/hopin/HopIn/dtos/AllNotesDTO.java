@@ -1,10 +1,10 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.HopIn.HopIn.entities.Note;
+import com.hopin.HopIn.entities.Note;
 
 public class AllNotesDTO {
 	private int totalCount;

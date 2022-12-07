@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.controllers;
+package com.hopin.HopIn.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.HopIn.HopIn.dtos.AllMessagesDTO;
-import com.HopIn.HopIn.dtos.AllNotesDTO;
-import com.HopIn.HopIn.dtos.AllUserRidesReturnedDTO;
-import com.HopIn.HopIn.dtos.AllUsersDTO;
-import com.HopIn.HopIn.dtos.CredentialsDTO;
-import com.HopIn.HopIn.dtos.MessageDTO;
-import com.HopIn.HopIn.dtos.MessageReturnedDTO;
-import com.HopIn.HopIn.dtos.NoteDTO;
-import com.HopIn.HopIn.dtos.NoteReturnedDTO;
-import com.HopIn.HopIn.dtos.TokenDTO;
-import com.HopIn.HopIn.services.interfaces.IUserService;
+import com.hopin.HopIn.dtos.AllMessagesDTO;
+import com.hopin.HopIn.dtos.AllNotesDTO;
+import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
+import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.CredentialsDTO;
+import com.hopin.HopIn.dtos.MessageDTO;
+import com.hopin.HopIn.dtos.MessageReturnedDTO;
+import com.hopin.HopIn.dtos.NoteDTO;
+import com.hopin.HopIn.dtos.NoteReturnedDTO;
+import com.hopin.HopIn.dtos.TokenDTO;
+import com.hopin.HopIn.services.interfaces.IUserService;
 
 @RestController
 @RequestMapping("/api/user")
@@ -31,7 +31,7 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 	
-	@GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AllUsersDTO> getAll(@RequestParam int page, @RequestParam int size) {
 		return new ResponseEntity<AllUsersDTO>(userService.getAll(page, size), HttpStatus.OK);
 	}

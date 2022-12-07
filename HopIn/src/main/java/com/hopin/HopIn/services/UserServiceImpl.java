@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.services;
+package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,27 +7,27 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.HopIn.HopIn.dtos.AllMessagesDTO;
-import com.HopIn.HopIn.dtos.AllNotesDTO;
-import com.HopIn.HopIn.dtos.AllUserRidesReturnedDTO;
-import com.HopIn.HopIn.dtos.AllUsersDTO;
-import com.HopIn.HopIn.dtos.CredentialsDTO;
-import com.HopIn.HopIn.dtos.MessageDTO;
-import com.HopIn.HopIn.dtos.MessageReturnedDTO;
-import com.HopIn.HopIn.dtos.NoteDTO;
-import com.HopIn.HopIn.dtos.NoteReturnedDTO;
-import com.HopIn.HopIn.dtos.TokenDTO;
-import com.HopIn.HopIn.entities.Driver;
-import com.HopIn.HopIn.entities.Message;
-import com.HopIn.HopIn.entities.Note;
-import com.HopIn.HopIn.entities.Passenger;
-import com.HopIn.HopIn.entities.Ride;
-import com.HopIn.HopIn.entities.User;
-import com.HopIn.HopIn.enums.MessageType;
-import com.HopIn.HopIn.enums.RideStatus;
-import com.HopIn.HopIn.enums.VehicleType;
-import com.HopIn.HopIn.exceptions.UserNotFoundException;
-import com.HopIn.HopIn.services.interfaces.IUserService;
+import com.hopin.HopIn.dtos.AllMessagesDTO;
+import com.hopin.HopIn.dtos.AllNotesDTO;
+import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
+import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.CredentialsDTO;
+import com.hopin.HopIn.dtos.MessageDTO;
+import com.hopin.HopIn.dtos.MessageReturnedDTO;
+import com.hopin.HopIn.dtos.NoteDTO;
+import com.hopin.HopIn.dtos.NoteReturnedDTO;
+import com.hopin.HopIn.dtos.TokenDTO;
+import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.entities.Message;
+import com.hopin.HopIn.entities.Note;
+import com.hopin.HopIn.entities.Passenger;
+import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.enums.MessageType;
+import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
+import com.hopin.HopIn.services.interfaces.IUserService;
 
 import ch.qos.logback.core.subst.Token;
 

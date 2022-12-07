@@ -1,9 +1,9 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
 
-import com.HopIn.HopIn.entities.Message;
-import com.HopIn.HopIn.enums.MessageType;
+import com.hopin.HopIn.entities.Message;
+import com.hopin.HopIn.enums.MessageType;
 
 public class MessageReturnedDTO {
 	
