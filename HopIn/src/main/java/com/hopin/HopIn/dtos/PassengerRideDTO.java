@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleType;
 
 public class PassengerRideDTO {

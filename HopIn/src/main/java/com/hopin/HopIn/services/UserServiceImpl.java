@@ -128,7 +128,7 @@ public class UserServiceImpl implements IUserService{
 		User user = getById(userId);
 		if (allRides.size() == 0) {
 			Ride ride = new Ride(1, LocalDateTime.now(), LocalDateTime.now(), 
-					123, 123, null, true, true, true, null, null, null, new ArrayList<Passenger>(), null, new Driver());
+					123, 123, null, true, true, null, null, null, null, null, null);
 			allRides.put(ride.getId(), ride);
 		}
 		return new AllUserRidesReturnedDTO(this.allRides);

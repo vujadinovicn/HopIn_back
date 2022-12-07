@@ -8,6 +8,9 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.enums.VehicleType;
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.PassengerRideDTO;

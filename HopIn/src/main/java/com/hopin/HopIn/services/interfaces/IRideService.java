@@ -8,7 +8,6 @@ import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.entities.PanicRide;
 import com.hopin.HopIn.enums.RideStatus;
-
 public interface IRideService {
 	
 	public RideReturnedDTO create(RideDTO dto);
