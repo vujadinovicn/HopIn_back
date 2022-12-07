@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.dtos.LocationsDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.UserInRideDTO;

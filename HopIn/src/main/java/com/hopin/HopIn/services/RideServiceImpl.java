@@ -21,8 +21,6 @@ import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UserInRideDTO;
 import com.hopin.HopIn.entities.PanicRide;
 import com.hopin.HopIn.entities.RejectionNotice;
-import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @Service
