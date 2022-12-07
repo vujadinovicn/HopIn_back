@@ -9,7 +9,6 @@ import com.hopin.HopIn.dtos.LocationDTO;
 import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.UserInRideDTO;
-import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.UserType;
 import com.hopin.HopIn.enums.VehicleType;
 
