@@ -1,26 +1,17 @@
-package com.hopin.HopIn.entities;
+package com.hopin.HopIn.dtos;
 
-public class Location {
-
-	private int id;
+public class LocationNoIdDTO {
 	private String address;
 	private double latitude;
 	private double longitude;
+	
+	public LocationNoIdDTO() {}
 
-	public Location(int id, String address, double latitude, double longitude) {
+	public LocationNoIdDTO(String address, double latitude, double longitude) {
 		super();
-		this.id = id;
 		this.address = address;
 		this.latitude = latitude;
 		this.longitude = longitude;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getAddress() {
@@ -46,5 +37,5 @@ public class Location {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-
+	
 }

@@ -1,5 +1,6 @@
 package com.hopin.HopIn.entities;
 
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.enums.VehicleType;
 
 public class Vehicle {
@@ -9,7 +10,7 @@ public class Vehicle {
 	private VehicleType vehicleType;
 	private String model;
 	private String licenseNumber;
-	private Location currentLocation;
+	private LocationNoIdDTO currentLocation;
 	private int passengerSeats;
 	private boolean babyTransport;
 	private boolean petTransport;
@@ -17,7 +18,7 @@ public class Vehicle {
 	public Vehicle() {}
 	
 	public Vehicle(int id, int driverId, VehicleType vehicleType, String model, String licenseNumber,
-			Location currentLocation, int passengerSeats, boolean babyTransport, boolean petTransport) {
+			LocationNoIdDTO currentLocation, int passengerSeats, boolean babyTransport, boolean petTransport) {
 		super();
 		this.id = id;
 		this.driverId = driverId;
@@ -70,11 +71,11 @@ public class Vehicle {
 		this.licenseNumber = licenseNumber;
 	}
 
-	public Location getCurrentLocation() {
+	public LocationNoIdDTO getCurrentLocation() {
 		return currentLocation;
 	}
 
-	public void setCurrentLocation(Location currentLocation) {
+	public void setCurrentLocation(LocationNoIdDTO currentLocation) {
 		this.currentLocation = currentLocation;
 	}
 
