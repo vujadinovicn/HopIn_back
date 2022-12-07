@@ -12,7 +12,7 @@ import com.hopin.HopIn.enums.VehicleType;
 
 public class PassengerRideDTO {
 	private int id;
-	private List<LocationsDTO> locations;
+	private List<LocationDTO> locations;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private double totalCost;
@@ -25,7 +25,7 @@ public class PassengerRideDTO {
 	private RejectionNotice rejection;
 	
 	
-	public PassengerRideDTO(int id, List<LocationsDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
+	public PassengerRideDTO(int id, List<LocationDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
 			double totalCost, UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
 			VehicleType vehicleType, boolean babyTransport, boolean petTransport, RejectionNotice rejection) {
 		super();
@@ -45,9 +45,9 @@ public class PassengerRideDTO {
 	
 	public PassengerRideDTO(Ride ride) {
 		this.id = ride.getId();
-		this.locations = new ArrayList<LocationsDTO>();
+		this.locations = new ArrayList<LocationDTO>();
 		for(int i = 0; i < ride.getLocations().size(); i =+ 2) {
-			this.locations.add(new LocationsDTO(ride.getLocations().get(i), ride.getLocations().get(i+1)));
+			this.locations.add(new LocationDTO(ride.getLocations().get(i), ride.getLocations().get(i+1)));
 		}
 		this.startTime = ride.getStartTime();
 		this.endTime = ride.getEndTime();
@@ -67,10 +67,10 @@ public class PassengerRideDTO {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public List<LocationsDTO> getLocations() {
+	public List<LocationDTO> getLocations() {
 		return locations;
 	}
-	public void setLocations(List<LocationsDTO> locations) {
+	public void setLocations(List<LocationDTO> locations) {
 		this.locations = locations;
 	}
 	public LocalDateTime getStartTime() {

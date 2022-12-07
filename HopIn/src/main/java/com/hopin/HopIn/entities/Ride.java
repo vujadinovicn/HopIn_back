@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.dtos.LocationsDTO;
+import com.hopin.HopIn.dtos.LocationDTO;
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.UserInRideDTO;
 import com.hopin.HopIn.enums.RideStatus;
@@ -26,7 +27,7 @@ public class Ride {
 	private boolean babyTransport;
 	private List<Review> reviews;
 	private RejectionNotice rejectionNotice;
-	private List<Location> locations;
+	private List<LocationNoIdDTO> locations;
 	private RideStatus status;
 
 	
@@ -35,7 +36,7 @@ public class Ride {
 
 	public Ride(LocalDateTime startTime, LocalDateTime endTime, double price, int estimatedDuration,
 			RideStatus status, boolean pet, boolean baby, VehicleType vehicleType, List<Review> reviews,
-			RejectionNotice rejectionNotice, List<UserInRideDTO> passengers, List<Location> locations) {
+			RejectionNotice rejectionNotice, List<UserInRideDTO> passengers, List<LocationNoIdDTO> locations) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -55,7 +56,7 @@ public class Ride {
 	
 	public Ride(int id, LocalDateTime startTime, LocalDateTime endTime, double price, int estimatedTimeInMinutes,
 			RideStatus status, boolean pet, boolean baby, VehicleType vehicleType, List<Review> reviews,
-			RejectionNotice rejectionNotice, List<UserInRideDTO> passengers, List<Location> locations, UserInRideDTO driver) {
+			RejectionNotice rejectionNotice, List<UserInRideDTO> passengers, List<LocationNoIdDTO> locations, UserInRideDTO driver) {
 		super();
 		this.setId(id);
 		this.startTime = startTime;
@@ -76,8 +77,8 @@ public class Ride {
 	
 	public Ride(RideDTO dto, int id) {
 		this.setId(id);
-		this.locations = new ArrayList<Location>();
-		for(LocationsDTO locDto : dto.getLocations()) {
+		this.locations = new ArrayList<LocationNoIdDTO>();
+		for(LocationDTO locDto : dto.getLocations()) {
 			this.locations.add(locDto.getDeparture());
 			this.locations.add(locDto.getDestinations());
 		}
@@ -204,11 +205,11 @@ public class Ride {
 		this.id = id;
 	}
 
-	public List<Location> getLocations() {
+	public List<LocationNoIdDTO> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<Location> locations) {
+	public void setLocations(List<LocationNoIdDTO> locations) {
 		this.locations = locations;
 	}
 }

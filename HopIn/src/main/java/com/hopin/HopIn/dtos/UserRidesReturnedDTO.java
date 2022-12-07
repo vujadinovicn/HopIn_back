@@ -3,7 +3,6 @@ package com.hopin.HopIn.dtos;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.VehicleType;
@@ -11,7 +10,7 @@ import com.hopin.HopIn.enums.VehicleType;
 public class UserRidesReturnedDTO {
 	
 	int id;
-	List<Location> locations;
+	List<LocationNoIdDTO> locations;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private int totalCost;
@@ -22,7 +21,7 @@ public class UserRidesReturnedDTO {
 	private boolean babyTransport;
 	private boolean petTransport;
 	
-	public UserRidesReturnedDTO(int id, List<Location> locations, LocalDateTime startTime, LocalDateTime endTime,
+	public UserRidesReturnedDTO(int id, List<LocationNoIdDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
 			int totalCost, UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
 			VehicleType vehicleType, boolean babyTransport, boolean petTransport) {
 		super();
@@ -62,11 +61,11 @@ public class UserRidesReturnedDTO {
 		this.id = id;
 	}
 
-	public List<Location> getLocations() {
+	public List<LocationNoIdDTO> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<Location> locations) {
+	public void setLocations(List<LocationNoIdDTO> locations) {
 		this.locations = locations;
 	}
 

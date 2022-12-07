@@ -2,16 +2,15 @@ package com.hopin.HopIn.dtos;
 
 import java.util.List;
 
-import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.enums.VehicleType;
 
 public class UnregisteredUserRideDTO {
-	List<Location> locations;
+	List<LocationNoIdDTO> locations;
 	VehicleType vehicleType;
 	boolean babyTransport;
 	boolean petTransport;
 	
-	public UnregisteredUserRideDTO(List<Location> locations, VehicleType vehicleType, boolean babyTransport,
+	public UnregisteredUserRideDTO(List<LocationNoIdDTO> locations, VehicleType vehicleType, boolean babyTransport,
 			boolean petTransport) {
 		super();
 		this.locations = locations;
@@ -20,11 +19,11 @@ public class UnregisteredUserRideDTO {
 		this.petTransport = petTransport;
 	}
 
-	public List<Location> getLocations() {
+	public List<LocationNoIdDTO> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<Location> locations) {
+	public void setLocations(List<LocationNoIdDTO> locations) {
 		this.locations = locations;
 	}
 
