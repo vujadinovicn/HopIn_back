@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.controllers;
+package com.hopin.HopIn.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.HopIn.HopIn.dtos.EstimatedRideDetailsDTO;
-import com.HopIn.HopIn.dtos.UnregisteredUserRideDTO;
-import com.HopIn.HopIn.services.interfaces.IUnregisteredUserService;
+import com.hopin.HopIn.dtos.EstimatedRideDetailsDTO;
+import com.hopin.HopIn.dtos.UnregisteredUserRideDTO;
+import com.hopin.HopIn.services.interfaces.IUnregisteredUserService;
 
 @RestController
 @RequestMapping("/api/unregisteredUser")

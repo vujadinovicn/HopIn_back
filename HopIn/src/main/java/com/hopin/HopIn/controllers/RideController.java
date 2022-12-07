@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.controllers;
+package com.hopin.HopIn.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.HopIn.HopIn.dtos.RejectedRideDTO;
-import com.HopIn.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.dtos.RejectedRideDTO;
+import com.hopin.HopIn.services.interfaces.IRideService;
 
 @RestController
 @RequestMapping("/api/ride")

@@ -1,7 +1,7 @@
-package com.HopIn.HopIn.services.interfaces;
+package com.hopin.HopIn.services.interfaces;
 
-import com.HopIn.HopIn.dtos.EstimatedRideDetailsDTO;
-import com.HopIn.HopIn.dtos.UnregisteredUserRideDTO;
+import com.hopin.HopIn.dtos.EstimatedRideDetailsDTO;
+import com.hopin.HopIn.dtos.UnregisteredUserRideDTO;
 
 public interface IUnregisteredUserService{
 	

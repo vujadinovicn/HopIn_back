@@ -1,10 +1,10 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.HopIn.HopIn.entities.Message;
+import com.hopin.HopIn.entities.Message;
 
 public class AllMessagesDTO {
 	

@@ -1,8 +1,8 @@
-package com.HopIn.HopIn.entities;
+package com.hopin.HopIn.entities;
 
 import java.time.LocalDateTime;
 
-import com.HopIn.HopIn.enums.MessageType;
+import com.hopin.HopIn.enums.MessageType;
 
 public class Message {
 

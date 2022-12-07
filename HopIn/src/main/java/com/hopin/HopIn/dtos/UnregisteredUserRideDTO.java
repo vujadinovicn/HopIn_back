@@ -1,9 +1,9 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
 import java.util.List;
 
-import com.HopIn.HopIn.entities.Location;
-import com.HopIn.HopIn.enums.VehicleType;
+import com.hopin.HopIn.entities.Location;
+import com.hopin.HopIn.enums.VehicleType;
 
 public class UnregisteredUserRideDTO {
 	List<Location> locations;

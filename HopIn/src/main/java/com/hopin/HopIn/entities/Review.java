@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.entities;
+package com.hopin.HopIn.entities;
 
 public class Review {
 	private int rating;

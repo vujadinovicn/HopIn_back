@@ -1,10 +1,10 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
 import java.util.List;
 import java.util.Map;
 
-import com.HopIn.HopIn.entities.Location;
-import com.HopIn.HopIn.enums.VehicleType;
+import com.hopin.HopIn.entities.Location;
+import com.hopin.HopIn.enums.VehicleType;
 
 public class RideDTO {
 	private Map<String, Location> locations;

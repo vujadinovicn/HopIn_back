@@ -1,10 +1,10 @@
-package com.HopIn.HopIn.services;
+package com.hopin.HopIn.services;
 
 import org.springframework.stereotype.Service;
 
-import com.HopIn.HopIn.dtos.EstimatedRideDetailsDTO;
-import com.HopIn.HopIn.dtos.UnregisteredUserRideDTO;
-import com.HopIn.HopIn.services.interfaces.IUnregisteredUserService;
+import com.hopin.HopIn.dtos.EstimatedRideDetailsDTO;
+import com.hopin.HopIn.dtos.UnregisteredUserRideDTO;
+import com.hopin.HopIn.services.interfaces.IUnregisteredUserService;
 
 @Service
 public class UnregisteredUserServiceImpl implements IUnregisteredUserService{
