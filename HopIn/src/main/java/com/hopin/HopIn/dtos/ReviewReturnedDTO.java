@@ -1,6 +1,6 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
-import com.HopIn.HopIn.entities.Review;
+import com.hopin.HopIn.entities.Review;
 
 public class ReviewReturnedDTO {
 	

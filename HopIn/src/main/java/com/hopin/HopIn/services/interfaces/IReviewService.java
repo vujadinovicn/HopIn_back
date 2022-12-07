@@ -1,9 +1,9 @@
-package com.HopIn.HopIn.services.interfaces;
+package com.hopin.HopIn.services.interfaces;
 
-import com.HopIn.HopIn.dtos.AllReviewsReturnedDTO;
-import com.HopIn.HopIn.dtos.AllRideReviewsDTO;
-import com.HopIn.HopIn.dtos.ReviewDTO;
-import com.HopIn.HopIn.dtos.ReviewReturnedDTO;
+import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
+import com.hopin.HopIn.dtos.AllRideReviewsDTO;
+import com.hopin.HopIn.dtos.ReviewDTO;
+import com.hopin.HopIn.dtos.ReviewReturnedDTO;
 
 public interface IReviewService {
 	

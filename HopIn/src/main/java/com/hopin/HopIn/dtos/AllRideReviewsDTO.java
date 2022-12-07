@@ -1,9 +1,9 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.HopIn.HopIn.entities.Review;
+import com.hopin.HopIn.entities.Review;
 
 public class AllRideReviewsDTO {
 	

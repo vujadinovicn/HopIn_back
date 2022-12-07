@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
 public class ReviewDTO {
 	

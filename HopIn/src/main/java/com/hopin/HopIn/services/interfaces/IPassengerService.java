@@ -1,8 +1,8 @@
-package com.HopIn.HopIn.services.interfaces;
+package com.hopin.HopIn.services.interfaces;
 
-import com.HopIn.HopIn.dtos.AllUsersDTO;
-import com.HopIn.HopIn.dtos.UserDTO;
-import com.HopIn.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserReturnedDTO;
 
 public interface IPassengerService {
 	

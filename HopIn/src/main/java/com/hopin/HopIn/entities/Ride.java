@@ -1,11 +1,11 @@
-package com.HopIn.HopIn.entities;
+package com.hopin.HopIn.entities;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.HopIn.HopIn.enums.RideStatus;
-import com.HopIn.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.enums.VehicleType;
 
 
 public class Ride {

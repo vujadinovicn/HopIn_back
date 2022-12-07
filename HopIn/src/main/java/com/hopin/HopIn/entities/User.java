@@ -1,7 +1,7 @@
-package com.HopIn.HopIn.entities;
+package com.hopin.HopIn.entities;
 
-import com.HopIn.HopIn.dtos.UserDTO;
-import com.HopIn.HopIn.enums.UserType;
+import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.enums.UserType;
 
 public class User {
 	

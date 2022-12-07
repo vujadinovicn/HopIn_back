@@ -1,6 +1,6 @@
-package com.HopIn.HopIn.services.interfaces;
+package com.hopin.HopIn.services.interfaces;
 
-import com.HopIn.HopIn.dtos.RejectedRideDTO;
+import com.hopin.HopIn.dtos.RejectedRideDTO;
 
 public interface IRideService {
 	

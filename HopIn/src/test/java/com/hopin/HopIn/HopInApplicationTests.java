@@ -1,4 +1,4 @@
-package com.HopIn.HopIn;
+package com.hopin.HopIn;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.controllers;
+package com.hopin.HopIn.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.HopIn.HopIn.dtos.AllReviewsReturnedDTO;
-import com.HopIn.HopIn.dtos.AllRideReviewsDTO;
-import com.HopIn.HopIn.dtos.AllUsersDTO;
-import com.HopIn.HopIn.dtos.ReviewDTO;
-import com.HopIn.HopIn.dtos.ReviewReturnedDTO;
-import com.HopIn.HopIn.services.interfaces.IReviewService;
-import com.HopIn.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
+import com.hopin.HopIn.dtos.AllRideReviewsDTO;
+import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.ReviewDTO;
+import com.hopin.HopIn.dtos.ReviewReturnedDTO;
+import com.hopin.HopIn.services.interfaces.IReviewService;
+import com.hopin.HopIn.services.interfaces.IRideService;
 
 @RestController
 @RequestMapping("/api/review")

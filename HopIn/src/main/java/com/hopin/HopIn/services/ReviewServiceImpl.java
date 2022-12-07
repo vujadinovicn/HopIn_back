@@ -1,4 +1,4 @@
-package com.HopIn.HopIn.services;
+package com.hopin.HopIn.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,13 +6,13 @@ import java.util.Map;
 
 import org.hibernate.mapping.List;
 import org.springframework.stereotype.Service;
-import com.HopIn.HopIn.dtos.AllReviewsReturnedDTO;
-import com.HopIn.HopIn.dtos.AllRideReviewsDTO;
-import com.HopIn.HopIn.dtos.ReviewDTO;
-import com.HopIn.HopIn.dtos.ReviewReturnedDTO;
-import com.HopIn.HopIn.entities.Review;
-import com.HopIn.HopIn.entities.User;
-import com.HopIn.HopIn.services.interfaces.IReviewService;
+import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
+import com.hopin.HopIn.dtos.AllRideReviewsDTO;
+import com.hopin.HopIn.dtos.ReviewDTO;
+import com.hopin.HopIn.dtos.ReviewReturnedDTO;
+import com.hopin.HopIn.entities.Review;
+import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.services.interfaces.IReviewService;
 
 @Service
 public class ReviewServiceImpl implements IReviewService{

@@ -1,8 +1,8 @@
-package com.HopIn.HopIn.dtos;
+package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
 
-import com.HopIn.HopIn.entities.Note;
+import com.hopin.HopIn.entities.Note;
 
 public class NoteReturnedDTO {
 	
