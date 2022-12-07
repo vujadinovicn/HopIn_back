@@ -39,7 +39,6 @@ public class DriverServiceImpl implements IDriverService {
 		Driver driver = dtoToDriver(dto, null);
 		driver.setId(currId);
 		this.allDrivers.put(currId++, driver);
-
 		return new UserReturnedDTO(driver);
 	}
 	
@@ -64,7 +63,6 @@ public class DriverServiceImpl implements IDriverService {
 		driver = dtoToDriver(newData, driver);
 		return new UserReturnedDTO(driver);
 	}
-
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
 		// TODO Auto-generated method stub
