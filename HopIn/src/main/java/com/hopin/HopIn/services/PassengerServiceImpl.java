@@ -24,6 +24,8 @@ public class PassengerServiceImpl implements IPassengerService {
 	
 	@Override
 	public UserReturnedDTO getPassenger(int id) {
+		User passenger = this.allPassengers.get(id);
+		if (passenger == null) { return null; }
 		return new UserReturnedDTO(this.allPassengers.get(id));
 	}
 	
