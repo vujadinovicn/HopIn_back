@@ -1,5 +1,6 @@
 package com.hopin.HopIn.controllers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.UserDTO;
@@ -86,14 +88,31 @@ public class DriverController {
 		return new ResponseEntity<Vehicle>(service.updateVehicle(driverId, vehicle), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/{id}/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WorkingHoursReturnedDTO> getWorkingHours(@PathVariable("id") int driverId, @PathVariable("working-hour-id") int hoursId) {
-		return new ResponseEntity<WorkingHoursReturnedDTO>(service.getWorkingHours(driverId, hoursId), HttpStatus.OK);
+//	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<AllRidesDTO> getAllRides(@PathVariable int id, @RequestParam int page, @RequestParam int size, @RequestParam String sort, 
+//													@RequestParam LocalDateTime from, @RequestParam LocalDateTime to) {
+//		
+//	}
+	
+	@GetMapping(value="/{id}/working-hours", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AllHoursDTO> getAllHours(@PathVariable int id, @RequestParam int page, @RequestParam int size, @RequestParam String sort, 
+													@RequestParam LocalDateTime from, @RequestParam LocalDateTime to) {
+		return new ResponseEntity<AllHoursDTO>(service.getAllHours(id, page, size, sort, from, to), HttpStatus.OK);
+		
 	}
 	
-//	@PostMapping(value = "/{id}/working-hours", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<WorkingHoursReturnedDTO> addWorkingHours(@PathVariable("id") int driverId) {
-//		return new ResponseEntity<WorkingHoursReturnedDTO>(service.addWorkingHours(driverId));
-//		return null;
-//	}
+	@GetMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<WorkingHoursReturnedDTO> getWorkingHours(@PathVariable("working-hour-id") int hoursId) {
+		return new ResponseEntity<WorkingHoursReturnedDTO>(service.getWorkingHours(hoursId), HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/{id}/working-hours", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<WorkingHoursReturnedDTO> addWorkingHours(@PathVariable("id") int driverId) {
+		return new ResponseEntity<WorkingHoursReturnedDTO>(service.addWorkingHours(driverId), HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<WorkingHoursReturnedDTO> updateWorkingHours(@PathVariable("working-hour-id") int hoursId) {
+		return new ResponseEntity<WorkingHoursReturnedDTO>(service.updateWorkingHours(hoursId), HttpStatus.OK);
+	}
 }

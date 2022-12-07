@@ -1,9 +1,12 @@
 package com.hopin.HopIn.services.interfaces;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.http.HttpStatusCode;
 
+import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.UserDTO;
@@ -33,8 +36,15 @@ public interface IDriverService {
 
 	public Vehicle updateVehicle(int driverId, VehicleDTO vehicle);
 
-	public WorkingHoursReturnedDTO getWorkingHours(int driverId, int hoursId);
+	public WorkingHoursReturnedDTO getWorkingHours(int hoursId);
 
 	public AllUsersDTO getAllPaginated(Pageable pageable);
+
+	public WorkingHoursReturnedDTO addWorkingHours(int driverId);
+
+	public AllHoursDTO getAllHours(int id, int page, int size, String sort, LocalDateTime from, LocalDateTime to);
+
+	WorkingHoursReturnedDTO updateWorkingHours(int hoursId);
+
 
 }

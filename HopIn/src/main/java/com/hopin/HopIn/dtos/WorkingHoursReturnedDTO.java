@@ -2,6 +2,8 @@ package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
 
+import com.hopin.HopIn.entities.WorkingHours;
+
 public class WorkingHoursReturnedDTO {
 	private int id;
 	private LocalDateTime start;
@@ -12,6 +14,13 @@ public class WorkingHoursReturnedDTO {
 		this.id = id;
 		this.start = start;
 		this.end = end;
+	}
+	
+	public WorkingHoursReturnedDTO(WorkingHours hours) {
+		super();
+		this.id = hours.getId();
+		this.start = hours.getStart();
+		this.end = hours.getEnd();
 	}
 
 	public int getId() {

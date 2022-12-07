@@ -1,14 +1,18 @@
 package com.hopin.HopIn.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 
+import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.UserDTO;
@@ -28,6 +32,7 @@ public class DriverServiceImpl implements IDriverService {
 	private int currId = 0;
 	private int currDocId = 0;
 	private int currVehicleId = 0;
+	private int currHoursId = 0;
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
@@ -106,13 +111,41 @@ public class DriverServiceImpl implements IDriverService {
 	}
 	
 	@Override
-	public WorkingHoursReturnedDTO getWorkingHours(int driverId, int hoursId) {
+	public AllHoursDTO getAllHours(int id, int page, int size, String sort, LocalDateTime from, LocalDateTime to) {
+		return new AllHoursDTO(1, new ArrayList<WorkingHours>() {
+            {
+                add(new WorkingHours(0, LocalDateTime.now(), LocalDateTime.now(), 0));
+            }
+        });
+	}
+	
+	@Override
+	public WorkingHoursReturnedDTO getWorkingHours(int hoursId) {
+		return new WorkingHoursReturnedDTO(new WorkingHours(hoursId, LocalDateTime.now(), LocalDateTime.now(), 0));
+	}
+	
+	@Override
+	public WorkingHoursReturnedDTO addWorkingHours(int driverId) {
 		Driver driver = this.allDrivers.get(driverId);
-		WorkingHours workingHours = driver.getWorkingHours().stream().filter(hours -> hoursId == hours.getId()).findFirst().orElse(null);
-		return new WorkingHoursReturnedDTO(workingHours.getId(), workingHours.getStart(), workingHours.getEnd());
+		WorkingHours hours = new WorkingHours(currHoursId++, LocalDateTime.now(), null, driverId);
+		driver.getWorkingHours().add(hours);
+		
+		System.out.println(new Date());
+		
+		return new WorkingHoursReturnedDTO(hours);
+	}
+	
+	
+	@Override
+	public WorkingHoursReturnedDTO updateWorkingHours(int hoursId) {
+		// vidi ovde kako bi zapravo sa repo bilo
+		return new WorkingHoursReturnedDTO(new WorkingHours(hoursId, LocalDateTime.now(), LocalDateTime.now(), hoursId));
 	}
 
-
+	
+	
+	
+	
 	private Vehicle dtoToVehicle(VehicleDTO dto, int driverId, Vehicle vehicle) {
 		if (vehicle == null) {
 			vehicle = new Vehicle();
@@ -158,8 +191,6 @@ public class DriverServiceImpl implements IDriverService {
 
 		return driver;
 	}
-
-	
 
 	
 }
