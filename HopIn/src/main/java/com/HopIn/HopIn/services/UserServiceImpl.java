@@ -68,7 +68,6 @@ public class UserServiceImpl implements IUserService{
 		User user = allUsers.get(userId);
 		if (user == null)
 			return null;
-			//throw new UserNotFoundException();
 		return user;
 	}
 
@@ -85,32 +84,22 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public NoteReturnedDTO addNote(int userId, NoteDTO note) {
 		User user = getById(userId);
-		//if (user != null) {
-			//user.addNote();
 		return new NoteReturnedDTO(15, LocalDateTime.now(), note.getMessage());	
-		//}
-		//return null;
 	}
 
 	@Override
 	public AllNotesDTO getNotes(int userId, int page, int size) {
 		User user = getById(userId);
-		//if (user != null) {
-			//user.addNote();
 		if (allNotes.size() == 0) {
 			Note note = new Note(15, LocalDateTime.now(), "Message is here!");
 			allNotes.put(1, note);
 		}
 		return new AllNotesDTO(this.allNotes);
-		//}
-		//return null;
 	}
 
 	@Override
 	public MessageReturnedDTO sendMessage(int userId, MessageDTO sentMessage) {
 		User user = getById(userId);
-		//if (user != null) {
-		//user.addMessage();
 		return createDetailedMessage(sentMessage);
 	}
 	
@@ -127,8 +116,6 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public AllMessagesDTO getMessages(int userId) {
 		User user = getById(userId);
-		//if (user != null) {
-			//user.addNote();
 		if (allMessages.size() == 0) {
 			Message message = new Message(1, 123, 123, LocalDateTime.now(), "Message is here!", MessageType.VOZNJA, 123);
 			allMessages.put(message.getId(), message);
@@ -139,8 +126,6 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to) {
 		User user = getById(userId);
-		//if (user != null) {
-			//user.addNote();
 		if (allRides.size() == 0) {
 			Ride ride = new Ride(1, LocalDateTime.now(), LocalDateTime.now(), 
 					123, 123, null, true, true, true, null, null, null, new ArrayList<Passenger>(), null, new Driver());
