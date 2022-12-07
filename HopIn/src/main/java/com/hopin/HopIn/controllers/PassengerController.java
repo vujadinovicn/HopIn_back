@@ -44,11 +44,11 @@ public class PassengerController {
 	}
 	
 	@PostMapping(value = "/{activationId}")
-	public ResponseEntity<String> activatePassenger(@PathVariable int activationId) {
+	public ResponseEntity<?> activatePassenger(@PathVariable int activationId) {
 		if(passengerService.Activate(activationId)) {
-			return new ResponseEntity<String>("", HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	

@@ -65,11 +65,11 @@ public class RideController {
 	
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<String> cancelRide(@PathVariable int id) {
+	public ResponseEntity<?> cancelRide(@PathVariable int id) {
 		if(service.cancelRide(id)) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	
