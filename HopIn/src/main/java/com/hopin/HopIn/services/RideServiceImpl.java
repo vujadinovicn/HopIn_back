@@ -30,60 +30,9 @@ public class RideServiceImpl implements IRideService {
 	private int currId = 0;
 	
 	@Override
-	public RideReturnedDTO create(RideDTO dto) {
-		Ride ride = new Ride(dto, ++this.currId);
-		this.allRides.put(ride.getId(), ride);
-		return new RideReturnedDTO(ride);
-	}
-	
-	@Override
-	public RideReturnedDTO getActiveRideForDriver(int id) {
-		for(Ride ride : this.allRides.values()) {
-			if(ride.getStartTime().isBefore(LocalDateTime.now()) && ride.getEndTime().isAfter(LocalDateTime.now()) 
-					&& ride.getDriver().getId() == id) {
-				return new RideReturnedDTO(ride);
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public RideReturnedDTO getActiveRideForPassenger(int id) {
-		for(Ride ride : this.allRides.values()) {
-			if(ride.getStartTime().isBefore(LocalDateTime.now()) && ride.getEndTime().isAfter(LocalDateTime.now())) {
-				for(UserInRideDTO passenger : ride.getPassengers()) {
-					if(passenger.getId() == id) {
-						return new RideReturnedDTO(ride);
-					}
-				}
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public RideReturnedWithRejectionDTO getRide(int id) {
-		for(int key: this.allRides.keySet()) {
-			if (key == id) {
-				return new RideReturnedWithRejectionDTO(this.allRides.get(key));
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public boolean cancelRide(int id) {
-		for (int key : this.allRides.keySet()) {
-			if (key == id) {
-				this.allRides.remove(key);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public PanicRide panicRide(int id, ReasonDTO reason) {
+	public RejectedRideDTO getRide(int id) {
+		Ride r = new Ride(id, LocalDateTime.now(), LocalDateTime.now(), 300, 5, RideStatus.PENDING, false, false, false, VehicleType.STANDARDNO, null, null, null, null, null);
+		this.allRides.put(id, r);
 		Ride ride = this.allRides.get(id);
 		if(ride != null) {
 			PanicRide panicRide = new PanicRide(new RideReturnedDTO(ride), reason.getReason());
