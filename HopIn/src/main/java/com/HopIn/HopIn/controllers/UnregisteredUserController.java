@@ -22,8 +22,6 @@ public class UnregisteredUserController {
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EstimatedRideDetailsDTO> getEstimatedRideDetails(@RequestBody UnregisteredUserRideDTO ride){
 		EstimatedRideDetailsDTO details = unregisteredUserService.getEstimatedRideDetails(ride);
-		//if (token == null)
-			//return new ResponseEntity<EstimatedRideDetailsDTO>(HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<EstimatedRideDetailsDTO>(details, HttpStatus.OK);
 	}
 
