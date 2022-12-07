@@ -44,10 +44,10 @@ public class UserRidesReturnedDTO {
 		this.id = ride.getId();
 		this.startTime = ride.getStartTime();
 		this.endTime = ride.getEndTime();
-		this.totalCost = (int) ride.getPrice();
-		this.driver = new UserInRideDTO(ride.getDriver());
-		for (Passenger p : ride.getPassengers())
-			this.passengers.add(new UserInRideDTO(p));
+		this.totalCost = (int) ride.getTotalCost();
+		this.driver = ride.getDriver();
+		for (UserInRideDTO p : ride.getPassengers())
+			this.passengers.add(p);
 		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
 		this.petTransport = ride.isPet();
 		this.babyTransport = ride.isBaby();
