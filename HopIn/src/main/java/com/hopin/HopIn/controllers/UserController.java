@@ -31,7 +31,7 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 	
-	@GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AllUsersDTO> getAll(@RequestParam int page, @RequestParam int size) {
 		return new ResponseEntity<AllUsersDTO>(userService.getAll(page, size), HttpStatus.OK);
 	}
@@ -47,19 +47,13 @@ public class UserController {
 	@PutMapping(value="{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> block(@PathVariable int id){
 		boolean isSuccesfullyBlocked = userService.block(id);
-		//if (isSuccesfullyBlocked)
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		//return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		//return new ResponseEntity<String>(HttpStatus.NOT_FOUND)
+		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 	}
 	
 	@PutMapping(value="{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> unblock(@PathVariable int id){
 		boolean isSuccesfullyUnblocked = userService.unblock(id);
-		//if (isSuccesfullyBlocked)
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		//return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		//return new ResponseEntity<String>(HttpStatus.NOT_FOUND)
+		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 	}
 	
 	@PostMapping(value="{id}/note", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

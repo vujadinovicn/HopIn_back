@@ -1,15 +1,18 @@
 package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hopin.HopIn.entities.Passenger;
-import com.hopin.HopIn.entities.Location;
+import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleType;
 
-public class RideReturnedDTO {
+public class PassengerRideDTO {
+	private int id;
+	private List<LocationsDTO> locations;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private double totalCost;
@@ -17,16 +20,17 @@ public class RideReturnedDTO {
 	private List<UserInRideDTO> passengers;
 	private int estimatedTimeInMinutes;
 	private VehicleType vehicleType;
-	private boolean petTransport;
 	private boolean babyTransport;
-	private List<Location> locations;
-	private RideStatus status;
-
+	private boolean petTransport;
+	private RejectionNotice rejection;
 	
-	public RideReturnedDTO(LocalDateTime startTime, LocalDateTime endTime, double totalCost, UserInRideDTO driver,
-			List<UserInRideDTO> passengers, int estimatedTimeInMinutes, VehicleType vehicleType, boolean petTransport,
-			boolean babyTransport, List<Location> locations, RideStatus status) {
+	
+	public PassengerRideDTO(int id, List<LocationsDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
+			double totalCost, UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
+			VehicleType vehicleType, boolean babyTransport, boolean petTransport, RejectionNotice rejection) {
 		super();
+		this.id = id;
+		this.locations = locations;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.totalCost = totalCost;
@@ -34,27 +38,41 @@ public class RideReturnedDTO {
 		this.passengers = passengers;
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
 		this.vehicleType = vehicleType;
-		this.petTransport = petTransport;
 		this.babyTransport = babyTransport;
-		this.setLocations(locations);
-		this.status = status;
+		this.petTransport = petTransport;
+		this.rejection = rejection;
 	}
-
-	public RideReturnedDTO(Ride ride) {
+	
+	public PassengerRideDTO(Ride ride) {
+		this.id = ride.getId();
+		this.locations = new ArrayList<LocationsDTO>();
+		for(int i = 0; i < ride.getLocations().size(); i =+ 2) {
+			this.locations.add(new LocationsDTO(ride.getLocations().get(i), ride.getLocations().get(i+1)));
+		}
 		this.startTime = ride.getStartTime();
 		this.endTime = ride.getEndTime();
 		this.totalCost = ride.getTotalCost();
 		this.driver = ride.getDriver();
 		this.passengers = ride.getPassengers();
 		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
-		this.status = ride.getStatus();
-		this.petTransport = ride.isPet();
-		this.babyTransport = ride.isBaby();
 		this.vehicleType = ride.getVehicleType();
-		this.setLocations(ride.getLocations());
-
+		this.babyTransport = ride.isBaby();
+		this.petTransport = ride.isPet();
+		this.rejection = ride.getRejectionNotice();
 	}
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public List<LocationsDTO> getLocations() {
+		return locations;
+	}
+	public void setLocations(List<LocationsDTO> locations) {
+		this.locations = locations;
+	}
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
@@ -70,8 +88,8 @@ public class RideReturnedDTO {
 	public double getTotalCost() {
 		return totalCost;
 	}
-	public void setTotalCost(double price) {
-		this.totalCost = price;
+	public void setTotalCost(double totalCost) {
+		this.totalCost = totalCost;
 	}
 	public UserInRideDTO getDriver() {
 		return driver;
@@ -91,39 +109,30 @@ public class RideReturnedDTO {
 	public void setEstimatedTimeInMinutes(int estimatedTimeInMinutes) {
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
 	}
-	public RideStatus getStatus() {
-		return status;
-	}
-	public void setStatus(RideStatus status) {
-		this.status = status;
-	}
-	public boolean isPetTransport() {
-		return petTransport;
-	}
-	public void setPetTransport(boolean pet) {
-		this.petTransport = pet;
-	}
-	public boolean isBabyTransport() {
-		return babyTransport;
-	}
-	public void setBabyTransport(boolean baby) {
-		this.babyTransport = baby;
-	}
 	public VehicleType getVehicleType() {
 		return vehicleType;
 	}
 	public void setVehicleType(VehicleType vehicleType) {
 		this.vehicleType = vehicleType;
 	}
-
-	public List<Location> getLocations() {
-		return locations;
+	public boolean isBabyTransport() {
+		return babyTransport;
 	}
-
-	public void setLocations(List<Location> locations) {
-		this.locations = locations;
+	public void setBabyTransport(boolean babyTransport) {
+		this.babyTransport = babyTransport;
 	}
-	
+	public boolean isPetTransport() {
+		return petTransport;
+	}
+	public void setPetTransport(boolean petTransport) {
+		this.petTransport = petTransport;
+	}
+	public RejectionNotice getRejection() {
+		return rejection;
+	}
+	public void setRejection(RejectionNotice rejection) {
+		this.rejection = rejection;
+	}
 	
 	
 }

@@ -5,37 +5,27 @@ import java.util.List;
 import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.enums.VehicleType;
 
-public class RideDTO {
-	private List<LocationsDTO> locations;
-	private List<UserInRideDTO> passengers;
-	private VehicleType vehicleType;
-	private boolean babyTransport;
-	private boolean petTransport;
+public class UnregisteredUserRideDTO {
+	List<Location> locations;
+	VehicleType vehicleType;
+	boolean babyTransport;
+	boolean petTransport;
 	
-	public RideDTO(List<LocationsDTO> locations, List<UserInRideDTO> passengers, VehicleType vehicleType,
-			boolean babyTransport, boolean petTransport) {
+	public UnregisteredUserRideDTO(List<Location> locations, VehicleType vehicleType, boolean babyTransport,
+			boolean petTransport) {
 		super();
 		this.locations = locations;
-		this.passengers = passengers;
 		this.vehicleType = vehicleType;
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
 	}
 
-	public List<LocationsDTO> getLocations() {
+	public List<Location> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<LocationsDTO> locations) {
+	public void setLocations(List<Location> locations) {
 		this.locations = locations;
-	}
-
-	public List<UserInRideDTO> getPassengers() {
-		return passengers;
-	}
-
-	public void setPassengers(List<UserInRideDTO> passengers) {
-		this.passengers = passengers;
 	}
 
 	public VehicleType getVehicleType() {
@@ -61,5 +51,6 @@ public class RideDTO {
 	public void setPetTransport(boolean petTransport) {
 		this.petTransport = petTransport;
 	}
+		
 	
 }
