@@ -12,15 +12,11 @@ public class UserInRideDTO {
 		this.email = user.getEmail();
 	}
 	
-	
-
 	public UserInRideDTO(int id, String email, UserType type) {
 		super();
 		this.id = id;
 		this.email = email;
 	}
-
-
 
 	public int getId() {
 		return id;
