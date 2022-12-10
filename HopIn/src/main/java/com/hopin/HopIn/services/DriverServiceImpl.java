@@ -16,6 +16,7 @@ import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -30,10 +31,10 @@ import com.hopin.HopIn.services.interfaces.IDriverService;
 public class DriverServiceImpl implements IDriverService {
 
 	private Map<Integer, Driver> allDrivers = new HashMap<Integer, Driver>();
-	private int currId = 0;
-	private int currDocId = 0;
-	private int currVehicleId = 0;
-	private int currHoursId = 0;
+	private int currId = 1;
+	private int currDocId = 1;
+	private int currVehicleId = 1;
+	private int currHoursId = 1;
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
@@ -55,7 +56,10 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public UserReturnedDTO getById(int id) {
-		return new UserReturnedDTO(this.allDrivers.get(id));
+		Driver driver = this.allDrivers.get(id);
+		if (driver == null)
+			driver = new Driver();
+		return new UserReturnedDTO(driver);
 	}
 
 	@Override
@@ -88,9 +92,15 @@ public class DriverServiceImpl implements IDriverService {
 	@Override
 	public Vehicle getVehicle(int driverId) {
 		Driver driver = this.allDrivers.get(driverId);
-		Vehicle vehicle = driver.getVehicle();
-		if (vehicle == null)
+		Vehicle vehicle = new Vehicle();
+		
+		if (driver != null)
+			vehicle = driver.getVehicle();
+		if (vehicle == null) {
 			vehicle = new Vehicle();
+			vehicle.setCurrentLocation(new LocationNoIdDTO());
+		}
+		
 		return vehicle;
 	}
 
@@ -112,6 +122,8 @@ public class DriverServiceImpl implements IDriverService {
 	public Vehicle updateVehicle(int driverId, VehicleDTO dto) {
 		Driver driver = this.allDrivers.get(driverId);
 		Vehicle vehicle = driver.getVehicle();
+		if (vehicle == null)
+			vehicle = new Vehicle();
 		dtoToVehicle(dto, driverId, vehicle);
 		
 		return vehicle;
