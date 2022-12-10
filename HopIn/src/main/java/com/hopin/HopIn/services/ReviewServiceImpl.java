@@ -19,6 +19,7 @@ public class ReviewServiceImpl implements IReviewService{
 	
 	Map<Integer, ArrayList<Review>> allVehicleReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allDriverReviews = new HashMap<Integer, ArrayList<Review>>();
+	Map<Integer, ArrayList<Review>> allRideReviews = new HashMap<Integer, ArrayList<Review>>();
 
 	@Override
 	public AllReviewsReturnedDTO getDriverReviews(int driverId) {
@@ -41,7 +42,7 @@ public class ReviewServiceImpl implements IReviewService{
 	}
 
 	@Override
-	public ReviewReturnedDTO addVehicleReview(int vehicleId, ReviewDTO reviewDTO) {
+	public ReviewReturnedDTO addVehicleReview(int vehicleId, int rideId, ReviewDTO reviewDTO) {
 		ArrayList<Review> currentVehicleReviews = getByVehicle(vehicleId);
 		int generatedId;
 		if (currentVehicleReviews == null) {
@@ -56,7 +57,7 @@ public class ReviewServiceImpl implements IReviewService{
 	}
 	
 	@Override
-	public ReviewReturnedDTO addDriverReview(int driverId, ReviewDTO reviewDTO) {
+	public ReviewReturnedDTO addDriverReview(int driverId, int rideId, ReviewDTO reviewDTO) {
 		ArrayList<Review> currentDriverReviews = getByDriver(driverId);
 		int generatedId;
 		if (currentDriverReviews == null) {

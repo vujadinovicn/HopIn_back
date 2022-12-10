@@ -13,7 +13,7 @@ public interface IReviewService {
 	
 	public AllReviewsReturnedDTO getVehicleReviews(int vehicleId);
 	
-	public ReviewReturnedDTO addVehicleReview(int vehicleId, ReviewDTO review);
+	public ReviewReturnedDTO addVehicleReview(int vehicleId, int rideId, ReviewDTO review);
 	
-	public ReviewReturnedDTO addDriverReview(int driverId, ReviewDTO review);
+	public ReviewReturnedDTO addDriverReview(int driverId, int rideId, ReviewDTO review);
 }

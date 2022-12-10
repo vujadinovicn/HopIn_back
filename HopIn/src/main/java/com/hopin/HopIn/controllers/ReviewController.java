@@ -27,14 +27,14 @@ public class ReviewController {
 	@Autowired
 	private IReviewService reviewService;
 	
-	@PostMapping(value="/vehicle/{vehicleId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ReviewReturnedDTO> addVehicleReview(@PathVariable int vehicleId, @RequestBody ReviewDTO review) {
-		return new ResponseEntity<ReviewReturnedDTO>( reviewService.addVehicleReview(vehicleId, review), HttpStatus.OK);
+	@PostMapping(value="{rideId}/vehicle/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ReviewReturnedDTO> addVehicleReview(@PathVariable int rideId, @PathVariable int id, @RequestBody ReviewDTO review) {
+		return new ResponseEntity<ReviewReturnedDTO>( reviewService.addVehicleReview(rideId, id, review), HttpStatus.OK);
 	}
 	
-	@PostMapping(value="/driver/{driverId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ReviewReturnedDTO> addDriverReview(@PathVariable int driverId, @RequestBody ReviewDTO review) {
-		return new ResponseEntity<ReviewReturnedDTO>(reviewService.addVehicleReview(driverId, review), HttpStatus.OK);
+	@PostMapping(value="{driverId}/driver/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ReviewReturnedDTO> addDriverReview(@PathVariable int driverId, @PathVariable int id, @RequestBody ReviewDTO review) {
+		return new ResponseEntity<ReviewReturnedDTO>(reviewService.addVehicleReview(driverId, id, review), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/vehicle/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
