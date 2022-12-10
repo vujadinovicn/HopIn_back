@@ -69,7 +69,6 @@ public class DriverController {
 	
 	@DeleteMapping(value = "/{id}/documents")
 	public ResponseEntity<Document> deleteDocument(@PathVariable("id") int documentId) {
-		//TODO: kako je ovo zamisljeno
 		return new ResponseEntity<Document>(HttpStatus.NO_CONTENT);
 	}
 

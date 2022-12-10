@@ -22,10 +22,10 @@ public class ReviewServiceImpl implements IReviewService{
 
 	@Override
 	public AllReviewsReturnedDTO getDriverReviews(int driverId) {
-		ArrayList<Review> currentDriverReviews = getByVehicle(driverId);
+		ArrayList<Review> currentDriverReviews = getByDriver(driverId);
 		if (currentDriverReviews == null) {
 			currentDriverReviews = new ArrayList<Review>();
-			currentDriverReviews.add(new Review(1, 3, "Stinky driver!"));
+			currentDriverReviews.add(new Review(1, 3, "Stinky driver!", null));
 		}
 		return new AllReviewsReturnedDTO(currentDriverReviews);
 	}
@@ -35,7 +35,7 @@ public class ReviewServiceImpl implements IReviewService{
 		ArrayList<Review> currentVehicleReviews = getByVehicle(vehicleId);
 		if (currentVehicleReviews == null) {
 			currentVehicleReviews = new ArrayList<Review>();
-			currentVehicleReviews.add(new Review(1, 3, "Messy vehicle!"));
+			currentVehicleReviews.add(new Review(1, 3, "Messy vehicle!", null));
 		}
 		return new AllReviewsReturnedDTO(currentVehicleReviews);
 	}
@@ -73,7 +73,7 @@ public class ReviewServiceImpl implements IReviewService{
 	@Override
 	public AllRideReviewsDTO getRideReviews(int rideId) {
 		ArrayList<Review> reviews = new ArrayList<Review>();
-		reviews.add(new Review(1, 3, "Bad vehicle"));
+		reviews.add(new Review(1, 3, "Bad vehicle", null));
 		return new AllRideReviewsDTO(reviews, reviews);
 	}
 	
@@ -86,6 +86,6 @@ public class ReviewServiceImpl implements IReviewService{
 	}
 	
 	private Review generateReview(int id, ReviewDTO reviewDTO) {
-		return new Review(id, reviewDTO.getRating(), reviewDTO.getComment());
+		return new Review(id, reviewDTO.getRating(), reviewDTO.getComment(), null);
 	}
 }
