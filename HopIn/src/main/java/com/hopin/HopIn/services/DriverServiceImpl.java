@@ -13,12 +13,13 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
+import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
-import com.hopin.HopIn.dtos.WorkingHoursReturnedDTO;
+import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Vehicle;
@@ -87,15 +88,23 @@ public class DriverServiceImpl implements IDriverService {
 	@Override
 	public Vehicle getVehicle(int driverId) {
 		Driver driver = this.allDrivers.get(driverId);
-		return driver.getVehicle();
+		Vehicle vehicle = driver.getVehicle();
+		if (vehicle == null)
+			vehicle = new Vehicle();
+		return vehicle;
 	}
 
 	@Override
 	public Vehicle setVehicle(int driverId, VehicleDTO dto) {
 		Driver driver = this.allDrivers.get(driverId);
-		Vehicle vehicle = dtoToVehicle(dto, driverId, null);
-		driver.setVehicle(vehicle);
-
+		Vehicle vehicle;
+		if (driver != null) {
+			vehicle = dtoToVehicle(dto, driverId, null);
+			driver.setVehicle(vehicle);
+		} else {
+			vehicle = new Vehicle();
+		}
+		
 		return vehicle;
 	}
 
@@ -109,7 +118,7 @@ public class DriverServiceImpl implements IDriverService {
 	}
 	
 	@Override
-	public AllHoursDTO getAllHours(int id, int page, int size, String sort, LocalDateTime from, LocalDateTime to) {
+	public AllHoursDTO getAllHours(int id, int page, int size, String from, String to) {
 		return new AllHoursDTO(1, new ArrayList<WorkingHours>() {
             {
                 add(new WorkingHours(0, LocalDateTime.now(), LocalDateTime.now(), 0));
@@ -118,30 +127,33 @@ public class DriverServiceImpl implements IDriverService {
 	}
 	
 	@Override
-	public WorkingHoursReturnedDTO getWorkingHours(int hoursId) {
-		return new WorkingHoursReturnedDTO(new WorkingHours(hoursId, LocalDateTime.now(), LocalDateTime.now(), 0));
+	public WorkingHoursDTO getWorkingHours(int hoursId) {
+		return new WorkingHoursDTO(new WorkingHours(hoursId, LocalDateTime.now(), LocalDateTime.now(), 0));
 	}
 	
 	@Override
-	public WorkingHoursReturnedDTO addWorkingHours(int driverId) {
+	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursDTO hours) {
 		Driver driver = this.allDrivers.get(driverId);
-		WorkingHours hours = new WorkingHours(currHoursId++, LocalDateTime.now(), null, driverId);
-		driver.getWorkingHours().add(hours);
+		WorkingHours newHours = new WorkingHours(currHoursId++, hours.getStart(), hours.getEnd(), driverId);
+		driver.getWorkingHours().add(newHours);
 		
 		System.out.println(new Date());
 		
-		return new WorkingHoursReturnedDTO(hours);
+		return new WorkingHoursDTO(newHours);
 	}
 	
 	
 	@Override
-	public WorkingHoursReturnedDTO updateWorkingHours(int hoursId) {
+	public WorkingHoursDTO updateWorkingHours(int hoursId, WorkingHoursDTO hours) {
 		// vidi ovde kako bi zapravo sa repo bilo
-		return new WorkingHoursReturnedDTO(new WorkingHours(hoursId, LocalDateTime.now(), LocalDateTime.now(), hoursId));
+		return new WorkingHoursDTO(new WorkingHours(hoursId, hours.getStart(), hours.getEnd(), hoursId));
 	}
 
 	
-	
+	@Override
+	public AllUserRidesReturnedDTO getAllRides(int driverId, int page, int size, String sort, String from, String to) {
+		return new AllUserRidesReturnedDTO();
+	}
 	
 	
 	private Vehicle dtoToVehicle(VehicleDTO dto, int driverId, Vehicle vehicle) {
@@ -189,6 +201,5 @@ public class DriverServiceImpl implements IDriverService {
 
 		return driver;
 	}
-
 	
 }

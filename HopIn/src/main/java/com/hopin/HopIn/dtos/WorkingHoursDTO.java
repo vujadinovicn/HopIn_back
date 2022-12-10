@@ -4,19 +4,19 @@ import java.time.LocalDateTime;
 
 import com.hopin.HopIn.entities.WorkingHours;
 
-public class WorkingHoursReturnedDTO {
+public class WorkingHoursDTO {
 	private int id;
 	private LocalDateTime start;
 	private LocalDateTime end;
 
-	public WorkingHoursReturnedDTO(int id, LocalDateTime start, LocalDateTime end) {
+	public WorkingHoursDTO(int id, LocalDateTime start, LocalDateTime end) {
 		super();
 		this.id = id;
 		this.start = start;
 		this.end = end;
 	}
 	
-	public WorkingHoursReturnedDTO(WorkingHours hours) {
+	public WorkingHoursDTO(WorkingHours hours) {
 		super();
 		this.id = hours.getId();
 		this.start = hours.getStart();
