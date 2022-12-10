@@ -1,18 +1,18 @@
 package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.PassengerRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
@@ -21,6 +21,9 @@ import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UserInRideDTO;
 import com.hopin.HopIn.entities.PanicRide;
 import com.hopin.HopIn.entities.RejectionNotice;
+import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.enums.VehicleType;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @Service
@@ -29,6 +32,21 @@ public class RideServiceImpl implements IRideService {
 	private Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
 	private Set<PanicRide> allPanicRides = new HashSet<PanicRide>();
 	private int currId = 0;
+	
+	public RideServiceImpl() {
+		List<LocationNoIdDTO> locs = new ArrayList<LocationNoIdDTO>();
+		locs.add(new LocationNoIdDTO("Bulevar oslobodjenja 46", 45.267136, 19.833549));
+		locs.add(new LocationNoIdDTO("Bulevar oslobodjenja 46", 45.267136, 19.833549));
+
+		List<UserInRideDTO> passengers = new ArrayList<UserInRideDTO>();
+		passengers.add(new UserInRideDTO(1, "mika@gmail.com"));
+		
+		Ride ride = new Ride(++this.currId, LocalDateTime.now().minusHours(1), LocalDateTime.now().minusHours(1), 2000.0, 5,
+			RideStatus.REJECTED, false, false, VehicleType.STANDARDNO, null,
+			new RejectionNotice("Odbijaaaam!"), passengers, locs, new UserInRideDTO(111, "driver@gmail.com"));
+		
+		this.allRides.put(1, ride);
+	}
 	
 	@Override
 	public RideReturnedDTO create(RideDTO dto) {
@@ -121,7 +139,7 @@ public class RideServiceImpl implements IRideService {
 	}
 	
 	@Override 
-	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size) {
+	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to) {
 		AllPassengerRidesDTO allPassRides = new AllPassengerRidesDTO();
 		for(Ride ride : this.allRides.values()) {
 			allPassRides.add(new PassengerRideDTO(ride));
