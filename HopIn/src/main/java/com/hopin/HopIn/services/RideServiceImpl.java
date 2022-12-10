@@ -41,9 +41,9 @@ public class RideServiceImpl implements IRideService {
 		List<UserInRideDTO> passengers = new ArrayList<UserInRideDTO>();
 		passengers.add(new UserInRideDTO(1, "mika@gmail.com"));
 		
-		Ride ride = new Ride(++this.currId, LocalDateTime.now().minusHours(1), LocalDateTime.now().minusHours(1), 2000.0, 5,
+		Ride ride = new Ride(++this.currId, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1), 2000.0, 5,
 			RideStatus.REJECTED, false, false, VehicleType.STANDARDNO, null,
-			new RejectionNotice("Odbijaaaam!"), passengers, locs, new UserInRideDTO(111, "driver@gmail.com"));
+			new RejectionNotice("Odbijaaaam!"), passengers, locs, new UserInRideDTO(1, "driver@gmail.com"));
 		
 		this.allRides.put(1, ride);
 	}
@@ -91,14 +91,14 @@ public class RideServiceImpl implements IRideService {
 	}
 	
 	@Override
-	public boolean cancelRide(int id) {
+	public RideReturnedDTO cancelRide(int id) {
 		for (int key : this.allRides.keySet()) {
 			if (key == id) {
-				this.allRides.remove(key);
-				return true;
+				this.allRides.get(key).setStatus(RideStatus.CANCELED);;
+				return new RideReturnedDTO(this.allRides.get(key));
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	@Override

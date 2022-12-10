@@ -18,7 +18,7 @@ public interface IRideService {
 	
 	public RideReturnedWithRejectionDTO getRide(int id);
 	
-	public boolean cancelRide(int id);
+	public RideReturnedDTO cancelRide(int id);
 	
 	public PanicRide panicRide(int id, ReasonDTO reason);
 	

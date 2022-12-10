@@ -7,6 +7,8 @@ public class UserInRideDTO {
 	private int id;
 	private String email;
 	
+	public UserInRideDTO() {}
+	
 	public UserInRideDTO(User user) {
 		this.id = user.getId();
 		this.email = user.getEmail();

@@ -92,7 +92,7 @@ public class Ride {
 		this.totalCost = 2000;
 		this.estimatedTimeInMinutes = 5;
 		this.status = RideStatus.PENDING;
-		this.driver = new UserInRideDTO(1, "driver@gmail.com", UserType.DRIVER);
+		this.driver = new UserInRideDTO(1, "driver@gmail.com");
 	}
 	
 
