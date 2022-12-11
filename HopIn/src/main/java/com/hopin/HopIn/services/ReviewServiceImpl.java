@@ -8,6 +8,7 @@ import org.hibernate.mapping.List;
 import org.springframework.stereotype.Service;
 import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
 import com.hopin.HopIn.dtos.AllRideReviewsDTO;
+import com.hopin.HopIn.dtos.CompleteRideReviewDTO;
 import com.hopin.HopIn.dtos.ReviewDTO;
 import com.hopin.HopIn.dtos.ReviewReturnedDTO;
 import com.hopin.HopIn.entities.Review;
@@ -19,13 +20,14 @@ public class ReviewServiceImpl implements IReviewService{
 	
 	Map<Integer, ArrayList<Review>> allVehicleReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allDriverReviews = new HashMap<Integer, ArrayList<Review>>();
+	Map<Integer, ArrayList<Review>> allRideReviews = new HashMap<Integer, ArrayList<Review>>();
 
 	@Override
 	public AllReviewsReturnedDTO getDriverReviews(int driverId) {
-		ArrayList<Review> currentDriverReviews = getByVehicle(driverId);
+		ArrayList<Review> currentDriverReviews = getByDriver(driverId);
 		if (currentDriverReviews == null) {
 			currentDriverReviews = new ArrayList<Review>();
-			currentDriverReviews.add(new Review(1, 3, "Stinky driver!"));
+			currentDriverReviews.add(new Review(1, 3, "Stinky driver!", null));
 		}
 		return new AllReviewsReturnedDTO(currentDriverReviews);
 	}
@@ -35,13 +37,13 @@ public class ReviewServiceImpl implements IReviewService{
 		ArrayList<Review> currentVehicleReviews = getByVehicle(vehicleId);
 		if (currentVehicleReviews == null) {
 			currentVehicleReviews = new ArrayList<Review>();
-			currentVehicleReviews.add(new Review(1, 3, "Messy vehicle!"));
+			currentVehicleReviews.add(new Review(1, 3, "Messy vehicle!", null));
 		}
 		return new AllReviewsReturnedDTO(currentVehicleReviews);
 	}
 
 	@Override
-	public ReviewReturnedDTO addVehicleReview(int vehicleId, ReviewDTO reviewDTO) {
+	public ReviewReturnedDTO addVehicleReview(int vehicleId, int rideId, ReviewDTO reviewDTO) {
 		ArrayList<Review> currentVehicleReviews = getByVehicle(vehicleId);
 		int generatedId;
 		if (currentVehicleReviews == null) {
@@ -56,7 +58,7 @@ public class ReviewServiceImpl implements IReviewService{
 	}
 	
 	@Override
-	public ReviewReturnedDTO addDriverReview(int driverId, ReviewDTO reviewDTO) {
+	public ReviewReturnedDTO addDriverReview(int driverId, int rideId, ReviewDTO reviewDTO) {
 		ArrayList<Review> currentDriverReviews = getByDriver(driverId);
 		int generatedId;
 		if (currentDriverReviews == null) {
@@ -71,10 +73,12 @@ public class ReviewServiceImpl implements IReviewService{
 	}
 	
 	@Override
-	public AllRideReviewsDTO getRideReviews(int rideId) {
-		ArrayList<Review> reviews = new ArrayList<Review>();
-		reviews.add(new Review(1, 3, "Bad vehicle"));
-		return new AllRideReviewsDTO(reviews, reviews);
+	public ArrayList<CompleteRideReviewDTO> getRideReviews(int rideId) {
+		ArrayList<CompleteRideReviewDTO> completeReviews = new ArrayList<CompleteRideReviewDTO>();
+		ReviewReturnedDTO review = new ReviewReturnedDTO(1, 1, "Partizan", null);
+		CompleteRideReviewDTO completeReview = new CompleteRideReviewDTO(review, review);
+		completeReviews.add(completeReview);
+		return completeReviews;
 	}
 	
 	public ArrayList<Review> getByVehicle(int vehicleId){
@@ -86,6 +90,6 @@ public class ReviewServiceImpl implements IReviewService{
 	}
 	
 	private Review generateReview(int id, ReviewDTO reviewDTO) {
-		return new Review(id, reviewDTO.getRating(), reviewDTO.getComment());
+		return new Review(id, reviewDTO.getRating(), reviewDTO.getComment(), null);
 	}
 }

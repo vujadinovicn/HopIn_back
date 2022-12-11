@@ -14,7 +14,7 @@ public class UserInRideDTO {
 		this.email = user.getEmail();
 	}
 	
-	public UserInRideDTO(int id, String email, UserType type) {
+	public UserInRideDTO(int id, String email) {
 		super();
 		this.id = id;
 		this.email = email;

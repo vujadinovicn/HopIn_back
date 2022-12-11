@@ -14,7 +14,7 @@ import com.hopin.HopIn.dtos.UnregisteredUserRideDTO;
 import com.hopin.HopIn.services.interfaces.IUnregisteredUserService;
 
 @RestController
-@RequestMapping("/api/unregisteredUser")
+@RequestMapping("/api/unregisteredUser/")
 public class UnregisteredUserController {
 	@Autowired
 	IUnregisteredUserService unregisteredUserService;
