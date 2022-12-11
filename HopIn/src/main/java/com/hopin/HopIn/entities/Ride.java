@@ -79,7 +79,7 @@ public class Ride {
 		this.locations = new ArrayList<LocationNoIdDTO>();
 		for(LocationDTO locDto : dto.getLocations()) {
 			this.locations.add(locDto.getDeparture());
-			this.locations.add(locDto.getDestinations());
+			this.locations.add(locDto.getDestination());
 		}
 		this.passengers = dto.getPassengers();
 		this.vehicleType = dto.getVehicleType();
@@ -92,7 +92,7 @@ public class Ride {
 		this.totalCost = 2000;
 		this.estimatedTimeInMinutes = 5;
 		this.status = RideStatus.PENDING;
-		this.driver = new UserInRideDTO(1, "driver@gmail.com", UserType.DRIVER);
+		this.driver = new UserInRideDTO(1, "driver@gmail.com");
 	}
 	
 

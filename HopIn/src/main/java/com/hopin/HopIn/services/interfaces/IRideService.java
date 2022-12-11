@@ -18,7 +18,7 @@ public interface IRideService {
 	
 	public RideReturnedWithRejectionDTO getRide(int id);
 	
-	public boolean cancelRide(int id);
+	public RideReturnedDTO cancelRide(int id);
 	
 	public PanicRide panicRide(int id, ReasonDTO reason);
 	
@@ -28,6 +28,6 @@ public interface IRideService {
 	
 	public AllPanicRidesDTO getAllPanicRides();
 		
-	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size);
+	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to);
 
 }

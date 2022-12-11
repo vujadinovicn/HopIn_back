@@ -1,14 +1,17 @@
 package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.hopin.HopIn.entities.Passenger;
+import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleType;
 
 public class RideReturnedDTO {
+	int id;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private double totalCost;
@@ -18,13 +21,14 @@ public class RideReturnedDTO {
 	private VehicleType vehicleType;
 	private boolean petTransport;
 	private boolean babyTransport;
-	private List<LocationNoIdDTO> locations;
+	private RejectionNotice rejection;
+	private List<LocationDTO> locations;
 	private RideStatus status;
 
 	
-	public RideReturnedDTO(LocalDateTime startTime, LocalDateTime endTime, double totalCost, UserInRideDTO driver,
+	public RideReturnedDTO(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost, UserInRideDTO driver,
 			List<UserInRideDTO> passengers, int estimatedTimeInMinutes, VehicleType vehicleType, boolean petTransport,
-			boolean babyTransport, List<LocationNoIdDTO> locations, RideStatus status) {
+			boolean babyTransport, List<LocationDTO> locations, RideStatus status) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -37,6 +41,7 @@ public class RideReturnedDTO {
 		this.babyTransport = babyTransport;
 		this.setLocations(locations);
 		this.status = status;
+		this.id = id;
 	}
 
 	public RideReturnedDTO(Ride ride) {
@@ -50,10 +55,23 @@ public class RideReturnedDTO {
 		this.petTransport = ride.isPet();
 		this.babyTransport = ride.isBaby();
 		this.vehicleType = ride.getVehicleType();
-		this.setLocations(ride.getLocations());
-
+		this.locations = new ArrayList<LocationDTO>();
+		for(int i = 0; i < ride.getLocations().size(); i =+ 2) {
+			this.locations.add(new LocationDTO(ride.getLocations().get(i), ride.getLocations().get(i+1)));
+		}
+		this.rejection = ride.getRejectionNotice();
 	}
 	
+	
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
@@ -115,12 +133,20 @@ public class RideReturnedDTO {
 		this.vehicleType = vehicleType;
 	}
 
-	public List<LocationNoIdDTO> getLocations() {
+	public List<LocationDTO> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<LocationNoIdDTO> locations) {
+	public void setLocations(List<LocationDTO> locations) {
 		this.locations = locations;
+	}
+
+	public RejectionNotice getRejection() {
+		return rejection;
+	}
+
+	public void setRejection(RejectionNotice rejection) {
+		this.rejection = rejection;
 	}
 	
 	

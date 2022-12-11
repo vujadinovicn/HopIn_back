@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 public class RejectionNotice {
 	private int id;
-	private LocalDateTime timeOfRejection;
 	private String reason;
+	private LocalDateTime timeOfRejection;
 	
 	public RejectionNotice(String reason) {
 		this.id = 1;

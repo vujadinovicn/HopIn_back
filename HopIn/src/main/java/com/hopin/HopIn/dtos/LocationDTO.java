@@ -18,7 +18,7 @@ public class LocationDTO {
 		this.departure = departure;
 	}
 
-	public LocationNoIdDTO getDestinations() {
+	public LocationNoIdDTO getDestination() {
 		return destination;
 	}
 

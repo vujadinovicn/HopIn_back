@@ -7,12 +7,22 @@ public class UserInRideDTO {
 	private int id;
 	private String email;
 	
+	public UserInRideDTO() {}
+	
 	public UserInRideDTO(User user) {
 		this.id = user.getId();
 		this.email = user.getEmail();
 	}
 	
 	public UserInRideDTO(int id, String email, UserType type) {
+		super();
+		this.id = id;
+		this.email = email;
+	}
+	
+	
+
+	public UserInRideDTO(int id, String email) {
 		super();
 		this.id = id;
 		this.email = email;
