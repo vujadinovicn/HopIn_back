@@ -1,6 +1,7 @@
 package com.hopin.HopIn.controllers;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
+import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
-import com.hopin.HopIn.dtos.WorkingHoursReturnedDTO;
+import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.entities.WorkingHours;
@@ -67,8 +69,8 @@ public class DriverController {
 		return new ResponseEntity<Document>(service.addDocument(id, newDocument), HttpStatus.OK);
 	}
 	
-	@DeleteMapping(value = "/{id}/documents")
-	public ResponseEntity<Document> deleteDocument(@PathVariable("id") int documentId) {
+	@DeleteMapping(value = "/document/{document-id}")
+	public ResponseEntity<Document> deleteDocument(@PathVariable("document-id") int documentId) {
 		//TODO: kako je ovo zamisljeno
 		return new ResponseEntity<Document>(HttpStatus.NO_CONTENT);
 	}
@@ -88,31 +90,31 @@ public class DriverController {
 		return new ResponseEntity<Vehicle>(service.updateVehicle(driverId, vehicle), HttpStatus.OK);
 	}
 	
-//	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<AllRidesDTO> getAllRides(@PathVariable int id, @RequestParam int page, @RequestParam int size, @RequestParam String sort, 
-//													@RequestParam LocalDateTime from, @RequestParam LocalDateTime to) {
-//		
-//	}
+	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AllUserRidesReturnedDTO> getAllRides(@PathVariable("id") int driverId, @RequestParam int page, @RequestParam int size, @RequestParam String sort, 
+													@RequestParam String from, @RequestParam String to) {
+		return new ResponseEntity<AllUserRidesReturnedDTO>(service.getAllRides(driverId, page, size, sort, from, to), HttpStatus.OK);
+	}
 	
-	@GetMapping(value="/{id}/working-hours", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllHoursDTO> getAllHours(@PathVariable int id, @RequestParam int page, @RequestParam int size, @RequestParam String sort, 
-													@RequestParam LocalDateTime from, @RequestParam LocalDateTime to) {
-		return new ResponseEntity<AllHoursDTO>(service.getAllHours(id, page, size, sort, from, to), HttpStatus.OK);
+	@GetMapping(value="/{id}/working-hour", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AllHoursDTO> getAllHours(@PathVariable int id, @RequestParam int page, @RequestParam int size, 
+													@RequestParam String from, @RequestParam String to) {
+		return new ResponseEntity<AllHoursDTO>(service.getAllHours(id, page, size, from, to), HttpStatus.OK);
 		
 	}
 	
 	@GetMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WorkingHoursReturnedDTO> getWorkingHours(@PathVariable("working-hour-id") int hoursId) {
-		return new ResponseEntity<WorkingHoursReturnedDTO>(service.getWorkingHours(hoursId), HttpStatus.OK);
+	public ResponseEntity<WorkingHoursDTO> getWorkingHours(@PathVariable("working-hour-id") int hoursId) {
+		return new ResponseEntity<WorkingHoursDTO>(service.getWorkingHours(hoursId), HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/{id}/working-hours", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WorkingHoursReturnedDTO> addWorkingHours(@PathVariable("id") int driverId) {
-		return new ResponseEntity<WorkingHoursReturnedDTO>(service.addWorkingHours(driverId), HttpStatus.OK);
+	@PostMapping(value = "/{id}/working-hour", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<WorkingHoursDTO> addWorkingHours(@PathVariable("id") int driverId, @RequestBody WorkingHoursDTO hours) {
+		return new ResponseEntity<WorkingHoursDTO>(service.addWorkingHours(driverId, hours), HttpStatus.OK);
 	}
 	
-	@PutMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WorkingHoursReturnedDTO> updateWorkingHours(@PathVariable("working-hour-id") int hoursId) {
-		return new ResponseEntity<WorkingHoursReturnedDTO>(service.updateWorkingHours(hoursId), HttpStatus.OK);
+	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<WorkingHoursDTO> updateWorkingHours(@PathVariable("working-hour-id") int hoursId, @RequestBody WorkingHoursDTO hours) {
+		return new ResponseEntity<WorkingHoursDTO>(service.updateWorkingHours(hoursId, hours), HttpStatus.OK);
 	}
 }

@@ -7,12 +7,13 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.http.HttpStatusCode;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
+import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
-import com.hopin.HopIn.dtos.WorkingHoursReturnedDTO;
+import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Vehicle;
 
@@ -36,15 +37,17 @@ public interface IDriverService {
 
 	public Vehicle updateVehicle(int driverId, VehicleDTO vehicle);
 
-	public WorkingHoursReturnedDTO getWorkingHours(int hoursId);
+	public WorkingHoursDTO getWorkingHours(int hoursId);
 
 	public AllUsersDTO getAllPaginated(Pageable pageable);
 
-	public WorkingHoursReturnedDTO addWorkingHours(int driverId);
+	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursDTO hours);
 
-	public AllHoursDTO getAllHours(int id, int page, int size, String sort, LocalDateTime from, LocalDateTime to);
+	public AllHoursDTO getAllHours(int id, int page, int size, String from, String to);
 
-	WorkingHoursReturnedDTO updateWorkingHours(int hoursId);
+	WorkingHoursDTO updateWorkingHours(int hoursId, WorkingHoursDTO hours);
+
+	public AllUserRidesReturnedDTO getAllRides(int driverId, int page, int size, String sort, String from, String to);
 
 
 }

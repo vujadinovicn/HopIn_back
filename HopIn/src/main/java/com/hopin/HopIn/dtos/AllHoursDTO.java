@@ -10,9 +10,9 @@ import com.hopin.HopIn.entities.WorkingHours;
 
 public class AllHoursDTO {
 	private int totalCount;
-	private Set<WorkingHoursReturnedDTO> results;
+	private Set<WorkingHoursDTO> results;
 
-	public AllHoursDTO(int totalCount, Set<WorkingHoursReturnedDTO> results) {
+	public AllHoursDTO(int totalCount, Set<WorkingHoursDTO> results) {
 		super();
 		this.totalCount = totalCount;
 		this.results = results;
@@ -22,9 +22,9 @@ public class AllHoursDTO {
 		super();
 		this.totalCount = allHours.size();
 		
-		this.results = new HashSet<WorkingHoursReturnedDTO>();
+		this.results = new HashSet<WorkingHoursDTO>();
 		for(WorkingHours hour : allHours) {
-			this.results.add(new WorkingHoursReturnedDTO(hour));
+			this.results.add(new WorkingHoursDTO(hour));
 		}
 	}
 
@@ -36,11 +36,11 @@ public class AllHoursDTO {
 		this.totalCount = totalCount;
 	}
 
-	public Set<WorkingHoursReturnedDTO> getResults() {
+	public Set<WorkingHoursDTO> getResults() {
 		return results;
 	}
 
-	public void setResults(Set<WorkingHoursReturnedDTO> results) {
+	public void setResults(Set<WorkingHoursDTO> results) {
 		this.results = results;
 	}
 
