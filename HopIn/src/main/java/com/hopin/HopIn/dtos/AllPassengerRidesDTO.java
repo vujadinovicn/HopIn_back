@@ -5,20 +5,20 @@ import java.util.Set;
 
 public class AllPassengerRidesDTO {
 	private int totalCount;
-	private Set<PassengerRideDTO> result;
+	private Set<PassengerRideDTO> results;
 	
 	public AllPassengerRidesDTO() {
-		this.result = new HashSet<PassengerRideDTO>();
+		this.results = new HashSet<PassengerRideDTO>();
 	}
 
 	public AllPassengerRidesDTO(int totalCount, Set<PassengerRideDTO> result) {
 		super();
 		this.totalCount = totalCount;
-		this.result = result;
+		this.results = result;
 	}
 	
 	public void add(PassengerRideDTO ride) {
-		this.result.add(ride);
+		this.results.add(ride);
 		this.totalCount++;
 	}
 	
@@ -28,11 +28,11 @@ public class AllPassengerRidesDTO {
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 	}
-	public Set<PassengerRideDTO> getResult() {
-		return result;
+	public Set<PassengerRideDTO> getResults() {
+		return results;
 	}
 	public void setResult(Set<PassengerRideDTO> result) {
-		this.result = result;
+		this.results = result;
 	}
 	
 	

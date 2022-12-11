@@ -1,16 +1,22 @@
-package com.hopin.HopIn.entities;
+package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
 
-public class RejectionNotice {
-	private int id;
-	private String reason;
+import com.hopin.HopIn.entities.RejectionNotice;
+
+public class RejectionNoticeDTO {
+
 	private LocalDateTime timeOfRejection;
+	private String reason;
 	
-	public RejectionNotice(String reason) {
-		this.id = 1;
+	public RejectionNoticeDTO(String reason) {
 		this.timeOfRejection = LocalDateTime.now();
 		this.reason = reason;
+	}
+	
+	public RejectionNoticeDTO(RejectionNotice rejection) {
+		this.timeOfRejection = rejection.getTimeOfRejection();
+		this.reason = rejection.getReason();
 	}
 
 	public LocalDateTime getTimeOfRejection() {
@@ -28,13 +34,4 @@ public class RejectionNotice {
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}	
-
 }

@@ -10,20 +10,21 @@ import com.hopin.HopIn.enums.VehicleType;
 public class UserRidesReturnedDTO {
 	
 	int id;
+	LocalDateTime startTime;
+	LocalDateTime endTime;
+	int totalCost;
+	UserInRideDTO driver;
+	List<UserInRideDTO> passengers;
+	int estimatedTimeInMinutes;
+	VehicleType vehicleType;
+	boolean babyTransport;
+	boolean petTransport;
+	RejectionNoticeDTO rejection;
 	List<LocationNoIdDTO> locations;
-	private LocalDateTime startTime;
-	private LocalDateTime endTime;
-	private int totalCost;
-	private UserInRideDTO driver;
-	private List<UserInRideDTO> passengers;
-	private int estimatedTimeInMinutes;
-	private VehicleType vehicleType;
-	private boolean babyTransport;
-	private boolean petTransport;
 	
 	public UserRidesReturnedDTO(int id, List<LocationNoIdDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
 			int totalCost, UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
-			VehicleType vehicleType, boolean babyTransport, boolean petTransport) {
+			VehicleType vehicleType, boolean babyTransport, boolean petTransport, RejectionNoticeDTO rejection) {
 		super();
 		this.id = id;
 		this.locations = locations;
@@ -36,6 +37,7 @@ public class UserRidesReturnedDTO {
 		this.vehicleType = vehicleType;
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
+		this.rejection = rejection;
 	}
 	
 	public UserRidesReturnedDTO(Ride ride) {
@@ -45,12 +47,17 @@ public class UserRidesReturnedDTO {
 		this.endTime = ride.getEndTime();
 		this.totalCost = (int) ride.getTotalCost();
 		this.driver = ride.getDriver();
-		for (UserInRideDTO p : ride.getPassengers())
-			this.passengers.add(p);
+		if (ride.getPassengers() == null)
+			this.passengers = null;
+		else {
+			for (UserInRideDTO p : ride.getPassengers())
+				this.passengers.add(p);
+		}
 		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
 		this.petTransport = ride.isPet();
 		this.babyTransport = ride.isBaby();
 		this.vehicleType = ride.getVehicleType();
+		this.rejection = new RejectionNoticeDTO(ride.getRejectionNotice());
 	}
 
 	public int getId() {
@@ -140,8 +147,13 @@ public class UserRidesReturnedDTO {
 	public void setPetTransport(boolean petTransport) {
 		this.petTransport = petTransport;
 	}
-	
-	
-	
+
+	public RejectionNoticeDTO getRejection() {
+		return rejection;
+	}
+
+	public void setRejection(RejectionNoticeDTO rejection) {
+		this.rejection = rejection;
+	}
 
 }

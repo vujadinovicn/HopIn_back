@@ -64,12 +64,13 @@ public class RideController {
 	}
 	
 	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<?> cancelRide(@PathVariable int id) {
-		if(service.cancelRide(id)) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	@PutMapping(value = "/{id}/withdraw")
+	public ResponseEntity<RideReturnedDTO> cancelRide(@PathVariable int id) {
+		RideReturnedDTO ride = service.cancelRide(id);
+		if(ride != null) {
+			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 	
 	

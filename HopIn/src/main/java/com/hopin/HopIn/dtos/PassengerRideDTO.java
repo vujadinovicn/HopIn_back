@@ -12,7 +12,6 @@ import com.hopin.HopIn.enums.VehicleType;
 
 public class PassengerRideDTO {
 	private int id;
-	private List<LocationDTO> locations;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private double totalCost;
@@ -23,6 +22,8 @@ public class PassengerRideDTO {
 	private boolean babyTransport;
 	private boolean petTransport;
 	private RejectionNotice rejection;
+	private List<LocationDTO> locations;
+
 	
 	
 	public PassengerRideDTO(int id, List<LocationDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
