@@ -13,14 +13,6 @@ public class UserInRideDTO {
 		this.id = user.getId();
 		this.email = user.getEmail();
 	}
-	
-	public UserInRideDTO(int id, String email) {
-		super();
-		this.id = id;
-		this.email = email;
-	}
-	
-	
 
 	public UserInRideDTO(int id, String email) {
 		super();
