@@ -79,7 +79,7 @@ public class Ride {
 		this.locations = new ArrayList<LocationNoIdDTO>();
 		for(LocationDTO locDto : dto.getLocations()) {
 			this.locations.add(locDto.getDeparture());
-			this.locations.add(locDto.getDestinations());
+			this.locations.add(locDto.getDestination());
 		}
 		this.passengers = dto.getPassengers();
 		this.vehicleType = dto.getVehicleType();

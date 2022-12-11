@@ -28,6 +28,6 @@ public interface IRideService {
 	
 	public AllPanicRidesDTO getAllPanicRides();
 		
-	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size);
+	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to);
 
 }

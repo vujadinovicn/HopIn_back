@@ -3,8 +3,8 @@ package com.hopin.HopIn.entities;
 import java.time.LocalDateTime;
 
 public class RejectionNotice {
-	private LocalDateTime timeOfRejection;
 	private String reason;
+	private LocalDateTime timeOfRejection;
 	
 	public RejectionNotice(String reason) {
 		this.timeOfRejection = LocalDateTime.now();
