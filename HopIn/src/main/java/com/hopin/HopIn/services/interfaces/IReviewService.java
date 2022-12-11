@@ -1,13 +1,15 @@
 package com.hopin.HopIn.services.interfaces;
 
+import java.util.ArrayList;
+
 import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
-import com.hopin.HopIn.dtos.AllRideReviewsDTO;
+import com.hopin.HopIn.dtos.CompleteRideReviewDTO;
 import com.hopin.HopIn.dtos.ReviewDTO;
 import com.hopin.HopIn.dtos.ReviewReturnedDTO;
 
 public interface IReviewService {
 	
-	public AllRideReviewsDTO getRideReviews(int rideId);
+	public ArrayList<CompleteRideReviewDTO> getRideReviews(int rideId);
 	
 	public AllReviewsReturnedDTO getDriverReviews(int driverId);
 	

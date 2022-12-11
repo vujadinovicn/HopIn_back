@@ -8,6 +8,7 @@ import org.hibernate.mapping.List;
 import org.springframework.stereotype.Service;
 import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
 import com.hopin.HopIn.dtos.AllRideReviewsDTO;
+import com.hopin.HopIn.dtos.CompleteRideReviewDTO;
 import com.hopin.HopIn.dtos.ReviewDTO;
 import com.hopin.HopIn.dtos.ReviewReturnedDTO;
 import com.hopin.HopIn.entities.Review;
@@ -72,10 +73,12 @@ public class ReviewServiceImpl implements IReviewService{
 	}
 	
 	@Override
-	public AllRideReviewsDTO getRideReviews(int rideId) {
-		ArrayList<Review> reviews = new ArrayList<Review>();
-		reviews.add(new Review(1, 3, "Bad vehicle", null));
-		return new AllRideReviewsDTO(reviews, reviews);
+	public ArrayList<CompleteRideReviewDTO> getRideReviews(int rideId) {
+		ArrayList<CompleteRideReviewDTO> completeReviews = new ArrayList<CompleteRideReviewDTO>();
+		ReviewReturnedDTO review = new ReviewReturnedDTO(1, 1, "Partizan", null);
+		CompleteRideReviewDTO completeReview = new CompleteRideReviewDTO(review, review);
+		completeReviews.add(completeReview);
+		return completeReviews;
 	}
 	
 	public ArrayList<Review> getByVehicle(int vehicleId){
