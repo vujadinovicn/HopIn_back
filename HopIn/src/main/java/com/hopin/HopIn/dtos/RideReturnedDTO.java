@@ -8,7 +8,7 @@ import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
 
 public class RideReturnedDTO {
 	int id;
@@ -18,7 +18,7 @@ public class RideReturnedDTO {
 	private UserInRideDTO driver;
 	private List<UserInRideDTO> passengers;
 	private int estimatedTimeInMinutes;
-	private VehicleType vehicleType;
+	private VehicleTypeName vehicleType;
 	private boolean petTransport;
 	private boolean babyTransport;
 	private RejectionNotice rejection;
@@ -27,7 +27,7 @@ public class RideReturnedDTO {
 
 	
 	public RideReturnedDTO(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost, UserInRideDTO driver,
-			List<UserInRideDTO> passengers, int estimatedTimeInMinutes, VehicleType vehicleType, boolean petTransport,
+			List<UserInRideDTO> passengers, int estimatedTimeInMinutes, VehicleTypeName vehicleType, boolean petTransport,
 			boolean babyTransport, List<LocationDTO> locations, RideStatus status) {
 		super();
 		this.startTime = startTime;
@@ -126,10 +126,10 @@ public class RideReturnedDTO {
 	public void setBabyTransport(boolean baby) {
 		this.babyTransport = baby;
 	}
-	public VehicleType getVehicleType() {
+	public VehicleTypeName getVehicleType() {
 		return vehicleType;
 	}
-	public void setVehicleType(VehicleType vehicleType) {
+	public void setVehicleType(VehicleTypeName vehicleType) {
 		this.vehicleType = vehicleType;
 	}
 

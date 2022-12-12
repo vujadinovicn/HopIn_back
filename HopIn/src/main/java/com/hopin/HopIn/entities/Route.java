@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -13,9 +14,13 @@ public class Route {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private Location departure;
-	private Location destination;
 	private double distance;
+	
+	@ManyToOne
+	private Location departure;
+	@ManyToOne
+	private Location destination;
+	
 	
 	public Route(int id, Location departure, Location destination, double distance) {
 		super();

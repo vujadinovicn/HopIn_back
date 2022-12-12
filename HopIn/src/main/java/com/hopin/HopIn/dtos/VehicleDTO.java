@@ -1,10 +1,10 @@
 package com.hopin.HopIn.dtos;
 
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
 
 public class VehicleDTO {
 
-	private VehicleType vehicleType;
+	private VehicleTypeName vehicleType;
 	private String model;
 	private String licenseNumber;
 	private LocationNoIdDTO currentLocation;
@@ -12,7 +12,7 @@ public class VehicleDTO {
 	private boolean babyTransport;
 	private boolean petTransport;
 
-	public VehicleDTO(VehicleType vehicleType, String model, String licenseNumber, LocationNoIdDTO currentLocation,
+	public VehicleDTO(VehicleTypeName vehicleType, String model, String licenseNumber, LocationNoIdDTO currentLocation,
 			int passengerSeats, boolean babyTransport, boolean petTransport) {
 		super();
 		this.vehicleType = vehicleType;
@@ -24,11 +24,11 @@ public class VehicleDTO {
 		this.petTransport = petTransport;
 	}
 
-	public VehicleType getVehicleType() {
+	public VehicleTypeName getVehicleType() {
 		return vehicleType;
 	}
 
-	public void setVehicleType(VehicleType vehicleType) {
+	public void setVehicleType(VehicleTypeName vehicleType) {
 		this.vehicleType = vehicleType;
 	}
 

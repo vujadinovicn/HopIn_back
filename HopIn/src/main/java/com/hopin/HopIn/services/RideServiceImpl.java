@@ -23,7 +23,7 @@ import com.hopin.HopIn.entities.PanicRide;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @Service
@@ -42,7 +42,7 @@ public class RideServiceImpl implements IRideService {
 		passengers.add(new UserInRideDTO(1, "mika@gmail.com"));
 		
 		Ride ride = new Ride(++this.currId, LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(1), 2000.0, 5,
-			RideStatus.REJECTED, false, false, VehicleType.STANDARDNO, null,
+			RideStatus.REJECTED, false, false, VehicleTypeName.STANDARDNO, null,
 			new RejectionNotice("Odbijaaaam!"), passengers, locs, new UserInRideDTO(1, "driver@gmail.com"));
 		
 		this.allRides.put(1, ride);

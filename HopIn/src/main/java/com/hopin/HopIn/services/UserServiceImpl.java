@@ -27,7 +27,7 @@ import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.MessageType;
 import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.services.interfaces.IUserService;
 

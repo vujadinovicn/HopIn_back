@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
 
 public class AllUserRidesReturnedDTO {
 	
