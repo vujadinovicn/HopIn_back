@@ -1,10 +1,25 @@
 package com.hopin.HopIn.entities;
 
+import jakarta.persistence.GenerationType;
+
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.enums.UserType;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Table;
+
+@Table(name="users")
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String name;
 	private String surname;
@@ -14,12 +29,13 @@ public class User {
 	private String telephoneNumber;
 	private String profilePicture;
 	private boolean isActivated;
-	private UserType type;
+	private boolean isBlocked;
 	
 	public User() {}
 
-	public User(int id, String name, String surname, String email, String password, String address, String telephoneNumber,
-			String profilePicture) {
+	
+	public User(int id, String name, String surname, String email, String password, String address,
+			String telephoneNumber, String profilePicture) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -30,8 +46,10 @@ public class User {
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
 		this.isActivated = false;
+		this.isBlocked = false;
 	}
-	
+
+
 	public User(UserDTO dto) {
 		super();
 		this.name = dto.getName();
@@ -127,12 +145,12 @@ public class User {
 		this.isActivated = isActivated;
 	}
 
-	public UserType getType() {
-		return type;
+	public boolean isBlocked() {
+		return isBlocked;
 	}
 
-	public void setType(UserType type) {
-		this.type = type;
+	public void setBlocked(boolean isBlocked) {
+		this.isBlocked = isBlocked;
 	}
 	
 }

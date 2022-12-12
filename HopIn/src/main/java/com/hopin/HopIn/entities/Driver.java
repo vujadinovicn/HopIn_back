@@ -1,16 +1,32 @@
 package com.hopin.HopIn.entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "drivers")
 public class Driver extends User {
 
+	@OneToOne(cascade = CascadeType.ALL)
 	private Vehicle vehicle;
-	private List<Document> documents = new ArrayList<Document>();
-	private List<WorkingHours> workingHours = new ArrayList<WorkingHours>();
-	
-	public Driver() {}
-	
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private Set<Document> documents = new HashSet<Document>();
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private Set<WorkingHours> workingHours = new HashSet<WorkingHours>();
+
+	public Driver() {
+	}
+
 	public Driver(int id, String name, String surname, String email, String password, String address,
 			String telephoneNumber, String profilePicture) {
 		super(id, name, surname, email, password, address, telephoneNumber, profilePicture);
@@ -24,19 +40,19 @@ public class Driver extends User {
 		this.vehicle = vehicle;
 	}
 
-	public List<Document> getDocuments() {
+	public Set<Document> getDocuments() {
 		return documents;
 	}
 
-	public void setDocuments(List<Document> documents) {
+	public void setDocuments(Set<Document> documents) {
 		this.documents = documents;
 	}
 
-	public List<WorkingHours> getWorkingHours() {
+	public Set<WorkingHours> getWorkingHours() {
 		return workingHours;
 	}
 
-	public void setWorkingHours(List<WorkingHours> workingHours) {
+	public void setWorkingHours(Set<WorkingHours> workingHours) {
 		this.workingHours = workingHours;
 	}
 

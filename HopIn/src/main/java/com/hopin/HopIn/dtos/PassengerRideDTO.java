@@ -8,7 +8,7 @@ import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
 
 public class PassengerRideDTO {
 	private int id;
@@ -18,7 +18,7 @@ public class PassengerRideDTO {
 	private UserInRideDTO driver;
 	private List<UserInRideDTO> passengers;
 	private int estimatedTimeInMinutes;
-	private VehicleType vehicleType;
+	private VehicleTypeName vehicleType;
 	private boolean babyTransport;
 	private boolean petTransport;
 	private RejectionNotice rejection;
@@ -28,7 +28,7 @@ public class PassengerRideDTO {
 	
 	public PassengerRideDTO(int id, List<LocationDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
 			double totalCost, UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
-			VehicleType vehicleType, boolean babyTransport, boolean petTransport, RejectionNotice rejection) {
+			VehicleTypeName vehicleType, boolean babyTransport, boolean petTransport, RejectionNotice rejection) {
 		super();
 		this.id = id;
 		this.locations = locations;
@@ -44,23 +44,23 @@ public class PassengerRideDTO {
 		this.rejection = rejection;
 	}
 	
-	public PassengerRideDTO(Ride ride) {
-		this.id = ride.getId();
-		this.locations = new ArrayList<LocationDTO>();
-		for(int i = 0; i < ride.getLocations().size(); i =+ 2) {
-			this.locations.add(new LocationDTO(ride.getLocations().get(i), ride.getLocations().get(i+1)));
-		}
-		this.startTime = ride.getStartTime();
-		this.endTime = ride.getEndTime();
-		this.totalCost = ride.getTotalCost();
-		this.driver = ride.getDriver();
-		this.passengers = ride.getPassengers();
-		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
-		this.vehicleType = ride.getVehicleType();
-		this.babyTransport = ride.isBaby();
-		this.petTransport = ride.isPet();
-		this.rejection = ride.getRejectionNotice();
-	}
+//	public PassengerRideDTO(Ride ride) {
+//		this.id = ride.getId();
+//		this.locations = new ArrayList<LocationDTO>();
+//		for(int i = 0; i < ride.getLocations().size(); i =+ 2) {
+//			this.locations.add(new LocationDTO(ride.getLocations().get(i), ride.getLocations().get(i+1)));
+//		}
+//		this.startTime = ride.getStartTime();
+//		this.endTime = ride.getEndTime();
+//		this.totalCost = ride.getTotalCost();
+//		this.driver = ride.getDriver();
+//		this.passengers = ride.getPassengers();
+//		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
+//		this.vehicleType = ride.getVehicleType();
+//		this.babyTransport = ride.isBaby();
+//		this.petTransport = ride.isPet();
+//		this.rejection = ride.getRejectionNotice();
+//	}
 	
 	public int getId() {
 		return id;
@@ -110,10 +110,10 @@ public class PassengerRideDTO {
 	public void setEstimatedTimeInMinutes(int estimatedTimeInMinutes) {
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
 	}
-	public VehicleType getVehicleType() {
+	public VehicleTypeName getVehicleType() {
 		return vehicleType;
 	}
-	public void setVehicleType(VehicleType vehicleType) {
+	public void setVehicleType(VehicleTypeName vehicleType) {
 		this.vehicleType = vehicleType;
 	}
 	public boolean isBabyTransport() {

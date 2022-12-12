@@ -27,7 +27,7 @@ import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.MessageType;
 import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.services.interfaces.IUserService;
 
@@ -127,12 +127,18 @@ public class UserServiceImpl implements IUserService{
 
 	@Override
 	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to) {
-		User user = getById(userId);
-		if (allRides.size() == 0) {
-			Ride ride = new Ride(1, LocalDateTime.now(), LocalDateTime.now(), 
-					123, 123, null, true, true, null, null, new RejectionNotice("Partizan sampion"), null, null, null);
-			allRides.put(ride.getId(), ride);
-		}
-		return new AllUserRidesReturnedDTO(this.allRides);
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+//	@Override
+//	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to) {
+//		User user = getById(userId);
+//		if (allRides.size() == 0) {
+//			Ride ride = new Ride(1, LocalDateTime.now(), LocalDateTime.now(), 
+//					123, 123, null, true, true, null, null, new RejectionNotice("Partizan sampion"), null, null, null);
+//			allRides.put(ride.getId(), ride);
+//		}
+//		return new AllUserRidesReturnedDTO(this.allRides);
+//	}
 }

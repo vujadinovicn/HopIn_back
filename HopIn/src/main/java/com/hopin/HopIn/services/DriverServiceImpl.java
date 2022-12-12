@@ -76,7 +76,8 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public List<Document> getDocuments(int driverId) {
-		return this.allDrivers.get(driverId).getDocuments();
+//		return this.allDrivers.get(driverId).getDocuments();
+		return null;
 	}
 
 	@Override
@@ -94,12 +95,12 @@ public class DriverServiceImpl implements IDriverService {
 		Driver driver = this.allDrivers.get(driverId);
 		Vehicle vehicle = new Vehicle();
 		
-		if (driver != null)
-			vehicle = driver.getVehicle();
-		if (vehicle == null) {
-			vehicle = new Vehicle();
-			vehicle.setCurrentLocation(new LocationNoIdDTO());
-		}
+//		if (driver != null)
+//			vehicle = driver.getVehicle();
+//		if (vehicle == null) {
+//			vehicle = new Vehicle();
+//			vehicle.setCurrentLocation(new LocationNoIdDTO());
+//		}
 		
 		return vehicle;
 	}
@@ -174,14 +175,14 @@ public class DriverServiceImpl implements IDriverService {
 			vehicle.setId(currVehicleId++);
 		}
 		
-		vehicle.setModel(dto.getModel());
-		vehicle.setLicenseNumber(dto.getLicenseNumber());
-		vehicle.setCurrentLocation(dto.getCurrentLocation());
-		vehicle.setPassengerSeats(dto.getPassengerSeats());
-		vehicle.setBabyTransport(dto.isBabyTransport());
-		vehicle.setPetTransport(dto.isBabyTransport());
-		vehicle.setVehicleType(dto.getVehicleType());
-		vehicle.setDriverId(driverId);
+//		vehicle.setModel(dto.getModel());
+//		vehicle.setLicenseNumber(dto.getLicenseNumber());
+//		vehicle.setCurrentLocation(dto.getCurrentLocation());
+//		vehicle.setPassengerSeats(dto.getPassengerSeats());
+//		vehicle.setBabyTransport(dto.isBabyTransport());
+//		vehicle.setPetTransport(dto.isBabyTransport());
+//		vehicle.setVehicleType(dto.getVehicleType());
+//		vehicle.setDriverId(driverId);
 
 		return vehicle;
 	}
