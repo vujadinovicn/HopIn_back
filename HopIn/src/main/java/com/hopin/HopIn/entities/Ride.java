@@ -1,6 +1,7 @@
 package com.hopin.HopIn.entities;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.hopin.HopIn.enums.RideStatus;
@@ -34,19 +35,19 @@ public class Ride {
 	private RideStatus status;
 
 	@ManyToMany(cascade = {})
-	private Set<Passenger> passengers;
+	private Set<Passenger> passengers = new HashSet<Passenger>();
 
 //	@ManyToOne(cascade = {})
 //	private Driver driver;
 
 	@OneToMany(cascade = { CascadeType.ALL })
-	private Set<Review> reviews;
+	private Set<Review> reviews = new HashSet<Review>();
 
 	@ManyToOne(cascade = {})
 	private VehicleType vehicleType;
 
 	@ManyToMany(cascade = {})
-	private Set<Route> routes;
+	private Set<Route> routes = new HashSet<Route>();
 
 	@OneToOne(cascade = { CascadeType.ALL })
 	private RejectionNotice rejectionNotice;

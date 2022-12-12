@@ -1,17 +1,22 @@
 package com.hopin.HopIn.entities;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.hopin.HopIn.dtos.UserDTO;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="passengers")
 public class Passenger extends User {
-	private Set<Ride> rides;
-	private Set<Route> favouriteRoutes;
+	@ManyToMany(cascade = CascadeType.REFRESH)
+	private Set<Ride> rides = new HashSet<Ride>();
+	@ManyToMany(cascade = CascadeType.REFRESH)
+	private Set<Route> favouriteRoutes = new HashSet<Route>();
 	
 	public Passenger(int id, String name, String surname, String email, String password, String address,
 			String telephoneNumber, String profilePicture, Set<Ride> rides, Set<Route> favouriteRoutes) {
