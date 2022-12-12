@@ -4,15 +4,25 @@ import java.time.LocalDateTime;
 
 import com.hopin.HopIn.enums.MessageType;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="messages")
 public class Message {
 
-	int id;
-	LocalDateTime timeOfSending;
-	int senderId;
-	int receiverId;
-	String message;
-	MessageType type;
-	int rideId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	private LocalDateTime timeOfSending;
+	private int senderId;
+	private int receiverId;
+	private String message;
+	private MessageType type;
+	private int rideId;
 	
 	public Message(int id, int senderId, int receiverId, LocalDateTime timeOfSending, String message,
 			MessageType type, int rideId) {
