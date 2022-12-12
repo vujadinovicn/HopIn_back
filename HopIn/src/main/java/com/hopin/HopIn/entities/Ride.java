@@ -30,6 +30,7 @@ public class Ride {
 	private int estimatedTimeInMinutes;
 	private boolean petTransport;
 	private boolean babyTransport;
+	private boolean panic;
 	private RideStatus status;
 
 	@ManyToMany(cascade = {})
@@ -46,10 +47,9 @@ public class Ride {
 
 	@ManyToMany(cascade = {})
 	private Set<Route> routes;
-	
-	@OneToOne(cascade = {CascadeType.ALL})
-	private RejectionNotice rejectionNotice;
 
+	@OneToOne(cascade = { CascadeType.ALL })
+	private RejectionNotice rejectionNotice;
 
 	public Ride() {
 	}
@@ -198,5 +198,29 @@ public class Ride {
 
 	public void setTotalDistance(double totalDistance) {
 		this.totalDistance = totalDistance;
+	}
+	
+	public boolean isPetTransport() {
+		return petTransport;
+	}
+
+	public void setPetTransport(boolean petTransport) {
+		this.petTransport = petTransport;
+	}
+
+	public boolean isBabyTransport() {
+		return babyTransport;
+	}
+
+	public void setBabyTransport(boolean babyTransport) {
+		this.babyTransport = babyTransport;
+	}
+
+	public boolean isPanic() {
+		return panic;
+	}
+
+	public void setPanic(boolean panic) {
+		this.panic = panic;
 	}
 }
