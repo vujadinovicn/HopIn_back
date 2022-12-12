@@ -15,15 +15,15 @@ public class AllUserRidesReturnedDTO {
 	
 	public AllUserRidesReturnedDTO() {}
 
-	public AllUserRidesReturnedDTO(Map<Integer, Ride> allRides) {
-		super();
-		this.totalCount = allRides.size();
-		
-		this.results = new HashSet<UserRidesReturnedDTO>();
-		for(Ride ride : allRides.values()) {
-			this.results.add(new UserRidesReturnedDTO(ride));
-		}
-	}
+//	public AllUserRidesReturnedDTO(Map<Integer, Ride> allRides) {
+//		super();
+//		this.totalCount = allRides.size();
+//		
+//		this.results = new HashSet<UserRidesReturnedDTO>();
+//		for(Ride ride : allRides.values()) {
+//			this.results.add(new UserRidesReturnedDTO(ride));
+//		}
+//	}
 
 	public int getTotalCount() {
 		return totalCount;

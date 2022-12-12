@@ -127,12 +127,18 @@ public class UserServiceImpl implements IUserService{
 
 	@Override
 	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to) {
-		User user = getById(userId);
-		if (allRides.size() == 0) {
-			Ride ride = new Ride(1, LocalDateTime.now(), LocalDateTime.now(), 
-					123, 123, null, true, true, null, null, new RejectionNotice("Partizan sampion"), null, null, null);
-			allRides.put(ride.getId(), ride);
-		}
-		return new AllUserRidesReturnedDTO(this.allRides);
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+//	@Override
+//	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to) {
+//		User user = getById(userId);
+//		if (allRides.size() == 0) {
+//			Ride ride = new Ride(1, LocalDateTime.now(), LocalDateTime.now(), 
+//					123, 123, null, true, true, null, null, new RejectionNotice("Partizan sampion"), null, null, null);
+//			allRides.put(ride.getId(), ride);
+//		}
+//		return new AllUserRidesReturnedDTO(this.allRides);
+//	}
 }

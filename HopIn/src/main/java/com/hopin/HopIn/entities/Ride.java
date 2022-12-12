@@ -36,8 +36,8 @@ public class Ride {
 	@ManyToMany(cascade = {})
 	private Set<Passenger> passengers;
 
-	@ManyToOne(cascade = {})
-	private Driver driver;
+//	@ManyToOne(cascade = {})
+//	private Driver driver;
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	private Set<Review> reviews;
@@ -70,7 +70,6 @@ public class Ride {
 		this.rejectionNotice = rejectionNotice;
 		this.status = status;
 		this.passengers = passengers;
-		this.driver = driver;
 		this.reviews = reviews;
 		this.vehicleType = vehicleType;
 		this.routes = routes;
@@ -94,14 +93,6 @@ public class Ride {
 
 	public double getTotalCost() {
 		return totalCost;
-	}
-
-	public Driver getDriver() {
-		return driver;
-	}
-
-	public void setDriver(Driver driver) {
-		this.driver = driver;
 	}
 
 	public void setEstimatedTimeInMinutes(int estimatedTimeInMinutes) {

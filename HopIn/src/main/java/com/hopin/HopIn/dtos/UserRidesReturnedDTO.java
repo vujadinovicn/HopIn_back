@@ -40,25 +40,25 @@ public class UserRidesReturnedDTO {
 		this.rejection = rejection;
 	}
 	
-	public UserRidesReturnedDTO(Ride ride) {
-		super();
-		this.id = ride.getId();
-		this.startTime = ride.getStartTime();
-		this.endTime = ride.getEndTime();
-		this.totalCost = (int) ride.getTotalCost();
-		this.driver = ride.getDriver();
-		if (ride.getPassengers() == null)
-			this.passengers = null;
-		else {
-			for (UserInRideDTO p : ride.getPassengers())
-				this.passengers.add(p);
-		}
-		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
-		this.petTransport = ride.isPet();
-		this.babyTransport = ride.isBaby();
-		this.vehicleType = ride.getVehicleType();
-		this.rejection = new RejectionNoticeDTO(ride.getRejectionNotice());
-	}
+//	public UserRidesReturnedDTO(Ride ride) {
+//		super();
+//		this.id = ride.getId();
+//		this.startTime = ride.getStartTime();
+//		this.endTime = ride.getEndTime();
+//		this.totalCost = (int) ride.getTotalCost();
+//		this.driver = ride.getDriver();
+//		if (ride.getPassengers() == null)
+//			this.passengers = null;
+//		else {
+//			for (UserInRideDTO p : ride.getPassengers())
+//				this.passengers.add(p);
+//		}
+//		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
+//		this.petTransport = ride.isPet();
+//		this.babyTransport = ride.isBaby();
+//		this.vehicleType = ride.getVehicleType();
+//		this.rejection = new RejectionNoticeDTO(ride.getRejectionNotice());
+//	}
 
 	public int getId() {
 		return id;
