@@ -37,8 +37,8 @@ public class Ride {
 	@ManyToMany(cascade = {})
 	private Set<Passenger> passengers = new HashSet<Passenger>();
 
-//	@ManyToOne(cascade = {})
-//	private Driver driver;
+	@ManyToOne(cascade = CascadeType.REFRESH)
+	private Driver driver;
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	private Set<Review> reviews = new HashSet<Review>();
@@ -56,9 +56,9 @@ public class Ride {
 	}
 
 	public Ride(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost, double totalDistance,
-			int estimatedTimeInMinutes, boolean petTransport, boolean babyTransport, RejectionNotice rejectionNotice,
-			RideStatus status, Set<Passenger> passengers, Driver driver, Set<Review> reviews, VehicleType vehicleType,
-			Set<Route> routes) {
+			int estimatedTimeInMinutes, boolean petTransport, boolean babyTransport, boolean panic, RideStatus status,
+			Set<Passenger> passengers, Driver driver, Set<Review> reviews, VehicleType vehicleType, Set<Route> routes,
+			RejectionNotice rejectionNotice) {
 		super();
 		this.id = id;
 		this.startTime = startTime;
@@ -68,12 +68,14 @@ public class Ride {
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
 		this.petTransport = petTransport;
 		this.babyTransport = babyTransport;
-		this.rejectionNotice = rejectionNotice;
+		this.panic = panic;
 		this.status = status;
 		this.passengers = passengers;
+		this.driver = driver;
 		this.reviews = reviews;
 		this.vehicleType = vehicleType;
 		this.routes = routes;
+		this.rejectionNotice = rejectionNotice;
 	}
 
 	public LocalDateTime getStartTime() {
@@ -191,7 +193,7 @@ public class Ride {
 	public void setTotalDistance(double totalDistance) {
 		this.totalDistance = totalDistance;
 	}
-	
+
 	public boolean isPetTransport() {
 		return petTransport;
 	}
@@ -215,4 +217,13 @@ public class Ride {
 	public void setPanic(boolean panic) {
 		this.panic = panic;
 	}
+
+	public Driver getDriver() {
+		return driver;
+	}
+
+	public void setDriver(Driver driver) {
+		this.driver = driver;
+	}
+
 }

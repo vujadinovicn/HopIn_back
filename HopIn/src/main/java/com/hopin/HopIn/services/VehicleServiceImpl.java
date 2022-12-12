@@ -18,8 +18,8 @@ public class VehicleServiceImpl implements IVehicleService {
 	@Override
 	public boolean updateLocation(int vehicleId, LocationNoIdDTO newLocation) {
 		Vehicle vehicle = allVehicles.get(vehicleId);
-		if (vehicle != null)
-			vehicle.setCurrentLocation(newLocation);
+//		if (vehicle != null)
+//			vehicle.setCurrentLocation(newLocation);
 		return true;
 	}
 }

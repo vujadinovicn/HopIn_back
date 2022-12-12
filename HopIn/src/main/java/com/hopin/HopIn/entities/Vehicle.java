@@ -1,34 +1,49 @@
 package com.hopin.HopIn.entities;
 
-import com.hopin.HopIn.dtos.LocationNoIdDTO;
-import com.hopin.HopIn.enums.VehicleTypeName;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "vehicles")
 public class Vehicle {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private int driverId;
-	private VehicleTypeName vehicleType;
 	private String model;
 	private String licenseNumber;
-	private LocationNoIdDTO currentLocation;
 	private int passengerSeats;
 	private boolean babyTransport;
 	private boolean petTransport;
 
-	public Vehicle() {}
-	
-	public Vehicle(int id, int driverId, VehicleTypeName vehicleType, String model, String licenseNumber,
-			LocationNoIdDTO currentLocation, int passengerSeats, boolean babyTransport, boolean petTransport) {
+	@ManyToOne(cascade = CascadeType.REFRESH)
+	private VehicleType vehicleType;
+
+	@OneToOne(cascade = CascadeType.REFRESH)
+	private Location currentLocation;
+
+	public Vehicle() {
+	}
+
+	public Vehicle(int id, int driverId, String model, String licenseNumber, int passengerSeats, boolean babyTransport,
+			boolean petTransport, VehicleType vehicleType, Location currentLocation) {
 		super();
 		this.id = id;
 		this.driverId = driverId;
-		this.vehicleType = vehicleType;
 		this.model = model;
 		this.licenseNumber = licenseNumber;
-		this.currentLocation = currentLocation;
 		this.passengerSeats = passengerSeats;
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
+		this.vehicleType = vehicleType;
+		this.currentLocation = currentLocation;
 	}
 
 	public int getId() {
@@ -47,14 +62,6 @@ public class Vehicle {
 		this.driverId = driverId;
 	}
 
-	public VehicleTypeName getVehicleType() {
-		return vehicleType;
-	}
-
-	public void setVehicleType(VehicleTypeName vehicleType) {
-		this.vehicleType = vehicleType;
-	}
-
 	public String getModel() {
 		return model;
 	}
@@ -69,14 +76,6 @@ public class Vehicle {
 
 	public void setLicenseNumber(String licenseNumber) {
 		this.licenseNumber = licenseNumber;
-	}
-
-	public LocationNoIdDTO getCurrentLocation() {
-		return currentLocation;
-	}
-
-	public void setCurrentLocation(LocationNoIdDTO currentLocation) {
-		this.currentLocation = currentLocation;
 	}
 
 	public int getPassengerSeats() {
@@ -101,6 +100,22 @@ public class Vehicle {
 
 	public void setPetTransport(boolean petTransport) {
 		this.petTransport = petTransport;
+	}
+
+	public VehicleType getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(VehicleType vehicleType) {
+		this.vehicleType = vehicleType;
+	}
+
+	public Location getCurrentLocation() {
+		return currentLocation;
+	}
+
+	public void setCurrentLocation(Location currentLocation) {
+		this.currentLocation = currentLocation;
 	}
 
 }
