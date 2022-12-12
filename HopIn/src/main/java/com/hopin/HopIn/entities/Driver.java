@@ -3,6 +3,8 @@ package com.hopin.HopIn.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hopin.HopIn.enums.UserType;
+
 public class Driver extends User {
 
 	private Vehicle vehicle;
