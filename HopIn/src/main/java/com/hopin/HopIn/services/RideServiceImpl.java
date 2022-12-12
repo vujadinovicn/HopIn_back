@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.LocationNoIdDTO;
+import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.PassengerRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UserInRideDTO;
-import com.hopin.HopIn.entities.PanicRide;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
@@ -30,7 +30,7 @@ import com.hopin.HopIn.services.interfaces.IRideService;
 public class RideServiceImpl implements IRideService {
 	
 	private Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
-	private Set<PanicRide> allPanicRides = new HashSet<PanicRide>();
+	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
 	private int currId = 0;
 	
 //	public RideServiceImpl() {
@@ -178,7 +178,7 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	@Override
-	public PanicRide panicRide(int id, ReasonDTO reason) {
+	public PanicRideDTO panicRide(int id, ReasonDTO reason) {
 		// TODO Auto-generated method stub
 		return null;
 	}

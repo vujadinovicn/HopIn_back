@@ -1,18 +1,15 @@
-package com.hopin.HopIn.entities;
+package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
 
-import com.hopin.HopIn.dtos.RideReturnedDTO;
-import com.hopin.HopIn.dtos.UserInPanicRideDTO;
-
-public class PanicRide {
+public class PanicRideDTO {
 	private int id;
 	private UserInPanicRideDTO user;
 	private RideReturnedDTO ride;
 	private LocalDateTime time;
 	private String reason;
 	
-	public PanicRide(int id, UserInPanicRideDTO user, RideReturnedDTO ride, LocalDateTime time,
+	public PanicRideDTO(int id, UserInPanicRideDTO user, RideReturnedDTO ride, LocalDateTime time,
 			String reason) {
 		super();
 		this.id = id;
@@ -22,7 +19,7 @@ public class PanicRide {
 		this.reason = reason;
 	}
 	
-	public PanicRide(RideReturnedDTO ride, String reason) {
+	public PanicRideDTO(RideReturnedDTO ride, String reason) {
 //		same id
 		this.id = 1;
 		this.ride = ride;

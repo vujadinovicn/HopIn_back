@@ -2,19 +2,17 @@ package com.hopin.HopIn.dtos;
 
 import java.util.Set;
 
-import com.hopin.HopIn.entities.PanicRide;
-
 public class AllPanicRidesDTO {
 	private int totalCount;
-	private Set<PanicRide> results;
+	private Set<PanicRideDTO> results;
 	
-	public AllPanicRidesDTO(int totalCount, Set<PanicRide> panicRides) {
+	public AllPanicRidesDTO(int totalCount, Set<PanicRideDTO> panicRides) {
 		super();
 		this.totalCount = totalCount;
 		this.setResults(panicRides);
 	}
 	
-	public AllPanicRidesDTO(Set<PanicRide> rides) {
+	public AllPanicRidesDTO(Set<PanicRideDTO> rides) {
 		super();
 		this.totalCount = rides.size();
 		this.setResults(rides);
@@ -27,11 +25,11 @@ public class AllPanicRidesDTO {
 		this.totalCount = totalCount;
 	}
 
-	public Set<PanicRide> getResults() {
+	public Set<PanicRideDTO> getResults() {
 		return results;
 	}
 
-	public void setResults(Set<PanicRide> results) {
+	public void setResults(Set<PanicRideDTO> results) {
 		this.results = results;
 	}
 	
