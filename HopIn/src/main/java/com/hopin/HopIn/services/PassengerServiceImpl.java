@@ -3,6 +3,7 @@ package com.hopin.HopIn.services;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.dtos.AllUsersDTO;
@@ -10,11 +11,15 @@ import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.User;
-import com.hopin.HopIn.enums.UserType;
+import com.hopin.HopIn.repositories.PassengerRepository;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 
 @Service
 public class PassengerServiceImpl implements IPassengerService {
+	
+	@Autowired
+	private PassengerRepository passengerRepository;
+	
 	private Map<Integer, User> allPassengers= new HashMap<Integer, User>();
 	private int currId = 0;
 	
