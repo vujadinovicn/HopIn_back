@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.dtos.AllMessagesDTO;
@@ -29,6 +30,9 @@ import com.hopin.HopIn.enums.MessageType;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
+import com.hopin.HopIn.repositories.MessageRepository;
+import com.hopin.HopIn.repositories.NoteRepository;
+import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.services.interfaces.IUserService;
 
 import ch.qos.logback.core.subst.Token;
@@ -36,6 +40,12 @@ import ch.qos.logback.core.subst.Token;
 @Service
 public class UserServiceImpl implements IUserService{
 
+	@Autowired 
+	UserRepository userRepository;
+	@Autowired 
+	MessageRepository messageRepository;
+	@Autowired
+	NoteRepository noteRepository;
 	Map<Integer, User> allUsers = new HashMap<Integer, User>();
 	Map<Integer, Note> allNotes = new HashMap<Integer, Note>();
 	Map<Integer, Message> allMessages = new HashMap<Integer, Message>();
