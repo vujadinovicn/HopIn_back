@@ -18,7 +18,8 @@ import com.hopin.HopIn.services.interfaces.IReviewService;
 public class ReviewServiceImpl implements IReviewService{
 	
 	@Autowired
-	private ReviewRepository reviewRepository;
+	private ReviewRepository allReviews;
+	
 	Map<Integer, ArrayList<Review>> allVehicleReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allDriverReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allRideReviews = new HashMap<Integer, ArrayList<Review>>();
