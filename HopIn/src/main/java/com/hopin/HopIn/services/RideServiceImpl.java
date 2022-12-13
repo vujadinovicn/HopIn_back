@@ -1,35 +1,32 @@
 package com.hopin.HopIn.services;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
-import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
-import com.hopin.HopIn.dtos.PassengerRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
-import com.hopin.HopIn.dtos.UserInRideDTO;
-import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleTypeName;
+import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @Service
 public class RideServiceImpl implements IRideService {
 	
-	private Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
+	@Autowired
+	private RideRepository allRides;
+	
+	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
 	private int currId = 0;
 	
