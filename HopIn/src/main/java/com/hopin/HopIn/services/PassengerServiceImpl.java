@@ -2,9 +2,15 @@ package com.hopin.HopIn.services;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
+
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.UserDTO;
@@ -23,30 +29,25 @@ public class PassengerServiceImpl implements IPassengerService {
 	private Map<Integer, User> allPassengerss= new HashMap<Integer, User>();
 	private int currId = 0;
 	
-	public PassengerServiceImpl() {
-		User passenger = new User(++this.currId, "Mika", "Mikic", "mika@gmail.com", "123", "Bulevar Oslobodjenja 7", "065454454",
-				"U3dhZ2dlciByb2Nrcw==");
-		this.allPassengerss.put(this.currId, passenger);
-			}
-	
 	@Override
 	public AllUsersDTO getAll() {
-		return new AllUsersDTO(this.allPassengerss);
+		return new AllUsersDTO(this.allPassengers.findAll());
 	}
 	
 	@Override
 	public UserReturnedDTO getPassenger(int id) {
-		User passenger = this.allPassengerss.get(id);
-		if (passenger == null) { return null; }
-		return new UserReturnedDTO(this.allPassengerss.get(id));
+		Optional<Passenger> found = allPassengers.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return new UserReturnedDTO(found.get());
 	}
 	
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
 		Passenger passenger = new Passenger(dto);
-		passenger.setId(++this.currId);
-		this.allPassengerss.put(this.currId, passenger);
-		
+		allPassengers.save(passenger);
+		allPassengers.flush();
 		return new UserReturnedDTO(passenger);
 	}
 	
