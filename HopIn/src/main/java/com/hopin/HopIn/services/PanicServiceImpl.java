@@ -8,6 +8,6 @@ import com.hopin.HopIn.services.interfaces.IPanicService;
 public class PanicServiceImpl implements IPanicService {
 	
 	@Autowired
-	private PanicRepository panicRepository;
+	private PanicRepository allPanics;
 
 }

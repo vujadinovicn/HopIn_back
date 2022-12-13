@@ -8,5 +8,5 @@ import com.hopin.HopIn.services.interfaces.IRouteService;
 public class RouteServiceImpl implements IRouteService {
 	
 	@Autowired
-	private RouteRepository routeRepository;
+	private RouteRepository allRoutes;
 }

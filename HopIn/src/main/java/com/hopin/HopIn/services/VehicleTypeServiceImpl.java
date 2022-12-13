@@ -8,5 +8,5 @@ import com.hopin.HopIn.services.interfaces.IVehicleTypeService;
 public class VehicleTypeServiceImpl implements IVehicleTypeService {
 	
 	@Autowired
-	private VehicleTypeRepository vehicleTypeRepository;
+	private VehicleTypeRepository allVehicleTypes;
 }

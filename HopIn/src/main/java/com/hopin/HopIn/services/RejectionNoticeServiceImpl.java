@@ -8,5 +8,5 @@ import com.hopin.HopIn.services.interfaces.IRejectionNoticeService;
 public class RejectionNoticeServiceImpl implements IRejectionNoticeService {
 	
 	@Autowired
-	private RejectionNoticeRepository rejectionNoticeRepository;
+	private RejectionNoticeRepository allRejectionNotices;
 }

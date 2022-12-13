@@ -24,9 +24,9 @@ import com.hopin.HopIn.services.interfaces.IRideService;
 public class RideServiceImpl implements IRideService {
 	
 	@Autowired
-	private RideRepository rideRepository;
+	private RideRepository allRides;
 	
-	private Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
+	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
 	private int currId = 0;
 	

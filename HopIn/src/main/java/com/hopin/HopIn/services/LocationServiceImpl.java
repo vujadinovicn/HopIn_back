@@ -8,5 +8,5 @@ import com.hopin.HopIn.services.interfaces.ILocationService;
 public class LocationServiceImpl implements ILocationService {
 	
 	@Autowired
-	private LocationRepository locationRepository;
+	private LocationRepository allLocations;
 }

@@ -18,41 +18,41 @@ import com.hopin.HopIn.services.interfaces.IPassengerService;
 public class PassengerServiceImpl implements IPassengerService {
 	
 	@Autowired
-	private PassengerRepository passengerRepository;
+	private PassengerRepository allPassengers;
 	
-	private Map<Integer, User> allPassengers= new HashMap<Integer, User>();
+	private Map<Integer, User> allPassengerss= new HashMap<Integer, User>();
 	private int currId = 0;
 	
 	public PassengerServiceImpl() {
 		User passenger = new User(++this.currId, "Mika", "Mikic", "mika@gmail.com", "123", "Bulevar Oslobodjenja 7", "065454454",
 				"U3dhZ2dlciByb2Nrcw==");
-		this.allPassengers.put(this.currId, passenger);
+		this.allPassengerss.put(this.currId, passenger);
 			}
 	
 	@Override
 	public AllUsersDTO getAll() {
-		return new AllUsersDTO(this.allPassengers);
+		return new AllUsersDTO(this.allPassengerss);
 	}
 	
 	@Override
 	public UserReturnedDTO getPassenger(int id) {
-		User passenger = this.allPassengers.get(id);
+		User passenger = this.allPassengerss.get(id);
 		if (passenger == null) { return null; }
-		return new UserReturnedDTO(this.allPassengers.get(id));
+		return new UserReturnedDTO(this.allPassengerss.get(id));
 	}
 	
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
 		Passenger passenger = new Passenger(dto);
 		passenger.setId(++this.currId);
-		this.allPassengers.put(this.currId, passenger);
+		this.allPassengerss.put(this.currId, passenger);
 		
 		return new UserReturnedDTO(passenger);
 	}
 	
 	@Override
 	public boolean Activate(int id) {
-		User passenger = this.allPassengers.get(id);
+		User passenger = this.allPassengerss.get(id);
 		if(passenger != null) {
 			passenger.setActivated(true);
 			return true;
@@ -62,7 +62,7 @@ public class PassengerServiceImpl implements IPassengerService {
 	
 	@Override
 	public UserReturnedDTO update(int id, UserDTO dto) {
-		User passenger = this.allPassengers.get(id);
+		User passenger = this.allPassengerss.get(id);
 		if(passenger == null) {
 			return null;
 		}
