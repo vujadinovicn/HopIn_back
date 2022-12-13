@@ -33,7 +33,7 @@ import com.hopin.HopIn.services.interfaces.IDriverService;
 public class DriverServiceImpl implements IDriverService {
 
 	@Autowired
-	DriverRepository allDrivers;
+	private DriverRepository allDrivers;
 	
 	private Map<Integer, Driver> allDriversMap = new HashMap<Integer, Driver>();
 	private int currId = 1;

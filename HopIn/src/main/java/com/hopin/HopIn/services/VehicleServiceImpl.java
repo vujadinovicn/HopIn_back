@@ -15,7 +15,7 @@ import com.hopin.HopIn.services.interfaces.IVehicleService;
 public class VehicleServiceImpl implements IVehicleService {
 	
 	@Autowired
-	VehicleRepository allVehicles;
+	private VehicleRepository allVehicles;
 	
 	private Map<Integer, Vehicle> allVehiclesMap = new HashMap<Integer, Vehicle>();
 	int currId = 0;
