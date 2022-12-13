@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,16 @@ import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.entities.WorkingHours;
+import com.hopin.HopIn.repositories.DriverRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 
 @Service
 public class DriverServiceImpl implements IDriverService {
 
-	private Map<Integer, Driver> allDrivers = new HashMap<Integer, Driver>();
+	@Autowired
+	private DriverRepository allDrivers;
+	
+	private Map<Integer, Driver> allDriversMap = new HashMap<Integer, Driver>();
 	private int currId = 1;
 	private int currDocId = 1;
 	private int currVehicleId = 1;
@@ -40,23 +45,23 @@ public class DriverServiceImpl implements IDriverService {
 	public UserReturnedDTO insert(UserDTO dto) {
 		Driver driver = dtoToDriver(dto, null);
 		driver.setId(currId);
-		this.allDrivers.put(currId++, driver);
+		this.allDriversMap.put(currId++, driver);
 		return new UserReturnedDTO(driver);
 	}
 	
 	@Override
 	public AllUsersDTO getAllPaginated(Pageable pageable) {
-		if (allDrivers.size() == 0) {
+		if (allDriversMap.size() == 0) {
 			Driver driver = new Driver(0, "Pera", "Peric", "pera.peric@email.com", "123", "Bulevar Oslobodjenja 74", "+381123123", "U3dhZ2dlciByb2Nrcw==");
-			allDrivers.put(driver.getId(), driver);
+			allDriversMap.put(driver.getId(), driver);
 		}
 		
-		return new AllUsersDTO(this.allDrivers.values());
+		return new AllUsersDTO(this.allDriversMap.values());
 	}
 
 	@Override
 	public UserReturnedDTO getById(int id) {
-		Driver driver = this.allDrivers.get(id);
+		Driver driver = this.allDriversMap.get(id);
 		if (driver == null)
 			driver = new Driver();
 		return new UserReturnedDTO(driver);
@@ -64,7 +69,7 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public UserReturnedDTO update(int id, UserDTO newData) {
-		Driver driver = this.allDrivers.get(id);
+		Driver driver = this.allDriversMap.get(id);
 		driver = dtoToDriver(newData, driver);
 		return new UserReturnedDTO(driver);
 	}
@@ -82,7 +87,7 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public Document addDocument(int driverId, DocumentDTO newDocument) {
-		Driver driver = this.allDrivers.get(driverId);
+		Driver driver = this.allDriversMap.get(driverId);
 		Document document = this.dtoToDocument(newDocument, null);
 		document.setDriverId(driverId);
 		driver.getDocuments().add(document);
@@ -92,7 +97,7 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public Vehicle getVehicle(int driverId) {
-		Driver driver = this.allDrivers.get(driverId);
+		Driver driver = this.allDriversMap.get(driverId);
 		Vehicle vehicle = new Vehicle();
 		
 //		if (driver != null)
@@ -107,7 +112,7 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public Vehicle setVehicle(int driverId, VehicleDTO dto) {
-		Driver driver = this.allDrivers.get(driverId);
+		Driver driver = this.allDriversMap.get(driverId);
 		Vehicle vehicle;
 		if (driver != null) {
 			vehicle = dtoToVehicle(dto, driverId, null);
@@ -121,7 +126,7 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public Vehicle updateVehicle(int driverId, VehicleDTO dto) {
-		Driver driver = this.allDrivers.get(driverId);
+		Driver driver = this.allDriversMap.get(driverId);
 		Vehicle vehicle = driver.getVehicle();
 		if (vehicle == null)
 			vehicle = new Vehicle();
@@ -146,7 +151,7 @@ public class DriverServiceImpl implements IDriverService {
 	
 	@Override
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursDTO hours) {
-		Driver driver = this.allDrivers.get(driverId);
+		Driver driver = this.allDriversMap.get(driverId);
 		WorkingHours newHours = new WorkingHours(currHoursId++, hours.getStart(), hours.getEnd(), driverId);
 		driver.getWorkingHours().add(newHours);
 		

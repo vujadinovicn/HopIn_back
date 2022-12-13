@@ -41,23 +41,24 @@ import ch.qos.logback.core.subst.Token;
 public class UserServiceImpl implements IUserService{
 
 	@Autowired 
-	UserRepository userRepository;
+	private UserRepository allUsers;
 	@Autowired 
-	MessageRepository messageRepository;
+	private MessageRepository allMessages;
 	@Autowired
-	NoteRepository noteRepository;
-	Map<Integer, User> allUsers = new HashMap<Integer, User>();
-	Map<Integer, Note> allNotes = new HashMap<Integer, Note>();
-	Map<Integer, Message> allMessages = new HashMap<Integer, Message>();
+	private NoteRepository allNotes;
+	
+	Map<Integer, User> allUsersMap = new HashMap<Integer, User>();
+	Map<Integer, Note> allNotesMap = new HashMap<Integer, Note>();
+	Map<Integer, Message> allMessagesMap = new HashMap<Integer, Message>();
 	Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
 	
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
-		if (allUsers.size() == 0) {
+		if (allUsersMap.size() == 0) {
 			User user = new User();
-			allUsers.put(1, user);
+			allUsersMap.put(1, user);
 		}
-		return new AllUsersDTO(this.allUsers);
+		return new AllUsersDTO(this.allUsersMap);
 	}
 	
 	@Override
@@ -77,7 +78,7 @@ public class UserServiceImpl implements IUserService{
 
 	@Override
 	public User getById(int userId) {
-		User user = allUsers.get(userId);
+		User user = allUsersMap.get(userId);
 		if (user == null)
 			return null;
 		return user;
@@ -102,11 +103,11 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public AllNotesDTO getNotes(int userId, int page, int size) {
 		User user = getById(userId);
-		if (allNotes.size() == 0) {
+		if (allNotesMap.size() == 0) {
 			Note note = new Note(15, LocalDateTime.now(), "Message is here!");
-			allNotes.put(1, note);
+			allNotesMap.put(1, note);
 		}
-		return new AllNotesDTO(this.allNotes);
+		return new AllNotesDTO(this.allNotesMap);
 	}
 
 	@Override
@@ -128,11 +129,11 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public AllMessagesDTO getMessages(int userId) {
 		User user = getById(userId);
-		if (allMessages.size() == 0) {
+		if (allMessagesMap.size() == 0) {
 			Message message = new Message(1, 123, 123, LocalDateTime.now(), "Message is here!", MessageType.RIDE, 123);
-			allMessages.put(message.getId(), message);
+			allMessagesMap.put(message.getId(), message);
 		}
-		return new AllMessagesDTO(this.allMessages);
+		return new AllMessagesDTO(this.allMessagesMap);
 	}
 
 	@Override
