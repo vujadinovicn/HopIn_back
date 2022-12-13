@@ -4,20 +4,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hibernate.mapping.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
-import com.hopin.HopIn.dtos.AllRideReviewsDTO;
 import com.hopin.HopIn.dtos.CompleteRideReviewDTO;
 import com.hopin.HopIn.dtos.ReviewDTO;
 import com.hopin.HopIn.dtos.ReviewReturnedDTO;
 import com.hopin.HopIn.entities.Review;
-import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.repositories.ReviewRepository;
 import com.hopin.HopIn.services.interfaces.IReviewService;
 
 @Service
 public class ReviewServiceImpl implements IReviewService{
 	
+	@Autowired
+	private ReviewRepository reviewRepository;
 	Map<Integer, ArrayList<Review>> allVehicleReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allDriverReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allRideReviews = new HashMap<Integer, ArrayList<Review>>();
