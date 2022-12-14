@@ -2,6 +2,8 @@ package com.hopin.HopIn.entities;
 
 import jakarta.persistence.GenerationType;
 
+import java.util.Base64;
+
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.enums.UserType;
 
@@ -13,6 +15,9 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Lob;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Table(name="users")
 @Entity
@@ -22,15 +27,39 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@NotEmpty
+	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
 	private String name;
+	
+	@NotEmpty
+	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
 	private String surname;
+	
+	@NotEmpty
+	@Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
 	private String email;
+	
+	@NotEmpty
+	@Pattern(regexp = "^([0-9a-zA-Z]{6,}$)")
 	private String password;
+	
+	@NotEmpty
+	@Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$")
 	private String address;
+	
+	@NotEmpty
+	@Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*")
 	private String telephoneNumber;
+	
+	@NotEmpty
 	@Lob
 	private byte[] profilePicture;
+	
+	@NotNull
 	private boolean isActivated;
+	
+	@NotNull
 	private boolean isBlocked;
 	
 	public User() {}
@@ -60,7 +89,7 @@ public class User {
 		this.password = dto.getPassword();
 		this.address = dto.getAddress();
 		this.telephoneNumber = dto.getTelephoneNumber();
-		this.profilePicture = dto.getProfilePicture();
+		this.setProfilePicture(dto.getProfilePicture());
 		this.isActivated = false;
 	}
 	
@@ -71,7 +100,7 @@ public class User {
 		this.password = dto.getPassword();
 		this.address = dto.getAddress();
 		this.telephoneNumber = dto.getTelephoneNumber();
-		this.profilePicture = dto.getProfilePicture();
+		this.setProfilePicture(dto.getProfilePicture());
 	}
 
 
@@ -123,13 +152,24 @@ public class User {
 		this.address = address;
 	}
 
-	public byte[] getProfilePicture() {
-		return profilePicture;
+	public String getProfilePicture(){
+		String s;
+		try {
+			s = "data:image/jpeg;base64, " + Base64.getEncoder().encodeToString(this.profilePicture);
+			return s;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-
-	public void setProfilePicture(byte[] profilePicture) {
-		this.profilePicture = profilePicture;
+	public void setProfilePicture(String profilePicture) {
+		String[] picture = profilePicture.split(",");
+		if (picture.length >= 2) {
+			byte[] decoded = Base64.getDecoder().decode(picture[1]);
+			this.profilePicture = decoded;
+		}
 	}
 
 

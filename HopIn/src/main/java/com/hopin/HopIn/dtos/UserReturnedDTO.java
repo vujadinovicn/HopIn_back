@@ -6,13 +6,13 @@ public class UserReturnedDTO {
 	private int id;
 	private String name;
 	private String surname;
-	private byte[] profilePicture;
+	private String profilePicture;
 	private String telephoneNumber;
 	private String email;
 	private String address;
 	
 	public UserReturnedDTO(int id, String name, String surname, String email, String address, String telephoneNumber,
-			byte[] profilePicture) {
+			String profilePicture) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -82,11 +82,11 @@ public class UserReturnedDTO {
 		this.telephoneNumber = telephoneNumber;
 	}
 
-	public byte[] getProfilePicture() {
+	public String getProfilePicture() {
 		return profilePicture;
 	}
 
-	public void setProfilePicture(byte[] profilePicture) {
+	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
 }

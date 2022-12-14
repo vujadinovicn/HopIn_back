@@ -9,10 +9,10 @@ public class UserDTO {
 	private String password;
 	private String address;
 	private String telephoneNumber;
-	private byte[] profilePicture;
+	private String profilePicture;
 
 	public UserDTO(String name, String surname, String email, String password, String address, String telephoneNumber,
-			byte[] profilePicture) {
+			String profilePicture) {
 		super();
 		this.name = name;
 		this.surname = surname;
@@ -82,11 +82,11 @@ public class UserDTO {
 		this.telephoneNumber = phone;
 	}
 
-	public byte[] getProfilePicture() {
+	public String getProfilePicture() {
 		return profilePicture;
 	}
 
-	public void setProfilePicture(byte[] profilePicture) {
+	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}		
 }

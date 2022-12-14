@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,8 @@ import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
+@Validated
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/api/passenger")
 public class PassengerController {
@@ -37,8 +40,7 @@ public class PassengerController {
 		AllUsersDTO passengers = this.passengerService.getAll();
 		return new ResponseEntity<AllUsersDTO>(passengers, HttpStatus.OK);
 	}
-
-	@CrossOrigin(origins = "http://localhost:4200")
+	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> insertPassenger(@RequestBody UserDTO dto) {
 		UserReturnedDTO passenger = passengerService.insert(dto);
@@ -53,7 +55,6 @@ public class PassengerController {
 		return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getPassenger(@PathVariable int id) {
 		UserReturnedDTO passenger = passengerService.getPassenger(id);
