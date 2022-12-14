@@ -82,6 +82,7 @@ public class PassengerController {
 		return new ResponseEntity<AllPassengerRidesDTO>(this.rideService.getAllPassengerRides(id, page, size, sort, from, to), HttpStatus.OK);
 	}
 	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "/{id}/favouriteRoutes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RouteDTO>> getFavouriteRides(@PathVariable int id) {
 		List<RouteDTO> favouriteRoutes = passengerService.getFavouriteRoutes(id);

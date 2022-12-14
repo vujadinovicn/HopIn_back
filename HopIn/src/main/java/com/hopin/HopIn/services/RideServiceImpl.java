@@ -135,14 +135,7 @@ public class RideServiceImpl implements IRideService {
 //		return new AllPanicRidesDTO(this.allPanicRides);
 //	}
 //	
-//	@Override 
-//	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to) {
-//		AllPassengerRidesDTO allPassRides = new AllPassengerRidesDTO();
-//		for(Ride ride : this.allRides.values()) {
-//			allPassRides.add(new PassengerRideDTO(ride));
-//		}
-//		return allPassRides;
-//	}
+
 
 	@Override
 	public RideReturnedDTO create(RideDTO dto) {
