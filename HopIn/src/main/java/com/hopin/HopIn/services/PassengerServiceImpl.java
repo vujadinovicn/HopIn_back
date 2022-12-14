@@ -25,7 +25,7 @@ public class PassengerServiceImpl implements IPassengerService {
 	
 	public PassengerServiceImpl() {
 		User passenger = new User(++this.currId, "Mika", "Mikic", "mika@gmail.com", "123", "Bulevar Oslobodjenja 7", "065454454",
-				"U3dhZ2dlciByb2Nrcw==");
+				"U3dhZ2dlciByb2Nrcw==".getBytes());
 		this.allPassengerss.put(this.currId, passenger);
 			}
 	

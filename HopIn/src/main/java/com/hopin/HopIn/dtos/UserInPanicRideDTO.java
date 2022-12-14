@@ -5,13 +5,13 @@ import com.hopin.HopIn.entities.User;
 public class UserInPanicRideDTO {
 	private String name;
 	private String surname;
-	private String profilePicture;
+	private byte[] profilePicture;
 	private String telephoneNumber;
 	private String email;
 	private String address;
 	
 	public UserInPanicRideDTO(String name, String surname, String email, String address, String telephoneNumber,
-			String profilePicture) {
+			byte[] profilePicture) {
 		super();
 		this.name = name;
 		this.surname = surname;
@@ -71,12 +71,11 @@ public class UserInPanicRideDTO {
 		this.telephoneNumber = telephoneNumber;
 	}
 
-	public String getProfilePicture() {
+	public byte[] getProfilePicture() {
 		return profilePicture;
 	}
 
-	public void setProfilePicture(String profilePicture) {
+	public void setProfilePicture(byte[] profilePicture) {
 		this.profilePicture = profilePicture;
 	}
-	
 }

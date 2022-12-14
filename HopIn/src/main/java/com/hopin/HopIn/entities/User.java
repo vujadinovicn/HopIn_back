@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Lob;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
 
@@ -27,7 +28,8 @@ public class User {
 	private String password;
 	private String address;
 	private String telephoneNumber;
-	private String profilePicture;
+	@Lob
+	private byte[] profilePicture;
 	private boolean isActivated;
 	private boolean isBlocked;
 	
@@ -35,7 +37,7 @@ public class User {
 
 	
 	public User(int id, String name, String surname, String email, String password, String address,
-			String telephoneNumber, String profilePicture) {
+			String telephoneNumber, byte[] profilePicture) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -121,13 +123,15 @@ public class User {
 		this.address = address;
 	}
 
-	public String getProfilePicture() {
+	public byte[] getProfilePicture() {
 		return profilePicture;
 	}
 
-	public void setProfilePicture(String profilePicture) {
+
+	public void setProfilePicture(byte[] profilePicture) {
 		this.profilePicture = profilePicture;
 	}
+
 
 	public String getTelephoneNumber() {
 		return telephoneNumber;

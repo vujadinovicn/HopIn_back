@@ -28,7 +28,7 @@ public class Driver extends User {
 	}
 
 	public Driver(int id, String name, String surname, String email, String password, String address,
-			String telephoneNumber, String profilePicture) {
+			String telephoneNumber, byte[] profilePicture) {
 		super(id, name, surname, email, password, address, telephoneNumber, profilePicture);
 	}
 

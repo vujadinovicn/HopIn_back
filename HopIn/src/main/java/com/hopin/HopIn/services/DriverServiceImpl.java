@@ -52,7 +52,7 @@ public class DriverServiceImpl implements IDriverService {
 	@Override
 	public AllUsersDTO getAllPaginated(Pageable pageable) {
 		if (allDriversMap.size() == 0) {
-			Driver driver = new Driver(0, "Pera", "Peric", "pera.peric@email.com", "123", "Bulevar Oslobodjenja 74", "+381123123", "U3dhZ2dlciByb2Nrcw==");
+			Driver driver = new Driver(0, "Pera", "Peric", "pera.peric@email.com", "123", "Bulevar Oslobodjenja 74", "+381123123", "U3dhZ2dlciByb2Nrcw==".getBytes());
 			allDriversMap.put(driver.getId(), driver);
 		}
 		
