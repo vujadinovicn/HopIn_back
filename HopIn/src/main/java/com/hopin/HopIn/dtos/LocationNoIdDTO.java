@@ -1,5 +1,7 @@
 package com.hopin.HopIn.dtos;
 
+import com.hopin.HopIn.entities.Location;
+
 public class LocationNoIdDTO {
 	private String address;
 	private double latitude;
@@ -12,6 +14,13 @@ public class LocationNoIdDTO {
 		this.address = address;
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+	
+	public LocationNoIdDTO(Location location) {
+		super();
+		this.address = location.getAddress();
+		this.latitude = location.getLatitude();
+		this.longitude = location.getLongitude();
 	}
 
 	public String getAddress() {

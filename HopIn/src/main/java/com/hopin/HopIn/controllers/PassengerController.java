@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.Route;
@@ -82,12 +83,12 @@ public class PassengerController {
 	}
 	
 	@GetMapping(value = "/{id}/favouriteRoutes", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Route>> getFavouriteRides(@PathVariable int id) {
-		List<Route> favouriteRoutes = passengerService.getFavouriteRoutes(id);
+	public ResponseEntity<List<RouteDTO>> getFavouriteRides(@PathVariable int id) {
+		List<RouteDTO> favouriteRoutes = passengerService.getFavouriteRoutes(id);
 		if(favouriteRoutes != null) {
-			return new ResponseEntity<List<Route>>(favouriteRoutes, HttpStatus.OK);
+			return new ResponseEntity<List<RouteDTO>>(favouriteRoutes, HttpStatus.OK);
 		}
-		return new ResponseEntity<List<Route>>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<List<RouteDTO>>(HttpStatus.NOT_FOUND);
 	}
 	
 

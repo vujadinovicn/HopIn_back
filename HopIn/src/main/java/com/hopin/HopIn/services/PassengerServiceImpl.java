@@ -1,5 +1,6 @@
 package com.hopin.HopIn.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.Passenger;
@@ -58,8 +60,13 @@ public class PassengerServiceImpl implements IPassengerService {
 	}
 	
 	@Override
-	public List<Route> getFavouriteRoutes(int id) {
-		return allPassengers.findAllRoutesById(id);
+	public List<RouteDTO> getFavouriteRoutes(int id) {
+		List<Route> routes = allPassengers.findAllRoutesById(id);
+		List<RouteDTO> res = new ArrayList<RouteDTO>();
+		for(Route route : routes) {
+			res.add(new RouteDTO(route));
+		}
+		return res;
 	}
 	
 	
