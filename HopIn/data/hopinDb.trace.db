@@ -4716,3 +4716,8 @@ insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1) [42000-
 2022-12-15 01:34:55 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * from [*]'rides' where 'id' in (select 'ride_id' from 'rides_passengers' where 'passengers_id' = ?) and 'start_time' between ? and ?"; expected "identifier"; SQL statement:
 select * from 'rides' where 'id' in (select 'ride_id' from 'rides_passengers' where 'passengers_id' = ?) and 'start_time' between ? and ? [42001-214]
+2022-12-15 02:18:33 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "insert into ""rides_passengers""(""ride_id"", ""passengers_id"") values (1, 1)\000d\000a[*]insert into ""rides_passengers""(""ride_id"", ""passengers_id"") values (2, 1)\000d\000ainsert into ""rides_passengers""(""ride_id"", ""passengers_id"") values (3, 1)"; SQL statement:
+insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1)
+insert into "rides_passengers"("ride_id", "passengers_id") values (2, 1)
+insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1) [42000-214]

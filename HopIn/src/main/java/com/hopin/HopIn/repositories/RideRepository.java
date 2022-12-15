@@ -10,6 +10,6 @@ import com.hopin.HopIn.entities.Ride;
 
 public interface RideRepository extends JpaRepository<Ride, Integer> {
 	
-	@Query(value = "select * from \"rides\" where \"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = 1) and \"start_time\" between '2022-12-19' and '2022-12-22';", nativeQuery=true)
+	@Query(value = "select * from \"rides\" where \"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id) and \"start_time\" between :from and :to", nativeQuery=true)
 	public List<Ride> getAllPassengerRidesBetweenDates(int id, LocalDateTime from, LocalDateTime to);
 }

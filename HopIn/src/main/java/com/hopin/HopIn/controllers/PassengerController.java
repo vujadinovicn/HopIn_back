@@ -92,6 +92,7 @@ public class PassengerController {
 		return new ResponseEntity<List<RouteDTO>>(HttpStatus.NOT_FOUND);
 	}
 	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id, @RequestParam String from, @RequestParam String to) {
 		return new ResponseEntity<List<RideForReportDTO>>(this.rideService.getAllPassengerRidesBetweenDates(id, from, to), HttpStatus.OK);
