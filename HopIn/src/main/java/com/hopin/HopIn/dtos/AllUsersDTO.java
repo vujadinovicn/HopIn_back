@@ -2,6 +2,7 @@ package com.hopin.HopIn.dtos;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +22,15 @@ public class AllUsersDTO {
 		
 		this.results = new HashSet<UserReturnedDTO>();
 		for(User user : allUsers.values()) {
+			this.results.add(new UserReturnedDTO(user));
+		}
+	}
+	
+	public AllUsersDTO(List<Passenger> passengers) {
+		super();
+		this.totalCount = passengers.size();
+		this.results = new HashSet<UserReturnedDTO>();
+		for(User user : passengers) {
 			this.results.add(new UserReturnedDTO(user));
 		}
 	}
