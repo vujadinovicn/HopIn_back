@@ -1,7 +1,12 @@
 package com.hopin.HopIn.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +18,7 @@ import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.entities.Ride;
@@ -29,6 +35,18 @@ public class RideServiceImpl implements IRideService {
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
 	private int currId = 0;
+	
+	@Override
+	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to) {
+		DateTimeFormatter formatter = DateTimeFormatter. ofPattern("yyyy/MM/dd"); 
+		List<Ride> rides = allRides.getAllPassengerRidesBetweenDates(id, LocalDate.parse(from, formatter).atStartOfDay(), LocalDate.parse(to, formatter).atStartOfDay());
+		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
+		for(Ride ride: rides) {
+			res.add(new RideForReportDTO(ride));
+		}
+		return res;
+	}
+	
 	
 //	public RideServiceImpl() {
 //		List<LocationNoIdDTO> locs = new ArrayList<LocationNoIdDTO>();

@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
@@ -90,6 +90,11 @@ public class PassengerController {
 			return new ResponseEntity<List<RouteDTO>>(favouriteRoutes, HttpStatus.OK);
 		}
 		return new ResponseEntity<List<RouteDTO>>(HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id, @RequestParam String from, @RequestParam String to) {
+		return new ResponseEntity<List<RideForReportDTO>>(this.rideService.getAllPassengerRidesBetweenDates(id, from, to), HttpStatus.OK);
 	}
 	
 

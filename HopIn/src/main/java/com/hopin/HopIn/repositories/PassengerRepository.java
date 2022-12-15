@@ -12,5 +12,7 @@ public interface PassengerRepository extends JpaRepository<Passenger, Integer>{
 	
 	@Query("select favouriteRoutes from Passenger p where p.id = ?1")
 	public List<Route> findAllRoutesById(int id);
+	
+//	@Query("select Ride from Passenger p where p= = :id and ")
 
 }
