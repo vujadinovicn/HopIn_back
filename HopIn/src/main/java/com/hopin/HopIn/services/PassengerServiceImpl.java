@@ -56,14 +56,14 @@ public class PassengerServiceImpl implements IPassengerService {
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
 		Passenger passenger = new Passenger(dto);
-		Location departure = new Location(1, "Novi Sad", 43.22222, 43.2222);
-		Location destination = new Location(2, "Novi Sad", 43.22222, 43.2222);
-		allLocations.save(departure);
-		allLocations.save(destination);
-		Route route = new Route(1, departure, destination, 20.0);
-		allRoutes.save(route);
-		allRoutes.flush();
-		passenger.getFavouriteRoutes().add(route);
+//		Location departure = new Location(1, "Novi Sad", 43.22222, 43.2222);
+//		Location destination = new Location(2, "Novi Sad", 43.22222, 43.2222);
+//		allLocations.save(departure);
+//		allLocations.save(destination);
+//		Route route = new Route(1, departure, destination, 20.0);
+//		allRoutes.save(route);
+//		allRoutes.flush();
+//		passenger.getFavouriteRoutes().add(route);
 		allPassengers.save(passenger);
 		allPassengers.flush();
 		return new UserReturnedDTO(passenger);
