@@ -18,6 +18,9 @@ public class Passenger extends User {
 	@ManyToMany(cascade = CascadeType.REFRESH)
 	private Set<Route> favouriteRoutes = new HashSet<Route>();
 	
+	public Passenger() {
+		super();
+	}
 	public Passenger(int id, String name, String surname, String email, String password, String address,
 			String telephoneNumber, byte[] profilePicture, Set<Ride> rides, Set<Route> favouriteRoutes) {
 		super(id, name, surname, email, password, address, telephoneNumber, profilePicture);

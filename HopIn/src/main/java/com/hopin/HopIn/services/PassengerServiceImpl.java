@@ -2,6 +2,7 @@ package com.hopin.HopIn.services;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,6 @@ public class PassengerServiceImpl implements IPassengerService {
 	private Map<Integer, User> allPassengerss= new HashMap<Integer, User>();
 	private int currId = 0;
 	
-	public PassengerServiceImpl() {
-		User passenger = new User(++this.currId, "Mika", "Mikic", "mika@gmail.com", "123", "Bulevar Oslobodjenja 7", "065454454",
-				"U3dhZ2dlciByb2Nrcw==".getBytes());
-		this.allPassengerss.put(this.currId, passenger);
-			}
 	
 	@Override
 	public AllUsersDTO getAll() {
@@ -36,23 +32,23 @@ public class PassengerServiceImpl implements IPassengerService {
 	
 	@Override
 	public UserReturnedDTO getPassenger(int id) {
-		User passenger = this.allPassengerss.get(id);
+		Passenger passenger = this.getById(id);
 		if (passenger == null) { return null; }
-		return new UserReturnedDTO(this.allPassengerss.get(id));
+		return new UserReturnedDTO(passenger);
 	}
 	
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
 		Passenger passenger = new Passenger(dto);
 		passenger.setId(++this.currId);
-		this.allPassengerss.put(this.currId, passenger);
-		
+		this.allPassengers.save(passenger);
+		this.allPassengers.flush();
 		return new UserReturnedDTO(passenger);
 	}
 	
 	@Override
 	public boolean Activate(int id) {
-		User passenger = this.allPassengerss.get(id);
+		User passenger = this.getById(id);
 		if(passenger != null) {
 			passenger.setActivated(true);
 			return true;
@@ -62,12 +58,34 @@ public class PassengerServiceImpl implements IPassengerService {
 	
 	@Override
 	public UserReturnedDTO update(int id, UserDTO dto) {
-		User passenger = this.allPassengerss.get(id);
-		if(passenger == null) {
+		Passenger passenger = this.getById(id);
+		if (passenger == null) {
 			return null;
 		}
+		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
+			if (!this.checkPasswordMatch(passenger.getPassword(), dto.getPassword())) {
+				System.out.println(passenger.getPassword());
+				System.out.println(dto.getPassword());
+				return null;	
+			}
+			dto.setPassword(dto.getNewPassword());
+		}
 		passenger.copy(dto);
+		this.allPassengers.save(passenger);
+		this.allPassengers.flush();
 		return new UserReturnedDTO(passenger);
+	}
+	
+	private boolean checkPasswordMatch(String password, String subbmitedPassword) {
+		return password.equals(subbmitedPassword);
+	}
+	
+	private Passenger getById(int passengerId) {
+		Optional<Passenger> passenger = allPassengers.findById(passengerId);
+		if (passenger.isEmpty()) {
+			return null;
+		}
+		return passenger.get();
 	}
 
 }

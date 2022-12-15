@@ -2,6 +2,7 @@ package com.hopin.HopIn.entities;
 
 import jakarta.persistence.GenerationType;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
 import com.hopin.HopIn.dtos.UserDTO;
@@ -52,7 +53,6 @@ public class User {
 	@Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*")
 	private String telephoneNumber;
 	
-	@NotEmpty
 	@Lob
 	private byte[] profilePicture;
 	
@@ -64,7 +64,6 @@ public class User {
 	
 	public User() {}
 
-	
 	public User(int id, String name, String surname, String email, String password, String address,
 			String telephoneNumber, byte[] profilePicture) {
 		super();
@@ -90,6 +89,7 @@ public class User {
 		this.address = dto.getAddress();
 		this.telephoneNumber = dto.getTelephoneNumber();
 		this.setProfilePicture(dto.getProfilePicture());
+		this.password = dto.getPassword();
 		this.isActivated = false;
 	}
 	
@@ -101,6 +101,7 @@ public class User {
 		this.address = dto.getAddress();
 		this.telephoneNumber = dto.getTelephoneNumber();
 		this.setProfilePicture(dto.getProfilePicture());
+		this.password = dto.getPassword();
 	}
 
 
@@ -155,7 +156,9 @@ public class User {
 	public String getProfilePicture(){
 		String s;
 		try {
-			s = "data:image/jpeg;base64, " + Base64.getEncoder().encodeToString(this.profilePicture);
+			s = "data:image/jpeg;base64, ";
+			s = s + new String(this.profilePicture, "UTF-8");
+//					Base64.getEncoder().encodeToString(this.profilePicture, "UTF-8");
 			return s;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -167,8 +170,15 @@ public class User {
 	public void setProfilePicture(String profilePicture) {
 		String[] picture = profilePicture.split(",");
 		if (picture.length >= 2) {
-			byte[] decoded = Base64.getDecoder().decode(picture[1]);
-			this.profilePicture = decoded;
+			//byte[] decoded = Base64.getDecoder().decode(picture[1], "-8");
+			byte[] decoded;
+			try {
+				decoded = picture[1].getBytes("UTF-8");
+				this.profilePicture = decoded;
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

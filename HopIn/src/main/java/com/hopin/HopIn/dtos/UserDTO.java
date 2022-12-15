@@ -7,11 +7,12 @@ public class UserDTO {
 	private String surname;
 	private String email;
 	private String password;
+	private String newPassword;
 	private String address;
 	private String telephoneNumber;
 	private String profilePicture;
 
-	public UserDTO(String name, String surname, String email, String password, String address, String telephoneNumber,
+	public UserDTO(String name, String surname, String email, String password, String newPassword, String address, String telephoneNumber,
 			String profilePicture) {
 		super();
 		this.name = name;
@@ -21,18 +22,20 @@ public class UserDTO {
 		this.address = address;
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
+		this.newPassword = newPassword;
 	}
 	
-	public UserDTO(User user) {
-		super();
-		this.name = user.getName();
-		this.surname = user.getSurname();
-		this.email = user.getEmail();
-		this.password = user.getPassword();
-		this.address = user.getAddress();
-		this.telephoneNumber = user.getTelephoneNumber();
-		this.profilePicture = user.getProfilePicture();
-	}
+//	public UserDTO(User user) {
+//		super();
+//		this.name = user.getName();
+//		this.surname = user.getSurname();
+//		this.email = user.getEmail();
+//		this.password = user.getPassword();
+//		this.newPassword = user.getNewPassword();
+//		this.address = user.getAddress();
+//		this.telephoneNumber = user.getTelephoneNumber();
+//		this.profilePicture = user.getProfilePicture();
+//	}
 
 	public String getName() {
 		return name;
@@ -64,6 +67,14 @@ public class UserDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
 
 	public String getAddress() {

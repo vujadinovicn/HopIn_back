@@ -79,7 +79,7 @@ public class RideController {
 		PanicRideDTO ride = service.panicRide(id, dto);
 		if (ride != null) {
 //			TODO: add getting user from other service
-			ride.setUser(new UserInPanicRideDTO("Pera", "Perić", "+381123123", "pera.peric@email.com", "Bulevar Oslobodjenja 74", "U3dhZ2dlciByb2Nrcw==".getBytes()));
+			ride.setUser(new UserInPanicRideDTO("Pera", "Perić", "+381123123", "pera.peric@email.com", "Bulevar Oslobodjenja 74", "U3dhZ2dlciByb2Nrcw=="));
 			return new ResponseEntity<PanicRideDTO>(ride, HttpStatus.OK);
 		}
 		return new ResponseEntity<PanicRideDTO>(HttpStatus.NOT_FOUND);
