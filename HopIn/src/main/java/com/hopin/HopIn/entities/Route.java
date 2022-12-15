@@ -21,6 +21,8 @@ public class Route {
 	@ManyToOne
 	private Location destination;
 	
+	public Route() {}
+	
 	
 	public Route(int id, Location departure, Location destination, double distance) {
 		super();
@@ -54,6 +56,14 @@ public class Route {
 	public void setDistance(double distance) {
 		this.distance = distance;
 	}
+
+	@Override
+	public String toString() {
+		return "Route [id=" + id + ", distance=" + distance + ", departure=" + departure + ", destination="
+				+ destination + "]";
+	}
+	
+	
 	
 	
 }

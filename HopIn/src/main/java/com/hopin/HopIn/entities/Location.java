@@ -16,7 +16,9 @@ public class Location {
 	private String address;
 	private double latitude;
 	private double longitude;
-
+	
+	public Location() {}
+	
 	public Location(int id, String address, double latitude, double longitude) {
 		super();
 		this.id = id;
