@@ -6,7 +6,6 @@ import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.entities.Route;
 
 public interface IPassengerService {
 	

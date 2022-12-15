@@ -23,7 +23,7 @@ public class Passenger extends User {
 	public Passenger() {}
 	
 	public Passenger(int id, String name, String surname, String email, String password, String address,
-			String telephoneNumber, String profilePicture, Set<Ride> rides, Set<Route> favouriteRoutes) {
+			String telephoneNumber, byte[] profilePicture, Set<Ride> rides, Set<Route> favouriteRoutes) {
 		super(id, name, surname, email, password, address, telephoneNumber, profilePicture);
 		this.rides = rides;
 		this.favouriteRoutes = favouriteRoutes;

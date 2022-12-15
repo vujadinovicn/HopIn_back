@@ -10,9 +10,10 @@ public class UserReturnedDTO {
 	private String telephoneNumber;
 	private String email;
 	private String address;
+	private String password;
 	
 	public UserReturnedDTO(int id, String name, String surname, String email, String address, String telephoneNumber,
-			String profilePicture) {
+			String profilePicture, String password) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -21,6 +22,7 @@ public class UserReturnedDTO {
 		this.address = address;
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
+		this.password = password;
 	}
 
 	public UserReturnedDTO(User user) {
@@ -32,6 +34,7 @@ public class UserReturnedDTO {
 		this.address = user.getAddress();
 		this.telephoneNumber = user.getTelephoneNumber();
 		this.profilePicture = user.getProfilePicture();
+		this.password = user.getPassword();
 	}
 
 	public int getId() {
@@ -89,5 +92,12 @@ public class UserReturnedDTO {
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
-	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }
