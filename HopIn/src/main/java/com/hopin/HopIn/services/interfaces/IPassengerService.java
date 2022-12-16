@@ -20,4 +20,6 @@ public interface IPassengerService {
 	public UserReturnedDTO update(int id, UserDTO dto);
 	
 	public List<RouteDTO> getFavouriteRoutes(int id);
+	
+	public boolean removeFavouriteRoute(int passengerId, int routeId);
 }

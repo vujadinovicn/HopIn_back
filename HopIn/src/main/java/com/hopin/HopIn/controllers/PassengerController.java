@@ -52,11 +52,11 @@ public class PassengerController {
 	}
 	
 	@GetMapping(value = "/activate/{activationId}")
-	public ResponseEntity<String> activatePassenger(@PathVariable int activationId) {
+	public ResponseEntity<Void> activatePassenger(@PathVariable int activationId) {
 		if(passengerService.Activate(activationId)) {
-			return new ResponseEntity<String>("", HttpStatus.OK);
+			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -92,11 +92,20 @@ public class PassengerController {
 		}
 		return new ResponseEntity<List<RouteDTO>>(HttpStatus.NOT_FOUND);
 	}
-	
+	 	
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id, @RequestParam String from, @RequestParam String to) {
 		return new ResponseEntity<List<RideForReportDTO>>(this.rideService.getAllPassengerRidesBetweenDates(id, from, to), HttpStatus.OK);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping(value = "{passengerId}/remove/route")
+	public ResponseEntity<Void> removeFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
+		if (passengerService.removeFavouriteRoute(passengerId, routeId)) {
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 	
 
