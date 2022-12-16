@@ -141,6 +141,18 @@ public class PassengerServiceImpl implements IPassengerService {
 		return false;
 		
 	}
+	
+	public boolean addFavouriteRoute(int passwordId, int routeId) {
+		Passenger passenger = this.getById(passwordId);
+		Optional<Route> route = this.allRoutes.findById(routeId);
+		if (passenger == null || route == null) {
+			return false;
+		}
+		passenger.getFavouriteRoutes().add(route.get());
+		this.allPassengers.save(passenger);
+		this.allPassengers.flush();
+		return true;
+	}
 
 
 }
