@@ -12,4 +12,7 @@ public interface RideRepository extends JpaRepository<Ride, Integer> {
 	
 	@Query(value = "select * from \"rides\" where \"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id) and \"start_time\" between :from and :to", nativeQuery=true)
 	public List<Ride> getAllPassengerRidesBetweenDates(int id, LocalDateTime from, LocalDateTime to);
+	
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"start_time\" between :from and :to", nativeQuery=true)
+	public List<Ride> getAllDriverRidesBetweenDates(int id, LocalDateTime from, LocalDateTime to);
 }

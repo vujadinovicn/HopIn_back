@@ -4844,3 +4844,105 @@ insert into "locations"("id", "address", "latitude", "longitude") values (2, "Be
 2022-12-15 04:59:33 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "passenger_favourite_routes" not found; SQL statement:
 insert into "passenger_favourite_routes"("passenger_id", "favourite_routes_id") values (1,1) [42102-214]
+2022-12-21 23:48:44 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "insert into ""rides_passengers""(""ride_id"", ""passengers_id"") values (1, 1)\000d\000a\000d\000a\000d\000a[*]select * from ""rides"" where ""id"" in (select ""ride_id"" from ""rides_passengers"" where ""passengers_id"" = 1)"; SQL statement:
+insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1)
+
+
+select * from "rides" where "id" in (select "ride_id" from "rides_passengers" where "passengers_id" = 1) [42000-214]
+2022-12-21 23:53:39 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "insert into ""rides_passengers""(""ride_id"", ""passengers_id"") values (1, 1)\000d\000a\000d\000a\000d\000a[*]select * from ""rides"" where ""id"" in (select ""ride_id"" from ""rides_passengers"" where ""passengers_id"" = 1)"; SQL statement:
+insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1)
+
+
+select * from "rides" where "id" in (select "ride_id" from "rides_passengers" where "passengers_id" = 1) [42000-214]
+2022-12-21 23:55:07 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "insert into ""rides_passengers""(""ride_id"", ""passengers_id"") values (1, 1)\000d\000a\000d\000a\000d\000a[*]insert into ""rides""(""id"", ""baby_transport"", ""distance"", ""end_time"", ""estimated_time_in_minutes"", ""panic"", ""pet_transport"", ""start_time"", ""status"", ""total_cost"", ""total_distance"", ""driver_id"", ""rejection_notice_id"", ""vehicle_type_id"") values (3, false, 5, null, 5, false, false, '2022-12-23T11:11:11', null, 5, 5, null, null, null)"; SQL statement:
+insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1)
+
+
+insert into "rides"("id", "baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id") values (3, false, 5, null, 5, false, false, '2022-12-23T11:11:11', null, 5, 5, null, null, null) [42000-214]
+2022-12-21 23:59:55 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'""regular""' (vehicle_types: ""name"" SMALLINT)"; SQL statement:
+INSERT INTO "PUBLIC"."vehicle_types"("id","name","price_per_km")VALUES(?,?,?) [22018-214]
+2022-12-21 23:59:55 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'""regular""' (vehicle_types: ""name"" SMALLINT)"; SQL statement:
+INSERT INTO "PUBLIC"."vehicle_types"("id","name","price_per_km")VALUES(?,?,?) [22018-214]
+2022-12-22 00:00:17 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'regular' (vehicle_types: ""name"" SMALLINT)"; SQL statement:
+INSERT INTO "PUBLIC"."vehicle_types"("id","name","price_per_km")VALUES(?,?,?) [22018-214]
+2022-12-22 00:00:17 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'regular' (vehicle_types: ""name"" SMALLINT)"; SQL statement:
+INSERT INTO "PUBLIC"."vehicle_types"("id","name","price_per_km")VALUES(?,?,?) [22018-214]
+2022-12-22 00:07:40 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'regular' (vehicle_types: ""name"" SMALLINT)"; SQL statement:
+insert into "vehicle_types"("id","name","price_per_km")VALUES(1,'regular',5) [22018-214]
+2022-12-22 00:07:40 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]inser into ""vehicles""(""id"", ""baby_transport"", ""driver_id"", ""license_number"", ""model"", ""passenger_seats"", ""pet_transport"", ""current_location_id"", ""vehicle_type_id"") values (1, true, 0, ""reg"", ""ford"", 4, true, 1, 1)"; expected "INSERT"; SQL statement:
+inser into "vehicles"("id", "baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (1, true, 0, "reg", "ford", 4, true, 1, 1) [42001-214]
+2022-12-22 00:09:43 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]inser into ""vehicles""(""id"", ""baby_transport"", ""driver_id"", ""license_number"", ""model"", ""passenger_seats"", ""pet_transport"", ""current_location_id"", ""vehicle_type_id"") values (1, true, 0, ""reg"", ""ford"", 4, true, 1, 1)"; expected "INSERT"; SQL statement:
+inser into "vehicles"("id", "baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (1, true, 0, "reg", "ford", 4, true, 1, 1) [42001-214]
+2022-12-22 00:11:16 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "reg" not found; SQL statement:
+insert into "vehicles"("id", "baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (1, true, 0, "reg", "ford", 4, true, 1, 1) [42122-214]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:502)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:244)
+	at org.h2.expression.ExpressionColumn.optimizeOther(ExpressionColumn.java:226)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:213)
+	at org.h2.command.dml.Insert.doPrepare(Insert.java:300)
+	at org.h2.command.dml.DataChangeStatement.prepare(DataChangeStatement.java:37)
+	at org.h2.command.Parser.prepareCommand(Parser.java:575)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:631)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:554)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1116)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:237)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:223)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1339)
+	at org.h2.server.web.WebApp.query(WebApp.java:1137)
+	at org.h2.server.web.WebApp.query(WebApp.java:1113)
+	at org.h2.server.web.WebApp.process(WebApp.java:244)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:176)
+	at org.h2.server.web.JakartaWebServlet.doGet(JakartaWebServlet.java:129)
+	at org.h2.server.web.JakartaWebServlet.doPost(JakartaWebServlet.java:166)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:814)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:223)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:119)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:400)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:861)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1739)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2022-12-22 00:18:12 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select * from [*]\\""rides\\"" where \\""id\\"" in (select \\""ride_id\\"" from \\""rides_passengers\\"" where \\""passengers_id\\"" = :id) and \\""start_time\\"" between '2022-12-19' and '2022-12-25'"; SQL statement:
+select * from \"rides\" where \"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id) and \"start_time\" between '2022-12-19' and '2022-12-25' [42000-214]
