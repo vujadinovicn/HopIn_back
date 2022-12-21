@@ -33,6 +33,7 @@ import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/api/driver")
 public class DriverController {
 

@@ -17,6 +17,8 @@ public class VehicleType {
 	private int id;
 	private VehicleTypeName name;
 	private double pricePerKm;
+	
+	public VehicleType() {}
 
 	public VehicleType(int id, VehicleTypeName name, double pricePerKm) {
 		super();
