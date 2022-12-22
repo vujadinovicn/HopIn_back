@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
+import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInPanicRideDTO;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -115,12 +117,13 @@ public class RideController {
 		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping(value = "/price", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody UnregisteredRideSuggestionDTO dto) {
+		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
+	}
 	
-	
-	
-	
-	
-	
+
 	
 	
 }

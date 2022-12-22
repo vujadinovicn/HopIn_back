@@ -15,9 +15,13 @@ import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
+import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.repositories.RideRepository;
+import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @Service
@@ -25,6 +29,9 @@ public class RideServiceImpl implements IRideService {
 	
 	@Autowired
 	private RideRepository allRides;
+	
+	@Autowired
+	private VehicleTypeRepository allVehicleTypes;
 	
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
@@ -202,6 +209,12 @@ public class RideServiceImpl implements IRideService {
 	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto) {
+		VehicleType vehicleType = this.allVehicleTypes.getByName(VehicleTypeName.valueOf(VehicleTypeName.class, dto.getVehicleTypeName()));
+		return vehicleType.getPricePerKm() * dto.getDistance();
 	}
 	
 }

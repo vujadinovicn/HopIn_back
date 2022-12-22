@@ -7,6 +7,7 @@ import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
+import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.enums.RideStatus;
 public interface IRideService {
 	
@@ -29,5 +30,7 @@ public interface IRideService {
 	public AllPanicRidesDTO getAllPanicRides();
 		
 	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to);
+
+	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto);
 
 }
