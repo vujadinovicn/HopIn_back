@@ -91,4 +91,13 @@ public class VehicleDTO {
 		this.petTransport = petTransport;
 	}
 
+	@Override
+	public String toString() {
+		return "VehicleDTO [vehicleType=" + vehicleType + ", model=" + model + ", licenseNumber=" + licenseNumber
+				+ ", currentLocation=" + currentLocation + ", passengerSeats=" + passengerSeats + ", babyTransport="
+				+ babyTransport + ", petTransport=" + petTransport + "]";
+	}
+	
+	
+
 }

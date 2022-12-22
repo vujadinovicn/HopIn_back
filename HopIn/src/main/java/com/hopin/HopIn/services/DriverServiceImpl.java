@@ -26,7 +26,9 @@ import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Vehicle;
+import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.entities.WorkingHours;
+import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.repositories.DriverRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 
@@ -122,12 +124,14 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public Vehicle updateVehicle(int driverId, VehicleDTO dto) {
-		Driver driver = this.allDriversMap.get(driverId);
-		Vehicle vehicle = driver.getVehicle();
-		if (vehicle == null)
-			vehicle = new Vehicle();
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
+		}
+		Vehicle vehicle = driver.get().getVehicle();
 		dtoToVehicle(dto, driverId, vehicle);
-		
+		allDrivers.save(driver.get());
+		allDrivers.flush();
 		return vehicle;
 	}
 	
@@ -171,19 +175,26 @@ public class DriverServiceImpl implements IDriverService {
 	
 	
 	private Vehicle dtoToVehicle(VehicleDTO dto, int driverId, Vehicle vehicle) {
-		if (vehicle == null) {
-			vehicle = new Vehicle();
-			vehicle.setId(currVehicleId++);
+//		if (vehicle == null) {
+//			vehicle = new Vehicle();
+//			vehicle.setId(currVehicleId++);
+//		}
+//		
+		vehicle.setModel(dto.getModel());
+		vehicle.setLicenseNumber(dto.getLicenseNumber());
+		//vehicle.setCurrentLocation(dto.getCurrentLocation());
+		vehicle.setPassengerSeats(dto.getPassengerSeats());
+		vehicle.setBabyTransport(dto.isBabyTransport());
+		vehicle.setPetTransport(dto.isPetTransport());
+		System.out.println(dto.getVehicleType());
+		if (dto.getVehicleType().equals(VehicleTypeName.CAR)) {
+			vehicle.getVehicleType().setName(VehicleTypeName.CAR);
+		} else if (dto.getVehicleType().equals(VehicleTypeName.VAN)) {
+			vehicle.getVehicleType().setName(VehicleTypeName.VAN);
+		} else {
+			vehicle.getVehicleType().setName(VehicleTypeName.LUXURY);
 		}
-		
-//		vehicle.setModel(dto.getModel());
-//		vehicle.setLicenseNumber(dto.getLicenseNumber());
-//		vehicle.setCurrentLocation(dto.getCurrentLocation());
-//		vehicle.setPassengerSeats(dto.getPassengerSeats());
-//		vehicle.setBabyTransport(dto.isBabyTransport());
-//		vehicle.setPetTransport(dto.isBabyTransport());
-//		vehicle.setVehicleType(dto.getVehicleType());
-//		vehicle.setDriverId(driverId);
+		vehicle.setDriverId(driverId);
 
 		return vehicle;
 	}
