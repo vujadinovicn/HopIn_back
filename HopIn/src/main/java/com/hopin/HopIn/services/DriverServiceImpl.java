@@ -66,12 +66,11 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public DriverReturnedDTO getById(int id) {
-		Optional<Driver> foundDriver = allDrivers.findById(id);
-		Optional<Vehicle> foundVehicle = allVehicles.findByDriverId(id);
-		if (foundDriver.isEmpty() || foundVehicle.isEmpty()) {
+		Optional<Driver> found = allDrivers.findById(id);
+		if (found.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
 		}
-		return new DriverReturnedDTO(foundDriver.get(), foundVehicle.get());
+		return new DriverReturnedDTO(found.get(), found.get().getVehicle());
 	}
 
 	@Override
