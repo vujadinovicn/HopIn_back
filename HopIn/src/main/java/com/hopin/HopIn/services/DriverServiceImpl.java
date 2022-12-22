@@ -25,6 +25,7 @@ import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.entities.WorkingHours;
@@ -64,17 +65,34 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public UserReturnedDTO getById(int id) {
-		Driver driver = this.allDriversMap.get(id);
-		if (driver == null)
-			driver = new Driver();
-		return new UserReturnedDTO(driver);
+		Optional<Driver> driver = allDrivers.findById(id);
+		if (driver.isEmpty()){
+			return null;
+		}
+		return new UserReturnedDTO(driver.get());
 	}
 
 	@Override
-	public UserReturnedDTO update(int id, UserDTO newData) {
-		Driver driver = this.allDriversMap.get(id);
-		driver = dtoToDriver(newData, driver);
-		return new UserReturnedDTO(driver);
+	public UserReturnedDTO update(int id, UserDTO dto) {
+		Optional<Driver> driver = allDrivers.findById(id);
+		if (driver.isEmpty()) {
+			return null;
+		}
+		
+		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
+			if (!this.checkPasswordMatch(driver.get().getPassword(), dto.getPassword())) {
+				return null;	
+			}
+			dto.setPassword(dto.getNewPassword());
+		}
+		driver.get().copy(dto);
+		this.allDrivers.save(driver.get());
+		this.allDrivers.flush();
+		return new UserReturnedDTO(driver.get());
+	}
+	
+	private boolean checkPasswordMatch(String password, String subbmitedPassword) {
+		return password.equals(subbmitedPassword);
 	}
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
@@ -200,10 +218,10 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	private Document dtoToDocument(DocumentDTO dto, Document document) {
-		if (document == null) {
-			document = new Document();
-			document.setId(currDocId++);
-		}
+//		if (document == null) {
+//			document = new Document();
+//			document.setId(currDocId++);
+//		}
 
 		document.setName(dto.getName());
 		document.setDocumentImage(dto.getDocumentImage());

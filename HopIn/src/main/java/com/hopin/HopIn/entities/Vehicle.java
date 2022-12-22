@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +30,7 @@ public class Vehicle {
 	@Pattern(regexp = "^([A-Z]{2}-[0-9]{3}-[A-Z]{2})$")
 	private String licenseNumber;
 	
-	@Pattern(regexp = "^([0-9]*)$")
+	@NumberFormat
 	private int passengerSeats;
 	
 	@NotNull

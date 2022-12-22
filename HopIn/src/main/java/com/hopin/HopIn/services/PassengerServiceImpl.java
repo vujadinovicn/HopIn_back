@@ -99,8 +99,6 @@ public class PassengerServiceImpl implements IPassengerService {
 		}
 		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
 			if (!this.checkPasswordMatch(passenger.getPassword(), dto.getPassword())) {
-				System.out.println(passenger.getPassword());
-				System.out.println(dto.getPassword());
 				return null;	
 			}
 			dto.setPassword(dto.getNewPassword());
