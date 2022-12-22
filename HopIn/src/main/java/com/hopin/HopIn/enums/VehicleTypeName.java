@@ -5,7 +5,7 @@ public enum VehicleTypeName {
 //	LUXURY,
 //	VAN
 
-	STANDARDNO,
-	LUKSUZNO,
-	KOMBI
+	CAR,
+	VAN,
+	LUXURY
 }
