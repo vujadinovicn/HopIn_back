@@ -35,5 +35,8 @@ public interface IRideService {
 	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to);
 	
 	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to);
+	
+	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to);
+
 
 }

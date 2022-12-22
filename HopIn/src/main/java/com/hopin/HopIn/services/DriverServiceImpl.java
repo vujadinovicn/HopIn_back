@@ -12,7 +12,9 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
@@ -65,11 +67,11 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public UserReturnedDTO getById(int id) {
-		Optional<Driver> driver = allDrivers.findById(id);
-		if (driver.isEmpty()){
-			return null;
+		Optional<Driver> found = allDrivers.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
 		}
-		return new UserReturnedDTO(driver.get());
+		return new UserReturnedDTO(found.get());
 	}
 
 	@Override

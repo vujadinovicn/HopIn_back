@@ -1,7 +1,5 @@
 package com.hopin.HopIn.controllers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +22,15 @@ import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Vehicle;
-import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IRideService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
@@ -40,6 +39,9 @@ public class DriverController {
 
 	@Autowired
 	private IDriverService service;
+	
+	@Autowired
+	private IRideService rideService;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
@@ -121,5 +123,11 @@ public class DriverController {
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<WorkingHoursDTO> updateWorkingHours(@PathVariable("working-hour-id") int hoursId, @RequestBody WorkingHoursDTO hours) {
 		return new ResponseEntity<WorkingHoursDTO>(service.updateWorkingHours(hoursId, hours), HttpStatus.OK);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id, @RequestParam String from, @RequestParam String to) {
+		return new ResponseEntity<List<RideForReportDTO>>(this.rideService.getAllDriverRidesBetweenDates(id, from, to), HttpStatus.OK);
 	}
 }

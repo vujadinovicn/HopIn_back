@@ -1,7 +1,6 @@
 package com.hopin.HopIn.services;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
@@ -40,6 +40,16 @@ public class RideServiceImpl implements IRideService {
 	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to) {
 		DateTimeFormatter formatter = DateTimeFormatter. ofPattern("yyyy/MM/dd"); 
 		List<Ride> rides = allRides.getAllPassengerRidesBetweenDates(id, LocalDate.parse(from, formatter).atStartOfDay(), LocalDate.parse(to, formatter).atStartOfDay());
+		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
+		for(Ride ride: rides) {
+			res.add(new RideForReportDTO(ride));
+		}
+		return res;
+	}
+	
+	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to) {
+		DateTimeFormatter formatter = DateTimeFormatter. ofPattern("yyyy/MM/dd"); 
+		List<Ride> rides = allRides.getAllDriverRidesBetweenDates(id, LocalDate.parse(from, formatter).atStartOfDay(), LocalDate.parse(to, formatter).atStartOfDay());
 		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
 		for(Ride ride: rides) {
 			res.add(new RideForReportDTO(ride));

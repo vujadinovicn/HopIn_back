@@ -21,7 +21,6 @@ public class VehicleType {
 	public VehicleType() {
 		
 	}
-
 	public VehicleType(int id, VehicleTypeName name, double pricePerKm) {
 		super();
 		this.id = id;
