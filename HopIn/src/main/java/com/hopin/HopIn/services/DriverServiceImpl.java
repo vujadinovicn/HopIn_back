@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,18 +97,13 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public Vehicle getVehicle(int driverId) {
-		Driver driver = this.allDriversMap.get(driverId);
-		Vehicle vehicle = new Vehicle();
-		
-//		if (driver != null)
-//			vehicle = driver.getVehicle();
-//		if (vehicle == null) {
-//			vehicle = new Vehicle();
-//			vehicle.setCurrentLocation(new LocationNoIdDTO());
-//		}
-		
-		return vehicle;
+	public VehicleDTO getVehicle(int driverId) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
+		}
+		VehicleDTO vehicleDTO = new VehicleDTO(driver.get().getVehicle());
+		return vehicleDTO;
 	}
 
 	@Override

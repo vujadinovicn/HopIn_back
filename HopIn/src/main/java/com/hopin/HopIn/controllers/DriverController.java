@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/api/driver")
 public class DriverController {
 
@@ -76,8 +78,11 @@ public class DriverController {
 	}
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Vehicle> getVehicle(@PathVariable("id") int driverId) {
-		return new ResponseEntity<Vehicle>(service.getVehicle(driverId), HttpStatus.OK);
+	public ResponseEntity<VehicleDTO> getVehicle(@PathVariable("id") int driverId) {
+		VehicleDTO vehicle = service.getVehicle(driverId);
+		if (vehicle == null)
+			return new ResponseEntity<VehicleDTO>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<VehicleDTO>(vehicle, HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

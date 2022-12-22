@@ -4844,3 +4844,6 @@ insert into "locations"("id", "address", "latitude", "longitude") values (2, "Be
 2022-12-15 04:59:33 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "passenger_favourite_routes" not found; SQL statement:
 insert into "passenger_favourite_routes"("passenger_id", "favourite_routes_id") values (1,1) [42102-214]
+2022-12-22 01:49:15 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "insert into ""vehicles""(""id"", ""baby_transport"", ""driver_id"", ""license_number"", ""model"", ""passenger_seats"", ""pet_transport"", ""current_location_id"", ""vehicle_type_id"") values (1, true, 0, 'BP-030-HR', 'A',UDI [*]A6 4, false, 1, 1)"; expected "(, ., [, ::, AT, FORMAT, *, /, %, +, -, ||, NOT, IS, ILIKE, REGEXP, AND, OR, ,, )"; SQL statement:
+insert into "vehicles"("id", "baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (1, true, 0, 'BP-030-HR', 'A',UDI A6 4, false, 1, 1) [42001-214]
