@@ -80,8 +80,11 @@ public class DriverController {
 	}
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Vehicle> getVehicle(@PathVariable("id") int driverId) {
-		return new ResponseEntity<Vehicle>(service.getVehicle(driverId), HttpStatus.OK);
+	public ResponseEntity<VehicleDTO> getVehicle(@PathVariable("id") int driverId) {
+		VehicleDTO vehicle = service.getVehicle(driverId);
+		if (vehicle == null)
+			return new ResponseEntity<VehicleDTO>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<VehicleDTO>(vehicle, HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
