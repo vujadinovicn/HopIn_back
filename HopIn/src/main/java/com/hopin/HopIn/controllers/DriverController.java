@@ -22,6 +22,7 @@ import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
@@ -44,8 +45,8 @@ public class DriverController {
 	private IRideService rideService;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
-		return new ResponseEntity<UserReturnedDTO>(service.getById(id), HttpStatus.OK);
+	public ResponseEntity<DriverReturnedDTO> getById(@PathVariable int id) {
+		return new ResponseEntity<DriverReturnedDTO>(service.getById(id), HttpStatus.OK);
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

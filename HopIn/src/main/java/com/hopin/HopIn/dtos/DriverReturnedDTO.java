@@ -3,7 +3,7 @@ package com.hopin.HopIn.dtos;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.entities.Vehicle;
 
-public class UserReturnedDTO {
+public class DriverReturnedDTO {
 	private int id;
 	private String name;
 	private String surname;
@@ -12,9 +12,14 @@ public class UserReturnedDTO {
 	private String email;
 	private String address;
 	private String password;
+	private String model;
+	private String licenseNumber;
+	private String vehicleType;
+	
+	
 
-	public UserReturnedDTO(int id, String name, String surname, String profilePicture, String telephoneNumber,
-			String email, String address, String password) {
+	public DriverReturnedDTO(int id, String name, String surname, String profilePicture, String telephoneNumber,
+			String email, String address, String password, String model, String licenseNumber, String vehicleType) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -24,9 +29,12 @@ public class UserReturnedDTO {
 		this.email = email;
 		this.address = address;
 		this.password = password;
+		this.model = model;
+		this.licenseNumber = licenseNumber;
+		this.vehicleType = vehicleType;
 	}
 
-	public UserReturnedDTO(User user) {
+	public DriverReturnedDTO(User user) {
 		super();
 		this.id = user.getId();
 		this.name = user.getName();
@@ -37,8 +45,8 @@ public class UserReturnedDTO {
 		this.profilePicture = user.getProfilePicture();
 		this.password = user.getPassword();
 	}
-
-	public UserReturnedDTO(User user, Vehicle vehicle) {
+	
+	public DriverReturnedDTO(User user, Vehicle vehicle) {
 		super();
 		this.id = user.getId();
 		this.name = user.getName();
@@ -48,6 +56,33 @@ public class UserReturnedDTO {
 		this.telephoneNumber = user.getTelephoneNumber();
 		this.profilePicture = user.getProfilePicture();
 		this.password = user.getPassword();
+		this.model = vehicle.getModel();
+		this.licenseNumber = vehicle.getLicenseNumber();
+		this.vehicleType = vehicle.getVehicleType().getName().toString();
+	}
+	
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getLicenseNumber() {
+		return licenseNumber;
+	}
+
+	public void setLicenseNumber(String licenseNumber) {
+		this.licenseNumber = licenseNumber;
+	}
+
+	public String getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(String vehicleType) {
+		this.vehicleType = vehicleType;
 	}
 
 	public int getId() {
@@ -113,4 +148,6 @@ public class UserReturnedDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+
 }

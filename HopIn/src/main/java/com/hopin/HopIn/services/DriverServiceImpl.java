@@ -7,11 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,19 +18,19 @@ import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
-import com.hopin.HopIn.dtos.LocationNoIdDTO;
+import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
-import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.repositories.DriverRepository;
+import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 
 @Service
@@ -40,6 +38,9 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Autowired
 	private DriverRepository allDrivers;
+	
+	@Autowired
+	private VehicleRepository allVehicles;
 	
 	private Map<Integer, Driver> allDriversMap = new HashMap<Integer, Driver>();
 	private int currId = 1;
@@ -66,12 +67,12 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public UserReturnedDTO getById(int id) {
+	public DriverReturnedDTO getById(int id) {
 		Optional<Driver> found = allDrivers.findById(id);
 		if (found.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
 		}
-		return new UserReturnedDTO(found.get());
+		return new DriverReturnedDTO(found.get(), found.get().getVehicle());
 	}
 
 	@Override
