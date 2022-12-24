@@ -1,12 +1,14 @@
 package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllMessagesDTO;
 import com.hopin.HopIn.dtos.AllNotesDTO;
@@ -17,25 +19,17 @@ import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
 import com.hopin.HopIn.dtos.NoteReturnedDTO;
-import com.hopin.HopIn.dtos.RejectionNoticeDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
-import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.entities.Note;
-import com.hopin.HopIn.entities.Passenger;
-import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.MessageType;
-import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.enums.VehicleTypeName;
-import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
 import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.services.interfaces.IUserService;
-
-import ch.qos.logback.core.subst.Token;
 
 @Service
 public class UserServiceImpl implements IUserService{
@@ -51,6 +45,15 @@ public class UserServiceImpl implements IUserService{
 	Map<Integer, Note> allNotesMap = new HashMap<Integer, Note>();
 	Map<Integer, Message> allMessagesMap = new HashMap<Integer, Message>();
 	Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
+	
+	@Override
+	public UserReturnedDTO getUser(int id) {
+		Optional<User> found = allUsers.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return new UserReturnedDTO(found.get());
+	}
 	
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
