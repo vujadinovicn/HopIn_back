@@ -22,6 +22,7 @@ import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
@@ -64,13 +65,13 @@ public class DriverController {
 	}
 
 	@GetMapping(value = "/{id}/documents", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Document>> getDocuments(@PathVariable("id") int driverId) {
-		return new ResponseEntity<List<Document>>(service.getDocuments(driverId), HttpStatus.OK);
+	public ResponseEntity<List<DocumentReturnedDTO>> getDocuments(@PathVariable("id") int driverId) {
+		return new ResponseEntity<List<DocumentReturnedDTO>>(service.getDocuments(driverId), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/{id}/documents", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Document> addDocument(@PathVariable int id, @RequestBody DocumentDTO newDocument) {
-		return new ResponseEntity<Document>(service.addDocument(id, newDocument), HttpStatus.OK);
+	public ResponseEntity<DocumentReturnedDTO> addDocument(@PathVariable int id, @RequestBody DocumentDTO newDocument) {
+		return new ResponseEntity<DocumentReturnedDTO>(service.addDocument(id, newDocument), HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/document/{document-id}")

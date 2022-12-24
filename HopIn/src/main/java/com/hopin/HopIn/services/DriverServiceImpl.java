@@ -20,6 +20,7 @@ import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
@@ -103,19 +104,19 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public List<Document> getDocuments(int driverId) {
+	public List<DocumentReturnedDTO> getDocuments(int driverId) {
 //		return this.allDrivers.get(driverId).getDocuments();
 		return null;
 	}
 
 	@Override
-	public Document addDocument(int driverId, DocumentDTO newDocument) {
+	public DocumentReturnedDTO addDocument(int driverId, DocumentDTO newDocument) {
 		Driver driver = this.allDriversMap.get(driverId);
 		Document document = this.dtoToDocument(newDocument, null);
 		document.setDriverId(driverId);
 		driver.getDocuments().add(document);
-
-		return document;
+		
+		return new DocumentReturnedDTO(document);
 	}
 
 	@Override
