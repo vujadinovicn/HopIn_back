@@ -99,14 +99,5 @@ public class UserDTO {
 
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
-	}
-
-	@Override
-	public String toString() {
-		return "UserDTO [name=" + name + ", surname=" + surname + ", email=" + email + ", password=" + password
-				+ ", newPassword=" + newPassword + ", address=" + address + ", telephoneNumber=" + telephoneNumber
-				+ ", profilePicture=" + profilePicture + "]";
 	}		
-	
-	
 }

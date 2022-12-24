@@ -18,9 +18,8 @@ public class VehicleType {
 	private VehicleTypeName name;
 	private double pricePerKm;
 	
-	public VehicleType() {
-		
-	}
+	public VehicleType() {}
+
 	public VehicleType(int id, VehicleTypeName name, double pricePerKm) {
 		super();
 		this.id = id;
