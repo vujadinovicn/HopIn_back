@@ -32,7 +32,7 @@ public interface IDriverService {
 
 	public Vehicle setVehicle(int driverId, VehicleDTO dto);
 
-	public VehicleDTO getVehicle(int driverId);
+	public Vehicle getVehicle(int driverId);
 
 	public Vehicle updateVehicle(int driverId, VehicleDTO vehicle);
 
