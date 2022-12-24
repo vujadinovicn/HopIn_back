@@ -74,7 +74,7 @@ public class DriverServiceImpl implements IDriverService {
 		}
 		return new UserReturnedDTO(found.get());
 	}
-
+	
 	@Override
 	public UserReturnedDTO update(int id, UserDTO dto) {
 		Optional<Driver> driver = allDrivers.findById(id);
@@ -105,8 +105,13 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public List<DocumentReturnedDTO> getDocuments(int driverId) {
-//		return this.allDrivers.get(driverId).getDocuments();
-		return null;
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
+		}
+		List<DocumentReturnedDTO> documents = new ArrayList<DocumentReturnedDTO>();
+		driver.get().getDocuments().forEach((document) -> {documents.add(new DocumentReturnedDTO(document));});
+		return documents;
 	}
 
 	@Override
@@ -222,7 +227,7 @@ public class DriverServiceImpl implements IDriverService {
 
 	private Document dtoToDocument(DocumentDTO dto, Document document) {
 //		if (document == null) {
-//			document = new Document();
+/)/			document = new Document();
 //			document.setId(currDocId++);
 //		}
 
