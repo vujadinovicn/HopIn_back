@@ -1,10 +1,14 @@
 package com.hopin.HopIn.services.interfaces;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
@@ -30,6 +34,11 @@ public interface IRideService {
 	public AllPanicRidesDTO getAllPanicRides();
 		
 	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to);
+	
+	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to);
+	
+	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to);
+
 
 	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto);
 

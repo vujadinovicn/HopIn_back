@@ -1,7 +1,5 @@
 package com.hopin.HopIn.controllers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +7,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,25 +22,31 @@ import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.DriverReturnedDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Vehicle;
-import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IRideService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/api/driver")
 public class DriverController {
 
 	@Autowired
 	private IDriverService service;
+	
+	@Autowired
+	private IRideService rideService;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
-		return new ResponseEntity<UserReturnedDTO>(service.getById(id), HttpStatus.OK);
+	public ResponseEntity<DriverReturnedDTO> getById(@PathVariable int id) {
+		return new ResponseEntity<DriverReturnedDTO>(service.getById(id), HttpStatus.OK);
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -76,8 +81,11 @@ public class DriverController {
 	}
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Vehicle> getVehicle(@PathVariable("id") int driverId) {
-		return new ResponseEntity<Vehicle>(service.getVehicle(driverId), HttpStatus.OK);
+	public ResponseEntity<VehicleDTO> getVehicle(@PathVariable("id") int driverId) {
+		VehicleDTO vehicle = service.getVehicle(driverId);
+		if (vehicle == null)
+			return new ResponseEntity<VehicleDTO>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<VehicleDTO>(vehicle, HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -116,5 +124,11 @@ public class DriverController {
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<WorkingHoursDTO> updateWorkingHours(@PathVariable("working-hour-id") int hoursId, @RequestBody WorkingHoursDTO hours) {
 		return new ResponseEntity<WorkingHoursDTO>(service.updateWorkingHours(hoursId, hours), HttpStatus.OK);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id, @RequestParam String from, @RequestParam String to) {
+		return new ResponseEntity<List<RideForReportDTO>>(this.rideService.getAllDriverRidesBetweenDates(id, from, to), HttpStatus.OK);
 	}
 }

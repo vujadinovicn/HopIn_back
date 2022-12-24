@@ -6,18 +6,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
-import com.hopin.HopIn.dtos.LocationNoIdDTO;
+import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -25,8 +26,11 @@ import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Vehicle;
+import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.entities.WorkingHours;
+import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.repositories.DriverRepository;
+import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 
 @Service
@@ -34,6 +38,9 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Autowired
 	private DriverRepository allDrivers;
+	
+	@Autowired
+	private VehicleRepository allVehicles;
 	
 	private Map<Integer, Driver> allDriversMap = new HashMap<Integer, Driver>();
 	private int currId = 1;
@@ -52,7 +59,7 @@ public class DriverServiceImpl implements IDriverService {
 	@Override
 	public AllUsersDTO getAllPaginated(Pageable pageable) {
 		if (allDriversMap.size() == 0) {
-			Driver driver = new Driver(0, "Pera", "Peric", "pera.peric@email.com", "123", "Bulevar Oslobodjenja 74", "+381123123", "U3dhZ2dlciByb2Nrcw==");
+			Driver driver = new Driver(0, "Pera", "Peric", "pera.peric@email.com", "123", "Bulevar Oslobodjenja 74", "+381123123", "U3dhZ2dlciByb2Nrcw==".getBytes());
 			allDriversMap.put(driver.getId(), driver);
 		}
 		
@@ -60,18 +67,35 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public UserReturnedDTO getById(int id) {
-		Driver driver = this.allDriversMap.get(id);
-		if (driver == null)
-			driver = new Driver();
-		return new UserReturnedDTO(driver);
+	public DriverReturnedDTO getById(int id) {
+		Optional<Driver> found = allDrivers.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return new DriverReturnedDTO(found.get(), found.get().getVehicle());
 	}
 
 	@Override
-	public UserReturnedDTO update(int id, UserDTO newData) {
-		Driver driver = this.allDriversMap.get(id);
-		driver = dtoToDriver(newData, driver);
-		return new UserReturnedDTO(driver);
+	public UserReturnedDTO update(int id, UserDTO dto) {
+		Optional<Driver> driver = allDrivers.findById(id);
+		if (driver.isEmpty()) {
+			return null;
+		}
+		
+		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
+			if (!this.checkPasswordMatch(driver.get().getPassword(), dto.getPassword())) {
+				return null;	
+			}
+			dto.setPassword(dto.getNewPassword());
+		}
+		driver.get().copy(dto);
+		this.allDrivers.save(driver.get());
+		this.allDrivers.flush();
+		return new UserReturnedDTO(driver.get());
+	}
+	
+	private boolean checkPasswordMatch(String password, String subbmitedPassword) {
+		return password.equals(subbmitedPassword);
 	}
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
@@ -96,18 +120,13 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public Vehicle getVehicle(int driverId) {
-		Driver driver = this.allDriversMap.get(driverId);
-		Vehicle vehicle = new Vehicle();
-		
-//		if (driver != null)
-//			vehicle = driver.getVehicle();
-//		if (vehicle == null) {
-//			vehicle = new Vehicle();
-//			vehicle.setCurrentLocation(new LocationNoIdDTO());
-//		}
-		
-		return vehicle;
+	public VehicleDTO getVehicle(int driverId) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
+		}
+		VehicleDTO vehicleDTO = new VehicleDTO(driver.get().getVehicle());
+		return vehicleDTO;
 	}
 
 	@Override
@@ -126,12 +145,14 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public Vehicle updateVehicle(int driverId, VehicleDTO dto) {
-		Driver driver = this.allDriversMap.get(driverId);
-		Vehicle vehicle = driver.getVehicle();
-		if (vehicle == null)
-			vehicle = new Vehicle();
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
+		}
+		Vehicle vehicle = driver.get().getVehicle();
 		dtoToVehicle(dto, driverId, vehicle);
-		
+		allDrivers.save(driver.get());
+		allDrivers.flush();
 		return vehicle;
 	}
 	
@@ -175,28 +196,35 @@ public class DriverServiceImpl implements IDriverService {
 	
 	
 	private Vehicle dtoToVehicle(VehicleDTO dto, int driverId, Vehicle vehicle) {
-		if (vehicle == null) {
-			vehicle = new Vehicle();
-			vehicle.setId(currVehicleId++);
+//		if (vehicle == null) {
+//			vehicle = new Vehicle();
+//			vehicle.setId(currVehicleId++);
+//		}
+//		
+		vehicle.setModel(dto.getModel());
+		vehicle.setLicenseNumber(dto.getLicenseNumber());
+		//vehicle.setCurrentLocation(dto.getCurrentLocation());
+		vehicle.setPassengerSeats(dto.getPassengerSeats());
+		vehicle.setBabyTransport(dto.isBabyTransport());
+		vehicle.setPetTransport(dto.isPetTransport());
+		System.out.println(dto.getVehicleType());
+		if (dto.getVehicleType().equals(VehicleTypeName.CAR)) {
+			vehicle.getVehicleType().setName(VehicleTypeName.CAR);
+		} else if (dto.getVehicleType().equals(VehicleTypeName.VAN)) {
+			vehicle.getVehicleType().setName(VehicleTypeName.VAN);
+		} else {
+			vehicle.getVehicleType().setName(VehicleTypeName.LUXURY);
 		}
-		
-//		vehicle.setModel(dto.getModel());
-//		vehicle.setLicenseNumber(dto.getLicenseNumber());
-//		vehicle.setCurrentLocation(dto.getCurrentLocation());
-//		vehicle.setPassengerSeats(dto.getPassengerSeats());
-//		vehicle.setBabyTransport(dto.isBabyTransport());
-//		vehicle.setPetTransport(dto.isBabyTransport());
-//		vehicle.setVehicleType(dto.getVehicleType());
-//		vehicle.setDriverId(driverId);
+		vehicle.setDriverId(driverId);
 
 		return vehicle;
 	}
 
 	private Document dtoToDocument(DocumentDTO dto, Document document) {
-		if (document == null) {
-			document = new Document();
-			document.setId(currDocId++);
-		}
+//		if (document == null) {
+//			document = new Document();
+//			document.setId(currDocId++);
+//		}
 
 		document.setName(dto.getName());
 		document.setDocumentImage(dto.getDocumentImage());

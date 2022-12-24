@@ -33,6 +33,7 @@ public class Ride {
 	private boolean babyTransport;
 	private boolean panic;
 	private RideStatus status;
+	private double distance;
 
 	@ManyToMany(cascade = {})
 	private Set<Passenger> passengers = new HashSet<Passenger>();
@@ -224,6 +225,14 @@ public class Ride {
 
 	public void setDriver(Driver driver) {
 		this.driver = driver;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 
 }
