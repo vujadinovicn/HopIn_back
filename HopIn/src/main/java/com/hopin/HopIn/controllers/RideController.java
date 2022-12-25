@@ -128,7 +128,7 @@ public class RideController {
 	}
 	
 	@CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping(value = "{/date", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/date", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@RequestParam String from, @RequestParam String to) {
 		return new ResponseEntity<List<RideForReportDTO>>(this.service.getAllRidesBetweenDates(from, to), HttpStatus.OK);
 	}
