@@ -42,4 +42,6 @@ public interface IRideService {
 
 	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto);
 
+	List<RideForReportDTO> getAllRidesBetweenDates(String from, String to);
+
 }

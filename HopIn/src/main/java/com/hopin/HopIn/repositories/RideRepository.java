@@ -15,4 +15,6 @@ public interface RideRepository extends JpaRepository<Ride, Integer> {
 	
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"start_time\" between :from and :to order by \"start_time\"", nativeQuery=true)
 	public List<Ride> getAllDriverRidesBetweenDates(int id, LocalDateTime from, LocalDateTime to);
+	
+	public List<Ride> findByStartTimeBetween(LocalDateTime from, LocalDateTime to);
 }
