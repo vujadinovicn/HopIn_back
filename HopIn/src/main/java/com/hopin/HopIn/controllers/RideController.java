@@ -1,5 +1,7 @@
 package com.hopin.HopIn.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,11 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
@@ -123,7 +127,11 @@ public class RideController {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
 	}
 	
-
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "{/date", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@RequestParam String from, @RequestParam String to) {
+		return new ResponseEntity<List<RideForReportDTO>>(this.service.getAllRidesBetweenDates(from, to), HttpStatus.OK);
+	}
 	
 	
 }
