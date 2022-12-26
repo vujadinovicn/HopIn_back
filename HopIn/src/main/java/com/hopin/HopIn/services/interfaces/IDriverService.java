@@ -1,15 +1,14 @@
 package com.hopin.HopIn.services.interfaces;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.http.HttpStatusCode;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -21,7 +20,7 @@ public interface IDriverService {
 
 	public UserReturnedDTO insert(UserDTO driver);
 
-	public UserReturnedDTO getById(int id);
+	public DriverReturnedDTO getById(int id);
 
 	public UserReturnedDTO update(int id, UserDTO newData);
 

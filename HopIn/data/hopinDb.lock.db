@@ -1,6 +1,6 @@
 #FileLock
-#Thu Dec 22 12:59:48 CET 2022
-server=192.168.1.102\:57105
+#Mon Dec 26 14:16:26 CET 2022
+server=172.20.10.8\:62732
 hostName=LAPTOP-LO4NB92F
 method=file
-id=18539b42fb0b17bb755b2382ab002f749c19bfbb1ce
+id=1854e913bc8ece81b8e4eea01cb47704ab500a48f91
