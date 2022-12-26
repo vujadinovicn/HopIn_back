@@ -1,7 +1,11 @@
 package com.hopin.HopIn.enums;
 
 public enum VehicleTypeName {
-	CAR, 
+//	STANDARD,
+//	LUXURY,
+//	VAN
+
+	CAR,
 	VAN,
 	LUXURY
 }

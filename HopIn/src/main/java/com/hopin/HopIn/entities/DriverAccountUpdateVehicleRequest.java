@@ -1,49 +1,37 @@
 package com.hopin.HopIn.entities;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "vehicles")
-public class Vehicle {
+@Table(name = "driver_account_update_vehicle_requests")
+public class DriverAccountUpdateVehicleRequest {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private int driverId;
+
 	private String model;
 	private String licenseNumber;
 	private int passengerSeats;
 	private boolean babyTransport;
 	private boolean petTransport;
 
-	@ManyToOne(cascade = CascadeType.REFRESH)
-	private VehicleType vehicleType;
-
-	@OneToOne(cascade = CascadeType.REFRESH)
-	private Location currentLocation;
-
-	public Vehicle() {
+	public DriverAccountUpdateVehicleRequest() {
 	}
 
-	public Vehicle(int id, int driverId, String model, String licenseNumber, int passengerSeats, boolean babyTransport,
-			boolean petTransport, VehicleType vehicleType, Location currentLocation) {
+	public DriverAccountUpdateVehicleRequest(int id, String model, String licenseNumber, int passengerSeats,
+			boolean babyTransport, boolean petTransport) {
 		super();
 		this.id = id;
-		this.driverId = driverId;
 		this.model = model;
 		this.licenseNumber = licenseNumber;
 		this.passengerSeats = passengerSeats;
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
-		this.vehicleType = vehicleType;
-		this.currentLocation = currentLocation;
 	}
 
 	public int getId() {
@@ -52,14 +40,6 @@ public class Vehicle {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getDriverId() {
-		return driverId;
-	}
-
-	public void setDriverId(int driverId) {
-		this.driverId = driverId;
 	}
 
 	public String getModel() {
@@ -100,22 +80,6 @@ public class Vehicle {
 
 	public void setPetTransport(boolean petTransport) {
 		this.petTransport = petTransport;
-	}
-
-	public VehicleType getVehicleType() {
-		return vehicleType;
-	}
-
-	public void setVehicleType(VehicleType vehicleType) {
-		this.vehicleType = vehicleType;
-	}
-
-	public Location getCurrentLocation() {
-		return currentLocation;
-	}
-
-	public void setCurrentLocation(Location currentLocation) {
-		this.currentLocation = currentLocation;
 	}
 
 }

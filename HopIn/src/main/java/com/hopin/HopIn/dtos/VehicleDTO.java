@@ -35,6 +35,7 @@ public class VehicleDTO {
 		this.petTransport = vehicle.isPetTransport();
 	}
 
+
 	public VehicleTypeName getVehicleType() {
 		return vehicleType;
 	}
@@ -90,14 +91,5 @@ public class VehicleDTO {
 	public void setPetTransport(boolean petTransport) {
 		this.petTransport = petTransport;
 	}
-
-	@Override
-	public String toString() {
-		return "VehicleDTO [vehicleType=" + vehicleType + ", model=" + model + ", licenseNumber=" + licenseNumber
-				+ ", currentLocation=" + currentLocation + ", passengerSeats=" + passengerSeats + ", babyTransport="
-				+ babyTransport + ", petTransport=" + petTransport + "]";
-	}
-	
-	
 
 }

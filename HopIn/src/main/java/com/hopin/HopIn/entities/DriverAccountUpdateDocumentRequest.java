@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import com.hopin.HopIn.enums.DocumentOperationType;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,24 +9,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "documents")
-public class Document {
+@Table(name = "driver_account_update_vehicle_requests")
+public class DriverAccountUpdateDocumentRequest {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+
 	private String name;
 	private String documentImage;
-	private int driverId;
-	
-	public Document() {}
-	
-	public Document(int id, String name, String documentImage, int driverId) {
+	private DocumentOperationType type;
+
+	public DriverAccountUpdateDocumentRequest(int id, String name, String documentImage, DocumentOperationType type) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.documentImage = documentImage;
-		this.driverId = driverId;
+		this.type = type;
 	}
 
 	public int getId() {
@@ -51,11 +52,12 @@ public class Document {
 		this.documentImage = documentImage;
 	}
 
-	public int getDriverId() {
-		return driverId;
+	public DocumentOperationType getType() {
+		return type;
 	}
 
-	public void setDriverId(int driverId) {
-		this.driverId = driverId;
+	public void setType(DocumentOperationType type) {
+		this.type = type;
 	}
+
 }
