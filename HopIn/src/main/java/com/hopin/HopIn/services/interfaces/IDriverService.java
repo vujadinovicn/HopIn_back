@@ -8,6 +8,7 @@ import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
@@ -26,9 +27,9 @@ public interface IDriverService {
 
 	public AllUsersDTO getAll(int page, int size);
 
-	public Document addDocument(int id, DocumentDTO newDocument);
+	public DocumentReturnedDTO addDocument(int id, DocumentDTO newDocument);
 
-	public List<Document> getDocuments(int driverId);
+	public List<DocumentReturnedDTO> getDocuments(int driverId);
 
 	public Vehicle setVehicle(int driverId, VehicleDTO dto);
 

@@ -18,6 +18,8 @@ import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
+import com.hopin.HopIn.dtos.DocumentReturnedDTO;
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
@@ -73,7 +75,8 @@ public class DriverServiceImpl implements IDriverService {
 		}
 		return new DriverReturnedDTO(found.get(), found.get().getVehicle());
 	}
-
+	
+	@Override
 	public UserReturnedDTO update(int id, UserDTO dto) {
 		Optional<Driver> driver = allDrivers.findById(id);
 		if (driver.isEmpty()) {
@@ -104,19 +107,24 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public List<Document> getDocuments(int driverId) {
-//		return this.allDrivers.get(driverId).getDocuments();
-		return null;
+	public List<DocumentReturnedDTO> getDocuments(int driverId) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
+		}
+		List<DocumentReturnedDTO> documents = new ArrayList<DocumentReturnedDTO>();
+		driver.get().getDocuments().forEach((document) -> {documents.add(new DocumentReturnedDTO(document));});
+		return documents;
 	}
 
 	@Override
-	public Document addDocument(int driverId, DocumentDTO newDocument) {
+	public DocumentReturnedDTO addDocument(int driverId, DocumentDTO newDocument) {
 		Driver driver = this.allDriversMap.get(driverId);
 		Document document = this.dtoToDocument(newDocument, null);
 		document.setDriverId(driverId);
 		driver.getDocuments().add(document);
-
-		return document;
+		
+		return new DocumentReturnedDTO(document);
 	}
 
 	@Override
@@ -216,11 +224,10 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	private Document dtoToDocument(DocumentDTO dto, Document document) {
-		if (document == null) {
-			document = new Document();
-			document.setId(currDocId++);
-		}
-
+//		if (document == null) {
+//			document = new Document();
+//			document.setId(currDocId++);
+//		}
 		document.setName(dto.getName());
 		document.setDocumentImage(dto.getDocumentImage());
 
