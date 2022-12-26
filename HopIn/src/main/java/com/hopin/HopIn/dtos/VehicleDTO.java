@@ -1,5 +1,6 @@
 package com.hopin.HopIn.dtos;
 
+import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.enums.VehicleTypeName;
 
 public class VehicleDTO {
@@ -23,6 +24,17 @@ public class VehicleDTO {
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
 	}
+	
+	public VehicleDTO(Vehicle vehicle) {
+		this.vehicleType = vehicle.getVehicleType().getName();
+		this.model = vehicle.getModel();
+		this.licenseNumber = vehicle.getLicenseNumber();
+		this.currentLocation = new LocationNoIdDTO(vehicle.getCurrentLocation());
+		this.passengerSeats = vehicle.getPassengerSeats();
+		this.babyTransport = vehicle.isBabyTransport();
+		this.petTransport = vehicle.isPetTransport();
+	}
+
 
 	public VehicleTypeName getVehicleType() {
 		return vehicleType;
