@@ -13,6 +13,7 @@ public class DriverAccountUpdateRequestDTO {
 	private RequestStatus status;
 	private RequestType type;
 	private LocalDateTime time;
+	private String reason;
 
 	public DriverAccountUpdateRequestDTO() {
 
@@ -40,6 +41,7 @@ public class DriverAccountUpdateRequestDTO {
 		this.id = request.getId();
 		this.driver = new UserReturnedDTO(request.getDriver());
 		this.status = request.getStatus();
+		this.reason = request.getReason();
 	}
 
 	public int getId() {
@@ -80,6 +82,14 @@ public class DriverAccountUpdateRequestDTO {
 
 	public void setTime(LocalDateTime time) {
 		this.time = time;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }

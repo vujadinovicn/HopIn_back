@@ -14,6 +14,7 @@ public class DriverAccountUpdateInfoRequestDTO {
 	private String telephoneNumber;
 	private String profilePicture;
 	private RequestStatus status;
+	private String reason;
 	
 	public DriverAccountUpdateInfoRequestDTO() {
 		
@@ -28,6 +29,7 @@ public class DriverAccountUpdateInfoRequestDTO {
 		this.telephoneNumber = request.getTelephoneNumber();
 		this.profilePicture = request.getProfilePicture();
 		this.status = request.getStatus();
+		this.reason = request.getReason();
 	}
 	
 	public DriverAccountUpdateInfoRequestDTO(int id, String name, String surname, String email, String address, String telephoneNumber, String profilePicture, RequestStatus status) {
@@ -104,6 +106,14 @@ public class DriverAccountUpdateInfoRequestDTO {
 	
 	public void setStatus(RequestStatus status) {
 		this.status = status;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 	
 	

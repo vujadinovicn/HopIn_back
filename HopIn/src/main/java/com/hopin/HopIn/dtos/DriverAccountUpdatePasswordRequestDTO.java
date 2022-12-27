@@ -10,6 +10,7 @@ public class DriverAccountUpdatePasswordRequestDTO {
 	private String oldPassword;
 	private String newPassword;
 	private RequestStatus status;
+	private String reason;
 	
 	public DriverAccountUpdatePasswordRequestDTO() {
 		
@@ -20,6 +21,7 @@ public class DriverAccountUpdatePasswordRequestDTO {
 		this.oldPassword = request.getOldPassword();
 		this.newPassword = request.getNewPassword();
 		this.status = request.getStatus();
+		this.reason = request.getReason();
 	}
 	
 	public DriverAccountUpdatePasswordRequestDTO(int id, String oldPassword, String newPassword, RequestStatus status) {
@@ -60,6 +62,14 @@ public class DriverAccountUpdatePasswordRequestDTO {
 
 	public void setStatus(RequestStatus status) {
 		this.status = status;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }

@@ -13,7 +13,7 @@ public class DriverAccountUpdateVehicleRequestDTO {
 	private boolean babyTransport;
 	private boolean petTransport;
 	private RequestStatus status;
-	
+	private String reason;
 	
 	public DriverAccountUpdateVehicleRequestDTO() {
 		
@@ -27,6 +27,7 @@ public class DriverAccountUpdateVehicleRequestDTO {
 		this.babyTransport = request.isBabyTransport();
 		this.petTransport = request.isPetTransport();
 		this.status = request.getStatus();
+		this.reason = request.getReason();
 	}
 	
 	

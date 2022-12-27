@@ -15,6 +15,7 @@ public class DriverAccountUpdateDocumentRequestDTO {
 	private String documentImage;
 	private DocumentOperationType documentOperationType;
 	private RequestStatus status;
+	private String reason;
 	
 	public DriverAccountUpdateDocumentRequestDTO() {
 		
@@ -26,6 +27,7 @@ public class DriverAccountUpdateDocumentRequestDTO {
 		this.documentImage = request.getDocumentImage();
 		this.documentOperationType = request.getDocumentOperationType();
 		this.status = request.getStatus();
+		this.reason = request.getReason();
 	}
 	
 	
@@ -79,6 +81,14 @@ public class DriverAccountUpdateDocumentRequestDTO {
 
 	public void setDocumentOperationType(DocumentOperationType documentOperationType) {
 		this.documentOperationType = documentOperationType;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 	
 	
