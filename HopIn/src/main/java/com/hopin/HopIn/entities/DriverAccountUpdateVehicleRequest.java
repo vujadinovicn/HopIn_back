@@ -1,10 +1,14 @@
 package com.hopin.HopIn.entities;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "driver_account_update_vehicle_requests")
@@ -14,17 +18,29 @@ public class DriverAccountUpdateVehicleRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@Pattern(regexp = "^([a-zA-Z0-9- ]*)$")
 	private String model;
+	
+	@Pattern(regexp = "^([A-Z]{2}-[0-9]{3}-[A-Z]{2})$")
 	private String licenseNumber;
+	
+	@NumberFormat
 	private int passengerSeats;
+	
+	@NotNull
 	private boolean babyTransport;
+	
+	@NotNull
 	private boolean petTransport;
+	
+	@NotNull
+	private VehicleType vehicleType;
 
 	public DriverAccountUpdateVehicleRequest() {
 	}
 
 	public DriverAccountUpdateVehicleRequest(int id, String model, String licenseNumber, int passengerSeats,
-			boolean babyTransport, boolean petTransport) {
+			boolean babyTransport, boolean petTransport, VehicleType vehicleType) {
 		super();
 		this.id = id;
 		this.model = model;
@@ -32,6 +48,7 @@ public class DriverAccountUpdateVehicleRequest {
 		this.passengerSeats = passengerSeats;
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
+		this.vehicleType = vehicleType;
 	}
 
 	public int getId() {
@@ -81,5 +98,15 @@ public class DriverAccountUpdateVehicleRequest {
 	public void setPetTransport(boolean petTransport) {
 		this.petTransport = petTransport;
 	}
+
+	public VehicleType getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(VehicleType vehicleType) {
+		this.vehicleType = vehicleType;
+	}
+	
+	
 
 }

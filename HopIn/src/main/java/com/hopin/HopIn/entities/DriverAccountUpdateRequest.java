@@ -11,6 +11,8 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "driver_account_update_requests")
@@ -21,13 +23,19 @@ public class DriverAccountUpdateRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotEmpty
+	@NotNull
 	private RequestStatus status;
+	
+	@NotEmpty
 	private String reason;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
+	@NotNull
 	private Driver driver;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
+	@NotNull
 	private User admin;
 	
 	public DriverAccountUpdateRequest() {}

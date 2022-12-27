@@ -26,6 +26,10 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 	@NotEmpty
 	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
 	private String surname;
+	
+	@NotEmpty
+	@Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+	private String email;
 
 	@NotEmpty
 	@Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$")
@@ -43,6 +47,7 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 
 	public DriverAccountUpdateInfoRequest(int id, @NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String name,
 			@NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String surname,
+			String email,
 			@NotEmpty @Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$") String address,
 			@NotEmpty @Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*") String telephoneNumber,
 			byte[] profilePicture) {
@@ -50,6 +55,7 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
+		this.email = email;
 		this.address = address;
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
@@ -77,6 +83,14 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 
 	public void setSurname(String surname) {
 		this.surname = surname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getAddress() {

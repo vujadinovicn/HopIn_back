@@ -15,6 +15,10 @@ public class DriverAccountUpdatePasswordRequest extends DriverAccountUpdateReque
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@NotEmpty 
+	@Pattern(regexp = "^([0-9a-zA-Z]{6,}$)")
+	private String oldPassword;
 
 	@NotEmpty
 	@Pattern(regexp = "^([0-9a-zA-Z]{6,}$)")
@@ -23,10 +27,11 @@ public class DriverAccountUpdatePasswordRequest extends DriverAccountUpdateReque
 	public DriverAccountUpdatePasswordRequest() {
 	}
 
-	public DriverAccountUpdatePasswordRequest(int id,
+	public DriverAccountUpdatePasswordRequest(int id, String oldPassword, 
 			@NotEmpty @Pattern(regexp = "^([0-9a-zA-Z]{6,}$)") String newPassword) {
 		super();
 		this.id = id;
+		this.oldPassword = oldPassword;
 		this.newPassword = newPassword;
 	}
 
@@ -36,6 +41,14 @@ public class DriverAccountUpdatePasswordRequest extends DriverAccountUpdateReque
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
 	}
 
 	public String getNewPassword() {

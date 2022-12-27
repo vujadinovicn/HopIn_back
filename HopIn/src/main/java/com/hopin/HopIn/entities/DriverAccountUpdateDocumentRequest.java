@@ -9,6 +9,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "driver_account_update_vehicle_requests")
@@ -18,8 +21,14 @@ public class DriverAccountUpdateDocumentRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	@NotEmpty
+	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
 	private String name;
+	
 	private byte[] documentImage;
+	
+	@NotEmpty
+	@NotNull
 	private DocumentOperationType type;
 
 	public DriverAccountUpdateDocumentRequest(int id, String name, byte[] documentImage, DocumentOperationType type) {
