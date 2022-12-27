@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,8 +17,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
-@RequestMapping("/api/administrator")
-public class AdministratorController {
+@RequestMapping("/api/request")
+public class RequestController {
 	
 	@Autowired
 	IAdministratorService service;
@@ -36,7 +37,19 @@ public class AdministratorController {
 	
 	@GetMapping(value = "/processed",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<DriverAccountUpdateRequestDTO>> getAllProcessed() {
-		List<DriverAccountUpdateRequestDTO> requests = this.service.getAllPending();
+		List<DriverAccountUpdateRequestDTO> requests = this.service.getAllProcessed();
+		return new ResponseEntity<List<DriverAccountUpdateRequestDTO>>(requests, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/driver/pending", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<DriverAccountUpdateRequestDTO>> getAllDriverPending(@PathVariable int id) {
+		List<DriverAccountUpdateRequestDTO> requests = this.service.getAllDriverPending(id);
+		return new ResponseEntity<List<DriverAccountUpdateRequestDTO>>(requests, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/driver/processed", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<DriverAccountUpdateRequestDTO>> getAllDriverProcessed(@PathVariable int id) {
+		List<DriverAccountUpdateRequestDTO> requests = this.service.getAllDriverProcessed(id);
 		return new ResponseEntity<List<DriverAccountUpdateRequestDTO>>(requests, HttpStatus.OK);
 	}
 
