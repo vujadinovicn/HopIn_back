@@ -4,9 +4,6 @@ import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.RequestStatus;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-
 public class DriverAccountUpdateDocumentRequestDTO {
 	
 	private int id;
@@ -16,6 +13,8 @@ public class DriverAccountUpdateDocumentRequestDTO {
 	private DocumentOperationType documentOperationType;
 	private RequestStatus status;
 	private String reason;
+	private String adminName;
+	private String adminSurname;
 	
 	public DriverAccountUpdateDocumentRequestDTO() {
 		
@@ -28,6 +27,8 @@ public class DriverAccountUpdateDocumentRequestDTO {
 		this.documentOperationType = request.getDocumentOperationType();
 		this.status = request.getStatus();
 		this.reason = request.getReason();
+		this.adminName = request.getAdmin().getName();
+		this.adminSurname = request.getAdmin().getSurname();
 	}
 	
 	
@@ -89,6 +90,22 @@ public class DriverAccountUpdateDocumentRequestDTO {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public String getAdminName() {
+		return adminName;
+	}
+
+	public void setAdminName(String adminName) {
+		this.adminName = adminName;
+	}
+
+	public String getAdminSurname() {
+		return adminSurname;
+	}
+
+	public void setAdminSurname(String adminSurname) {
+		this.adminSurname = adminSurname;
 	}
 	
 	

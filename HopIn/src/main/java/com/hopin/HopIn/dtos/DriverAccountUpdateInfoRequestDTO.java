@@ -15,6 +15,8 @@ public class DriverAccountUpdateInfoRequestDTO {
 	private String profilePicture;
 	private RequestStatus status;
 	private String reason;
+	private String adminName;
+	private String adminSurname;
 	
 	public DriverAccountUpdateInfoRequestDTO() {
 		
@@ -30,6 +32,8 @@ public class DriverAccountUpdateInfoRequestDTO {
 		this.profilePicture = request.getProfilePicture();
 		this.status = request.getStatus();
 		this.reason = request.getReason();
+		this.adminName = request.getAdmin().getName();
+		this.adminSurname = request.getAdmin().getSurname();
 	}
 	
 	public DriverAccountUpdateInfoRequestDTO(int id, String name, String surname, String email, String address, String telephoneNumber, String profilePicture, RequestStatus status) {
@@ -114,6 +118,22 @@ public class DriverAccountUpdateInfoRequestDTO {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public String getAdminName() {
+		return adminName;
+	}
+
+	public void setAdminName(String adminName) {
+		this.adminName = adminName;
+	}
+
+	public String getAdminSurname() {
+		return adminSurname;
+	}
+
+	public void setAdminSurname(String adminSurname) {
+		this.adminSurname = adminSurname;
 	}
 	
 	

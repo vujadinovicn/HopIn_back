@@ -14,6 +14,8 @@ public class DriverAccountUpdateVehicleRequestDTO {
 	private boolean petTransport;
 	private RequestStatus status;
 	private String reason;
+	private String adminName;
+	private String adminSurname;
 	
 	public DriverAccountUpdateVehicleRequestDTO() {
 		
@@ -28,6 +30,8 @@ public class DriverAccountUpdateVehicleRequestDTO {
 		this.petTransport = request.isPetTransport();
 		this.status = request.getStatus();
 		this.reason = request.getReason();
+		this.adminName = request.getAdmin().getName();
+		this.adminSurname = request.getAdmin().getSurname();
 	}
 	
 	
@@ -85,6 +89,30 @@ public class DriverAccountUpdateVehicleRequestDTO {
 	}
 	public void setStatus(RequestStatus status) {
 		this.status = status;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public String getAdminName() {
+		return adminName;
+	}
+
+	public void setAdminName(String adminName) {
+		this.adminName = adminName;
+	}
+
+	public String getAdminSurname() {
+		return adminSurname;
+	}
+
+	public void setAdminSurname(String adminSurname) {
+		this.adminSurname = adminSurname;
 	}
 	
 	

@@ -11,6 +11,8 @@ public class DriverAccountUpdatePasswordRequestDTO {
 	private String newPassword;
 	private RequestStatus status;
 	private String reason;
+	private String adminName;
+	private String adminSurname;
 	
 	public DriverAccountUpdatePasswordRequestDTO() {
 		
@@ -22,6 +24,8 @@ public class DriverAccountUpdatePasswordRequestDTO {
 		this.newPassword = request.getNewPassword();
 		this.status = request.getStatus();
 		this.reason = request.getReason();
+		this.adminName = request.getAdmin().getName();
+		this.adminSurname = request.getAdmin().getSurname();
 	}
 	
 	public DriverAccountUpdatePasswordRequestDTO(int id, String oldPassword, String newPassword, RequestStatus status) {
@@ -70,6 +74,22 @@ public class DriverAccountUpdatePasswordRequestDTO {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public String getAdminName() {
+		return adminName;
+	}
+
+	public void setAdminName(String adminName) {
+		this.adminName = adminName;
+	}
+
+	public String getAdminSurname() {
+		return adminSurname;
+	}
+
+	public void setAdminSurname(String adminSurname) {
+		this.adminSurname = adminSurname;
 	}
 
 }
