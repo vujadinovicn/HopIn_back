@@ -28,11 +28,11 @@ public class DriverAccountUpdateRequest {
 	private Driver driver;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
-	private User admin;
+	private Administrator admin;
 	
 	public DriverAccountUpdateRequest() {}
 
-	public DriverAccountUpdateRequest(RequestStatus status, String reason, Driver driver, User admin) {
+	public DriverAccountUpdateRequest(RequestStatus status, String reason, Driver driver, Administrator admin) {
 		super();
 		this.status = status;
 		this.reason = reason;
@@ -64,11 +64,11 @@ public class DriverAccountUpdateRequest {
 		this.driver = driver;
 	}
 
-	public User getAdmin() {
+	public Administrator getAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(User admin) {
+	public void setAdmin(Administrator admin) {
 		this.admin = admin;
 	}
 
