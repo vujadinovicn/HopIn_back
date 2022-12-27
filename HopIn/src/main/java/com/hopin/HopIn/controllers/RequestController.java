@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.services.interfaces.IAdministratorService;
@@ -61,8 +62,8 @@ public class RequestController {
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<DriverAccountUpdateRequest> getById(@PathVariable int id) {
-		return new ResponseEntity<DriverAccountUpdateRequest>(this.service.getById(id), HttpStatus.OK);
+	public ResponseEntity<DriverAccountUpdateInfoRequestDTO> getInfoById(@PathVariable int id) {
+		return new ResponseEntity<DriverAccountUpdateInfoRequestDTO>(this.service.getInfoById(id), HttpStatus.OK);
 	}
 
 }

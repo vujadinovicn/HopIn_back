@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
+import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.enums.RequestType;
 import com.hopin.HopIn.repositories.DriverAccountUpdateDocumentRequestRepository;
@@ -26,13 +28,13 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	private DriverAccountUpdatePasswordRequestRepository allDriverAccountUpdatePasswordRequests;
 	
 	@Autowired
-	private DriverAccountUpdateDocumentRequestRepository allDriverAccountDocumentPasswordRequests;
+	private DriverAccountUpdateDocumentRequestRepository allDriverAccountUpdateDocumentRequests;
 	
 	@Autowired
-	private DriverAccountUpdateInfoRequestRepository allDriverAccountInfoPasswordRequests;
+	private DriverAccountUpdateInfoRequestRepository allDriverAccountUpdateInfoRequests;
 	
 	@Autowired
-	private DriverAccountUpdateVehicleRequestRepository allDriverAccountVehiclePasswordRequests;
+	private DriverAccountUpdateVehicleRequestRepository allDriverAccountUpdateVehicleRequests;
 	
 	@Autowired
 	private DriverAccountUpdateRequestRepository allDriverAccountUpdateRequests;
@@ -82,24 +84,39 @@ public class AdministratorServiceImpl implements IAdministratorService{
 		return driverAccountUpdateRequestsToDtoList(requests);
 	}
 	
+//	@Override
+//	public DriverAccountUpdateRequest getById(int id) {
+//		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
+//		if (found.isEmpty()) {
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+//		}
+//		
+//		DriverAccountUpdateRequest ret;
+//		if (found.get().getType() == RequestType.INFO) {
+//			ret = this.allDriverAccountInfoPasswordRequests.findById(id).get();
+//		} else if (found.get().getType() == RequestType.PASSWORD) {
+//			ret = this.allDriverAccountUpdatePasswordRequests.findById(id).get();
+//		} else if (found.get().getType() == RequestType.DOCUMENT) {
+//			ret = this.allDriverAccountDocumentPasswordRequests.findById(id).get();
+//		}else {
+//			ret = this.allDriverAccountVehiclePasswordRequests.findById(id).get();			
+//		}
+//		return ret;
+//	}
+
 	@Override
-	public DriverAccountUpdateRequest getById(int id) {
+	public DriverAccountUpdateInfoRequestDTO getInfoById(int id) {
 		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
 		if (found.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
 		}
-		
-		DriverAccountUpdateRequest ret;
-		if (found.get().getType() == RequestType.INFO) {
-			ret = this.allDriverAccountInfoPasswordRequests.findById(id).get();
-		} else if (found.get().getType() == RequestType.PASSWORD) {
-			ret = this.allDriverAccountUpdatePasswordRequests.findById(id).get();
-		} else if (found.get().getType() == RequestType.DOCUMENT) {
-			ret = this.allDriverAccountDocumentPasswordRequests.findById(id).get();
-		}else {
-			ret = this.allDriverAccountVehiclePasswordRequests.findById(id).get();			
-		}
-		return ret;
+		DriverAccountUpdateInfoRequest request = allDriverAccountUpdateInfoRequests.findById(id).get();
+		return driverAccountUpdateInfoRequestToDto(request);
 	}
+	
+	private DriverAccountUpdateInfoRequestDTO driverAccountUpdateInfoRequestToDto(DriverAccountUpdateInfoRequest request) {
+		return new DriverAccountUpdateInfoRequestDTO(request);
+	}
+	
 	
 }
