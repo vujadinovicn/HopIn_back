@@ -6,9 +6,6 @@ import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -38,7 +35,7 @@ public class DriverAccountUpdateVehicleRequest extends DriverAccountUpdateReques
 	public DriverAccountUpdateVehicleRequest() {
 	}
 
-	public DriverAccountUpdateVehicleRequest(int id, RequestStatus status, String reason, Driver driver, User admin,
+	public DriverAccountUpdateVehicleRequest(int id, RequestStatus status, String reason, Driver driver, Administrator admin,
 			String model, String licenseNumber, int passengerSeats,
 			boolean babyTransport, boolean petTransport, VehicleType vehicleType) {
 		super(id, status, reason, driver, admin, RequestType.VEHICLE);

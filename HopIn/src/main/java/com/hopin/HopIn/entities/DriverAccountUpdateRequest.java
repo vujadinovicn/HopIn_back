@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import java.time.LocalDateTime;
+
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
@@ -40,6 +42,8 @@ public class DriverAccountUpdateRequest {
 	@NotNull
 	private RequestType type;
 	
+	private LocalDateTime time;
+	
 	public DriverAccountUpdateRequest() {}
 
 	public DriverAccountUpdateRequest(int id, RequestStatus status, String reason, Driver driver, Administrator admin, RequestType type) {
@@ -50,6 +54,7 @@ public class DriverAccountUpdateRequest {
 		this.driver = driver;
 		this.admin = admin;
 		this.type = type;
+		this.time = LocalDateTime.now();
 	}
 	
 	
@@ -100,5 +105,13 @@ public class DriverAccountUpdateRequest {
 
 	public void setType(RequestType type) {
 		this.type = type;
+	}
+
+	public LocalDateTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalDateTime time) {
+		this.time = time;
 	}
 }

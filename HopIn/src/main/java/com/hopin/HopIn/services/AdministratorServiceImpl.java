@@ -59,4 +59,16 @@ public class AdministratorServiceImpl implements IAdministratorService{
 		}
 		return requestsDTO;
 	}
+	
+	@Override
+	public List<DriverAccountUpdateRequestDTO> getAllDriverProcessed(int id) {
+		List<DriverAccountUpdateRequest> requests = allDriverAccountUpdateRequests.findAllDriverProcessed(id);
+		return driverAccountUpdateRequestsToDtoList(requests);
+	}
+	
+	@Override
+	public List<DriverAccountUpdateRequestDTO> getAllDriverPending(int id) {
+		List<DriverAccountUpdateRequest> requests = allDriverAccountUpdateRequests.findAllDriverPending(id);
+		return driverAccountUpdateRequestsToDtoList(requests);
+	}
 }

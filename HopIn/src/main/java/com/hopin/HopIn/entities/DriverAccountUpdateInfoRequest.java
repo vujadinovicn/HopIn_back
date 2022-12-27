@@ -6,9 +6,6 @@ import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -44,7 +41,7 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 	public DriverAccountUpdateInfoRequest() {
 	}
 
-	public DriverAccountUpdateInfoRequest(int id, RequestStatus status, String reason, Driver driver, User admin, @NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String name,
+	public DriverAccountUpdateInfoRequest(int id, RequestStatus status, String reason, Driver driver, Administrator admin, @NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String name,
 			@NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String surname,
 			String email,
 			@NotEmpty @Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$") String address,
