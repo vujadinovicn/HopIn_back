@@ -7,7 +7,6 @@ import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateVehicleRequestDTO;
-import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 
 public interface IAdministratorService {
 	
@@ -30,5 +29,7 @@ public interface IAdministratorService {
 	public DriverAccountUpdateDocumentRequestDTO getDocumentById(int id);
 	
 	public DriverAccountUpdateVehicleRequestDTO getVehicleById(int id);
+
+	DriverAccountUpdateRequestDTO getRequestById(int id);
 
 }

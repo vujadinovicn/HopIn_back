@@ -1,11 +1,10 @@
 package com.hopin.HopIn.dtos;
 
-
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.enums.RequestStatus;
 
 public class DriverAccountUpdateInfoRequestDTO {
-	
+
 	private int id;
 	private String name;
 	private String surname;
@@ -14,14 +13,11 @@ public class DriverAccountUpdateInfoRequestDTO {
 	private String telephoneNumber;
 	private String profilePicture;
 	private RequestStatus status;
-	private String reason;
-	private String adminName;
-	private String adminSurname;
-	
+
 	public DriverAccountUpdateInfoRequestDTO() {
-		
+
 	}
-	
+
 	public DriverAccountUpdateInfoRequestDTO(DriverAccountUpdateInfoRequest request) {
 		this.id = request.getId();
 		this.name = request.getName();
@@ -31,12 +27,10 @@ public class DriverAccountUpdateInfoRequestDTO {
 		this.telephoneNumber = request.getTelephoneNumber();
 		this.profilePicture = request.getProfilePicture();
 		this.status = request.getStatus();
-		this.reason = request.getReason();
-		this.adminName = request.getAdmin().getName();
-		this.adminSurname = request.getAdmin().getSurname();
 	}
-	
-	public DriverAccountUpdateInfoRequestDTO(int id, String name, String surname, String email, String address, String telephoneNumber, String profilePicture, RequestStatus status) {
+
+	public DriverAccountUpdateInfoRequestDTO(int id, String name, String surname, String email, String address,
+			String telephoneNumber, String profilePicture, RequestStatus status) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -47,95 +41,69 @@ public class DriverAccountUpdateInfoRequestDTO {
 		this.profilePicture = profilePicture;
 		this.status = status;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getSurname() {
 		return surname;
 	}
-	
+
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public String getAddress() {
 		return address;
 	}
-	
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	public String getTelephoneNumber() {
 		return telephoneNumber;
 	}
-	
+
 	public void setTelephoneNumber(String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
-	
+
 	public String getProfilePicture() {
 		return profilePicture;
 	}
-	
+
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
-	
+
 	public RequestStatus getStatus() {
 		return status;
 	}
-	
+
 	public void setStatus(RequestStatus status) {
 		this.status = status;
 	}
-
-	public String getReason() {
-		return reason;
-	}
-
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
-	public String getAdminName() {
-		return adminName;
-	}
-
-	public void setAdminName(String adminName) {
-		this.adminName = adminName;
-	}
-
-	public String getAdminSurname() {
-		return adminSurname;
-	}
-
-	public void setAdminSurname(String adminSurname) {
-		this.adminSurname = adminSurname;
-	}
-	
-	
 
 }

@@ -19,7 +19,6 @@ import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
-import com.hopin.HopIn.enums.RequestType;
 import com.hopin.HopIn.repositories.DriverAccountUpdateDocumentRequestRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdateInfoRequestRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdatePasswordRequestRepository;
@@ -166,7 +165,18 @@ public class AdministratorServiceImpl implements IAdministratorService{
 		return new DriverAccountUpdateVehicleRequestDTO(request);
 	}
 	
+	@Override
+	public DriverAccountUpdateRequestDTO getRequestById(int id) {
+		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return driverAccountUpdateRequestToDto(found.get());
+	}
 	
+	private DriverAccountUpdateRequestDTO driverAccountUpdateRequestToDto(DriverAccountUpdateRequest request) {
+		return new DriverAccountUpdateRequestDTO(request);
+	}
 	
 	
 }
