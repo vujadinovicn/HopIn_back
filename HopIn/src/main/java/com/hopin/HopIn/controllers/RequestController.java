@@ -85,8 +85,8 @@ public class RequestController {
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<DriverAccountUpdateVehicleRequestDTO> getRequestById(@PathVariable int id) {
-		return new ResponseEntity<DriverAccountUpdateVehicleRequestDTO>(this.service.getRequstById(id), HttpStatus.OK);
+	public ResponseEntity<DriverAccountUpdateRequestDTO> getRequestById(@PathVariable int id) {
+		return new ResponseEntity<DriverAccountUpdateRequestDTO>(this.service.getRequestById(id), HttpStatus.OK);
 	}
 
 }
