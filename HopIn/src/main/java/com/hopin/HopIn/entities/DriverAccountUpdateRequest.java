@@ -1,6 +1,7 @@
 package com.hopin.HopIn.entities;
 
 import com.hopin.HopIn.enums.RequestStatus;
+import com.hopin.HopIn.enums.RequestType;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -37,15 +38,19 @@ public class DriverAccountUpdateRequest {
 	@NotNull
 	private User admin;
 	
+	@NotNull
+	private RequestType type;
+	
 	public DriverAccountUpdateRequest() {}
 
-	public DriverAccountUpdateRequest(int id, RequestStatus status, String reason, Driver driver, User admin) {
+	public DriverAccountUpdateRequest(int id, RequestStatus status, String reason, Driver driver, User admin, RequestType type) {
 		super();
 		this.id = id;
 		this.status = status;
 		this.reason = reason;
 		this.driver = driver;
 		this.admin = admin;
+		this.type = type;
 	}
 	
 	
@@ -90,4 +95,11 @@ public class DriverAccountUpdateRequest {
 		this.admin = admin;
 	}
 
+	public RequestType getType() {
+		return type;
+	}
+
+	public void setType(RequestType type) {
+		this.type = type;
+	}
 }

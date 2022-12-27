@@ -3,6 +3,7 @@ package com.hopin.HopIn.entities;
 import org.springframework.format.annotation.NumberFormat;
 
 import com.hopin.HopIn.enums.RequestStatus;
+import com.hopin.HopIn.enums.RequestType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,7 +41,7 @@ public class DriverAccountUpdateVehicleRequest extends DriverAccountUpdateReques
 	public DriverAccountUpdateVehicleRequest(int id, RequestStatus status, String reason, Driver driver, User admin,
 			String model, String licenseNumber, int passengerSeats,
 			boolean babyTransport, boolean petTransport, VehicleType vehicleType) {
-		super(id, status, reason, driver, admin);
+		super(id, status, reason, driver, admin, RequestType.VEHICLE);
 		this.model = model;
 		this.licenseNumber = licenseNumber;
 		this.passengerSeats = passengerSeats;

@@ -3,6 +3,7 @@ package com.hopin.HopIn.entities;
 import java.io.UnsupportedEncodingException;
 
 import com.hopin.HopIn.enums.RequestStatus;
+import com.hopin.HopIn.enums.RequestType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,7 +50,7 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 			@NotEmpty @Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$") String address,
 			@NotEmpty @Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*") String telephoneNumber,
 			byte[] profilePicture) {
-		super(id, status, reason, driver, admin);
+		super(id, status, reason, driver, admin,RequestType.INFO);
 		this.name = name;
 		this.surname = surname;
 		this.email = email;

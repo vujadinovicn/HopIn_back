@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.RequestStatus;
+import com.hopin.HopIn.enums.RequestType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,14 +27,14 @@ public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateReque
 	
 	@NotEmpty
 	@NotNull
-	private DocumentOperationType type;
+	private DocumentOperationType documentOperationType;
 
 	public DriverAccountUpdateDocumentRequest(int id, RequestStatus status, String reason, Driver driver, User admin,
 			String name, byte[] documentImage, DocumentOperationType type) {
-		super(id, status, reason, driver, admin);
+		super(id, status, reason, driver, admin, RequestType.DOCUMENT);
 		this.name = name;
 		this.documentImage = documentImage;
-		this.type = type;
+		this.documentOperationType = documentOperationType;
 	}
 
 	public String getName() {
@@ -68,12 +69,12 @@ public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateReque
 			}
 		}
 	}
-	public DocumentOperationType getType() {
-		return type;
+	public DocumentOperationType getDocumentOperationType() {
+		return documentOperationType;
 	}
 
-	public void setType(DocumentOperationType type) {
-		this.type = type;
+	public void setDocumentOperationType(DocumentOperationType type) {
+		this.documentOperationType = type;
 	}
 
 }
