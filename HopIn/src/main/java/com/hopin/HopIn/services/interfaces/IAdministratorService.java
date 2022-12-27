@@ -2,6 +2,7 @@ package com.hopin.HopIn.services.interfaces;
 
 import java.util.List;
 
+import com.hopin.HopIn.dtos.DriverAccountUpdateDocumentRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
@@ -25,7 +26,7 @@ public interface IAdministratorService {
 	
 	public DriverAccountUpdatePasswordRequestDTO getPasswordById(int id);
 	
-	//public DriverAccountUpdateInfoRequestDTO getInfoById(int id);
+	public DriverAccountUpdateDocumentRequestDTO getDocumentById(int id);
 	
 	//public DriverAccountUpdateInfoRequestDTO getInfoById(int id);
 

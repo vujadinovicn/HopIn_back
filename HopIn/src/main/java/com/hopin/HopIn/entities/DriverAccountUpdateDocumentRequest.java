@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
-@Table(name = "driver_account_update_vehicle_requests")
+@Table(name = "driver_account_update_document_requests")
 public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateRequest{
 
 	@NotEmpty
@@ -25,13 +25,17 @@ public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateReque
 	@NotEmpty
 	@NotNull
 	private DocumentOperationType documentOperationType;
+	
+	public DriverAccountUpdateDocumentRequest() {
+		
+	}
 
 	public DriverAccountUpdateDocumentRequest(int id, RequestStatus status, String reason, Driver driver, Administrator admin,
 			String name, byte[] documentImage, DocumentOperationType type) {
 		super(id, status, reason, driver, admin, RequestType.DOCUMENT);
 		this.name = name;
 		this.documentImage = documentImage;
-		this.documentOperationType = documentOperationType;
+		this.documentOperationType = type;
 	}
 
 	public String getName() {

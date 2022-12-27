@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hopin.HopIn.dtos.DriverAccountUpdateDocumentRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
@@ -70,6 +71,11 @@ public class RequestController {
 	@GetMapping(value = "/{id}/password", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<DriverAccountUpdatePasswordRequestDTO> getPasswordById(@PathVariable int id) {
 		return new ResponseEntity<DriverAccountUpdatePasswordRequestDTO>(this.service.getPasswordById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/document", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<DriverAccountUpdateDocumentRequestDTO> getDocumentById(@PathVariable int id) {
+		return new ResponseEntity<DriverAccountUpdateDocumentRequestDTO>(this.service.getDocumentById(id), HttpStatus.OK);
 	}
 
 }
