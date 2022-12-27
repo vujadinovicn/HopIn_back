@@ -1,45 +1,53 @@
 package com.hopin.HopIn.entities;
 
+import org.springframework.format.annotation.NumberFormat;
+
+import com.hopin.HopIn.enums.RequestStatus;
+import com.hopin.HopIn.enums.RequestType;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "driver_account_update_vehicle_requests")
-public class DriverAccountUpdateVehicleRequest {
+public class DriverAccountUpdateVehicleRequest extends DriverAccountUpdateRequest {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-
+	@Pattern(regexp = "^([a-zA-Z0-9- ]*)$")
 	private String model;
+	
+	@Pattern(regexp = "^([A-Z]{2}-[0-9]{3}-[A-Z]{2})$")
 	private String licenseNumber;
+	
+	@NumberFormat
 	private int passengerSeats;
+	
+	@NotNull
 	private boolean babyTransport;
+	
+	@NotNull
 	private boolean petTransport;
+	
+//	@NotNull
+//	private VehicleType vehicleType;
 
 	public DriverAccountUpdateVehicleRequest() {
 	}
 
-	public DriverAccountUpdateVehicleRequest(int id, String model, String licenseNumber, int passengerSeats,
-			boolean babyTransport, boolean petTransport) {
-		super();
-		this.id = id;
+	public DriverAccountUpdateVehicleRequest(int id, RequestStatus status, String reason, Driver driver, User admin,
+			String model, String licenseNumber, int passengerSeats,
+			boolean babyTransport, boolean petTransport, VehicleType vehicleType) {
+		super(id, status, reason, driver, admin, RequestType.VEHICLE);
 		this.model = model;
 		this.licenseNumber = licenseNumber;
 		this.passengerSeats = passengerSeats;
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+		//this.vehicleType = vehicleType;
 	}
 
 	public String getModel() {
@@ -81,5 +89,15 @@ public class DriverAccountUpdateVehicleRequest {
 	public void setPetTransport(boolean petTransport) {
 		this.petTransport = petTransport;
 	}
+
+//	public VehicleType getVehicleType() {
+//		return vehicleType;
+//	}
+//
+//	public void setVehicleType(VehicleType vehicleType) {
+//		this.vehicleType = vehicleType;
+//	}
+	
+	
 
 }
