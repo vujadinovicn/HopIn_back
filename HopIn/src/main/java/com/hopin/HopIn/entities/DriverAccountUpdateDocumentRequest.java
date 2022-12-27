@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import java.io.UnsupportedEncodingException;
+
 import com.hopin.HopIn.enums.DocumentOperationType;
 
 import jakarta.persistence.Entity;
@@ -17,10 +19,10 @@ public class DriverAccountUpdateDocumentRequest {
 	private int id;
 
 	private String name;
-	private String documentImage;
+	private byte[] documentImage;
 	private DocumentOperationType type;
 
-	public DriverAccountUpdateDocumentRequest(int id, String name, String documentImage, DocumentOperationType type) {
+	public DriverAccountUpdateDocumentRequest(int id, String name, byte[] documentImage, DocumentOperationType type) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -45,13 +47,29 @@ public class DriverAccountUpdateDocumentRequest {
 	}
 
 	public String getDocumentImage() {
-		return documentImage;
+		String s;
+		try {
+			s = "data:image/jpeg;base64, ";
+			s = s + new String(this.documentImage, "UTF-8");
+			return s;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public void setDocumentImage(String documentImage) {
-		this.documentImage = documentImage;
+		String[] picture = documentImage.split(",");
+		if (picture.length >= 2) {
+			byte[] decoded;
+			try {
+				decoded = picture[1].getBytes("UTF-8");
+				this.documentImage = decoded;
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-
 	public DocumentOperationType getType() {
 		return type;
 	}

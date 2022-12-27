@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import java.io.UnsupportedEncodingException;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -93,12 +95,30 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 		this.telephoneNumber = telephoneNumber;
 	}
 
-	public byte[] getProfilePicture() {
-		return profilePicture;
+	public String getProfilePicture() {
+		String s;
+		try {
+			s = "data:image/jpeg;base64, ";
+			s = s + new String(this.profilePicture, "UTF-8");
+			return s;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	public void setProfilePicture(byte[] profilePicture) {
-		this.profilePicture = profilePicture;
+	public void setProfilePicture(String profilePicture) {
+		String[] picture = profilePicture.split(",");
+		if (picture.length >= 2) {
+			byte[] decoded;
+			try {
+				decoded = picture[1].getBytes("UTF-8");
+				this.profilePicture = decoded;
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
