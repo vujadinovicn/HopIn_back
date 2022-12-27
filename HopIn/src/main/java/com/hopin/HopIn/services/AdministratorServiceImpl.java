@@ -13,10 +13,12 @@ import com.hopin.HopIn.dtos.DriverAccountUpdateDocumentRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
+import com.hopin.HopIn.dtos.DriverAccountUpdateVehicleRequestDTO;
 import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 import com.hopin.HopIn.enums.RequestType;
 import com.hopin.HopIn.repositories.DriverAccountUpdateDocumentRequestRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdateInfoRequestRepository;
@@ -149,6 +151,22 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	private DriverAccountUpdateDocumentRequestDTO driverAccountUpdateDocumentRequestToDto(DriverAccountUpdateDocumentRequest request) {
 		return new DriverAccountUpdateDocumentRequestDTO(request);
 	}
+
+	@Override
+	public DriverAccountUpdateVehicleRequestDTO getVehicleById(int id) {
+		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		DriverAccountUpdateVehicleRequest request = allDriverAccountUpdateVehicleRequests.findById(id).get();
+		return driverAccountUpdateVehicleRequestToDto(request);
+	}
+	
+	private DriverAccountUpdateVehicleRequestDTO driverAccountUpdateVehicleRequestToDto(DriverAccountUpdateVehicleRequest request) {
+		return new DriverAccountUpdateVehicleRequestDTO(request);
+	}
+	
+	
 	
 	
 }

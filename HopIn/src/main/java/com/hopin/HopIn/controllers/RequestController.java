@@ -14,6 +14,7 @@ import com.hopin.HopIn.dtos.DriverAccountUpdateDocumentRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
+import com.hopin.HopIn.dtos.DriverAccountUpdateVehicleRequestDTO;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.services.interfaces.IAdministratorService;
 
@@ -76,6 +77,11 @@ public class RequestController {
 	@GetMapping(value = "/{id}/document", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<DriverAccountUpdateDocumentRequestDTO> getDocumentById(@PathVariable int id) {
 		return new ResponseEntity<DriverAccountUpdateDocumentRequestDTO>(this.service.getDocumentById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<DriverAccountUpdateVehicleRequestDTO> getVehicleById(@PathVariable int id) {
+		return new ResponseEntity<DriverAccountUpdateVehicleRequestDTO>(this.service.getVehicleById(id), HttpStatus.OK);
 	}
 
 }
