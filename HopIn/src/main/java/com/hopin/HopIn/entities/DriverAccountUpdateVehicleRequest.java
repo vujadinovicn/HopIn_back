@@ -2,6 +2,8 @@ package com.hopin.HopIn.entities;
 
 import org.springframework.format.annotation.NumberFormat;
 
+import com.hopin.HopIn.enums.RequestStatus;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,11 +14,7 @@ import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "driver_account_update_vehicle_requests")
-public class DriverAccountUpdateVehicleRequest {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+public class DriverAccountUpdateVehicleRequest extends DriverAccountUpdateRequest {
 
 	@Pattern(regexp = "^([a-zA-Z0-9- ]*)$")
 	private String model;
@@ -33,30 +31,22 @@ public class DriverAccountUpdateVehicleRequest {
 	@NotNull
 	private boolean petTransport;
 	
-	@NotNull
-	private VehicleType vehicleType;
+//	@NotNull
+//	private VehicleType vehicleType;
 
 	public DriverAccountUpdateVehicleRequest() {
 	}
 
-	public DriverAccountUpdateVehicleRequest(int id, String model, String licenseNumber, int passengerSeats,
+	public DriverAccountUpdateVehicleRequest(int id, RequestStatus status, String reason, Driver driver, User admin,
+			String model, String licenseNumber, int passengerSeats,
 			boolean babyTransport, boolean petTransport, VehicleType vehicleType) {
-		super();
-		this.id = id;
+		super(id, status, reason, driver, admin);
 		this.model = model;
 		this.licenseNumber = licenseNumber;
 		this.passengerSeats = passengerSeats;
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
-		this.vehicleType = vehicleType;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+		//this.vehicleType = vehicleType;
 	}
 
 	public String getModel() {
@@ -99,13 +89,13 @@ public class DriverAccountUpdateVehicleRequest {
 		this.petTransport = petTransport;
 	}
 
-	public VehicleType getVehicleType() {
-		return vehicleType;
-	}
-
-	public void setVehicleType(VehicleType vehicleType) {
-		this.vehicleType = vehicleType;
-	}
+//	public VehicleType getVehicleType() {
+//		return vehicleType;
+//	}
+//
+//	public void setVehicleType(VehicleType vehicleType) {
+//		this.vehicleType = vehicleType;
+//	}
 	
 	
 

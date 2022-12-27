@@ -27,7 +27,6 @@ public class DriverAccountUpdateRequest {
 	@NotNull
 	private RequestStatus status;
 	
-	@NotEmpty
 	private String reason;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
@@ -40,12 +39,23 @@ public class DriverAccountUpdateRequest {
 	
 	public DriverAccountUpdateRequest() {}
 
-	public DriverAccountUpdateRequest(RequestStatus status, String reason, Driver driver, User admin) {
+	public DriverAccountUpdateRequest(int id, RequestStatus status, String reason, Driver driver, User admin) {
 		super();
+		this.id = id;
 		this.status = status;
 		this.reason = reason;
 		this.driver = driver;
 		this.admin = admin;
+	}
+	
+	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public RequestStatus getStatus() {

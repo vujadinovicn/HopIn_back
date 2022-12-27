@@ -3,6 +3,7 @@ package com.hopin.HopIn.entities;
 import java.io.UnsupportedEncodingException;
 
 import com.hopin.HopIn.enums.DocumentOperationType;
+import com.hopin.HopIn.enums.RequestStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,11 +16,7 @@ import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "driver_account_update_vehicle_requests")
-public class DriverAccountUpdateDocumentRequest {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateRequest{
 
 	@NotEmpty
 	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
@@ -31,20 +28,12 @@ public class DriverAccountUpdateDocumentRequest {
 	@NotNull
 	private DocumentOperationType type;
 
-	public DriverAccountUpdateDocumentRequest(int id, String name, byte[] documentImage, DocumentOperationType type) {
-		super();
-		this.id = id;
+	public DriverAccountUpdateDocumentRequest(int id, RequestStatus status, String reason, Driver driver, User admin,
+			String name, byte[] documentImage, DocumentOperationType type) {
+		super(id, status, reason, driver, admin);
 		this.name = name;
 		this.documentImage = documentImage;
 		this.type = type;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {

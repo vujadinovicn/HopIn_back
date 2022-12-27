@@ -2,6 +2,8 @@ package com.hopin.HopIn.entities;
 
 import java.io.UnsupportedEncodingException;
 
+import com.hopin.HopIn.enums.RequestStatus;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,10 +16,6 @@ import jakarta.validation.constraints.Pattern;
 @Entity
 @Table(name = "driver_account_update_info_requests")
 public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 
 	@NotEmpty
 	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
@@ -45,28 +43,19 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 	public DriverAccountUpdateInfoRequest() {
 	}
 
-	public DriverAccountUpdateInfoRequest(int id, @NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String name,
+	public DriverAccountUpdateInfoRequest(int id, RequestStatus status, String reason, Driver driver, User admin, @NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String name,
 			@NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String surname,
 			String email,
 			@NotEmpty @Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$") String address,
 			@NotEmpty @Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*") String telephoneNumber,
 			byte[] profilePicture) {
-		super();
-		this.id = id;
+		super(id, status, reason, driver, admin);
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
 		this.address = address;
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {

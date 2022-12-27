@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import com.hopin.HopIn.enums.RequestStatus;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,10 +13,6 @@ import jakarta.validation.constraints.Pattern;
 @Entity
 @Table(name = "driver_account_update_password_requests")
 public class DriverAccountUpdatePasswordRequest extends DriverAccountUpdateRequest {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 	
 	@NotEmpty 
 	@Pattern(regexp = "^([0-9a-zA-Z]{6,}$)")
@@ -27,20 +25,20 @@ public class DriverAccountUpdatePasswordRequest extends DriverAccountUpdateReque
 	public DriverAccountUpdatePasswordRequest() {
 	}
 
-	public DriverAccountUpdatePasswordRequest(int id, String oldPassword, 
+//	public DriverAccountUpdatePasswordRequest(int id, String oldPassword, 
+//			@NotEmpty @Pattern(regexp = "^([0-9a-zA-Z]{6,}$)") String newPassword) {
+//		super();
+//		this.id = id;
+//		this.oldPassword = oldPassword;
+//		this.newPassword = newPassword;
+//	}
+	
+	public DriverAccountUpdatePasswordRequest(int id, RequestStatus status, String reason, Driver driver, User admin,
+			String oldPassword, 
 			@NotEmpty @Pattern(regexp = "^([0-9a-zA-Z]{6,}$)") String newPassword) {
-		super();
-		this.id = id;
+		super(id, status, reason, driver, admin);
 		this.oldPassword = oldPassword;
 		this.newPassword = newPassword;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getOldPassword() {
