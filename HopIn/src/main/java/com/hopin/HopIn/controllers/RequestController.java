@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
+import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.services.interfaces.IAdministratorService;
@@ -61,9 +62,14 @@ public class RequestController {
 		return new ResponseEntity<List<DriverAccountUpdateRequestDTO>>(requests, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/{id}/info", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<DriverAccountUpdateInfoRequestDTO> getInfoById(@PathVariable int id) {
 		return new ResponseEntity<DriverAccountUpdateInfoRequestDTO>(this.service.getInfoById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}/password", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<DriverAccountUpdatePasswordRequestDTO> getPasswordById(@PathVariable int id) {
+		return new ResponseEntity<DriverAccountUpdatePasswordRequestDTO>(this.service.getPasswordById(id), HttpStatus.OK);
 	}
 
 }

@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
+import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.enums.RequestType;
 import com.hopin.HopIn.repositories.DriverAccountUpdateDocumentRequestRepository;
@@ -116,6 +118,20 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	
 	private DriverAccountUpdateInfoRequestDTO driverAccountUpdateInfoRequestToDto(DriverAccountUpdateInfoRequest request) {
 		return new DriverAccountUpdateInfoRequestDTO(request);
+	}
+
+	@Override
+	public DriverAccountUpdatePasswordRequestDTO getPasswordById(int id) {
+		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		DriverAccountUpdatePasswordRequest request = allDriverAccountUpdatePasswordRequests.findById(id).get();
+		return driverAccountUpdatePasswordRequestToDto(request);
+	}
+	
+	private DriverAccountUpdatePasswordRequestDTO driverAccountUpdatePasswordRequestToDto(DriverAccountUpdatePasswordRequest request) {
+		return new DriverAccountUpdatePasswordRequestDTO(request);
 	}
 	
 	
