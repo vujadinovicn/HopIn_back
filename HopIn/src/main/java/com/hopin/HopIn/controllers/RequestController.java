@@ -52,5 +52,11 @@ public class RequestController {
 		List<DriverAccountUpdateRequestDTO> requests = this.service.getAllDriverProcessed(id);
 		return new ResponseEntity<List<DriverAccountUpdateRequestDTO>>(requests, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/{id}/admin/processed", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<DriverAccountUpdateRequestDTO>> getAllAdminProcessed(@PathVariable int id) {
+		List<DriverAccountUpdateRequestDTO> requests = this.service.getAllAdminProcessed(id);
+		return new ResponseEntity<List<DriverAccountUpdateRequestDTO>>(requests, HttpStatus.OK);
+	}
 
 }

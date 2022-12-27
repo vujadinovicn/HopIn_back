@@ -15,6 +15,8 @@ public interface IAdministratorService {
 	List<DriverAccountUpdateRequestDTO> getAllDriverProcessed(int id);
 
 	List<DriverAccountUpdateRequestDTO> getAllDriverPending(int id);
+
+	List<DriverAccountUpdateRequestDTO> getAllAdminProcessed(int id);
 	
 
 }
