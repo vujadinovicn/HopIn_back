@@ -1,6 +1,7 @@
 package com.hopin.HopIn.entities;
 
 import com.hopin.HopIn.enums.RequestStatus;
+import com.hopin.HopIn.enums.RequestType;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -11,6 +12,8 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "driver_account_update_requests")
@@ -21,23 +24,43 @@ public class DriverAccountUpdateRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotEmpty
+	@NotNull
 	private RequestStatus status;
+	
 	private String reason;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
+	@NotNull
 	private Driver driver;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
+	@NotNull
 	private User admin;
+	
+	@NotNull
+	private RequestType type;
 	
 	public DriverAccountUpdateRequest() {}
 
-	public DriverAccountUpdateRequest(RequestStatus status, String reason, Driver driver, User admin) {
+	public DriverAccountUpdateRequest(int id, RequestStatus status, String reason, Driver driver, User admin, RequestType type) {
 		super();
+		this.id = id;
 		this.status = status;
 		this.reason = reason;
 		this.driver = driver;
 		this.admin = admin;
+		this.type = type;
+	}
+	
+	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public RequestStatus getStatus() {
@@ -72,4 +95,11 @@ public class DriverAccountUpdateRequest {
 		this.admin = admin;
 	}
 
+	public RequestType getType() {
+		return type;
+	}
+
+	public void setType(RequestType type) {
+		this.type = type;
+	}
 }

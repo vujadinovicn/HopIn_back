@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import org.springframework.format.annotation.NumberFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "vehicles")
@@ -16,14 +20,27 @@ public class Vehicle {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@NotNull
 	private int driverId;
+	
+	@Pattern(regexp = "^([a-zA-Z0-9- ]*)$")
 	private String model;
+	
+	@Pattern(regexp = "^([A-Z]{2}-[0-9]{3}-[A-Z]{2})$")
 	private String licenseNumber;
+	
+	@NumberFormat
 	private int passengerSeats;
+	
+	@NotNull
 	private boolean babyTransport;
+	
+	@NotNull
 	private boolean petTransport;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
+	@NotNull
 	private VehicleType vehicleType;
 
 	@OneToOne(cascade = CascadeType.REFRESH)
