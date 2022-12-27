@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
+import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.services.interfaces.IAdministratorService;
 
 import java.util.List;
@@ -57,6 +58,11 @@ public class RequestController {
 	public ResponseEntity<List<DriverAccountUpdateRequestDTO>> getAllAdminProcessed(@PathVariable int id) {
 		List<DriverAccountUpdateRequestDTO> requests = this.service.getAllAdminProcessed(id);
 		return new ResponseEntity<List<DriverAccountUpdateRequestDTO>>(requests, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<DriverAccountUpdateRequest> getById(@PathVariable int id) {
+		return new ResponseEntity<DriverAccountUpdateRequest>(this.service.getById(id), HttpStatus.OK);
 	}
 
 }
