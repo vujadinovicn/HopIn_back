@@ -44,6 +44,9 @@ public class DriverAccountUpdateRequestDTO {
 		this.status = request.getStatus();
 		this.reason = request.getReason();
 		this.admin = new UserReturnedDTO(request.getAdmin());
+		System.out.println(request.getTime());
+		this.time = request.getTime();
+		this.type = request.getType();
 	}
 
 	public int getId() {
