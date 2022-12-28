@@ -26,8 +26,7 @@ public class DriverAccountUpdateRequest {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@NotEmpty
-	@NotNull
+	
 	private RequestStatus status;
 	
 	private String reason;

@@ -15,6 +15,10 @@ import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
+import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 import com.hopin.HopIn.entities.Vehicle;
 
 public interface IDriverService {
@@ -48,6 +52,14 @@ public interface IDriverService {
 	WorkingHoursDTO updateWorkingHours(int hoursId, WorkingHoursDTO hours);
 
 	public AllUserRidesReturnedDTO getAllRides(int driverId, int page, int size, String sort, String from, String to);
+
+	void updateByInfoRequest(DriverAccountUpdateInfoRequest request);
+
+	void updateByPasswordRequest(DriverAccountUpdatePasswordRequest request);
+
+	void updateByVehicleRequest(DriverAccountUpdateVehicleRequest request);
+
+	void updateByDocumentRequest(DriverAccountUpdateDocumentRequest request);
 
 
 }

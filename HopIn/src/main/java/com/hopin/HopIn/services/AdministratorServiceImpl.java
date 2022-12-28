@@ -14,17 +14,24 @@ import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateVehicleRequestDTO;
+import com.hopin.HopIn.entities.Administrator;
 import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
+import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.enums.RequestStatus;
+import com.hopin.HopIn.enums.RequestType;
+import com.hopin.HopIn.repositories.AdministratorRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdateDocumentRequestRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdateInfoRequestRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdatePasswordRequestRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdateRequestRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdateVehicleRequestRepository;
 import com.hopin.HopIn.services.interfaces.IAdministratorService;
+import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IUserService;
 
 @Service
 public class AdministratorServiceImpl implements IAdministratorService{
@@ -43,6 +50,15 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	
 	@Autowired
 	private DriverAccountUpdateRequestRepository allDriverAccountUpdateRequests;
+	
+	@Autowired
+	private AdministratorRepository allAdministrators;
+	
+	@Autowired
+	private IDriverService driverService;
+	
+	@Autowired
+	private IUserService userService;
 
 	@Override
 	public List<DriverAccountUpdateRequestDTO> getAll() {
@@ -176,6 +192,53 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	
 	private DriverAccountUpdateRequestDTO driverAccountUpdateRequestToDto(DriverAccountUpdateRequest request) {
 		return new DriverAccountUpdateRequestDTO(request);
+	}
+	
+	@Override
+	public void acceptRequest(int requestId, int adminId) {
+		Optional<DriverAccountUpdateRequest> foundRequest = this.allDriverAccountUpdateRequests.findById(requestId);
+		Optional<Administrator> foundAdmin = this.allAdministrators.findById(adminId);
+		if (foundRequest.isEmpty() || foundAdmin.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Request not found.");
+		}
+		
+		if (foundRequest.get().getType() == RequestType.INFO) {
+			DriverAccountUpdateInfoRequest request = this.allDriverAccountUpdateInfoRequests.findById(requestId).get();
+			this.driverService.updateByInfoRequest(request);
+			request.setAdmin(foundAdmin.get());
+		} else if (foundRequest.get().getType() == RequestType.PASSWORD) {
+			DriverAccountUpdatePasswordRequest request = this.allDriverAccountUpdatePasswordRequests.findById(requestId).get();
+			this.driverService.updateByPasswordRequest(request);
+			request.setAdmin(foundAdmin.get());
+		} else if (foundRequest.get().getType() == RequestType.VEHICLE) {
+			DriverAccountUpdateVehicleRequest request = this.allDriverAccountUpdateVehicleRequests.findById(requestId).get();
+			this.driverService.updateByVehicleRequest(request);
+			request.setAdmin(foundAdmin.get());
+		} else {
+			DriverAccountUpdateDocumentRequest request = this.allDriverAccountUpdateDocumentRequests.findById(requestId).get();
+			this.driverService.updateByDocumentRequest(request);
+			request.setAdmin(foundAdmin.get());
+		}
+		foundRequest.get().setStatus(RequestStatus.ACCEPTED);
+		System.out.println(foundRequest.get().getStatus());
+		this.allDriverAccountUpdateRequests.save(foundRequest.get());
+		this.allDriverAccountUpdateRequests.flush();
+	}
+	
+	@Override
+	public void denyRequest(int requestId, int adminId, String reason) {
+		Optional<DriverAccountUpdateRequest> foundRequest = this.allDriverAccountUpdateRequests.findById(requestId);
+		Optional<Administrator> foundAdmin = this.allAdministrators.findById(adminId);
+		if (foundRequest.isEmpty() || foundAdmin.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Request not found.");
+		}
+		
+		DriverAccountUpdateRequest request = foundRequest.get();
+		request.setReason(reason);
+		request.setAdmin(foundAdmin.get());
+		request.setStatus(RequestStatus.DENIED);
+		this.allDriverAccountUpdateRequests.save(request);
+		this.allDriverAccountUpdateRequests.flush();
 	}
 	
 	

@@ -31,5 +31,9 @@ public interface IAdministratorService {
 	public DriverAccountUpdateVehicleRequestDTO getVehicleById(int id);
 
 	DriverAccountUpdateRequestDTO getRequestById(int id);
+	
+	public void acceptRequest(int requestId, int adminId);
+
+	void denyRequest(int requestId, int adminId, String reason);
 
 }
