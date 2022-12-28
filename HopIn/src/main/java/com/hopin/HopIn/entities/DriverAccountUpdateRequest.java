@@ -29,7 +29,6 @@ public class DriverAccountUpdateRequest {
 	@NotNull
 	private RequestStatus status;
 	
-	@NotNull
 	private String reason;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
