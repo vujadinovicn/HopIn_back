@@ -1,5 +1,7 @@
 package com.hopin.HopIn.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -7,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,10 +19,7 @@ import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
 import com.hopin.HopIn.dtos.DriverAccountUpdateVehicleRequestDTO;
-import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.services.interfaces.IAdministratorService;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
@@ -87,6 +88,18 @@ public class RequestController {
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<DriverAccountUpdateRequestDTO> getRequestById(@PathVariable int id) {
 		return new ResponseEntity<DriverAccountUpdateRequestDTO>(this.service.getRequestById(id), HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/{requestId}/{adminId}/accept")
+	public ResponseEntity<String> acceptRequestById(@PathVariable int requestId, @PathVariable int adminId) {
+		this.service.acceptRequest(requestId, adminId);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/{requestId}/{adminId}/deny")
+	public ResponseEntity<String> denyRequestById(@PathVariable int requestId, @PathVariable int adminId, @RequestBody String reason) {
+		this.service.denyRequest(requestId, adminId, reason);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 }
