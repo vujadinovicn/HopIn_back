@@ -2,6 +2,7 @@ package com.hopin.HopIn.entities;
 
 import org.springframework.format.annotation.NumberFormat;
 
+import com.hopin.HopIn.dtos.VehicleRequestDTO;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
@@ -48,6 +49,16 @@ public class DriverAccountUpdateVehicleRequest extends DriverAccountUpdateReques
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
 		this.vehicleType = vehicleType;
+	}
+	
+	public DriverAccountUpdateVehicleRequest(VehicleRequestDTO dto, Driver driver, VehicleType type) {
+		super(RequestStatus.PENDING, "", driver, null, RequestType.VEHICLE);
+		this.model = dto.getModel();
+		this.licenseNumber = dto.getLicenseNumber();
+		this.passengerSeats = dto.getPassengerSeats();
+		this.babyTransport = dto.isBabyTransport();
+		this.petTransport = dto.isPetTransport();
+		this.vehicleType = type;
 	}
 
 	public String getModel() {
