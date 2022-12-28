@@ -62,6 +62,14 @@ public class Vehicle {
 		this.vehicleType = vehicleType;
 		this.currentLocation = currentLocation;
 	}
+	
+	public void setInfoByRequest(DriverAccountUpdateVehicleRequest request) {
+		this.model = request.getModel();
+		this.licenseNumber = request.getLicenseNumber();
+		this.passengerSeats = request.getPassengerSeats();
+		this.petTransport = request.isPetTransport();
+		this.babyTransport = request.isBabyTransport();
+	}
 
 	public int getId() {
 		return id;

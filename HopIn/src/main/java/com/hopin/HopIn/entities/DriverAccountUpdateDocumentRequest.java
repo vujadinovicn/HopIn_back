@@ -22,8 +22,6 @@ public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateReque
 	
 	private byte[] documentImage;
 	
-	@NotEmpty
-	@NotNull
 	private DocumentOperationType documentOperationType;
 	
 	public DriverAccountUpdateDocumentRequest() {

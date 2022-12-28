@@ -26,6 +26,13 @@ public class Document {
 		this.documentImage = documentImage;
 		this.driverId = driverId;
 	}
+	
+	public Document(String name, String documentImage, int driverId) {
+		super();
+		this.name = name;
+		this.documentImage = documentImage;
+		this.driverId = driverId;
+	}
 
 	public int getId() {
 		return id;

@@ -31,6 +31,15 @@ public class Driver extends User {
 			String telephoneNumber, byte[] profilePicture) {
 		super(id, name, surname, email, password, address, telephoneNumber, profilePicture);
 	}
+	
+	public void setInfoByRequest(DriverAccountUpdateInfoRequest request) {
+		this.setName(request.getName());
+		this.setSurname(request.getSurname());
+		this.setAddress(request.getAddress());
+		this.setEmail(request.getEmail());
+		this.setProfilePicture(request.getProfilePicture());
+		this.setTelephoneNumber(request.getTelephoneNumber());
+	}
 
 	public Vehicle getVehicle() {
 		return vehicle;

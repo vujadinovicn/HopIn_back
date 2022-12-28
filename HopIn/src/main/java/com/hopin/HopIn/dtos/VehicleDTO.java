@@ -24,7 +24,7 @@ public class VehicleDTO {
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
 	}
-	
+
 	public VehicleDTO(Vehicle vehicle) {
 		this.vehicleType = vehicle.getVehicleType().getName();
 		this.model = vehicle.getModel();
@@ -34,7 +34,6 @@ public class VehicleDTO {
 		this.babyTransport = vehicle.isBabyTransport();
 		this.petTransport = vehicle.isPetTransport();
 	}
-
 
 	public VehicleTypeName getVehicleType() {
 		return vehicleType;

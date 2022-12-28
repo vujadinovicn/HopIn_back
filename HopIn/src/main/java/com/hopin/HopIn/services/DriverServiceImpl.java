@@ -19,7 +19,6 @@ import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
-import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
@@ -27,8 +26,13 @@ import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.entities.WorkingHours;
+import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.repositories.DriverRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
@@ -249,5 +253,50 @@ public class DriverServiceImpl implements IDriverService {
 
 		return driver;
 	}
+	
+	@Override
+	public void updateByInfoRequest(DriverAccountUpdateInfoRequest request) {
+		Driver driver = request.getDriver();
+		driver.setInfoByRequest(request);
+		
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+	}
+	
+	@Override
+	public void updateByPasswordRequest(DriverAccountUpdatePasswordRequest request) {
+		Driver driver = request.getDriver();
+		if (request.getNewPassword() != "" && request.getNewPassword() != null) {
+			if (!this.checkPasswordMatch(driver.getPassword(), request.getOldPassword())) {
+				System.out.println(driver.getPassword());
+				System.out.println(request.getOldPassword());
+				return;	
+			}
+			driver.setPassword(request.getNewPassword());
+		}
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+		
+	}
+	
+	@Override
+	public void updateByVehicleRequest(DriverAccountUpdateVehicleRequest request) {
+		Driver driver = request.getDriver();
+		Vehicle vehicle = request.getDriver().getVehicle();
+		vehicle.setInfoByRequest(request);
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+	}
+	
+	@Override
+	public void updateByDocumentRequest(DriverAccountUpdateDocumentRequest request) {
+		Driver driver = request.getDriver();
+		if (request.getDocumentOperationType() == DocumentOperationType.ADD) {
+			driver.getDocuments().add(new Document(request.getName(), request.getDocumentImage(), driver.getId()));
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+		}
+	}
+
 	
 }
