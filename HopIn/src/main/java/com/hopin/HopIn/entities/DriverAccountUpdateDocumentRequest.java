@@ -2,6 +2,7 @@ package com.hopin.HopIn.entities;
 
 import java.io.UnsupportedEncodingException;
 
+import com.hopin.HopIn.dtos.DocumentRequestDTO;
 import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
@@ -35,6 +36,13 @@ public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateReque
 		this.name = name;
 		this.documentImage = documentImage;
 		this.documentOperationType = type;
+	}
+	
+	public DriverAccountUpdateDocumentRequest(DocumentRequestDTO dto, Driver driver) {
+		super(RequestStatus.PENDING, "", driver, null, RequestType.DOCUMENT);
+		this.name = dto.getName();
+		this.documentImage = dto.getDocumentImage().getBytes();
+		this.documentOperationType = dto.getDocumentOperationType();
 	}
 
 	public String getName() {

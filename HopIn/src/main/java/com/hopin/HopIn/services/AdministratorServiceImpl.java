@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.DocumentRequestDTO;
-import com.hopin.HopIn.dtos.DriverSentPasswordRequestDTO;
 import com.hopin.HopIn.dtos.InfoRequestDTO;
 import com.hopin.HopIn.dtos.PasswordRequestDTO;
 import com.hopin.HopIn.dtos.RequestDTO;
@@ -22,6 +21,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
+import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 import com.hopin.HopIn.repositories.AdministratorRepository;
@@ -32,7 +32,7 @@ import com.hopin.HopIn.repositories.DriverAccountUpdateRequestRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdateVehicleRequestRepository;
 import com.hopin.HopIn.services.interfaces.IAdministratorService;
 import com.hopin.HopIn.services.interfaces.IDriverService;
-import com.hopin.HopIn.services.interfaces.IUserService;
+import com.hopin.HopIn.services.interfaces.IVehicleTypeService;
 
 @Service
 public class AdministratorServiceImpl implements IAdministratorService{
@@ -59,7 +59,7 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	private IDriverService driverService;
 	
 	@Autowired
-	private IUserService userService;
+	private IVehicleTypeService vehicleTypeService;
 
 	@Override
 	public List<RequestDTO> getAll() {
@@ -242,12 +242,36 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	}
 	
 	@Override
-	public void insertPasswordRequest(int driverId, DriverSentPasswordRequestDTO dto) {
+	public void insertPasswordRequest(int driverId, PasswordRequestDTO dto) {
 		Driver driver = this.driverService.getDriver(driverId);
-		
 		DriverAccountUpdatePasswordRequest request = new DriverAccountUpdatePasswordRequest(dto, driver);
 		this.allDriverAccountUpdatePasswordRequests.save(request);
 		this.allDriverAccountUpdatePasswordRequests.flush();
+	}
+	
+	@Override
+	public void insertInfoRequest(int driverId, InfoRequestDTO dto) {
+		Driver driver = this.driverService.getDriver(driverId);
+		DriverAccountUpdateInfoRequest request = new DriverAccountUpdateInfoRequest(dto, driver);
+		this.allDriverAccountUpdateInfoRequests.save(request);
+		this.allDriverAccountUpdateInfoRequests.flush();
+	}
+	
+	@Override
+	public void insertVehicleRequest(int driverId, VehicleRequestDTO dto) {
+		Driver driver = this.driverService.getDriver(driverId);
+		VehicleType type = this.vehicleTypeService.getByName(dto.getVehicleType());
+		DriverAccountUpdateVehicleRequest request = new DriverAccountUpdateVehicleRequest(dto, driver, type);
+		this.allDriverAccountUpdateVehicleRequests.save(request);
+		this.allDriverAccountUpdateVehicleRequests.flush();
+	}
+	
+	@Override
+	public void insertDocumentRequest(int driverId, DocumentRequestDTO dto) {
+		Driver driver = this.driverService.getDriver(driverId);
+		DriverAccountUpdateDocumentRequest request = new DriverAccountUpdateDocumentRequest(dto, driver);
+		this.allDriverAccountUpdateDocumentRequests.save(request);
+		this.allDriverAccountUpdateDocumentRequests.flush();
 	}
 	
 	

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hopin.HopIn.dtos.DocumentRequestDTO;
-import com.hopin.HopIn.dtos.DriverSentPasswordRequestDTO;
 import com.hopin.HopIn.dtos.InfoRequestDTO;
 import com.hopin.HopIn.dtos.PasswordRequestDTO;
 import com.hopin.HopIn.dtos.RequestDTO;
@@ -104,8 +103,26 @@ public class RequestController {
 	}
 	
 	@PostMapping(value = "/{driverId}/password/request")
-	public ResponseEntity<String> denyRequestById(@PathVariable int requestId, @RequestBody DriverSentPasswordRequestDTO request) {
-		this.service.insertPasswordRequest(requestId, request);
+	public ResponseEntity<String> insertPasswordRequest(@PathVariable int driverId, @RequestBody PasswordRequestDTO request) {
+		this.service.insertPasswordRequest(driverId, request);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/{driverId}/info/request")
+	public ResponseEntity<String> insertInfoRequest(@PathVariable int driverId, @RequestBody InfoRequestDTO request) {
+		this.service.insertInfoRequest(driverId, request);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/{driverId}/vehicle/request")
+	public ResponseEntity<String> insertVehicleRequest(@PathVariable int driverId, @RequestBody VehicleRequestDTO request) {
+		this.service.insertVehicleRequest(driverId, request);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/{driverId}/document/request")
+	public ResponseEntity<String> insertDocumentRequest(@PathVariable int driverId, @RequestBody DocumentRequestDTO request) {
+		this.service.insertDocumentRequest(driverId, request);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
