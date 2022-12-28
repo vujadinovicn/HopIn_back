@@ -2,6 +2,7 @@ package com.hopin.HopIn.entities;
 
 import java.io.UnsupportedEncodingException;
 
+import com.hopin.HopIn.dtos.InfoRequestDTO;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
@@ -54,6 +55,16 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 		this.address = address;
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
+	}
+	
+	public DriverAccountUpdateInfoRequest(InfoRequestDTO dto, Driver driver) {
+		super(RequestStatus.PENDING, "", driver, null, RequestType.INFO);
+		this.name = dto.getName();
+		this.surname = dto.getSurname();
+		this.email = dto.getEmail();
+		this.address = dto.getAddress();
+		this.telephoneNumber = dto.getTelephoneNumber();
+		this.profilePicture = dto.getProfilePicture().getBytes();
 	}
 
 	public String getName() {

@@ -1,6 +1,6 @@
 package com.hopin.HopIn.entities;
 
-import com.hopin.HopIn.dtos.DriverSentPasswordRequestDTO;
+import com.hopin.HopIn.dtos.PasswordRequestDTO;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
@@ -40,10 +40,10 @@ public class DriverAccountUpdatePasswordRequest extends DriverAccountUpdateReque
 		this.newPassword = newPassword;
 	}
 	
-	public DriverAccountUpdatePasswordRequest(DriverSentPasswordRequestDTO dto, Driver driver) {
+	public DriverAccountUpdatePasswordRequest(PasswordRequestDTO dto, Driver driver) {
 		super(RequestStatus.PENDING, "", driver, null, RequestType.PASSWORD);
-		this.oldPassword = dto.getRequest().getOldPassword();
-		this.newPassword = dto.getRequest().getNewPassword();
+		this.oldPassword = dto.getOldPassword();
+		this.newPassword = dto.getNewPassword();
 	}
 
 	public String getOldPassword() {
