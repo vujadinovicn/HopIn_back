@@ -43,7 +43,8 @@ public class RequestDTO {
 		this.driver = new UserReturnedDTO(request.getDriver());
 		this.status = request.getStatus();
 		this.reason = request.getReason();
-		this.admin = new UserReturnedDTO(request.getAdmin());
+		if (this.admin != null)
+			this.admin = new UserReturnedDTO(request.getAdmin());
 		this.type = request.getType();
 		this.time = request.getTime();
 	}
