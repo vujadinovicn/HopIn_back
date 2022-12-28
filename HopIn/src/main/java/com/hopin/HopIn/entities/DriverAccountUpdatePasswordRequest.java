@@ -4,9 +4,6 @@ import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -34,7 +31,7 @@ public class DriverAccountUpdatePasswordRequest extends DriverAccountUpdateReque
 //		this.newPassword = newPassword;
 //	}
 	
-	public DriverAccountUpdatePasswordRequest(int id, RequestStatus status, String reason, Driver driver, User admin,
+	public DriverAccountUpdatePasswordRequest(int id, RequestStatus status, String reason, Driver driver, Administrator admin,
 			String oldPassword, 
 			@NotEmpty @Pattern(regexp = "^([0-9a-zA-Z]{6,}$)") String newPassword) {
 		super(id, status, reason, driver, admin, RequestType.PASSWORD);

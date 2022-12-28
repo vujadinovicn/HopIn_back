@@ -13,7 +13,16 @@ public interface DriverAccountUpdateRequestRepository extends JpaRepository<Driv
 	@Query("select r from DriverAccountUpdateRequest r where r.status = 1")
 	public List<DriverAccountUpdateRequest> findAllPending();
 	
+	@Query("select r from DriverAccountUpdateRequest r where r.status = 1 and r.driver.id = :id")
+	public List<DriverAccountUpdateRequest> findAllDriverPending(int id);
+
 	@Query("select r from DriverAccountUpdateRequest r where r.status != 1")
 	public List<DriverAccountUpdateRequest> findAllProcessed();
+	
+	@Query("select r from DriverAccountUpdateRequest r where r.status != 1 and r.driver.id = :id")
+	public List<DriverAccountUpdateRequest> findAllDriverProcessed(int id);
+	
+	@Query("select r from DriverAccountUpdateRequest r where r.status != 1 and r.admin.id = :id")
+	public List<DriverAccountUpdateRequest> findAllAdminProcessed(int id);
 
 }

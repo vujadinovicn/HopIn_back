@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import java.time.LocalDateTime;
+
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
@@ -23,11 +25,11 @@ public class DriverAccountUpdateRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@NotEmpty
+
 	@NotNull
 	private RequestStatus status;
 	
+	@NotEmpty
 	private String reason;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
@@ -35,15 +37,16 @@ public class DriverAccountUpdateRequest {
 	private Driver driver;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
-	@NotNull
-	private User admin;
+	private Administrator admin;
 	
 	@NotNull
 	private RequestType type;
 	
+	private LocalDateTime time;
+	
 	public DriverAccountUpdateRequest() {}
 
-	public DriverAccountUpdateRequest(int id, RequestStatus status, String reason, Driver driver, User admin, RequestType type) {
+	public DriverAccountUpdateRequest(int id, RequestStatus status, String reason, Driver driver, Administrator admin, RequestType type) {
 		super();
 		this.id = id;
 		this.status = status;
@@ -51,6 +54,7 @@ public class DriverAccountUpdateRequest {
 		this.driver = driver;
 		this.admin = admin;
 		this.type = type;
+		this.time = LocalDateTime.now();
 	}
 	
 	
@@ -87,11 +91,11 @@ public class DriverAccountUpdateRequest {
 		this.driver = driver;
 	}
 
-	public User getAdmin() {
+	public Administrator getAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(User admin) {
+	public void setAdmin(Administrator admin) {
 		this.admin = admin;
 	}
 
@@ -101,5 +105,13 @@ public class DriverAccountUpdateRequest {
 
 	public void setType(RequestType type) {
 		this.type = type;
+	}
+
+	public LocalDateTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalDateTime time) {
+		this.time = time;
 	}
 }
