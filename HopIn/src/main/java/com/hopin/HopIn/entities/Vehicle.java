@@ -69,6 +69,7 @@ public class Vehicle {
 		this.passengerSeats = request.getPassengerSeats();
 		this.petTransport = request.isPetTransport();
 		this.babyTransport = request.isBabyTransport();
+		this.vehicleType = request.getVehicleType();
 	}
 
 	public int getId() {

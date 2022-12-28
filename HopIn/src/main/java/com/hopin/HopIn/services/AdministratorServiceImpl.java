@@ -220,7 +220,6 @@ public class AdministratorServiceImpl implements IAdministratorService{
 			request.setAdmin(foundAdmin.get());
 		}
 		foundRequest.get().setStatus(RequestStatus.ACCEPTED);
-		System.out.println(foundRequest.get().getStatus());
 		this.allDriverAccountUpdateRequests.save(foundRequest.get());
 		this.allDriverAccountUpdateRequests.flush();
 	}

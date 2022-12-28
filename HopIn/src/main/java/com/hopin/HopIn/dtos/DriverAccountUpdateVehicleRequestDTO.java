@@ -2,6 +2,7 @@ package com.hopin.HopIn.dtos;
 
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 import com.hopin.HopIn.enums.RequestStatus;
+import com.hopin.HopIn.enums.VehicleTypeName;
 
 public class DriverAccountUpdateVehicleRequestDTO {
 
@@ -11,6 +12,7 @@ public class DriverAccountUpdateVehicleRequestDTO {
 	private int passengerSeats;
 	private boolean babyTransport;
 	private boolean petTransport;
+	private VehicleTypeName vehicleType;
 	private RequestStatus status;
 
 	public DriverAccountUpdateVehicleRequestDTO() {
@@ -24,6 +26,7 @@ public class DriverAccountUpdateVehicleRequestDTO {
 		this.passengerSeats = request.getPassengerSeats();
 		this.babyTransport = request.isBabyTransport();
 		this.petTransport = request.isPetTransport();
+		this.vehicleType = request.getVehicleType().getName();
 		this.status = request.getStatus();
 	}
 
@@ -95,4 +98,11 @@ public class DriverAccountUpdateVehicleRequestDTO {
 		this.status = status;
 	}
 
+	public VehicleTypeName getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(VehicleTypeName vehicleType) {
+		this.vehicleType = vehicleType;
+	}
 }

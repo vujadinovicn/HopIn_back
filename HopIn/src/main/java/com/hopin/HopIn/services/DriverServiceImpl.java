@@ -268,8 +268,6 @@ public class DriverServiceImpl implements IDriverService {
 		Driver driver = request.getDriver();
 		if (request.getNewPassword() != "" && request.getNewPassword() != null) {
 			if (!this.checkPasswordMatch(driver.getPassword(), request.getOldPassword())) {
-				System.out.println(driver.getPassword());
-				System.out.println(request.getOldPassword());
 				return;	
 			}
 			driver.setPassword(request.getNewPassword());

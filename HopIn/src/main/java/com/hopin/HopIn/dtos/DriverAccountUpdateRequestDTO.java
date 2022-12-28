@@ -26,8 +26,8 @@ public class DriverAccountUpdateRequestDTO {
 		this.id = id;
 		this.driver = driver;
 		this.status = status;
-		this.setType(type);
-		this.setTime(time);
+		this.type = type;
+		this.time = time;
 	}
 
 	public DriverAccountUpdateRequestDTO(int id, UserReturnedDTO driver, RequestStatus status) {
@@ -44,6 +44,8 @@ public class DriverAccountUpdateRequestDTO {
 		this.status = request.getStatus();
 		this.reason = request.getReason();
 		this.admin = new UserReturnedDTO(request.getAdmin());
+		this.type = request.getType();
+		this.time = request.getTime();
 	}
 
 	public int getId() {

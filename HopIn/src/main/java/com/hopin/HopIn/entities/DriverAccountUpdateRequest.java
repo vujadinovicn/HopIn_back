@@ -25,10 +25,11 @@ public class DriverAccountUpdateRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	
+
+	@NotNull
 	private RequestStatus status;
 	
+	@NotEmpty
 	private String reason;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)

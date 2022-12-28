@@ -5,7 +5,9 @@ import org.springframework.format.annotation.NumberFormat;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -29,8 +31,9 @@ public class DriverAccountUpdateVehicleRequest extends DriverAccountUpdateReques
 	@NotNull
 	private boolean petTransport;
 	
-//	@NotNull
-//	private VehicleType vehicleType;
+	@ManyToOne(cascade = CascadeType.REFRESH)
+	@NotNull
+	private VehicleType vehicleType;
 
 	public DriverAccountUpdateVehicleRequest() {
 	}
@@ -44,7 +47,7 @@ public class DriverAccountUpdateVehicleRequest extends DriverAccountUpdateReques
 		this.passengerSeats = passengerSeats;
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
-		//this.vehicleType = vehicleType;
+		this.vehicleType = vehicleType;
 	}
 
 	public String getModel() {
@@ -87,13 +90,13 @@ public class DriverAccountUpdateVehicleRequest extends DriverAccountUpdateReques
 		this.petTransport = petTransport;
 	}
 
-//	public VehicleType getVehicleType() {
-//		return vehicleType;
-//	}
-//
-//	public void setVehicleType(VehicleType vehicleType) {
-//		this.vehicleType = vehicleType;
-//	}
+	public VehicleType getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(VehicleType vehicleType) {
+		this.vehicleType = vehicleType;
+	}
 	
 	
 
