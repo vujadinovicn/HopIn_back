@@ -22,6 +22,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 import com.hopin.HopIn.entities.VehicleType;
+import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 import com.hopin.HopIn.repositories.AdministratorRepository;
@@ -267,9 +268,16 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	}
 	
 	@Override
-	public void insertDocumentRequest(int driverId, DocumentRequestDTO dto) {
+	public void insertDocumentRequest(int driverId, int operationNumber, DocumentRequestDTO dto) {
 		Driver driver = this.driverService.getDriver(driverId);
 		DriverAccountUpdateDocumentRequest request = new DriverAccountUpdateDocumentRequest(dto, driver);
+		if (operationNumber == 1) 
+			request.setDocumentOperationType(DocumentOperationType.ADD);
+		else if (operationNumber == 2)
+			request.setDocumentOperationType(DocumentOperationType.UPDATE);
+		else 
+			request.setDocumentOperationType(DocumentOperationType.DELETE);
+		System.out.println("sss");
 		this.allDriverAccountUpdateDocumentRequests.save(request);
 		this.allDriverAccountUpdateDocumentRequests.flush();
 	}

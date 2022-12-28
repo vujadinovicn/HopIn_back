@@ -42,6 +42,6 @@ public interface IAdministratorService {
 
 	void insertVehicleRequest(int driverId, VehicleRequestDTO dto);
 
-	void insertDocumentRequest(int driverId, DocumentRequestDTO dto);
+	void insertDocumentRequest(int driverId, int operationNumber, DocumentRequestDTO dto);
 
 }

@@ -120,9 +120,9 @@ public class RequestController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/{driverId}/document/request")
-	public ResponseEntity<String> insertDocumentRequest(@PathVariable int driverId, @RequestBody DocumentRequestDTO request) {
-		this.service.insertDocumentRequest(driverId, request);
+	@PostMapping(value = "/{driverId}/{operationNumber}/document/request")
+	public ResponseEntity<String> insertDocumentRequest(@PathVariable int driverId, @PathVariable int operationNumber, @RequestBody DocumentRequestDTO request) {
+		this.service.insertDocumentRequest(driverId, operationNumber, request);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
