@@ -3,7 +3,7 @@ package com.hopin.HopIn.dtos;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.enums.RequestStatus;
 
-public class DriverAccountUpdateInfoRequestDTO {
+public class InfoRequestDTO {
 
 	private int id;
 	private String name;
@@ -14,11 +14,11 @@ public class DriverAccountUpdateInfoRequestDTO {
 	private String profilePicture;
 	private RequestStatus status;
 
-	public DriverAccountUpdateInfoRequestDTO() {
+	public InfoRequestDTO() {
 
 	}
 
-	public DriverAccountUpdateInfoRequestDTO(DriverAccountUpdateInfoRequest request) {
+	public InfoRequestDTO(DriverAccountUpdateInfoRequest request) {
 		this.id = request.getId();
 		this.name = request.getName();
 		this.surname = request.getSurname();
@@ -29,7 +29,7 @@ public class DriverAccountUpdateInfoRequestDTO {
 		this.status = request.getStatus();
 	}
 
-	public DriverAccountUpdateInfoRequestDTO(int id, String name, String surname, String email, String address,
+	public InfoRequestDTO(int id, String name, String surname, String email, String address,
 			String telephoneNumber, String profilePicture, RequestStatus status) {
 		super();
 		this.id = id;

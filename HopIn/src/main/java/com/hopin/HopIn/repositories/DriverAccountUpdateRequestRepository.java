@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
+import com.hopin.HopIn.dtos.RequestDTO;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 
 public interface DriverAccountUpdateRequestRepository extends JpaRepository<DriverAccountUpdateRequest, Integer>{

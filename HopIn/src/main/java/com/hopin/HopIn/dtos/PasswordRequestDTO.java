@@ -3,25 +3,25 @@ package com.hopin.HopIn.dtos;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.enums.RequestStatus;
 
-public class DriverAccountUpdatePasswordRequestDTO {
+public class PasswordRequestDTO {
 
 	private int id;
 	private String oldPassword;
 	private String newPassword;
 	private RequestStatus status;
 
-	public DriverAccountUpdatePasswordRequestDTO() {
+	public PasswordRequestDTO() {
 
 	}
 
-	public DriverAccountUpdatePasswordRequestDTO(DriverAccountUpdatePasswordRequest request) {
+	public PasswordRequestDTO(DriverAccountUpdatePasswordRequest request) {
 		this.id = request.getId();
 		this.oldPassword = request.getOldPassword();
 		this.newPassword = request.getNewPassword();
 		this.status = request.getStatus();
 	}
 
-	public DriverAccountUpdatePasswordRequestDTO(int id, String oldPassword, String newPassword, RequestStatus status) {
+	public PasswordRequestDTO(int id, String oldPassword, String newPassword, RequestStatus status) {
 		super();
 		this.id = id;
 		this.oldPassword = oldPassword;

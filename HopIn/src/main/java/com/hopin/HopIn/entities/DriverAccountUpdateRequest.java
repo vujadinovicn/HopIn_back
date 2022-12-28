@@ -57,6 +57,15 @@ public class DriverAccountUpdateRequest {
 		this.time = LocalDateTime.now();
 	}
 	
+	public DriverAccountUpdateRequest(RequestStatus status, String reason, Driver driver, Administrator admin, RequestType type) {
+		super();
+		this.status = status;
+		this.reason = reason;
+		this.driver = driver;
+		this.admin = admin;
+		this.type = type;
+		this.time = LocalDateTime.now();
+	}
 	
 
 	public int getId() {

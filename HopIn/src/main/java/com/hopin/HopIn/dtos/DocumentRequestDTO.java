@@ -4,7 +4,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.RequestStatus;
 
-public class DriverAccountUpdateDocumentRequestDTO {
+public class DocumentRequestDTO {
 
 	private int id;
 
@@ -13,11 +13,11 @@ public class DriverAccountUpdateDocumentRequestDTO {
 	private DocumentOperationType documentOperationType;
 	private RequestStatus status;
 
-	public DriverAccountUpdateDocumentRequestDTO() {
+	public DocumentRequestDTO() {
 
 	}
 
-	public DriverAccountUpdateDocumentRequestDTO(DriverAccountUpdateDocumentRequest request) {
+	public DocumentRequestDTO(DriverAccountUpdateDocumentRequest request) {
 		this.id = request.getId();
 		this.name = request.getName();
 		this.documentImage = request.getDocumentImage();
@@ -25,7 +25,7 @@ public class DriverAccountUpdateDocumentRequestDTO {
 		this.status = request.getStatus();
 	}
 
-	public DriverAccountUpdateDocumentRequestDTO(int id, String name, String documentImage,
+	public DocumentRequestDTO(int id, String name, String documentImage,
 			DocumentOperationType documentOperationType, RequestStatus status) {
 		super();
 		this.id = id;

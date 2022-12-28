@@ -15,6 +15,7 @@ import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
+import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
@@ -60,6 +61,8 @@ public interface IDriverService {
 	void updateByVehicleRequest(DriverAccountUpdateVehicleRequest request);
 
 	void updateByDocumentRequest(DriverAccountUpdateDocumentRequest request);
+
+	Driver getDriver(int id);
 
 
 }
