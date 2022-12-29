@@ -2,38 +2,46 @@ package com.hopin.HopIn.services.interfaces;
 
 import java.util.List;
 
-import com.hopin.HopIn.dtos.DriverAccountUpdateDocumentRequestDTO;
-import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
-import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
-import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
-import com.hopin.HopIn.dtos.DriverAccountUpdateVehicleRequestDTO;
+import com.hopin.HopIn.dtos.DocumentRequestDTO;
+import com.hopin.HopIn.dtos.InfoRequestDTO;
+import com.hopin.HopIn.dtos.PasswordRequestDTO;
+import com.hopin.HopIn.dtos.RequestDTO;
+import com.hopin.HopIn.dtos.VehicleRequestDTO;
 
 public interface IAdministratorService {
 	
-	public List<DriverAccountUpdateRequestDTO> getAll();
+	public List<RequestDTO> getAll();
 	
-	public List<DriverAccountUpdateRequestDTO> getAllPending();
+	public List<RequestDTO> getAllPending();
 	
-	public List<DriverAccountUpdateRequestDTO> getAllProcessed();
+	public List<RequestDTO> getAllProcessed();
 
-	List<DriverAccountUpdateRequestDTO> getAllDriverProcessed(int id);
+	List<RequestDTO> getAllDriverProcessed(int id);
 
-	List<DriverAccountUpdateRequestDTO> getAllDriverPending(int id);
+	List<RequestDTO> getAllDriverPending(int id);
 
-	List<DriverAccountUpdateRequestDTO> getAllAdminProcessed(int id);
+	List<RequestDTO> getAllAdminProcessed(int id);
 	
-	public DriverAccountUpdateInfoRequestDTO getInfoById(int id);
+	public InfoRequestDTO getInfoById(int id);
 	
-	public DriverAccountUpdatePasswordRequestDTO getPasswordById(int id);
+	public PasswordRequestDTO getPasswordById(int id);
 	
-	public DriverAccountUpdateDocumentRequestDTO getDocumentById(int id);
+	public DocumentRequestDTO getDocumentById(int id);
 	
-	public DriverAccountUpdateVehicleRequestDTO getVehicleById(int id);
+	public VehicleRequestDTO getVehicleById(int id);
 
-	DriverAccountUpdateRequestDTO getRequestById(int id);
+	RequestDTO getRequestById(int id);
 	
 	public void acceptRequest(int requestId, int adminId);
 
 	void denyRequest(int requestId, int adminId, String reason);
+
+	void insertPasswordRequest(int driverId, PasswordRequestDTO dto);
+
+	void insertInfoRequest(int driverId, InfoRequestDTO dto);
+
+	void insertVehicleRequest(int driverId, VehicleRequestDTO dto);
+
+	void insertDocumentRequest(int driverId, int operationNumber, int documentId, DocumentRequestDTO dto);
 
 }

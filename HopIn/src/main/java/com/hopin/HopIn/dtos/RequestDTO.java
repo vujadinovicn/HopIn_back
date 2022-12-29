@@ -6,7 +6,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
-public class DriverAccountUpdateRequestDTO {
+public class RequestDTO {
 
 	private int id;
 	private UserReturnedDTO driver;
@@ -16,11 +16,11 @@ public class DriverAccountUpdateRequestDTO {
 	private String reason;
 	private UserReturnedDTO admin;
 
-	public DriverAccountUpdateRequestDTO() {
+	public RequestDTO() {
 
 	}
 
-	public DriverAccountUpdateRequestDTO(int id, UserReturnedDTO driver, RequestStatus status, RequestType type,
+	public RequestDTO(int id, UserReturnedDTO driver, RequestStatus status, RequestType type,
 			LocalDateTime time) {
 		super();
 		this.id = id;
@@ -30,20 +30,21 @@ public class DriverAccountUpdateRequestDTO {
 		this.time = time;
 	}
 
-	public DriverAccountUpdateRequestDTO(int id, UserReturnedDTO driver, RequestStatus status) {
+	public RequestDTO(int id, UserReturnedDTO driver, RequestStatus status) {
 		super();
 		this.id = id;
 		this.driver = driver;
 		this.status = status;
 	}
 
-	public DriverAccountUpdateRequestDTO(DriverAccountUpdateRequest request) {
+	public RequestDTO(DriverAccountUpdateRequest request) {
 		super();
 		this.id = request.getId();
 		this.driver = new UserReturnedDTO(request.getDriver());
 		this.status = request.getStatus();
 		this.reason = request.getReason();
-		this.admin = new UserReturnedDTO(request.getAdmin());
+		if (request.getAdmin() != null)
+			this.admin = new UserReturnedDTO(request.getAdmin());
 		this.type = request.getType();
 		this.time = request.getTime();
 	}

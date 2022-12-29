@@ -4,7 +4,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
 
-public class DriverAccountUpdateVehicleRequestDTO {
+public class VehicleRequestDTO {
 
 	private int id;
 	private String model;
@@ -15,11 +15,11 @@ public class DriverAccountUpdateVehicleRequestDTO {
 	private VehicleTypeName vehicleType;
 	private RequestStatus status;
 
-	public DriverAccountUpdateVehicleRequestDTO() {
+	public VehicleRequestDTO() {
 
 	}
 
-	public DriverAccountUpdateVehicleRequestDTO(DriverAccountUpdateVehicleRequest request) {
+	public VehicleRequestDTO(DriverAccountUpdateVehicleRequest request) {
 		this.id = request.getId();
 		this.model = request.getModel();
 		this.licenseNumber = request.getLicenseNumber();
@@ -30,7 +30,7 @@ public class DriverAccountUpdateVehicleRequestDTO {
 		this.status = request.getStatus();
 	}
 
-	public DriverAccountUpdateVehicleRequestDTO(int id, String model, String licenseNumber, int passengerSeats,
+	public VehicleRequestDTO(int id, String model, String licenseNumber, int passengerSeats,
 			boolean babyTransport, boolean petTransport, RequestStatus status) {
 		super();
 		this.id = id;

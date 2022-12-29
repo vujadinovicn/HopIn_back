@@ -9,18 +9,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.hopin.HopIn.dtos.DriverAccountUpdateDocumentRequestDTO;
-import com.hopin.HopIn.dtos.DriverAccountUpdateInfoRequestDTO;
-import com.hopin.HopIn.dtos.DriverAccountUpdatePasswordRequestDTO;
-import com.hopin.HopIn.dtos.DriverAccountUpdateRequestDTO;
-import com.hopin.HopIn.dtos.DriverAccountUpdateVehicleRequestDTO;
+import com.hopin.HopIn.dtos.DocumentRequestDTO;
+import com.hopin.HopIn.dtos.InfoRequestDTO;
+import com.hopin.HopIn.dtos.PasswordRequestDTO;
+import com.hopin.HopIn.dtos.RequestDTO;
+import com.hopin.HopIn.dtos.VehicleRequestDTO;
 import com.hopin.HopIn.entities.Administrator;
+import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
-import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.entities.VehicleType;
+import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 import com.hopin.HopIn.repositories.AdministratorRepository;
@@ -31,7 +33,7 @@ import com.hopin.HopIn.repositories.DriverAccountUpdateRequestRepository;
 import com.hopin.HopIn.repositories.DriverAccountUpdateVehicleRequestRepository;
 import com.hopin.HopIn.services.interfaces.IAdministratorService;
 import com.hopin.HopIn.services.interfaces.IDriverService;
-import com.hopin.HopIn.services.interfaces.IUserService;
+import com.hopin.HopIn.services.interfaces.IVehicleTypeService;
 
 @Service
 public class AdministratorServiceImpl implements IAdministratorService{
@@ -58,49 +60,49 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	private IDriverService driverService;
 	
 	@Autowired
-	private IUserService userService;
+	private IVehicleTypeService vehicleTypeService;
 
 	@Override
-	public List<DriverAccountUpdateRequestDTO> getAll() {
+	public List<RequestDTO> getAll() {
 		List<DriverAccountUpdateRequest> requests = allDriverAccountUpdateRequests.findAll();
 		return driverAccountUpdateRequestsToDtoList(requests);
 	}
 
 	@Override
-	public List<DriverAccountUpdateRequestDTO> getAllPending() {
+	public List<RequestDTO> getAllPending() {
 		List<DriverAccountUpdateRequest> requests = allDriverAccountUpdateRequests.findAllPending();
 		return driverAccountUpdateRequestsToDtoList(requests);
 	}
 	
 	@Override
-	public List<DriverAccountUpdateRequestDTO> getAllProcessed() {
+	public List<RequestDTO> getAllProcessed() {
 		List<DriverAccountUpdateRequest> requests = allDriverAccountUpdateRequests.findAllProcessed();
 		return driverAccountUpdateRequestsToDtoList(requests);
 	}	
 
-	private List<DriverAccountUpdateRequestDTO> driverAccountUpdateRequestsToDtoList(
+	private List<RequestDTO> driverAccountUpdateRequestsToDtoList(
 			List<DriverAccountUpdateRequest> requests) {
-		List<DriverAccountUpdateRequestDTO> requestsDTO = new ArrayList<DriverAccountUpdateRequestDTO>();
+		List<RequestDTO> requestsDTO = new ArrayList<RequestDTO>();
 		for (DriverAccountUpdateRequest request : requests) {
-			requestsDTO.add(new DriverAccountUpdateRequestDTO(request));
+			requestsDTO.add(new RequestDTO(request));
 		}
 		return requestsDTO;
 	}
 	
 	@Override
-	public List<DriverAccountUpdateRequestDTO> getAllDriverProcessed(int id) {
+	public List<RequestDTO> getAllDriverProcessed(int id) {
 		List<DriverAccountUpdateRequest> requests = allDriverAccountUpdateRequests.findAllDriverProcessed(id);
 		return driverAccountUpdateRequestsToDtoList(requests);
 	}
 	
 	@Override
-	public List<DriverAccountUpdateRequestDTO> getAllDriverPending(int id) {
+	public List<RequestDTO> getAllDriverPending(int id) {
 		List<DriverAccountUpdateRequest> requests = allDriverAccountUpdateRequests.findAllDriverPending(id);
 		return driverAccountUpdateRequestsToDtoList(requests);
 	}
 	
 	@Override
-	public List<DriverAccountUpdateRequestDTO> getAllAdminProcessed(int id) {
+	public List<RequestDTO> getAllAdminProcessed(int id) {
 		List<DriverAccountUpdateRequest> requests = allDriverAccountUpdateRequests.findAllAdminProcessed(id);
 		return driverAccountUpdateRequestsToDtoList(requests);
 	}
@@ -126,7 +128,7 @@ public class AdministratorServiceImpl implements IAdministratorService{
 //	}
 
 	@Override
-	public DriverAccountUpdateInfoRequestDTO getInfoById(int id) {
+	public InfoRequestDTO getInfoById(int id) {
 		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
 		if (found.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
@@ -135,12 +137,12 @@ public class AdministratorServiceImpl implements IAdministratorService{
 		return driverAccountUpdateInfoRequestToDto(request);
 	}
 	
-	private DriverAccountUpdateInfoRequestDTO driverAccountUpdateInfoRequestToDto(DriverAccountUpdateInfoRequest request) {
-		return new DriverAccountUpdateInfoRequestDTO(request);
+	private InfoRequestDTO driverAccountUpdateInfoRequestToDto(DriverAccountUpdateInfoRequest request) {
+		return new InfoRequestDTO(request);
 	}
 
 	@Override
-	public DriverAccountUpdatePasswordRequestDTO getPasswordById(int id) {
+	public PasswordRequestDTO getPasswordById(int id) {
 		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
 		if (found.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
@@ -149,12 +151,12 @@ public class AdministratorServiceImpl implements IAdministratorService{
 		return driverAccountUpdatePasswordRequestToDto(request);
 	}
 	
-	private DriverAccountUpdatePasswordRequestDTO driverAccountUpdatePasswordRequestToDto(DriverAccountUpdatePasswordRequest request) {
-		return new DriverAccountUpdatePasswordRequestDTO(request);
+	private PasswordRequestDTO driverAccountUpdatePasswordRequestToDto(DriverAccountUpdatePasswordRequest request) {
+		return new PasswordRequestDTO(request);
 	}
 
 	@Override
-	public DriverAccountUpdateDocumentRequestDTO getDocumentById(int id) {
+	public DocumentRequestDTO getDocumentById(int id) {
 		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
 		if (found.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
@@ -163,12 +165,12 @@ public class AdministratorServiceImpl implements IAdministratorService{
 		return driverAccountUpdateDocumentRequestToDto(request);
 	}
 	
-	private DriverAccountUpdateDocumentRequestDTO driverAccountUpdateDocumentRequestToDto(DriverAccountUpdateDocumentRequest request) {
-		return new DriverAccountUpdateDocumentRequestDTO(request);
+	private DocumentRequestDTO driverAccountUpdateDocumentRequestToDto(DriverAccountUpdateDocumentRequest request) {
+		return new DocumentRequestDTO(request);
 	}
 
 	@Override
-	public DriverAccountUpdateVehicleRequestDTO getVehicleById(int id) {
+	public VehicleRequestDTO getVehicleById(int id) {
 		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
 		if (found.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
@@ -177,12 +179,12 @@ public class AdministratorServiceImpl implements IAdministratorService{
 		return driverAccountUpdateVehicleRequestToDto(request);
 	}
 	
-	private DriverAccountUpdateVehicleRequestDTO driverAccountUpdateVehicleRequestToDto(DriverAccountUpdateVehicleRequest request) {
-		return new DriverAccountUpdateVehicleRequestDTO(request);
+	private VehicleRequestDTO driverAccountUpdateVehicleRequestToDto(DriverAccountUpdateVehicleRequest request) {
+		return new VehicleRequestDTO(request);
 	}
 	
 	@Override
-	public DriverAccountUpdateRequestDTO getRequestById(int id) {
+	public RequestDTO getRequestById(int id) {
 		Optional<DriverAccountUpdateRequest> found = this.allDriverAccountUpdateRequests.findById(id);
 		if (found.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
@@ -190,8 +192,8 @@ public class AdministratorServiceImpl implements IAdministratorService{
 		return driverAccountUpdateRequestToDto(found.get());
 	}
 	
-	private DriverAccountUpdateRequestDTO driverAccountUpdateRequestToDto(DriverAccountUpdateRequest request) {
-		return new DriverAccountUpdateRequestDTO(request);
+	private RequestDTO driverAccountUpdateRequestToDto(DriverAccountUpdateRequest request) {
+		return new RequestDTO(request);
 	}
 	
 	@Override
@@ -238,6 +240,45 @@ public class AdministratorServiceImpl implements IAdministratorService{
 		request.setStatus(RequestStatus.DENIED);
 		this.allDriverAccountUpdateRequests.save(request);
 		this.allDriverAccountUpdateRequests.flush();
+	}
+	
+	@Override
+	public void insertPasswordRequest(int driverId, PasswordRequestDTO dto) {
+		Driver driver = this.driverService.getDriver(driverId);
+		DriverAccountUpdatePasswordRequest request = new DriverAccountUpdatePasswordRequest(dto, driver);
+		this.allDriverAccountUpdatePasswordRequests.save(request);
+		this.allDriverAccountUpdatePasswordRequests.flush();
+	}
+	
+	@Override
+	public void insertInfoRequest(int driverId, InfoRequestDTO dto) {
+		Driver driver = this.driverService.getDriver(driverId);
+		DriverAccountUpdateInfoRequest request = new DriverAccountUpdateInfoRequest(dto, driver);
+		this.allDriverAccountUpdateInfoRequests.save(request);
+		this.allDriverAccountUpdateInfoRequests.flush();
+	}
+	
+	@Override
+	public void insertVehicleRequest(int driverId, VehicleRequestDTO dto) {
+		Driver driver = this.driverService.getDriver(driverId);
+		VehicleType type = this.vehicleTypeService.getByName(dto.getVehicleType());
+		DriverAccountUpdateVehicleRequest request = new DriverAccountUpdateVehicleRequest(dto, driver, type);
+		this.allDriverAccountUpdateVehicleRequests.save(request);
+		this.allDriverAccountUpdateVehicleRequests.flush();
+	}
+	
+	@Override
+	public void insertDocumentRequest(int driverId, int operationNumber, int documentId, DocumentRequestDTO dto) {
+		Driver driver = this.driverService.getDriver(driverId);
+		DriverAccountUpdateDocumentRequest request = new DriverAccountUpdateDocumentRequest(dto, driver);
+		if (operationNumber == 1) 
+			request.setDocumentOperationType(DocumentOperationType.ADD);
+		else if (operationNumber == 2)
+			request.setDocumentOperationType(DocumentOperationType.UPDATE);
+		else 
+			request.setDocumentOperationType(DocumentOperationType.DELETE);
+		this.allDriverAccountUpdateDocumentRequests.save(request);
+		this.allDriverAccountUpdateDocumentRequests.flush();
 	}
 	
 	
