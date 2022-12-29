@@ -61,11 +61,11 @@ public class PassengerController {
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getPassenger(@PathVariable int id) {
-		UserReturnedDTO passenger = passengerService.getPassenger(id);
+		UserReturnedDTO passenger = passengerService.getById(id);
 		if(passenger != null) {
+			passengerService.getFavouriteRoutes(id);
 			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
 		}
-		passengerService.getFavouriteRoutes(id);
 		return new ResponseEntity<UserReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 	
