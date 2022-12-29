@@ -35,13 +35,13 @@ insert into "admins" ("id") values (3);
 
 insert into "driver_account_update_requests"("id", "reason", "status", "admin_id", "driver_id", "type", "time") values (1, null, 1, null, 2, 0, '2022-12-26T11:11:11');
 insert into "driver_account_update_password_requests"("new_password", "old_password", "id") values('lofi1123', 'larako2', 1);
-insert into "driver_account_update_requests"("id", "reason", "status", "admin_id", "driver_id", "type", "time") values (3, 'Too many password changes this month.', 2, 3, 2, 0, '2022-12-26T11:11:11');
-insert into "driver_account_update_password_requests"("new_password", "old_password", "id") values('novisad1', 'beograd1', 3);
-insert into "driver_account_update_requests"("id", "reason", "status", "admin_id", "driver_id", "type", "time") values (4, null, 0, 3, 2, 0, '2022-12-26T11:11:11');
-insert into "driver_account_update_password_requests"("new_password", "old_password", "id") values('lepsika', 'kekios', 4);
+insert into "driver_account_update_requests"("id", "reason", "status", "admin_id", "driver_id", "type", "time") values (2, 'Too many password changes this month.', 2, 3, 2, 0, '2022-12-26T11:11:11');
+insert into "driver_account_update_password_requests"("new_password", "old_password", "id") values('novisad1', 'beograd1', 2);
+insert into "driver_account_update_requests"("id", "reason", "status", "admin_id", "driver_id", "type", "time") values (3, null, 0, 3, 2, 0, '2022-12-26T11:11:11');
+insert into "driver_account_update_password_requests"("new_password", "old_password", "id") values('lepsika', 'kekios', 3);
 
-insert into "driver_account_update_requests"("id", "reason", "status", "admin_id", "driver_id", "type", "time") values (7, null, 1, null, 2, 1, '2022-12-26T11:11:11');
-insert into "driver_account_update_document_requests"("document_id", "document_image", "document_operation_type", "name", "id") values(2, 'djskd', 1, 'Drivers license SRB', 7);
+insert into "driver_account_update_requests"("id", "reason", "status", "admin_id", "driver_id", "type", "time") values (4, null, 1, null, 2, 1, '2022-12-26T11:11:11');
+insert into "driver_account_update_document_requests"("document_id", "document_image", "document_operation_type", "name", "id") values(2, 'djskd', 1, 'Drivers license SRB', 4);
 
-insert into "driver_account_update_requests"("id", "reason", "status", "type", "admin_id", "driver_id") values (8, 'blablatruc', 1, 2, 3, 2);
-insert into "driver_account_update_info_requests"("address", "email", "name", "profile_picture", "surname", "telephone_number", "id") values('Beograd', 'mark@gmail.com', 'Neca', 'a', 'Vijic', '+3816492031', 8);
+insert into "driver_account_update_requests"("id", "reason", "status", "type", "admin_id", "driver_id") values (5, 'blablatruc', 1, 2, 3, 2);
+insert into "driver_account_update_info_requests"("address", "email", "name", "profile_picture", "surname", "telephone_number", "id") values('Beograd', 'mark@gmail.com', 'Neca', 'a', 'Vijic', '+3816492031', 5);
