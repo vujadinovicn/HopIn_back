@@ -24,4 +24,6 @@ public interface IPassengerService {
 	public boolean removeFavouriteRoute(int passengerId, int routeId);
 
 	public boolean addFavouriteRoute(int passwordId, int routeId);
+
+	UserReturnedDTO getById(int id);
 }

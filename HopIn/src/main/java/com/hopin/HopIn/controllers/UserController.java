@@ -25,6 +25,7 @@ import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
 import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
+import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.services.interfaces.IUserService;
 
 @Validated
@@ -34,6 +35,11 @@ import com.hopin.HopIn.services.interfaces.IUserService;
 public class UserController {
 	@Autowired
 	IUserService userService;
+	
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
+		return new ResponseEntity<UserReturnedDTO>(userService.getUser(id), HttpStatus.OK);
+	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AllUsersDTO> getAll(@RequestParam int page, @RequestParam int size) {
