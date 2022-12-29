@@ -268,7 +268,7 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	}
 	
 	@Override
-	public void insertDocumentRequest(int driverId, int operationNumber, DocumentRequestDTO dto) {
+	public void insertDocumentRequest(int driverId, int operationNumber, int documentId, DocumentRequestDTO dto) {
 		Driver driver = this.driverService.getDriver(driverId);
 		DriverAccountUpdateDocumentRequest request = new DriverAccountUpdateDocumentRequest(dto, driver);
 		if (operationNumber == 1) 
@@ -277,7 +277,6 @@ public class AdministratorServiceImpl implements IAdministratorService{
 			request.setDocumentOperationType(DocumentOperationType.UPDATE);
 		else 
 			request.setDocumentOperationType(DocumentOperationType.DELETE);
-		System.out.println("sss");
 		this.allDriverAccountUpdateDocumentRequests.save(request);
 		this.allDriverAccountUpdateDocumentRequests.flush();
 	}

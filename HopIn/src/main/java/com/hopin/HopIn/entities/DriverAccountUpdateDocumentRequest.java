@@ -8,6 +8,7 @@ import com.hopin.HopIn.enums.RequestStatus;
 import com.hopin.HopIn.enums.RequestType;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -17,10 +18,13 @@ import jakarta.validation.constraints.Pattern;
 @Table(name = "driver_account_update_document_requests")
 public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateRequest{
 
+	private int documentId;
+	
 	@NotEmpty
 	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
 	private String name;
 	
+	@Lob
 	private byte[] documentImage;
 	
 	@NotNull
@@ -30,9 +34,10 @@ public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateReque
 		
 	}
 
-	public DriverAccountUpdateDocumentRequest(int id, RequestStatus status, String reason, Driver driver, Administrator admin,
+	public DriverAccountUpdateDocumentRequest(int id, RequestStatus status, String reason, Driver driver, Administrator admin, int documentId, 
 			String name, byte[] documentImage, DocumentOperationType type) {
 		super(id, status, reason, driver, admin, RequestType.DOCUMENT);
+		this.documentId = documentId;
 		this.name = name;
 		this.documentImage = documentImage;
 		this.documentOperationType = type;
@@ -85,4 +90,11 @@ public class DriverAccountUpdateDocumentRequest extends DriverAccountUpdateReque
 		this.documentOperationType = type;
 	}
 
+	public int getDocumentId() {
+		return documentId;
+	}
+
+	public void setDocumentId(int documentId) {
+		this.documentId = documentId;
+	}
 }

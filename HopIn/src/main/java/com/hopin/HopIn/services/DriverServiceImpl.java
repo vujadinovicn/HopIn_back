@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
@@ -34,6 +35,7 @@ import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.VehicleTypeName;
+import com.hopin.HopIn.repositories.DocumentRepository;
 import com.hopin.HopIn.repositories.DriverRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
@@ -46,6 +48,9 @@ public class DriverServiceImpl implements IDriverService {
 	
 	@Autowired
 	private VehicleRepository allVehicles;
+	
+	@Autowired
+	private DocumentRepository allDocuments;
 	
 	private Map<Integer, Driver> allDriversMap = new HashMap<Integer, Driver>();
 	private int currId = 1;
@@ -299,11 +304,33 @@ public class DriverServiceImpl implements IDriverService {
 	public void updateByDocumentRequest(DriverAccountUpdateDocumentRequest request) {
 		Driver driver = request.getDriver();
 		if (request.getDocumentOperationType() == DocumentOperationType.ADD) {
-			driver.getDocuments().add(new Document(request.getName(), request.getDocumentImage(), driver.getId()));
+			driver.getDocuments().add(new Document(request.getName(), request.getDocumentImage(), driver.getId()));	
+		} else {
+			if (request.getDocumentOperationType() == DocumentOperationType.UPDATE) {
+				Document document = this.getDocumentById(driver.getDocuments(), request.getDocumentId());
+				document.setName(request.getName());
+				document.setDocumentImage(request.getDocumentImage());
+			} else {
+				if (request.getDocumentOperationType() == DocumentOperationType.DELETE) {
+					Document document = this.getDocumentById(driver.getDocuments(), request.getDocumentId());
+					driver.getDocuments().remove(document);
+					this.allDocuments.delete(document);
+				}
+			}
+		}
+	
 		this.allDrivers.save(driver);
 		this.allDrivers.flush();
-		}
 	}
 
+	private Document getDocumentById(Set<Document> documents, int id) {
+		for (Document elem: documents) {
+			if (elem.getId() == id) {
+				return elem;
+			}
+		}
+		
+		return null;
+	}
 	
 }
