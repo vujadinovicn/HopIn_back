@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Route;
@@ -83,7 +84,7 @@ public class PassengerServiceImpl implements IPassengerService {
 	}
 
 	@Override
-	public UserReturnedDTO update(int id, UserDTO dto) {
+	public UserReturnedDTO update(int id, UserDTOOld dto) {
 		Passenger passenger = this.allPassengers.findById(id).get();
 		if (passenger == null) {
 			return null;

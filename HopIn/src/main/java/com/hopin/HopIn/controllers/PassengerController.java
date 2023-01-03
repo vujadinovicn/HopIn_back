@@ -21,7 +21,7 @@ import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
-import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -46,7 +46,7 @@ public class PassengerController {
 	}
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> insertPassenger(@RequestBody UserDTO dto) {
+	public ResponseEntity<UserReturnedDTO> insertPassenger(@RequestBody UserDTOOld dto) {
 		UserReturnedDTO passenger = passengerService.insert(dto);
 		return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
 	}
@@ -70,7 +70,7 @@ public class PassengerController {
 	}
 	
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> updatePassenger(@RequestBody UserDTO dto, @PathVariable int id) {
+	public ResponseEntity<UserReturnedDTO> updatePassenger(@RequestBody UserDTOOld dto, @PathVariable int id) {
 		UserReturnedDTO passenger = passengerService.update(id, dto);
 		if(passenger != null) {
 			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);

@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
 import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.enums.UserType;
 
 import jakarta.persistence.Entity;
@@ -93,7 +94,7 @@ public class User {
 		this.isActivated = false;
 	}
 	
-	public void copy(UserDTO dto) {
+	public void copy(UserDTOOld dto) {
 		this.name = dto.getName();
 		this.surname = dto.getSurname();
 		this.email = dto.getEmail();

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserDTOOld;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
