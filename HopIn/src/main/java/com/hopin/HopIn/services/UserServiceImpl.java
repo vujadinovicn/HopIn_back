@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,7 +35,7 @@ import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.services.interfaces.IUserService;
 
 @Service
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService, UserDetailsService {
 
 	@Autowired 
 	private UserRepository allUsers;
@@ -86,7 +87,7 @@ public class UserServiceImpl implements IUserService{
 	
 	@Override
 	public TokenDTO login(CredentialsDTO credentials) {
-		return new TokenDTO(credentials.getEmail(), credentials.getPassword());
+		return null;
 	}
 
 	@Override
