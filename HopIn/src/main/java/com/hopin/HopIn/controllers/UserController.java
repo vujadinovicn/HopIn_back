@@ -1,5 +1,7 @@
 package com.hopin.HopIn.controllers;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,7 +33,6 @@ import com.hopin.HopIn.dtos.NoteDTO;
 import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
 
@@ -61,9 +62,14 @@ public class UserController {
 	
 	@PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentials){
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-				credentials.getEmail(), credentials.getPassword()));
-
+		Authentication authentication;
+		try {
+			authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+					credentials.getEmail(), credentials.getPassword()));
+		}
+		catch(Exception ex) {
+			return new ResponseEntity<TokenDTO>(HttpStatus.UNAUTHORIZED);
+		}
 		// Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
 		// kontekst
 		SecurityContextHolder.getContext().setAuthentication(authentication);

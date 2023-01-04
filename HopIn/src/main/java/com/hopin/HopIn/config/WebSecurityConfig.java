@@ -91,5 +91,4 @@ public class WebSecurityConfig {
     	// Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
     	return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/api/user/login");	 
     }
-
 }
