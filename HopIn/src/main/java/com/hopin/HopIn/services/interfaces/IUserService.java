@@ -1,5 +1,8 @@
 package com.hopin.HopIn.services.interfaces;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import com.hopin.HopIn.dtos.AllMessagesDTO;
 import com.hopin.HopIn.dtos.AllNotesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
@@ -36,4 +39,8 @@ public interface IUserService {
 	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to);
 
 	UserReturnedDTO getUser(int id);
+
+	UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
+
+	User getByEmail(String email);
 }

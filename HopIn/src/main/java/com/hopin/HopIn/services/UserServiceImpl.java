@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -45,6 +47,24 @@ public class UserServiceImpl implements IUserService{
 	Map<Integer, Note> allNotesMap = new HashMap<Integer, Note>();
 	Map<Integer, Message> allMessagesMap = new HashMap<Integer, Message>();
 	Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
+	
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		Optional<User> ret = allUsers.findByEmail(email);
+		if (!ret.isEmpty() ) {
+			return org.springframework.security.core.userdetails.User.withUsername(email).password(ret.get().getPassword()).roles(ret.get().getRole().toString()).build();
+		}
+		throw new UsernameNotFoundException("User not found with this username: " + email);
+	}
+	
+	@Override
+	public User getByEmail(String email) {
+		Optional<User> found = allUsers.findByEmail(email);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return found.get();
+	}
 	
 	@Override
 	public UserReturnedDTO getUser(int id) {

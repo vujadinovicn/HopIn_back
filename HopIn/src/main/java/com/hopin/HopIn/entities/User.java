@@ -238,4 +238,12 @@ public class User {
 		this.role = role;
 	}
 
+	public String getJwt() {
+		return jwt;
+	}
+
+	public void setJwt(String jwt) {
+		this.jwt = jwt;
+	}
+
 }
