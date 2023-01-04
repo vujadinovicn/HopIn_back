@@ -18,28 +18,17 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class TokenUtils {
 
-	// Izdavac tokena
-	@Value("spring-security-example")
+	@Value("HopIn")
 	private String APP_NAME;
 
-	// Tajna koju samo backend aplikacija treba da zna kako bi mogla da generise i proveri JWT https://jwt.io/
 	@Value("somesecret")
 	public String SECRET;
 
-	// Period vazenja tokena - 30 minuta
 	@Value("1800000")
 	private int EXPIRES_IN;
 	
-	// Naziv headera kroz koji ce se prosledjivati JWT u komunikaciji server-klijent
 	@Value("Authorization")
 	private String AUTH_HEADER;
-	
-	// Moguce je generisati JWT za razlicite klijente (npr. web i mobilni klijenti nece imati isto trajanje JWT, 
-	// JWT za mobilne klijente ce trajati duze jer se mozda aplikacija redje koristi na taj nacin)
-	// Radi jednostavnosti primera, necemo voditi racuna o uređaju sa kojeg zahtev stiže.
-	//	private static final String AUDIENCE_UNKNOWN = "unknown";
-	//	private static final String AUDIENCE_MOBILE = "mobile";
-	//	private static final String AUDIENCE_TABLET = "tablet";
 	
 	private static final String AUDIENCE_WEB = "web";
 
@@ -63,9 +52,6 @@ public class TokenUtils {
 				.setIssuedAt(new Date())
 				.setExpiration(generateExpirationDate())
 				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
-		
-
-		// moguce je postavljanje proizvoljnih podataka u telo JWT tokena pozivom funkcije .claim("key", value), npr. .claim("role", user.getRole())
 	}
 	
 	/**
@@ -73,19 +59,6 @@ public class TokenUtils {
 	 * @return Tip uređaja. 
 	 */
 	private String generateAudience() {
-		
-		//	Moze se iskoristiti org.springframework.mobile.device.Device objekat za odredjivanje tipa uredjaja sa kojeg je zahtev stigao.
-		//	https://spring.io/projects/spring-mobile
-				
-		//	String audience = AUDIENCE_UNKNOWN;
-		//		if (device.isNormal()) {
-		//			audience = AUDIENCE_WEB;
-		//		} else if (device.isTablet()) {
-		//			audience = AUDIENCE_TABLET;
-		//		} else if (device.isMobile()) {
-		//			audience = AUDIENCE_MOBILE;
-		//		}
-		
 		return AUDIENCE_WEB;
 	}
 
@@ -111,11 +84,8 @@ public class TokenUtils {
 	public String getToken(HttpServletRequest request) {
 		String authHeader = getAuthHeaderFromHeader(request);
 
-		// JWT se prosledjuje kroz header 'Authorization' u formatu:
-		// Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-		
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
-			return authHeader.substring(7); // preuzimamo samo token (vrednost tokena je nakon "Bearer " prefiksa)
+			return authHeader.substring(7);
 		}
 
 		return null;
@@ -216,9 +186,7 @@ public class TokenUtils {
 		} catch (Exception e) {
 			claims = null;
 		}
-		
-		// Preuzimanje proizvoljnih podataka je moguce pozivom funkcije claims.get(key)
-		
+				
 		return claims;
 	}
 	
@@ -234,14 +202,13 @@ public class TokenUtils {
 	 * @return Informacija da li je token validan ili ne.
 	 */
 	public Boolean validateToken(String token, UserDetails userDetails) {
-		User user = (User) userDetails;
+		UserDetails user = (UserDetails) userDetails;
 		final String username = getUsernameFromToken(token);
 		final Date created = getIssuedAtDateFromToken(token);
 		
-		// Token je validan kada:
-		return (username != null // korisnicko ime nije null
-			&& username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickom imenom koje pise u bazi
-			); // nakon kreiranja tokena korisnik nije menjao svoju lozinku 
+		//TODO: need to add verification for password change, if user changed his password after token creation then it's invalid. Use method below
+		return (username != null
+			&& username.equals(userDetails.getUsername())); 
 	}
 	
 	/**
