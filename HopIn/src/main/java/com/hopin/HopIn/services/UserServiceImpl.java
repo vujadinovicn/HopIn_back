@@ -52,7 +52,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Optional<User> ret = allUsers.findByEmail(email);
-		if (!ret.isEmpty() ) {
+		if (!ret.isEmpty() && !ret.get().isBlocked()) {
 			return org.springframework.security.core.userdetails.User.withUsername(email).password(ret.get().getPassword()).roles(ret.get().getRole().toString()).build();
 		}
 		throw new UsernameNotFoundException("User not found with this username: " + email);
