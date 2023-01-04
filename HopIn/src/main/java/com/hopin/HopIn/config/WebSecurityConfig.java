@@ -85,7 +85,8 @@ public class WebSecurityConfig {
         
         // sve neautentifikovane zahteve obradi uniformno i posalji 401 gresku	
         http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
-    	http.authorizeRequests()		// /auth/**
+    	http.authorizeRequests()
+    		.requestMatchers("/**").permitAll()
 			.requestMatchers("/h2-console/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
 			.requestMatchers("/api/user/login").permitAll()		// /api/foo
 			// ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
