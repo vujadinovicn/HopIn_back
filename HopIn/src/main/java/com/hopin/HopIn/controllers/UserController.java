@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +29,11 @@ import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
 import com.hopin.HopIn.dtos.NoteReturnedDTO;
+import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.User;
-import com.hopin.HopIn.security.jwt.JwtTokenUtil;
 import com.hopin.HopIn.services.interfaces.IUserService;
+import com.hopin.HopIn.util.TokenUtils;
 
 @Validated
 @RestController
@@ -43,10 +44,10 @@ public class UserController {
 	IUserService userService;
 	
 	@Autowired
-	private AuthenticationManager authenticationManager;
+	private TokenUtils tokenUtils;
 
 	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	private AuthenticationManager authenticationManager;
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
@@ -59,20 +60,21 @@ public class UserController {
 	}
 	
 	@PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<User> login(@RequestBody CredentialsDTO credentials){
-		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(credentials.getEmail(),
-				credentials.getPassword());
-		Authentication auth = authenticationManager.authenticate(authReq);
+	public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentials){
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				credentials.getEmail(), credentials.getPassword()));
 
-		SecurityContext sc = SecurityContextHolder.getContext();
-		sc.setAuthentication(auth);
+		// Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
+		// kontekst
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		String token = jwtTokenUtil.generateToken(credentials.getEmail());
-		User user = this.userService.getByEmail(credentials.getEmail());
-		user.setJwt(token);
+		// Kreiraj token za tog korisnika
+		UserDetails user = (UserDetails) authentication.getPrincipal();
+		String jwt = tokenUtils.generateToken(user.getUsername());
+		long expiresIn = tokenUtils.getExpiredIn();
 
-
-		return new ResponseEntity<User>(user, HttpStatus.OK);
+		// Vrati token kao odgovor na uspesnu autentifikaciju
+		return new ResponseEntity<TokenDTO>(new TokenDTO(jwt, expiresIn), HttpStatus.OK);
 	}
 	
 	@PutMapping(value="{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
