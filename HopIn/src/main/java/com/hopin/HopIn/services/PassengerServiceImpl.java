@@ -19,16 +19,26 @@ import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.repositories.LocationRepository;
 import com.hopin.HopIn.repositories.PassengerRepository;
 import com.hopin.HopIn.repositories.RouteRepository;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
+import com.hopin.HopIn.services.interfaces.IUserService;
+
+import net.bytebuddy.utility.RandomString;
 
 @Service
 public class PassengerServiceImpl implements IPassengerService {
 
 	@Autowired
 	private PassengerRepository allPassengers;
+	
+	@Autowired
+	private IUserService userService;
+	
+	@Autowired
+	private IMailService mailService;
 
 	@Autowired
 	RouteRepository allRoutes;
@@ -55,9 +65,19 @@ public class PassengerServiceImpl implements IPassengerService {
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
+		if (this.userService.userAlreadyExists(dto.getEmail())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with that email already exists!");
+		}
 		Passenger passenger = new Passenger(dto);
-		allPassengers.save(passenger);
+		
+		String verficationCode = RandomString.make(64);
+		passenger.setVerificationCode(verficationCode);
+		
+		passenger = allPassengers.save(passenger);
 		allPassengers.flush();
+		
+		this.mailService.sendVerificationMail(passenger);
+		
 		return new UserReturnedDTO(passenger);
 	}
 

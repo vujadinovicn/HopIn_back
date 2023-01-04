@@ -145,6 +145,11 @@ public class UserServiceImpl implements IUserService{
 		return null;
 	}
 
+	@Override
+	public Boolean userAlreadyExists(String email) {
+		return (!this.allUsers.getUserByEmail(email).isEmpty());
+	}
+
 //	@Override
 //	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to) {
 //		User user = getById(userId);

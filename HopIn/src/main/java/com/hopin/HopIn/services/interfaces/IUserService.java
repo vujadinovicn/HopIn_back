@@ -36,4 +36,6 @@ public interface IUserService {
 	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to);
 
 	UserReturnedDTO getUser(int id);
+	
+	public Boolean userAlreadyExists(String email);
 }

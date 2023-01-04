@@ -12,24 +12,27 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="passengers")
+@Table(name = "passengers")
 public class Passenger extends User {
-	
+
+	private String verificationCode;
+
 	@ManyToMany(cascade = CascadeType.REFRESH)
 	private Set<Ride> rides = new HashSet<Ride>();
-	
+
 	@ManyToMany(cascade = CascadeType.REFRESH)
 	private Set<Route> favouriteRoutes = new HashSet<Route>();
-	
-	public Passenger() {}
-	
+
+	public Passenger() {
+	}
+
 	public Passenger(int id, String name, String surname, String email, String password, String address,
 			String telephoneNumber, byte[] profilePicture, Set<Ride> rides, Set<Route> favouriteRoutes) {
 		super(id, name, surname, email, password, address, telephoneNumber, profilePicture);
 		this.rides = rides;
 		this.favouriteRoutes = favouriteRoutes;
 	}
-	
+
 	public Passenger(Set<Ride> rides, Set<Route> favouriteRoutes) {
 		super();
 		this.rides = rides;
@@ -39,7 +42,7 @@ public class Passenger extends User {
 	public Passenger(UserDTO dto) {
 		super(dto);
 	}
-	
+
 	public Set<Ride> getRides() {
 		return rides;
 	}
@@ -54,6 +57,14 @@ public class Passenger extends User {
 
 	public void setFavouriteRoutes(Set<Route> favouriteRoutes) {
 		this.favouriteRoutes = favouriteRoutes;
+	}
+
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
 	}
 
 }
