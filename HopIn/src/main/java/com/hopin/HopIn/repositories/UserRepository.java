@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.hopin.HopIn.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Integer>{
+	
+	public Optional<User> findByEmail(String email);
 
 	public Optional<User> getUserByEmail(String email);
 

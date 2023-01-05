@@ -11,9 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,6 +27,7 @@ import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.repositories.LocationRepository;
 import com.hopin.HopIn.repositories.PassengerRepository;
@@ -51,6 +54,9 @@ public class PassengerServiceImpl implements IPassengerService {
 
 	@Autowired
 	LocationRepository allLocations;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	private Map<Integer, User> allPassengerss = new HashMap<Integer, User>();
 	private int currId = 0;
@@ -71,10 +77,17 @@ public class PassengerServiceImpl implements IPassengerService {
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
+		if (!Pattern.matches("^([0-9a-zA-Z]{6,}$)", dto.getPassword())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid password format!");
+		}
+		
 		if (this.userService.userAlreadyExists(dto.getEmail())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with that email already exists!");
 		}
+		
 		Passenger passenger = new Passenger(dto);
+		passenger.setPassword(passwordEncoder.encode(dto.getPassword()));
+		passenger.setRole(Role.PASSENGER);
 		
 		setVerificationCodeAndExp(passenger);
 		

@@ -1,14 +1,14 @@
 package com.hopin.HopIn.dtos;
 
 public class TokenDTO {
-	
+
 	String accessToken;
-	String refreshToken;
-	
-	public TokenDTO(String accessToken, String refreshToken) {
+	private Long expiresIn;
+
+	public TokenDTO(String accessToken, Long expiresIn) {
 		super();
 		this.accessToken = accessToken;
-		this.refreshToken = refreshToken;
+		this.expiresIn = expiresIn;
 	}
 
 	public String getAccessToken() {
@@ -19,11 +19,12 @@ public class TokenDTO {
 		this.accessToken = accessToken;
 	}
 
-	public String getRefreshToken() {
-		return refreshToken;
+	public Long getExpiresIn() {
+		return expiresIn;
 	}
 
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
+	public void setExpiresIn(Long expiresIn) {
+		this.expiresIn = expiresIn;
 	}
+
 }
