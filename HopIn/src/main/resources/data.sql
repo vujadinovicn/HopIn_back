@@ -9,7 +9,7 @@ insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
 insert into "vehicle_types" ("name", "price_per_km") values (2, 100);
 
 insert into "vehicles"("id", "baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (1, true, 0, 'BP-030-HR', 'AUDI A6', 4, true, 1, 1);
-insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number") values ('Hajduk Veljka', 'driver@gmail.com', false, false, 'Mark', 'password123', 's', 'Jacobs', '+381603454212');
+insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number") values ('Hajduk Veljka', 'driver@gmail.com', false, false, 'Mark', 'password123', null , 'Jacobs', '+381603454212');
 insert into "drivers"("id", "vehicle_id") values (2, 1);
 
 insert into "documents"("id", "name", "document_image", "driver_id") values (1, 'Drivers license 1', 'sss', 2);

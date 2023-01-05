@@ -27,4 +27,8 @@ public interface IPassengerService {
 	public boolean addFavouriteRoute(int passwordId, int routeId);
 
 	UserReturnedDTO getById(int id);
+
+	public Boolean verifyRegistration(String verificationCode);
+
+	public Boolean resendVerificationMail(int passengerId);
 }

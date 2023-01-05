@@ -50,7 +50,7 @@ public class MailServiceImpl implements IMailService {
 	    Personalization personalization = new Personalization();
 	    personalization.addTo(to);
 	    personalization.addDynamicTemplateData("name", passenger.getName());
-	    personalization.addDynamicTemplateData("verificationLink", "https://dzone.com/articles/integrate-sendgrid-with-a-spring-boot-and-java-app");
+	    personalization.addDynamicTemplateData("verificationLink", "http://localhost:4200/verify?code=" + passenger.getVerificationCode());
 	    
 	    Mail mail = new Mail();
 	    mail.setFrom(from);

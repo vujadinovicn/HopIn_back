@@ -155,6 +155,9 @@ public class User {
 	}
 
 	public String getProfilePicture(){
+		if (this.profilePicture == null) 
+			return null;
+		
 		String s;
 		try {
 			s = "data:image/jpeg;base64, ";

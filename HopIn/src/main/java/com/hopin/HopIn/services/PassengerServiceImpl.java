@@ -1,6 +1,12 @@
 package com.hopin.HopIn.services;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,11 +78,12 @@ public class PassengerServiceImpl implements IPassengerService {
 		
 		String verficationCode = RandomString.make(64);
 		passenger.setVerificationCode(verficationCode);
+		passenger.setVerificationExp(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 		
 		passenger = allPassengers.save(passenger);
 		allPassengers.flush();
 		
-		this.mailService.sendVerificationMail(passenger);
+//		this.mailService.sendVerificationMail(passenger);
 		
 		return new UserReturnedDTO(passenger);
 	}
@@ -111,8 +118,6 @@ public class PassengerServiceImpl implements IPassengerService {
 		}
 		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
 			if (!this.checkPasswordMatch(passenger.getPassword(), dto.getPassword())) {
-				System.out.println(passenger.getPassword());
-				System.out.println(dto.getPassword());
 				return null;
 			}
 			dto.setPassword(dto.getNewPassword());
@@ -156,6 +161,32 @@ public class PassengerServiceImpl implements IPassengerService {
 		this.allPassengers.save(passenger);
 		this.allPassengers.flush();
 		return true;
+	}
+
+	@Override
+	public Boolean verifyRegistration(String verificationCode) {
+		Passenger passenger = this.allPassengers.findPassengerByVerificationCode(verificationCode).orElse(null);
+		
+		if (passenger == null || passenger.isActivated() || passenger.getVerificationExp().isBefore(LocalDateTime.now())) {
+			return false;
+		}
+		
+		passenger.setActivated(true);
+		this.allPassengers.save(passenger);
+		this.allPassengers.flush();
+		return true;
+	}
+
+	@Override
+	public Boolean resendVerificationMail(int passengerId) {
+		Passenger passenger = this.allPassengers.findById(passengerId).orElse(null);
+		
+		if (passenger == null)
+			return false;
+		
+		this.mailService.sendVerificationMail(passenger);
+		return true;
+		
 	}
 
 }

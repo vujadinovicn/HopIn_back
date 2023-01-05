@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +18,8 @@ import jakarta.persistence.Table;
 public class Passenger extends User {
 
 	private String verificationCode;
+
+	private LocalDateTime verificationExp;
 
 	@ManyToMany(cascade = CascadeType.REFRESH)
 	private Set<Ride> rides = new HashSet<Ride>();
@@ -65,6 +69,14 @@ public class Passenger extends User {
 
 	public void setVerificationCode(String verificationCode) {
 		this.verificationCode = verificationCode;
+	}
+
+	public LocalDateTime getVerificationExp() {
+		return verificationExp;
+	}
+
+	public void setVerificationExp(LocalDateTime verificationExp) {
+		this.verificationExp = verificationExp;
 	}
 
 }

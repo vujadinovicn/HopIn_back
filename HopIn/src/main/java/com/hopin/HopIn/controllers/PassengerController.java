@@ -121,5 +121,25 @@ public class PassengerController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
+	
+	@GetMapping(value = "verify")
+	public ResponseEntity<Void> verifyRegistration(@RequestParam("code") String verificationCode) {
+		Boolean verified = this.passengerService.verifyRegistration(verificationCode);
+		if (verified) {
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping(value = "activate/resend")
+	public ResponseEntity<Void> resendVerificationMail(@RequestParam("id") int passengerId) {
+		Boolean ret = this.passengerService.resendVerificationMail(passengerId);
+		if (ret) {
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
 }
