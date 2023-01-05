@@ -24,6 +24,7 @@ import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
+import com.hopin.HopIn.dtos.VehicleReturnedDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
@@ -159,21 +160,23 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public Vehicle setVehicle(int driverId, VehicleDTO dto) {
-		Driver driver = this.allDriversMap.get(driverId);
-		Vehicle vehicle;
-		if (driver != null) {
-			vehicle = dtoToVehicle(dto, driverId, null);
-			driver.setVehicle(vehicle);
-		} else {
-			vehicle = new Vehicle();
+	public VehicleReturnedDTO insertVehicle(int driverId, VehicleDTO dto) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
 		}
 		
-		return vehicle;
+		Vehicle vehicle = new Vehicle();
+		dtoToVehicle(dto, driverId, vehicle);
+		driver.get().setVehicle(vehicle);
+		allDrivers.save(driver.get());
+		allDrivers.flush();
+		
+		return new VehicleReturnedDTO(driver.get().getVehicle());
 	}
 
 	@Override
-	public Vehicle updateVehicle(int driverId, VehicleDTO dto) {
+	public VehicleReturnedDTO updateVehicle(int driverId, VehicleDTO dto) {
 		Optional<Driver> driver = allDrivers.findById(driverId);
 		if (driver.isEmpty()){
 			return null;
@@ -183,7 +186,7 @@ public class DriverServiceImpl implements IDriverService {
 		allDrivers.save(driver.get());
 		allDrivers.flush();
 		
-		return vehicle;
+		return new VehicleReturnedDTO(driver.get().getVehicle());
 	}
 	
 	@Override
@@ -226,6 +229,7 @@ public class DriverServiceImpl implements IDriverService {
 	
 	
 	private Vehicle dtoToVehicle(VehicleDTO dto, int driverId, Vehicle vehicle) {
+		vehicle.setDriverId(driverId);
 		vehicle.setModel(dto.getModel());
 		vehicle.setLicenseNumber(dto.getLicenseNumber());
 		//vehicle.setCurrentLocation(dto.getCurrentLocation());
@@ -245,10 +249,6 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	private Document dtoToDocument(DocumentDTO dto, Document document) {
-//		if (document == null) {
-//			document = new Document();
-//			document.setId(currDocId++);
-//		}
 		document.setName(dto.getName());
 		document.setDocumentImage(dto.getDocumentImage());
 
