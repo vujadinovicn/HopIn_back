@@ -30,5 +30,5 @@ public interface IPassengerService {
 
 	public Boolean verifyRegistration(String verificationCode);
 
-	public Boolean resendVerificationMail(int passengerId);
+	public Boolean resendVerificationMail(String verificationCode);
 }

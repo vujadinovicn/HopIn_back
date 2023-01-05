@@ -76,16 +76,20 @@ public class PassengerServiceImpl implements IPassengerService {
 		}
 		Passenger passenger = new Passenger(dto);
 		
-		String verficationCode = RandomString.make(64);
-		passenger.setVerificationCode(verficationCode);
-		passenger.setVerificationExp(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+		setVerificationCodeAndExp(passenger);
 		
 		passenger = allPassengers.save(passenger);
 		allPassengers.flush();
 		
-//		this.mailService.sendVerificationMail(passenger);
+		this.mailService.sendVerificationMail(passenger);
 		
 		return new UserReturnedDTO(passenger);
+	}
+
+	private void setVerificationCodeAndExp(Passenger passenger) {
+		String verficationCode = RandomString.make(64);
+		passenger.setVerificationCode(verficationCode);
+		passenger.setVerificationExp(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 	}
 
 	@Override
@@ -178,11 +182,15 @@ public class PassengerServiceImpl implements IPassengerService {
 	}
 
 	@Override
-	public Boolean resendVerificationMail(int passengerId) {
-		Passenger passenger = this.allPassengers.findById(passengerId).orElse(null);
+	public Boolean resendVerificationMail(String verificationCode) {
+		Passenger passenger = this.allPassengers.findPassengerByVerificationCode(verificationCode).orElse(null);
 		
-		if (passenger == null)
+		if (passenger == null || passenger.isActivated() || passenger.getVerificationExp().isAfter(LocalDateTime.now()))
 			return false;
+		
+		setVerificationCodeAndExp(passenger);
+		this.allPassengers.save(passenger);
+		this.allPassengers.flush();
 		
 		this.mailService.sendVerificationMail(passenger);
 		return true;

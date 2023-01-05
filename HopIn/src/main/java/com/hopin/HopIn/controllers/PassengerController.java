@@ -133,8 +133,8 @@ public class PassengerController {
 	}
 	
 	@GetMapping(value = "activate/resend")
-	public ResponseEntity<Void> resendVerificationMail(@RequestParam("id") int passengerId) {
-		Boolean ret = this.passengerService.resendVerificationMail(passengerId);
+	public ResponseEntity<Void> resendVerificationMail(@RequestParam("code") String verificationCode) {
+		Boolean ret = this.passengerService.resendVerificationMail(verificationCode);
 		if (ret) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		} else {

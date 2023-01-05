@@ -63,7 +63,6 @@ public class MailServiceImpl implements IMailService {
 	      request.setEndpoint("mail/send");
 	      request.setBody(mail.build());
 	      Response response = this.sendGrid.api(request);     
-	      System.out.println(response);
 	    } catch (IOException ex) {
 	      
 	    }	   
