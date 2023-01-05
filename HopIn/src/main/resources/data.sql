@@ -1,4 +1,4 @@
-insert into "users"("id", "address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values (1, 'Bulevar Oslobodjenja 5', 'pera@gmail.com', false, true, 'Pera', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'ooooo', 'Peric', '+3819720132 ', 0);
+insert into "users"("id", "address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values (1, 'Bulevar Oslobodjenja 5', 'pera@gmail.com', false, false, 'Pera', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', 'ooooo', 'Peric', '+3819720132 ', 0);
 insert into "passengers"("id") values (1);
 
 insert into "locations"("id", "address", "latitude", "longitude") values (1, 'Novi Sad', 43.20, 44.20);
