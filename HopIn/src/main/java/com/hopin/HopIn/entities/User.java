@@ -178,6 +178,8 @@ public class User {
 	}
 
 	public String getProfilePicture() {
+		if (this.profilePicture == null)
+			return null;
 		String s;
 		try {
 			s = "data:image/jpeg;base64, ";
@@ -192,6 +194,8 @@ public class User {
 	}
 
 	public void setProfilePicture(String profilePicture) {
+		if (profilePicture == null)
+			profilePicture = "s";
 		String[] picture = profilePicture.split(",");
 		if (picture.length >= 2) {
 			// byte[] decoded = Base64.getDecoder().decode(picture[1], "-8");

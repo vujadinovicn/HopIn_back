@@ -34,6 +34,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.enums.DocumentOperationType;
+import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.repositories.DocumentRepository;
 import com.hopin.HopIn.repositories.DriverRepository;
@@ -60,9 +61,11 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
+		//TODO: handle error if email already exists
 		Driver driver = dtoToDriver(dto, null);
-		driver.setId(currId);
-		this.allDriversMap.put(currId++, driver);
+		driver.setRole(Role.DRIVER);
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
 		return new UserReturnedDTO(driver);
 	}
 	
