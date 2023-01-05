@@ -3,6 +3,8 @@ package com.hopin.HopIn.entities;
 import java.io.UnsupportedEncodingException;
 
 import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserDTOOld;
+import com.hopin.HopIn.enums.UserType;
 import com.hopin.HopIn.enums.Role;
 
 import jakarta.persistence.Entity;
@@ -40,7 +42,6 @@ public class User {
 	private String email;
 
 	@NotEmpty
-	@Pattern(regexp = "^([0-9a-zA-Z]{6,}$)")
 	private String password;
 
 	@NotEmpty
@@ -117,8 +118,8 @@ public class User {
 		this.password = dto.getPassword();
 		this.isActivated = false;
 	}
-
-	public void copy(UserDTO dto) {
+	
+	public void copy(UserDTOOld dto) {
 		this.name = dto.getName();
 		this.surname = dto.getSurname();
 		this.email = dto.getEmail();
@@ -177,8 +178,8 @@ public class User {
 		this.address = address;
 	}
 
-	public String getProfilePicture() {
-		if (this.profilePicture == null)
+	public String getProfilePicture(){
+		if (this.profilePicture == null) 
 			return null;
 		String s;
 		try {

@@ -25,7 +25,7 @@ import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
-import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.VehicleReturnedDTO;
@@ -57,12 +57,12 @@ public class DriverController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> insert(@RequestBody UserDTO dto) {
+	public ResponseEntity<UserReturnedDTO> insert(@RequestBody UserDTOOld dto) {
 		return new ResponseEntity<UserReturnedDTO>(service.insert(dto), HttpStatus.OK);
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> update(@PathVariable("id") int driverId, @RequestBody UserDTO newData) {
+	public ResponseEntity<UserReturnedDTO> update(@PathVariable("id") int driverId, @RequestBody UserDTOOld newData) {
 		return new ResponseEntity<UserReturnedDTO>(service.update(driverId, newData), HttpStatus.OK);
 	}
 

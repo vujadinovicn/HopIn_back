@@ -1,15 +1,18 @@
 package com.hopin.HopIn.dtos;
 
-public class UserDTO {
+import com.hopin.HopIn.entities.User;
+
+public class UserDTOOld {
 	private String name;
 	private String surname;
 	private String email;
 	private String password;
+	private String newPassword;
 	private String address;
 	private String telephoneNumber;
 	private String profilePicture;
 
-	public UserDTO(String name, String surname, String email, String password, String address, String telephoneNumber,
+	public UserDTOOld(String name, String surname, String email, String password, String newPassword, String address, String telephoneNumber,
 			String profilePicture) {
 		super();
 		this.name = name;
@@ -19,7 +22,20 @@ public class UserDTO {
 		this.address = address;
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
+		this.newPassword = newPassword;
 	}
+	
+//	public UserDTO(User user) {
+//		super();
+//		this.name = user.getName();
+//		this.surname = user.getSurname();
+//		this.email = user.getEmail();
+//		this.password = user.getPassword();
+//		this.newPassword = user.getNewPassword();
+//		this.address = user.getAddress();
+//		this.telephoneNumber = user.getTelephoneNumber();
+//		this.profilePicture = user.getProfilePicture();
+//	}
 
 	public String getName() {
 		return name;
@@ -53,6 +69,14 @@ public class UserDTO {
 		this.password = password;
 	}
 
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+
 	public String getAddress() {
 		return address;
 	}
@@ -65,8 +89,8 @@ public class UserDTO {
 		return telephoneNumber;
 	}
 
-	public void setTelephoneNumber(String telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
+	public void setTelephoneNumber(String phone) {
+		this.telephoneNumber = phone;
 	}
 
 	public String getProfilePicture() {
@@ -75,6 +99,5 @@ public class UserDTO {
 
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
-	}
-
+	}		
 }

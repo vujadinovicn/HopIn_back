@@ -21,7 +21,7 @@ import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
-import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.VehicleReturnedDTO;
@@ -61,8 +61,7 @@ public class DriverServiceImpl implements IDriverService {
 	private int currHoursId = 1;
 
 	@Override
-	public UserReturnedDTO insert(UserDTO dto) {
-		//TODO: handle error if email already exists
+	public UserReturnedDTO insert(UserDTOOld dto) {
 		Driver driver = dtoToDriver(dto, null);
 		driver.setRole(Role.DRIVER);
 		this.allDrivers.save(driver);
@@ -99,7 +98,7 @@ public class DriverServiceImpl implements IDriverService {
 	}
 	
 	@Override
-	public UserReturnedDTO update(int id, UserDTO dto) {
+	public UserReturnedDTO update(int id, UserDTOOld dto) {
 		Optional<Driver> driver = allDrivers.findById(id);
 		if (driver.isEmpty()) {
 			return null;
@@ -263,7 +262,7 @@ public class DriverServiceImpl implements IDriverService {
 
 	}
 
-	private Driver dtoToDriver(UserDTO dto, Driver driver) {
+	private Driver dtoToDriver(UserDTOOld dto, Driver driver) {
 		if (driver == null)
 			driver = new Driver();
 

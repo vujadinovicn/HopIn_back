@@ -38,9 +38,12 @@ public interface IUserService {
 	
 	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to);
 
-	UserReturnedDTO getUser(int id);
+	public UserReturnedDTO getUser(int id);
 
-	UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
+	public Boolean userAlreadyExists(String email);
 
-	User getByEmail(String email);
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
+
+	public User getByEmail(String email);
+
 }
