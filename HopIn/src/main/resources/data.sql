@@ -12,8 +12,8 @@ insert into "vehicles"("baby_transport", "driver_id", "license_number", "model",
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Veljka', 'driver@gmail.com', false, false, 'Mark', 'password123', 's', 'Jacobs', '+381603454212', 1);
 insert into "drivers"("id", "vehicle_id") values (2, 1);
 
-insert into "documents"("id", "name", "document_image", "driver_id") values (1, 'Drivers license 1', 'sss', 2);
-insert into "documents"("id", "name", "document_image", "driver_id") values (2, 'Registration license 1', 'sss', 2);
+insert into "documents"("name", "document_image", "driver_id") values ('Drivers license 1', 'sss', 2);
+insert into "documents"("name", "document_image", "driver_id") values ('Registration license 1', 'sss', 2);
 
 insert into "drivers_documents" values (2,1);
 insert into "drivers_documents" values (2,2);

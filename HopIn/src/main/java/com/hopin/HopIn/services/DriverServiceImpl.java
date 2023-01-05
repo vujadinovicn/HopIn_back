@@ -140,11 +140,18 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public DocumentReturnedDTO addDocument(int driverId, DocumentDTO newDocument) {
-		Driver driver = this.allDriversMap.get(driverId);
-		Document document = this.dtoToDocument(newDocument, null);
+	public DocumentReturnedDTO addDocument(int driverId, DocumentDTO documentDTO) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
+		}
+		Document document = new Document();
+		this.dtoToDocument(documentDTO, document);
 		document.setDriverId(driverId);
-		driver.getDocuments().add(document);
+		driver.get().getDocuments().add(document);
+		
+		allDrivers.save(driver.get());
+		allDrivers.flush();
 		
 		return new DocumentReturnedDTO(document);
 	}
@@ -307,7 +314,11 @@ public class DriverServiceImpl implements IDriverService {
 	public void updateByDocumentRequest(DriverAccountUpdateDocumentRequest request) {
 		Driver driver = request.getDriver();
 		if (request.getDocumentOperationType() == DocumentOperationType.ADD) {
-			driver.getDocuments().add(new Document(request.getName(), request.getDocumentImage(), driver.getId()));	
+			Document document = new Document();
+			document.setName(request.getName());
+			document.setDocumentImage(request.getDocumentImage());
+			document.setDriverId(driver.getId());
+			driver.getDocuments().add(document);	
 		} else {
 			if (request.getDocumentOperationType() == DocumentOperationType.UPDATE) {
 				Document document = this.getDocumentById(driver.getDocuments(), request.getDocumentId());
