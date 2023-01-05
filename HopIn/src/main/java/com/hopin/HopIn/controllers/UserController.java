@@ -1,9 +1,16 @@
 package com.hopin.HopIn.controllers;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +34,7 @@ import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.services.interfaces.IUserService;
+import com.hopin.HopIn.util.TokenUtils;
 
 @Validated
 @RestController
@@ -35,6 +43,12 @@ import com.hopin.HopIn.services.interfaces.IUserService;
 public class UserController {
 	@Autowired
 	IUserService userService;
+	
+	@Autowired
+	private TokenUtils tokenUtils;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
@@ -48,10 +62,25 @@ public class UserController {
 	
 	@PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentials){
-		TokenDTO token = userService.login(credentials);
-		if (token == null)
-			return new ResponseEntity<TokenDTO>(HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<TokenDTO>(token, HttpStatus.OK);
+		Authentication authentication;
+		try {
+			authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+					credentials.getEmail(), credentials.getPassword()));
+		}
+		catch(Exception ex) {
+			return new ResponseEntity<TokenDTO>(HttpStatus.UNAUTHORIZED);
+		}
+		// Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
+		// kontekst
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		// Kreiraj token za tog korisnika
+		UserDetails user = (UserDetails) authentication.getPrincipal();
+		String jwt = tokenUtils.generateToken(user);
+		long expiresIn = tokenUtils.getExpiredIn();
+
+		// Vrati token kao odgovor na uspesnu autentifikaciju
+		return new ResponseEntity<TokenDTO>(new TokenDTO(jwt, expiresIn), HttpStatus.OK);
 	}
 	
 	@PutMapping(value="{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,68 +1,72 @@
 package com.hopin.HopIn.entities;
 
-import jakarta.persistence.GenerationType;
-
 import java.io.UnsupportedEncodingException;
-import java.util.Base64;
 
 import com.hopin.HopIn.dtos.UserDTO;
-import com.hopin.HopIn.enums.UserType;
+import com.hopin.HopIn.enums.Role;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Lob;
-import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-@Table(name="users")
+@Table(name = "users")
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	@NotEmpty
 	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
 	private String name;
-	
+
 	@NotEmpty
 	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
 	private String surname;
-	
+
 	@NotEmpty
 	@Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
 	private String email;
-	
+
 	@NotEmpty
 	@Pattern(regexp = "^([0-9a-zA-Z]{6,}$)")
 	private String password;
-	
+
 	@NotEmpty
 	@Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$")
 	private String address;
-	
+
 	@NotEmpty
 	@Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*")
 	private String telephoneNumber;
-	
+
 	@Lob
 	private byte[] profilePicture;
-	
+
 	@NotNull
 	private boolean isActivated;
-	
+
 	@NotNull
 	private boolean isBlocked;
-	
-	public User() {}
+
+	private Role role;
+
+	@Transient
+	private String jwt;
+
+	public User() {
+	}
 
 	public User(int id, String name, String surname, String email, String password, String address,
 			String telephoneNumber, byte[] profilePicture) {
@@ -79,6 +83,27 @@ public class User {
 		this.isBlocked = false;
 	}
 
+	public User(int id, @NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String name,
+			@NotEmpty @Pattern(regexp = "^([a-zA-Zčćđžš ]*)$") String surname,
+			@NotEmpty @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$") String email,
+			@NotEmpty @Pattern(regexp = "^([0-9a-zA-Z]{6,}$)") String password,
+			@NotEmpty @Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$") String address,
+			@NotEmpty @Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*") String telephoneNumber,
+			byte[] profilePicture, @NotNull boolean isActivated, @NotNull boolean isBlocked, Role role, String jwt) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.password = password;
+		this.address = address;
+		this.telephoneNumber = telephoneNumber;
+		this.profilePicture = profilePicture;
+		this.isActivated = isActivated;
+		this.isBlocked = isBlocked;
+		this.role = role;
+		this.jwt = jwt;
+	}
 
 	public User(UserDTO dto) {
 		super();
@@ -92,7 +117,7 @@ public class User {
 		this.password = dto.getPassword();
 		this.isActivated = false;
 	}
-	
+
 	public void copy(UserDTO dto) {
 		this.name = dto.getName();
 		this.surname = dto.getSurname();
@@ -104,7 +129,6 @@ public class User {
 		this.password = dto.getPassword();
 	}
 
-
 	public String getPassword() {
 		return password;
 	}
@@ -112,7 +136,7 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -153,7 +177,7 @@ public class User {
 		this.address = address;
 	}
 
-	public String getProfilePicture(){
+	public String getProfilePicture() {
 		String s;
 		try {
 			s = "data:image/jpeg;base64, ";
@@ -170,7 +194,7 @@ public class User {
 	public void setProfilePicture(String profilePicture) {
 		String[] picture = profilePicture.split(",");
 		if (picture.length >= 2) {
-			//byte[] decoded = Base64.getDecoder().decode(picture[1], "-8");
+			// byte[] decoded = Base64.getDecoder().decode(picture[1], "-8");
 			byte[] decoded;
 			try {
 				decoded = picture[1].getBytes("UTF-8");
@@ -181,7 +205,6 @@ public class User {
 			}
 		}
 	}
-
 
 	public String getTelephoneNumber() {
 		return telephoneNumber;
@@ -206,5 +229,21 @@ public class User {
 	public void setBlocked(boolean isBlocked) {
 		this.isBlocked = isBlocked;
 	}
-	
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public String getJwt() {
+		return jwt;
+	}
+
+	public void setJwt(String jwt) {
+		this.jwt = jwt;
+	}
+
 }
