@@ -70,16 +70,12 @@ public class UserController {
 		catch(Exception ex) {
 			return new ResponseEntity<TokenDTO>(HttpStatus.UNAUTHORIZED);
 		}
-		// Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
-		// kontekst
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		// Kreiraj token za tog korisnika
 		UserDetails user = (UserDetails) authentication.getPrincipal();
-		String jwt = tokenUtils.generateToken(user);
+		String jwt = tokenUtils.generateToken(user, this.userService.getByEmail(credentials.getEmail()).getId());
 		long expiresIn = tokenUtils.getExpiredIn();
 
-		// Vrati token kao odgovor na uspesnu autentifikaciju
 		return new ResponseEntity<TokenDTO>(new TokenDTO(jwt, expiresIn), HttpStatus.OK);
 	}
 	
