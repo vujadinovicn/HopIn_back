@@ -13,6 +13,7 @@ import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
+import com.hopin.HopIn.dtos.VehicleReturnedDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
@@ -36,11 +37,11 @@ public interface IDriverService {
 
 	public List<DocumentReturnedDTO> getDocuments(int driverId);
 
-	public Vehicle setVehicle(int driverId, VehicleDTO dto);
+	public VehicleReturnedDTO insertVehicle(int driverId, VehicleDTO dto);
 
 	public VehicleDTO getVehicle(int driverId);
 
-	public Vehicle updateVehicle(int driverId, VehicleDTO vehicle);
+	public VehicleReturnedDTO updateVehicle(int driverId, VehicleDTO vehicle);
 
 	public WorkingHoursDTO getWorkingHours(int hoursId);
 

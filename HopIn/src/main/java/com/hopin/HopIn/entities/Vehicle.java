@@ -39,14 +39,15 @@ public class Vehicle {
 	@NotNull
 	private boolean petTransport;
 
-	@ManyToOne(cascade = CascadeType.REFRESH)
-	@NotNull
+	@ManyToOne(cascade = CascadeType.ALL)
 	private VehicleType vehicleType;
 
 	@OneToOne(cascade = CascadeType.REFRESH)
 	private Location currentLocation;
 
 	public Vehicle() {
+		super();
+		vehicleType = new VehicleType();
 	}
 
 	public Vehicle(int id, int driverId, String model, String licenseNumber, int passengerSeats, boolean babyTransport,
