@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.entities.Passenger;
+import com.hopin.HopIn.tokens.SecureToken;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -42,7 +43,7 @@ public class MailServiceImpl implements IMailService {
 	}
 	
 	@Override
-	public void sendVerificationMail(Passenger passenger) {
+	public void sendVerificationMail(Passenger passenger, String token) {
 		
 		Email from = new Email("hopinapp22@gmail.com", "HopIn");
 	    Email to = new Email(passenger.getEmail());
@@ -50,7 +51,7 @@ public class MailServiceImpl implements IMailService {
 	    Personalization personalization = new Personalization();
 	    personalization.addTo(to);
 	    personalization.addDynamicTemplateData("name", passenger.getName());
-	    personalization.addDynamicTemplateData("verificationLink", "http://localhost:4200/verify?code=" + passenger.getVerificationCode());
+	    personalization.addDynamicTemplateData("verificationLink", "http://localhost:4200/verify?code=" + token);
 	    
 	    Mail mail = new Mail();
 	    mail.setFrom(from);
