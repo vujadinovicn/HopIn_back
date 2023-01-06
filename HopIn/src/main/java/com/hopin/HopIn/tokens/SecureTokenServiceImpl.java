@@ -24,7 +24,7 @@ public class SecureTokenServiceImpl implements ISecureTokenService {
 		SecureToken token = new SecureToken();
 		token.setToken(RandomString.make(64));
 		token.setUser(user);
-		token.setExpirationDate(Date.from(Instant.now().plus(1, ChronoUnit.MINUTES)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+		token.setExpirationDate(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 		token.setType(type);
 		
 		this.allTokens.save(token);
