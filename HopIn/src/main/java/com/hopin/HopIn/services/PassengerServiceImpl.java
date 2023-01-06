@@ -27,12 +27,15 @@ import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.Role;
+import com.hopin.HopIn.enums.SecureTokenType;
 import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.repositories.LocationRepository;
 import com.hopin.HopIn.repositories.PassengerRepository;
 import com.hopin.HopIn.repositories.RouteRepository;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IUserService;
+import com.hopin.HopIn.tokens.ISecureTokenService;
+import com.hopin.HopIn.tokens.SecureToken;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -47,6 +50,9 @@ public class PassengerServiceImpl implements IPassengerService {
 	
 	@Autowired
 	private IMailService mailService;
+	
+	@Autowired
+	private ISecureTokenService tokenService;
 
 	@Autowired
 	RouteRepository allRoutes;
@@ -88,20 +94,14 @@ public class PassengerServiceImpl implements IPassengerService {
 		passenger.setPassword(passwordEncoder.encode(dto.getPassword()));
 		passenger.setRole(Role.PASSENGER);
 		
-		setVerificationCodeAndExp(passenger);
-		
 		passenger = allPassengers.save(passenger);
 		allPassengers.flush();
 		
-		this.mailService.sendVerificationMail(passenger);
+		SecureToken token = tokenService.createToken(passenger, SecureTokenType.REGISTRATION);
+		
+		this.mailService.sendVerificationMail(passenger, token.getToken());
 		
 		return new UserReturnedDTO(passenger);
-	}
-
-	private void setVerificationCodeAndExp(Passenger passenger) {
-		String verficationCode = RandomString.make(64);
-		passenger.setVerificationCode(verficationCode);
-		passenger.setVerificationExp(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 	}
 
 	@Override
@@ -181,30 +181,28 @@ public class PassengerServiceImpl implements IPassengerService {
 
 	@Override
 	public Boolean verifyRegistration(String verificationCode) {
-		Passenger passenger = this.allPassengers.findPassengerByVerificationCode(verificationCode).orElse(null);
-		
-		if (passenger == null || passenger.isActivated() || passenger.getVerificationExp().isBefore(LocalDateTime.now())) {
+		SecureToken token = this.tokenService.findByToken(verificationCode);
+
+		if (!this.tokenService.isValid(token) || token.isExpired() || token.getType() != SecureTokenType.REGISTRATION) {
 			return false;
 		}
 		
-		passenger.setActivated(true);
-		this.allPassengers.save(passenger);
-		this.allPassengers.flush();
+		this.userService.activateUser(token.getUser());
 		return true;
 	}
 
 	@Override
 	public Boolean resendVerificationMail(String verificationCode) {
-		Passenger passenger = this.allPassengers.findPassengerByVerificationCode(verificationCode).orElse(null);
-		
-		if (passenger == null || passenger.isActivated() || passenger.getVerificationExp().isAfter(LocalDateTime.now()))
+		SecureToken token = this.tokenService.findByToken(verificationCode);
+
+		if (!this.tokenService.isValid(token)) {
 			return false;
+		}
 		
-		setVerificationCodeAndExp(passenger);
-		this.allPassengers.save(passenger);
-		this.allPassengers.flush();
-		
-		this.mailService.sendVerificationMail(passenger);
+		SecureToken newToken = tokenService.createToken(token.getUser(), SecureTokenType.REGISTRATION);
+		Passenger passenger = this.allPassengers.findById(token.getUser().getId()).orElse(null);
+		this.mailService.sendVerificationMail(passenger, newToken.getToken());
+
 		return true;
 		
 	}

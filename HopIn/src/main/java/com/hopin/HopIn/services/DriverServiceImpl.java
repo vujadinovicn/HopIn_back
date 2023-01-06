@@ -24,6 +24,7 @@ import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
+import com.hopin.HopIn.dtos.VehicleReturnedDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
@@ -34,6 +35,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.enums.DocumentOperationType;
+import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.repositories.DocumentRepository;
 import com.hopin.HopIn.repositories.DriverRepository;
@@ -61,8 +63,9 @@ public class DriverServiceImpl implements IDriverService {
 	@Override
 	public UserReturnedDTO insert(UserDTOOld dto) {
 		Driver driver = dtoToDriver(dto, null);
-		driver.setId(currId);
-		this.allDriversMap.put(currId++, driver);
+		driver.setRole(Role.DRIVER);
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
 		return new UserReturnedDTO(driver);
 	}
 	
@@ -136,11 +139,18 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public DocumentReturnedDTO addDocument(int driverId, DocumentDTO newDocument) {
-		Driver driver = this.allDriversMap.get(driverId);
-		Document document = this.dtoToDocument(newDocument, null);
+	public DocumentReturnedDTO addDocument(int driverId, DocumentDTO documentDTO) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
+		}
+		Document document = new Document();
+		this.dtoToDocument(documentDTO, document);
 		document.setDriverId(driverId);
-		driver.getDocuments().add(document);
+		driver.get().getDocuments().add(document);
+		
+		allDrivers.save(driver.get());
+		allDrivers.flush();
 		
 		return new DocumentReturnedDTO(document);
 	}
@@ -156,21 +166,23 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public Vehicle setVehicle(int driverId, VehicleDTO dto) {
-		Driver driver = this.allDriversMap.get(driverId);
-		Vehicle vehicle;
-		if (driver != null) {
-			vehicle = dtoToVehicle(dto, driverId, null);
-			driver.setVehicle(vehicle);
-		} else {
-			vehicle = new Vehicle();
+	public VehicleReturnedDTO insertVehicle(int driverId, VehicleDTO dto) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
 		}
 		
-		return vehicle;
+		Vehicle vehicle = new Vehicle();
+		dtoToVehicle(dto, driverId, vehicle);
+		driver.get().setVehicle(vehicle);
+		allDrivers.save(driver.get());
+		allDrivers.flush();
+		
+		return new VehicleReturnedDTO(driver.get().getVehicle());
 	}
 
 	@Override
-	public Vehicle updateVehicle(int driverId, VehicleDTO dto) {
+	public VehicleReturnedDTO updateVehicle(int driverId, VehicleDTO dto) {
 		Optional<Driver> driver = allDrivers.findById(driverId);
 		if (driver.isEmpty()){
 			return null;
@@ -180,7 +192,7 @@ public class DriverServiceImpl implements IDriverService {
 		allDrivers.save(driver.get());
 		allDrivers.flush();
 		
-		return vehicle;
+		return new VehicleReturnedDTO(driver.get().getVehicle());
 	}
 	
 	@Override
@@ -223,6 +235,7 @@ public class DriverServiceImpl implements IDriverService {
 	
 	
 	private Vehicle dtoToVehicle(VehicleDTO dto, int driverId, Vehicle vehicle) {
+		vehicle.setDriverId(driverId);
 		vehicle.setModel(dto.getModel());
 		vehicle.setLicenseNumber(dto.getLicenseNumber());
 		//vehicle.setCurrentLocation(dto.getCurrentLocation());
@@ -242,10 +255,6 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	private Document dtoToDocument(DocumentDTO dto, Document document) {
-//		if (document == null) {
-//			document = new Document();
-//			document.setId(currDocId++);
-//		}
 		document.setName(dto.getName());
 		document.setDocumentImage(dto.getDocumentImage());
 
@@ -304,7 +313,11 @@ public class DriverServiceImpl implements IDriverService {
 	public void updateByDocumentRequest(DriverAccountUpdateDocumentRequest request) {
 		Driver driver = request.getDriver();
 		if (request.getDocumentOperationType() == DocumentOperationType.ADD) {
-			driver.getDocuments().add(new Document(request.getName(), request.getDocumentImage(), driver.getId()));	
+			Document document = new Document();
+			document.setName(request.getName());
+			document.setDocumentImage(request.getDocumentImage());
+			document.setDriverId(driver.getId());
+			driver.getDocuments().add(document);	
 		} else {
 			if (request.getDocumentOperationType() == DocumentOperationType.UPDATE) {
 				Document document = this.getDocumentById(driver.getDocuments(), request.getDocumentId());

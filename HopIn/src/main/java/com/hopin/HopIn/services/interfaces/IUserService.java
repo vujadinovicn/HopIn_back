@@ -46,4 +46,6 @@ public interface IUserService {
 
 	public User getByEmail(String email);
 
+	public void activateUser(User user);
+
 }

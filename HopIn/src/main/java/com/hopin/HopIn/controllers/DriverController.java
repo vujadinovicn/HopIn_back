@@ -28,6 +28,7 @@ import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
+import com.hopin.HopIn.dtos.VehicleReturnedDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Vehicle;
@@ -87,13 +88,13 @@ public class DriverController {
 	}
 	
 	@PostMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Vehicle> setVehicle(@PathVariable("id") int driverId, @RequestBody VehicleDTO vehicle) {
-		return new ResponseEntity<Vehicle>(service.setVehicle(driverId, vehicle), HttpStatus.OK);
+	public ResponseEntity<VehicleReturnedDTO> insertVehicle(@PathVariable("id") int driverId, @RequestBody VehicleDTO vehicle) {
+		return new ResponseEntity<VehicleReturnedDTO>(service.insertVehicle(driverId, vehicle), HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Vehicle> updateVehicle(@PathVariable("id") int driverId, @RequestBody VehicleDTO vehicle) {
-		return new ResponseEntity<Vehicle>(service.updateVehicle(driverId, vehicle), HttpStatus.OK);
+	public ResponseEntity<VehicleReturnedDTO> updateVehicle(@PathVariable("id") int driverId, @RequestBody VehicleDTO vehicle) {
+		return new ResponseEntity<VehicleReturnedDTO>(service.updateVehicle(driverId, vehicle), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)

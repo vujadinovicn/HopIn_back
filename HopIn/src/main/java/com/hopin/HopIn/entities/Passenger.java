@@ -17,10 +17,6 @@ import jakarta.persistence.Table;
 @Table(name = "passengers")
 public class Passenger extends User {
 
-	private String verificationCode;
-
-	private LocalDateTime verificationExp;
-
 	@ManyToMany(cascade = CascadeType.REFRESH)
 	private Set<Ride> rides = new HashSet<Ride>();
 
@@ -61,22 +57,6 @@ public class Passenger extends User {
 
 	public void setFavouriteRoutes(Set<Route> favouriteRoutes) {
 		this.favouriteRoutes = favouriteRoutes;
-	}
-
-	public String getVerificationCode() {
-		return verificationCode;
-	}
-
-	public void setVerificationCode(String verificationCode) {
-		this.verificationCode = verificationCode;
-	}
-
-	public LocalDateTime getVerificationExp() {
-		return verificationExp;
-	}
-
-	public void setVerificationExp(LocalDateTime verificationExp) {
-		this.verificationExp = verificationExp;
 	}
 
 }
