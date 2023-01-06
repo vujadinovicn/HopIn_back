@@ -171,6 +171,13 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		return (!this.allUsers.getUserByEmail(email).isEmpty());
 	}
 
+	@Override
+	public void activateUser(User user) {
+		user.setActivated(true);
+		this.allUsers.save(user);
+		this.allUsers.flush();
+	}
+
 //	@Override
 //	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to) {
 //		User user = getById(userId);
