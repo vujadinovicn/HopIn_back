@@ -1,6 +1,6 @@
 package com.hopin.HopIn.controllers;
 
-import javax.naming.AuthenticationException;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +33,9 @@ import com.hopin.HopIn.dtos.NoteDTO;
 import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
+import com.hopin.HopIn.enums.Role;
+import com.hopin.HopIn.services.WorkingHoursServiceImpl;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
 
@@ -43,6 +46,9 @@ import com.hopin.HopIn.util.TokenUtils;
 public class UserController {
 	@Autowired
 	IUserService userService;
+	
+	@Autowired
+	WorkingHoursServiceImpl workingHoursService;
 	
 	@Autowired
 	private TokenUtils tokenUtils;
@@ -73,8 +79,16 @@ public class UserController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		UserDetails user = (UserDetails) authentication.getPrincipal();
-		String jwt = tokenUtils.generateToken(user, this.userService.getByEmail(credentials.getEmail()).getId());
+		int userId = this.userService.getByEmail(credentials.getEmail()).getId(); 
+		String jwt = tokenUtils.generateToken(user, userId);
 		long expiresIn = tokenUtils.getExpiredIn();
+		
+		// start counting working-hours if role is driver
+		if (authentication.getAuthorities().stream()
+		          .anyMatch(r -> r.getAuthority().equals("ROLE_DRIVER"))) {
+			System.out.println(user.getAuthorities());
+			this.workingHoursService.addWorkingHours(userId, new WorkingHoursStartDTO(LocalDateTime.now()));
+		}
 
 		return new ResponseEntity<TokenDTO>(new TokenDTO(jwt, expiresIn), HttpStatus.OK);
 	}
