@@ -20,6 +20,8 @@ public class WorkingHours {
 	private LocalDateTime start;
 	private LocalDateTime end;
 	private int driverId;
+	
+	public WorkingHours() {}
 
 	public WorkingHours(int id, LocalDateTime start, LocalDateTime end, int driverId) {
 		super();
