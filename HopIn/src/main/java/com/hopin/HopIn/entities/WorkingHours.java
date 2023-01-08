@@ -2,6 +2,8 @@ package com.hopin.HopIn.entities;
 
 import java.time.LocalDateTime;
 
+import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +26,12 @@ public class WorkingHours {
 		this.id = id;
 		this.start = start;
 		this.end = end;
+		this.driverId = driverId;
+	}
+	
+	public WorkingHours(int driverId, WorkingHoursStartDTO dto) {
+		super();
+		this.start = dto.getStart();
 		this.driverId = driverId;
 	}
 
