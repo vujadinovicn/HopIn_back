@@ -81,13 +81,7 @@ public class UserController {
 		UserDetails user = (UserDetails) authentication.getPrincipal();
 		int userId = this.userService.getByEmail(credentials.getEmail()).getId(); 
 		String jwt = tokenUtils.generateToken(user, userId);
-		long expiresIn = tokenUtils.getExpiredIn();
-		
-		// start counting working-hours if role is driver
-		if (authentication.getAuthorities().stream()
-		          .anyMatch(r -> r.getAuthority().equals("ROLE_DRIVER"))) {
-			this.workingHoursService.addWorkingHours(userId, new WorkingHoursStartDTO(LocalDateTime.now()));
-		}
+		long expiresIn = tokenUtils.getExpiredIn(); 
 
 		return new ResponseEntity<TokenDTO>(new TokenDTO(jwt, expiresIn), HttpStatus.OK);
 	}
