@@ -72,6 +72,16 @@ public class PassengerController {
 		return new ResponseEntity<UserReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "/email/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserReturnedDTO> getPassenger(@PathVariable String email) {
+		UserReturnedDTO passenger = passengerService.getByEmail(email);
+		if (passenger != null) {
+			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
+		}
+		return new ResponseEntity<UserReturnedDTO>(HttpStatus.NOT_FOUND);
+	}
+
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> updatePassenger(@RequestBody UserDTOOld dto, @PathVariable int id) {
 		UserReturnedDTO passenger = passengerService.update(id, dto);
