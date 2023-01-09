@@ -1,7 +1,8 @@
 package com.hopin.HopIn.services;
 
+import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,16 +43,25 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	}
 	
 	@Override
-	public double getWorkedHoursForDate(int driverId, LocalDate date) {
-		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriverAndStart(driverId, date);
-		double hours = 0;
+	public double getWorkedHoursForDate(int driverId, LocalDateTime end) {
+		LocalDateTime start = end.minusDays(1);
+		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriverAndDates(driverId, start, end);
 		
+		double hours = 0;
+		DecimalFormat df = new DecimalFormat("#.##");
 		for (WorkingHours workingHours : allWorkingHours) {
 			long minutes= Duration.between(workingHours.getStart(), workingHours.getEnd()).toMinutes();
+			if (start.isAfter(workingHours.getStart())) {
+				minutes = Duration.between(start, workingHours.getEnd()).toMinutes();
+			}
 			hours += minutes / 60;
-			hours += (minutes % 60) * 0.1;
+			if ((minutes % 60) < 10) {
+				hours += (minutes%60) * 0.1;
+			} else {
+				hours += (minutes%60) * 0.01;
+			}
 		}
-		return hours;
+		return Double.valueOf(df.format(hours));
 	}
 
 }

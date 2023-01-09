@@ -1,6 +1,7 @@
 package com.hopin.HopIn.services.interfaces;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.dtos.WorkingHoursEndDTO;
@@ -12,6 +13,6 @@ public interface IWorkingHoursService {
 
 	WorkingHoursDTO updateWorkingHours(int id, WorkingHoursEndDTO dto);
 
-	double getWorkedHoursForDate(int driverId, LocalDate date);
+	double getWorkedHoursForDate(int driverId, LocalDateTime end);
 
 }
