@@ -12,6 +12,8 @@ public class UserReturnedDTO {
 	private String email;
 	private String address;
 	private String password;
+	
+	public UserReturnedDTO() {}
 
 	public UserReturnedDTO(int id, String name, String surname, String profilePicture, String telephoneNumber,
 			String email, String address, String password) {
