@@ -35,7 +35,10 @@ import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.dtos.WorkingHoursEndDTO;
 import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
 import com.hopin.HopIn.entities.Document;
+import com.hopin.HopIn.exceptions.BadDateTimeFormatException;
+import com.hopin.HopIn.exceptions.BadIdFormatException;
 import com.hopin.HopIn.exceptions.DriverAlreadyActiveException;
+import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.exceptions.WorkingHoursException;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -140,8 +143,18 @@ public class DriverController {
 	}
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WorkingHoursDTO> updateWorkingHours(@PathVariable("working-hour-id") int hoursId, @RequestBody WorkingHoursEndDTO dto) {
-		return new ResponseEntity<WorkingHoursDTO>(workingHoursService.updateWorkingHours(hoursId, dto), HttpStatus.OK);
+	public ResponseEntity<?> updateWorkingHours(@PathVariable("working-hour-id") int hoursId, @RequestBody WorkingHoursEndDTO dto) {
+		try {
+			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.updateWorkingHours(hoursId, dto), HttpStatus.OK);
+		} catch (BadIdFormatException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Working hour does not exist!"), HttpStatus.BAD_REQUEST);
+		} catch (BadDateTimeFormatException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Bad Date format, or future date is sent!"), HttpStatus.BAD_REQUEST);
+		} catch (NoActiveDriverException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("No shift is ongoing!"), HttpStatus.BAD_REQUEST);
+		} catch (NullPointerException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot end shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
+		}	
 	}
 	
 	@CrossOrigin(origins = "http://localhost:4200")
