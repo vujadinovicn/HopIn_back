@@ -1,5 +1,8 @@
 package com.hopin.HopIn.services;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,18 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		this.allWorkingHours.save(found.get());
 		this.allWorkingHours.flush();
 		return new WorkingHoursDTO(found.get());
+	}
+	
+	@Override
+	public int getWorkedHoursForDate(int driverId, LocalDate date) {
+		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriverAndStart(driverId, date);
+		int hours = 0;
+		
+		for (WorkingHours workingHours : allWorkingHours) {
+			long minutes= Duration.between(workingHours.getStart(), workingHours.getEnd()).toMinutes();
+			hours += minutes / 60;
+		}
+		return hours;
 	}
 
 }

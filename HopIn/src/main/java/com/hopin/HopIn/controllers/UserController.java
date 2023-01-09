@@ -86,7 +86,6 @@ public class UserController {
 		// start counting working-hours if role is driver
 		if (authentication.getAuthorities().stream()
 		          .anyMatch(r -> r.getAuthority().equals("ROLE_DRIVER"))) {
-			System.out.println(user.getAuthorities());
 			this.workingHoursService.addWorkingHours(userId, new WorkingHoursStartDTO(LocalDateTime.now()));
 		}
 
