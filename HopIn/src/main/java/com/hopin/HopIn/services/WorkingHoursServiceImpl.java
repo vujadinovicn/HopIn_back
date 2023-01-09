@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.dtos.WorkingHoursEndDTO;
 import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
+import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.repositories.WorkingHoursRepository;
+import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IWorkingHoursService;
 
 @Service
@@ -21,11 +23,17 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	@Autowired
 	WorkingHoursRepository allWorkingHours;
 	
+	@Autowired
+	private IDriverService driverService;
+	
 	@Override
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursStartDTO dto) {
 		WorkingHours workingHours = new WorkingHours(driverId, dto);
 		this.allWorkingHours.save(workingHours);
 		this.allWorkingHours.flush();
+		
+		this.driverService.setDriverActivity(driverId, true);
+		
 		return new WorkingHoursDTO(workingHours);
 	}
 	
@@ -38,6 +46,10 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		found.get().setEnd(dto.getEnd());
 		this.allWorkingHours.save(found.get());
 		this.allWorkingHours.flush();
+		
+		int driverId = found.get().getDriverId();
+		this.driverService.setDriverActivity(driverId, false);
+		
 		return new WorkingHoursDTO(found.get());
 	}
 	
@@ -53,5 +65,4 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		}
 		return hours;
 	}
-
 }
