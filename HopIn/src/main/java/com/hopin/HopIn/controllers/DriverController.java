@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
@@ -24,6 +25,7 @@ import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
+import com.hopin.HopIn.dtos.ExceptionDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
@@ -33,6 +35,8 @@ import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.dtos.WorkingHoursEndDTO;
 import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
 import com.hopin.HopIn.entities.Document;
+import com.hopin.HopIn.exceptions.DriverAlreadyActiveException;
+import com.hopin.HopIn.exceptions.WorkingHoursException;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.IWorkingHoursService;
@@ -121,8 +125,18 @@ public class DriverController {
 	}
 	
 	@PostMapping(value = "/{id}/working-hour", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WorkingHoursDTO> addWorkingHours(@PathVariable("id") int driverId, @RequestBody WorkingHoursStartDTO dto) {
-		return new ResponseEntity<WorkingHoursDTO>(workingHoursService.addWorkingHours(driverId, dto), HttpStatus.OK);
+	public ResponseEntity<?> addWorkingHours(@PathVariable("id") int driverId, @RequestBody WorkingHoursStartDTO dto) {
+		try {
+			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.addWorkingHours(driverId, dto), HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
+		} catch (WorkingHoursException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because you exceeded the 8 hours limit in last 24 hours!"), HttpStatus.BAD_REQUEST);
+		} catch (DriverAlreadyActiveException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Shifth already ongoing!"), HttpStatus.BAD_REQUEST);
+		} catch (NullPointerException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
+		}	 
 	}
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

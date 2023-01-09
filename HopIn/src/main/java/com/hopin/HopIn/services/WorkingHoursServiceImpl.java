@@ -14,6 +14,8 @@ import com.hopin.HopIn.dtos.WorkingHoursEndDTO;
 import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.WorkingHours;
+import com.hopin.HopIn.exceptions.DriverAlreadyActiveException;
+import com.hopin.HopIn.exceptions.WorkingHoursException;
 import com.hopin.HopIn.repositories.WorkingHoursRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IWorkingHoursService;
@@ -29,6 +31,14 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	
 	@Override
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursStartDTO dto) {
+		Driver driver = this.driverService.getDriver(driverId);
+		
+		if (driver.isActive()) {
+			throw new DriverAlreadyActiveException();
+		} else if (this.getWorkedHoursForDate(driverId, dto.getStart()) > 8) {
+			throw new WorkingHoursException();
+		}
+		
 		WorkingHours workingHours = new WorkingHours(driverId, dto);
 		this.allWorkingHours.save(workingHours);
 		this.allWorkingHours.flush();
