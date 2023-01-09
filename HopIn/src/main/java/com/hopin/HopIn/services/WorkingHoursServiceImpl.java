@@ -42,13 +42,14 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	}
 	
 	@Override
-	public int getWorkedHoursForDate(int driverId, LocalDate date) {
+	public double getWorkedHoursForDate(int driverId, LocalDate date) {
 		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriverAndStart(driverId, date);
-		int hours = 0;
+		double hours = 0;
 		
 		for (WorkingHours workingHours : allWorkingHours) {
 			long minutes= Duration.between(workingHours.getStart(), workingHours.getEnd()).toMinutes();
 			hours += minutes / 60;
+			hours += (minutes % 60) * 0.1;
 		}
 		return hours;
 	}
