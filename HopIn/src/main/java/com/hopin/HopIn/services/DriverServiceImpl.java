@@ -351,4 +351,17 @@ public class DriverServiceImpl implements IDriverService {
 		return null;
 	}
 	
+	public List<Driver> getActiveDrivers(){
+		List<Driver> drivers = this.allDrivers.findByIsActive(true);
+		return drivers;
+	}
+
+	@Override
+	public void setDriverActivity(int driverId, boolean isActive) {
+		Driver driver = this.getDriver(driverId);
+		driver.setActive(isActive);
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+		
+	}
 }

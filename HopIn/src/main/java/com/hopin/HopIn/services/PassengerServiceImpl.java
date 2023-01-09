@@ -82,7 +82,7 @@ public class PassengerServiceImpl implements IPassengerService {
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
-		if (!Pattern.matches("^([0-9a-zA-Z]{6,}$)", dto.getPassword())) {
+		if (!Pattern.matches("^([0-9a-zA-Z]{3,}$)", dto.getPassword())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid password format!");
 		}
 		

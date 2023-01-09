@@ -14,6 +14,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "drivers")
 public class Driver extends User {
+	
+	private boolean isActive;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Vehicle vehicle;
@@ -30,6 +32,7 @@ public class Driver extends User {
 	public Driver(int id, String name, String surname, String email, String password, String address,
 			String telephoneNumber, byte[] profilePicture) {
 		super(id, name, surname, email, password, address, telephoneNumber, profilePicture);
+		this.isActive = false;
 	}
 	
 	public void setInfoByRequest(DriverAccountUpdateInfoRequest request) {
@@ -63,6 +66,14 @@ public class Driver extends User {
 
 	public void setWorkingHours(Set<WorkingHours> workingHours) {
 		this.workingHours = workingHours;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 }

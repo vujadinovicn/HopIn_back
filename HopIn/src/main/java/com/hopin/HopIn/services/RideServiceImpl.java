@@ -11,7 +11,9 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
@@ -22,12 +24,15 @@ import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
+import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
+import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
+import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @Service
@@ -38,6 +43,9 @@ public class RideServiceImpl implements IRideService {
 	
 	@Autowired
 	private VehicleTypeRepository allVehicleTypes;
+	
+	@Autowired 
+	private IDriverService driverService;
 	
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
@@ -173,8 +181,11 @@ public class RideServiceImpl implements IRideService {
 
 
 	@Override
-	public RideReturnedDTO create(RideDTO dto) {
-		// TODO Auto-generated method stub
+	public RideReturnedDTO add(RideDTO dto) {
+		List<Driver> activeDrivers = this.driverService.getActiveDrivers();
+		if (activeDrivers.size() == 0) {
+			throw new NoActiveDriverException();
+		}
 		return null;
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hopin.HopIn.dtos.ExceptionDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
@@ -21,6 +22,7 @@ import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInPanicRideDTO;
 import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @RestController
@@ -32,8 +34,13 @@ public class RideController {
 
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> create(@RequestBody RideDTO dto) {
-		return new ResponseEntity<RideReturnedDTO>(service.create(dto), HttpStatus.OK);
+	public ResponseEntity<?> add(@RequestBody RideDTO dto) {
+		try {
+			return new ResponseEntity<RideReturnedDTO>(service.add(dto), HttpStatus.OK);
+		} catch (NoActiveDriverException e) {
+			ExceptionDTO ex = new ExceptionDTO("There are not any active drivers!");
+			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
