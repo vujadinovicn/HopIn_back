@@ -57,8 +57,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			}
 			
 		} catch (ExpiredJwtException ex) {
-			LOGGER.debug("Token expired!");
-			throw ex;
+			String requestUrl = request.getRequestURI().toString();
+			if (requestUrl.contains("refresh")) {
+				System.out.println("TOKEN REFRESH!");
+			} else {
+				LOGGER.debug("Token expired!");
+				throw ex;
+			}
 		} 
 		
 		chain.doFilter(request, response);
