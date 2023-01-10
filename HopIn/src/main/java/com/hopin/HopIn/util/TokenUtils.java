@@ -24,7 +24,7 @@ public class TokenUtils {
 	@Value("somesecret")
 	public String SECRET;
 
-	@Value("1800000")
+	@Value("10000")
 	private int EXPIRES_IN;
 	
 	@Value("Authorization")
@@ -53,7 +53,7 @@ public class TokenUtils {
 				.setAudience(generateAudience())
 				.setIssuedAt(new Date())
 				.setExpiration(generateExpirationDate())
-				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
+				.signWith(SIGNATURE_ALGORITHM, SECRET.getBytes()).compact();
 	}
 	
 	/**
@@ -180,7 +180,7 @@ public class TokenUtils {
 		Claims claims;
 		try {
 			claims = Jwts.parser()
-					.setSigningKey(SECRET)
+					.setSigningKey(SECRET.getBytes())
 					.parseClaimsJws(token)
 					.getBody();
 		} catch (ExpiredJwtException ex) {

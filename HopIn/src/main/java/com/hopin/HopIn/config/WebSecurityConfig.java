@@ -69,7 +69,7 @@ public class WebSecurityConfig {
         
         http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
     	http.authorizeRequests()
-    		.requestMatchers("/**").permitAll()
+    		.requestMatchers("/api/**").permitAll()
 			.requestMatchers("/h2-console/**").permitAll()	
 			.requestMatchers("/api/user/login").permitAll()	
 			.anyRequest().authenticated().and()
