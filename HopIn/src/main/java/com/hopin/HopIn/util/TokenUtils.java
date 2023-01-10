@@ -22,7 +22,7 @@ public class TokenUtils {
 	@Value("somesecret")
 	public String SECRET;
 
-	@Value("1000")
+	@Value("1800000")
 	private int EXPIRES_IN;
 	
 	@Value("9000000")
@@ -62,7 +62,7 @@ public class TokenUtils {
 				.setIssuer(APP_NAME)
 				.setSubject(getUsernameFromToken(token))
 				.claim("role", getRoleFromToken(token))
-				.claim("id", getIdFromToken(token))
+				.claim("id", getIdFromToken(token)) 
 				.setAudience(generateAudience())
 				.setIssuedAt(new Date())
 				.setExpiration(generateExpirationDate())

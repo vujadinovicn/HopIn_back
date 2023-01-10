@@ -96,13 +96,6 @@ public class UserController {
 
 		try {
 			String email = tokenUtils.getUsernameFromToken(dto.getRefreshToken());
-			System.out.println(this.refreshTokens.size());
-			for (String e : this.refreshTokens.keySet()) {
-				System.out.println(e);
-				System.out.println(dto.getRefreshToken());
-				System.out.println(this.refreshTokens.get(e));
-				System.out.println(email);
-			}
 			if (this.refreshTokens.get(dto.getRefreshToken()) == null) {
 				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("null"), HttpStatus.UNAUTHORIZED);
 			}

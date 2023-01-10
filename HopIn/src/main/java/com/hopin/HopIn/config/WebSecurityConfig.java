@@ -74,7 +74,6 @@ public class WebSecurityConfig {
 			.requestMatchers("/api/user/login").permitAll()	
 			.anyRequest().authenticated().and()
 			.cors().and()
-
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
 		
 		http.csrf().disable();
