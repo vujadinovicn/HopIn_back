@@ -11,13 +11,13 @@ insert into "vehicle_types" ("name", "price_per_km") values (2, 100);
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Veljka', 'driver@gmail.com', false, false, 'Mark', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', null , 'Jacobs', '+381603454212', 1);
 insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 0, 'BP-030-HR', 'AUDI A6', 4, true, 1, 1);
 
-insert into "drivers"("id", "vehicle_id") values (2, 1);
+insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, false);
 
 insert into "documents"("name", "document_image", "driver_id") values ('Drivers license 1', 'sss', 2);
 insert into "documents"("name", "document_image", "driver_id") values ('Registration license 1', 'sss', 2);
 
 insert into "drivers_documents" values (2,1);
-insert into "drivers_documents" values (2,2);
+insert into "drivers_documents" values (2,2);   
 
 insert into "rides"("id", "baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id") values (3, false, 5, null, 5, false, false, '2022-12-23T11:11:11', null, 5, 5, 2, null, null);
 insert into "rides"("id", "baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id") values (2, false, 5, null, 5, false, false, '2022-12-21T11:11:11', null, 5, 5, 2, null, null);

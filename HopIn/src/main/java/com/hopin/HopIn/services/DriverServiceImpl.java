@@ -197,34 +197,39 @@ public class DriverServiceImpl implements IDriverService {
 	
 	@Override
 	public AllHoursDTO getAllHours(int id, int page, int size, String from, String to) {
-		return new AllHoursDTO(1, new ArrayList<WorkingHours>() {
-            {
-                add(new WorkingHours(0, LocalDateTime.now(), LocalDateTime.now(), 0));
-            }
-        });
+//		return new AllHoursDTO(1, new ArrayList<WorkingHours>() {
+//            {
+//                add(new WorkingHours(0, LocalDateTime.now(), LocalDateTime.now(), 0));
+//            }
+//        });
+		return null;
 	}
 	
 	@Override
 	public WorkingHoursDTO getWorkingHours(int hoursId) {
-		return new WorkingHoursDTO(new WorkingHours(hoursId, LocalDateTime.now(), LocalDateTime.now(), 0));
+//		return new WorkingHoursDTO(new WorkingHours(hoursId, LocalDateTime.now(), LocalDateTime.now(), 0));
+		return null;
 	}
 	
 	@Override
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursDTO hours) {
-		Driver driver = this.allDriversMap.get(driverId);
-		WorkingHours newHours = new WorkingHours(currHoursId++, hours.getStart(), hours.getEnd(), driverId);
-		driver.getWorkingHours().add(newHours);
+//		Driver driver = this.allDriversMap.get(driverId);
+//		WorkingHours newHours = new WorkingHours(currHoursId++, hours.getStart(), hours.getEnd(), driverId);
+//		driver.getWorkingHours().add(newHours);
+//		
+//		System.out.println(new Date());
+//		
+//		return new WorkingHoursDTO(newHours);
 		
-		System.out.println(new Date());
-		
-		return new WorkingHoursDTO(newHours);
+		return null;
 	}
 	
 	
 	@Override
 	public WorkingHoursDTO updateWorkingHours(int hoursId, WorkingHoursDTO hours) {
 		// vidi ovde kako bi zapravo sa repo bilo
-		return new WorkingHoursDTO(new WorkingHours(hoursId, hours.getStart(), hours.getEnd(), hoursId));
+//		return new WorkingHoursDTO(new WorkingHours(hoursId, hours.getStart(), hours.getEnd(), hoursId));
+		return null;
 	}
 
 	
@@ -346,4 +351,17 @@ public class DriverServiceImpl implements IDriverService {
 		return null;
 	}
 	
+	public List<Driver> getActiveDrivers(){
+		List<Driver> drivers = this.allDrivers.findByIsActive(true);
+		return drivers;
+	}
+
+	@Override
+	public void setDriverActivity(int driverId, boolean isActive) {
+		Driver driver = this.getDriver(driverId);
+		driver.setActive(isActive);
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+		
+	}
 }

@@ -15,7 +15,7 @@ import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.enums.RideStatus;
 public interface IRideService {
 	
-	public RideReturnedDTO create(RideDTO dto);
+	public RideReturnedDTO add(RideDTO dto);
 	
 	public RideReturnedDTO getActiveRideForDriver(int id);
 	

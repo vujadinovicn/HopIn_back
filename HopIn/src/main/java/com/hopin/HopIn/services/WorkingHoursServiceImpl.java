@@ -1,0 +1,99 @@
+package com.hopin.HopIn.services;
+
+import java.text.DecimalFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hopin.HopIn.dtos.WorkingHoursDTO;
+import com.hopin.HopIn.dtos.WorkingHoursEndDTO;
+import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
+import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.entities.WorkingHours;
+import com.hopin.HopIn.exceptions.BadDateTimeFormatException;
+import com.hopin.HopIn.exceptions.BadIdFormatException;
+import com.hopin.HopIn.exceptions.DriverAlreadyActiveException;
+import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.exceptions.WorkingHoursException;
+import com.hopin.HopIn.repositories.WorkingHoursRepository;
+import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IWorkingHoursService;
+
+@Service
+public class WorkingHoursServiceImpl implements IWorkingHoursService {
+	
+	@Autowired
+	WorkingHoursRepository allWorkingHours;
+	
+	@Autowired
+	private IDriverService driverService;
+	
+	@Override
+	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursStartDTO dto) {
+		Driver driver = this.driverService.getDriver(driverId);
+		
+		if (driver.isActive()) {
+			throw new DriverAlreadyActiveException();
+		} else if (this.getWorkedHoursForDate(driverId, dto.getStart()) > 8) {
+			throw new WorkingHoursException();
+		}
+		
+		WorkingHours workingHours = new WorkingHours(driverId, dto);
+		this.allWorkingHours.save(workingHours);
+		this.allWorkingHours.flush();
+		
+		this.driverService.setDriverActivity(driverId, true);
+		
+		return new WorkingHoursDTO(workingHours);
+	}
+	
+	@Override
+	public WorkingHoursDTO updateWorkingHours(int id, WorkingHoursEndDTO dto) {
+		Optional<WorkingHours> found = this.allWorkingHours.findById(id);
+		if (found.isEmpty()) {
+			throw new BadIdFormatException();
+		} else if (found.get().getStart().isAfter(dto.getEnd())) {
+			throw new BadDateTimeFormatException();
+		}
+		
+		Driver driver = this.driverService.getDriver(found.get().getDriverId());
+		if (!driver.isActive()) {
+			throw new NoActiveDriverException();
+		}
+		
+		found.get().setEnd(dto.getEnd());
+		this.allWorkingHours.save(found.get());
+		this.allWorkingHours.flush();
+		
+		int driverId = found.get().getDriverId();
+		this.driverService.setDriverActivity(driverId, false);
+		
+		return new WorkingHoursDTO(found.get());
+	}
+	
+	@Override
+	public double getWorkedHoursForDate(int driverId, LocalDateTime end) {
+		LocalDateTime start = end.minusDays(1);
+		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriverAndDates(driverId, start, end);
+		
+		double hours = 0;
+		DecimalFormat df = new DecimalFormat("#.##");
+		for (WorkingHours workingHours : allWorkingHours) {
+			long minutes= Duration.between(workingHours.getStart(), workingHours.getEnd()).toMinutes();
+			if (start.isAfter(workingHours.getStart())) {
+				minutes = Duration.between(start, workingHours.getEnd()).toMinutes();
+			}
+			hours += minutes / 60;
+			if ((minutes % 60) < 10) {
+				hours += (minutes%60) * 0.1;
+			} else {
+				hours += (minutes%60) * 0.01;
+			}
+		}
+		return Double.valueOf(df.format(hours));
+	}
+}

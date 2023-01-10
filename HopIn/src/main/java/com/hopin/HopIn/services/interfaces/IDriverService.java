@@ -62,6 +62,10 @@ public interface IDriverService {
 	void updateByVehicleRequest(DriverAccountUpdateVehicleRequest request);
 
 	void updateByDocumentRequest(DriverAccountUpdateDocumentRequest request);
+	
+	public List<Driver> getActiveDrivers();
+	
+	public void setDriverActivity(int driverId, boolean isActive);
 
 	Driver getDriver(int id);
 
