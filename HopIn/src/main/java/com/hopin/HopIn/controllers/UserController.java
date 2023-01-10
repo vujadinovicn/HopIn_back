@@ -1,6 +1,7 @@
 package com.hopin.HopIn.controllers;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,14 +28,14 @@ import com.hopin.HopIn.dtos.AllNotesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
+import com.hopin.HopIn.dtos.ExceptionDTO;
 import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
 import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
-import com.hopin.HopIn.enums.Role;
+import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.services.WorkingHoursServiceImpl;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
@@ -55,6 +56,8 @@ public class UserController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	private HashMap<String, String> refreshTokens = new HashMap<String, String>();
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
@@ -81,9 +84,38 @@ public class UserController {
 		UserDetails user = (UserDetails) authentication.getPrincipal();
 		int userId = this.userService.getByEmail(credentials.getEmail()).getId(); 
 		String jwt = tokenUtils.generateToken(user, userId);
-		long expiresIn = tokenUtils.getExpiredIn(); 
+		String refreshToken = tokenUtils.generateRefreshToken(user, userId);
+		this.refreshTokens.put(refreshToken, credentials.getEmail());
 
-		return new ResponseEntity<TokenDTO>(new TokenDTO(jwt, expiresIn), HttpStatus.OK);
+		return new ResponseEntity<TokenDTO>(new TokenDTO(jwt, refreshToken), HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/refresh")
+	public ResponseEntity<?> refresh(@RequestBody TokenDTO dto) {
+		dto.setRefreshToken(dto.getRefreshToken().substring(1, dto.getRefreshToken().length() - 1));
+
+		try {
+			String email = tokenUtils.getUsernameFromToken(dto.getRefreshToken());
+			System.out.println(this.refreshTokens.size());
+			for (String e : this.refreshTokens.keySet()) {
+				System.out.println(e);
+				System.out.println(dto.getRefreshToken());
+				System.out.println(this.refreshTokens.get(e));
+				System.out.println(email);
+			}
+			if (this.refreshTokens.get(dto.getRefreshToken()) == null) {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("null"), HttpStatus.UNAUTHORIZED);
+			}
+			else if (!this.refreshTokens.get(dto.getRefreshToken()).equals(email)) {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("CAN'T FIND REFRESH TOKEN."), HttpStatus.UNAUTHORIZED);
+			}
+		} catch(Exception ex) {
+			this.refreshTokens.remove(dto.getRefreshToken());
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("UNAUTHORIZED"), HttpStatus.UNAUTHORIZED);
+		}
+		
+		String newToken = tokenUtils.renewToken(dto.getRefreshToken());
+		return new ResponseEntity<TokenDTO>(new TokenDTO(newToken, dto.getRefreshToken()), HttpStatus.OK);
 	}
 	
 	@PutMapping(value="{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
