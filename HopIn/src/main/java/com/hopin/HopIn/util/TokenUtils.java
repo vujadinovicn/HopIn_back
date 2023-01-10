@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.hopin.HopIn.entities.User;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -26,6 +24,9 @@ public class TokenUtils {
 
 	@Value("1800000")
 	private int EXPIRES_IN;
+	
+	@Value("9000000")
+	private int REFRESH_EXPIRES_IN;
 	
 	@Value("Authorization")
 	private String AUTH_HEADER;
@@ -53,8 +54,34 @@ public class TokenUtils {
 				.setAudience(generateAudience())
 				.setIssuedAt(new Date())
 				.setExpiration(generateExpirationDate())
-				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
+				.signWith(SIGNATURE_ALGORITHM, SECRET.getBytes()).compact();
 	}
+	
+	public String renewToken(String token) {
+		return Jwts.builder()
+				.setIssuer(APP_NAME)
+				.setSubject(getUsernameFromToken(token))
+				.claim("role", getRoleFromToken(token))
+				.claim("id", getIdFromToken(token)) 
+				.setAudience(generateAudience())
+				.setIssuedAt(new Date())
+				.setExpiration(generateExpirationDate())
+				.signWith(SIGNATURE_ALGORITHM, SECRET.getBytes()).compact();
+	}
+	
+	
+	public String generateRefreshToken(UserDetails user, int id) {
+		return Jwts.builder()
+				.setIssuer(APP_NAME)
+				.setSubject(user.getUsername())
+				.claim("role", user.getAuthorities())
+				.claim("id", id)
+				.setAudience(generateAudience())
+				.setIssuedAt(new Date())
+				.setExpiration(generateRefreshExpirationDate())
+				.signWith(SIGNATURE_ALGORITHM, SECRET.getBytes()).compact();
+	}
+	
 	
 	/**
 	 * Funkcija za utvrđivanje tipa uređaja za koji se JWT kreira.
@@ -71,6 +98,10 @@ public class TokenUtils {
 	 */
 	private Date generateExpirationDate() {
 		return new Date(new Date().getTime() + EXPIRES_IN);
+	}
+	
+	private Date generateRefreshExpirationDate() {
+		return new Date(new Date().getTime() + 	REFRESH_EXPIRES_IN);
 	}
 	
 	// =================================================================
@@ -113,16 +144,31 @@ public class TokenUtils {
 		return username;
 	}
 	
-	public int getIdFromToken(String token) {
-		int id;
+	public Object getRoleFromToken(String token) {
+		Object role;
 		
 		try {
 			final Claims claims = this.getAllClaimsFromToken(token);
-			id = (int) claims.get("id");
+			role = claims.get("role");
 		} catch (ExpiredJwtException ex) {
 			throw ex;
 		} catch (Exception e) {
-			id = -1;
+			role = null;
+		}
+		
+		return role;
+	}
+	
+	public Object getIdFromToken(String token) {
+		Object id;
+		
+		try {
+			final Claims claims = this.getAllClaimsFromToken(token);
+			id = claims.get("id");
+		} catch (ExpiredJwtException ex) {
+			throw ex;
+		} catch (Exception e) {
+			id = null;
 		}
 		
 		return id;
@@ -195,7 +241,7 @@ public class TokenUtils {
 		Claims claims;
 		try {
 			claims = Jwts.parser()
-					.setSigningKey(SECRET)
+					.setSigningKey(SECRET.getBytes())
 					.parseClaimsJws(token)
 					.getBody();
 		} catch (ExpiredJwtException ex) {

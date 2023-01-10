@@ -42,15 +42,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		try {
 	
 			if (authToken != null) {
-				
+				authToken = authToken.substring(1, authToken.length() - 1);
+
 				username = tokenUtils.getUsernameFromToken(authToken);
-				
 				if (username != null) {
-					
 					UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 					
 					if (tokenUtils.validateToken(authToken, userDetails)) {
-						
 						TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);
 						authentication.setToken(authToken);
 						SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -59,7 +57,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			}
 			
 		} catch (ExpiredJwtException ex) {
-			LOGGER.debug("Token expired!");
+			String requestUrl = request.getRequestURI().toString();
+			if (requestUrl.contains("refresh")) {
+				System.out.println("TOKEN REFRESH!");
+			} else {
+				LOGGER.debug("Token expired!");
+				throw ex;
+			}
 		} 
 		
 		chain.doFilter(request, response);
