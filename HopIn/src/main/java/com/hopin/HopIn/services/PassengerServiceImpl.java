@@ -79,6 +79,15 @@ public class PassengerServiceImpl implements IPassengerService {
 		}
 		return new UserReturnedDTO(found.get());
 	}
+	
+	@Override
+	public UserReturnedDTO getByEmail(String email) {
+		Optional<Passenger> found = allPassengers.findPassengerByEmail(email);
+		if (found.isEmpty() || found.get().isBlocked() || !found.get().isActivated()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return new UserReturnedDTO(found.get());
+	}
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
@@ -206,5 +215,7 @@ public class PassengerServiceImpl implements IPassengerService {
 		return true;
 		
 	}
+
+	
 
 }
