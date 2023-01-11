@@ -124,11 +124,17 @@ public class DriverController {
 	}
 	
 	@GetMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<WorkingHoursDTO> getWorkingHours(@PathVariable("working-hour-id") int hoursId) {
-		return new ResponseEntity<WorkingHoursDTO>(service.getWorkingHours(hoursId), HttpStatus.OK);
+	@PreAuthorize("hasRole('DRIVER')")
+	public ResponseEntity<?> getWorkingHours(@PathVariable("working-hour-id") int hoursId) {
+		try {
+			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.getWorkingHoursById(hoursId), HttpStatus.OK);
+		} catch (WorkingHoursException ex) {
+			return new ResponseEntity<String>("Working hour does not exist!", HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PostMapping(value = "/{id}/working-hour", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> addWorkingHours(@PathVariable("id") int driverId, @RequestBody WorkingHoursStartDTO dto) {
 		try {
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.addWorkingHours(driverId, dto), HttpStatus.OK);
@@ -144,6 +150,7 @@ public class DriverController {
 	}
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> updateWorkingHours(@PathVariable("working-hour-id") int hoursId, @RequestBody WorkingHoursEndDTO dto) {
 		try {
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.updateWorkingHours(hoursId, dto), HttpStatus.OK);

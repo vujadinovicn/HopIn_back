@@ -63,6 +63,7 @@ public class PassengerController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('ADMIN', 'PASSENGER')")
 	public ResponseEntity<?> getPassenger(@PathVariable int id) {
 		UserReturnedDTO passenger = passengerService.getById(id);
 		if (passenger != null) {
