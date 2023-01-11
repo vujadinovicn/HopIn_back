@@ -2,7 +2,10 @@ package com.hopin.HopIn.dtos;
 
 import com.hopin.HopIn.entities.User;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class UserDTOOld {
+	@NotEmpty(message="is required")
 	private String name;
 	private String surname;
 	private String email;

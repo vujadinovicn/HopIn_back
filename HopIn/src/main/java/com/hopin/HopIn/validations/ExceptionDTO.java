@@ -1,4 +1,4 @@
-package com.hopin.HopIn.dtos;
+package com.hopin.HopIn.validations;
 
 public class ExceptionDTO {
 	

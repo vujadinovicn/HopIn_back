@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hopin.HopIn.dtos.ExceptionDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
@@ -24,6 +23,7 @@ import com.hopin.HopIn.dtos.UserInPanicRideDTO;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.validations.ExceptionDTO;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")

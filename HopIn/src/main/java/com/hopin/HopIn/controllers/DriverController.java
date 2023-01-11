@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +27,6 @@ import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
-import com.hopin.HopIn.dtos.ExceptionDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
@@ -43,7 +44,15 @@ import com.hopin.HopIn.exceptions.WorkingHoursException;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.IWorkingHoursService;
+import com.hopin.HopIn.validations.ExceptionDTO;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+@Validated
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/api/driver")
@@ -59,7 +68,7 @@ public class DriverController {
 	private IWorkingHoursService workingHoursService;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<DriverReturnedDTO> getById(@PathVariable int id) {
+	public ResponseEntity<DriverReturnedDTO> getById(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		return new ResponseEntity<DriverReturnedDTO>(service.getById(id), HttpStatus.OK);
 	}
 
@@ -69,27 +78,27 @@ public class DriverController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> insert(@RequestBody UserDTOOld dto) {
+	public ResponseEntity<UserReturnedDTO> insert(@Valid @RequestBody UserDTOOld dto) {
 		return new ResponseEntity<UserReturnedDTO>(service.insert(dto), HttpStatus.OK);
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> update(@PathVariable("id") int driverId, @RequestBody UserDTOOld newData) {
+	public ResponseEntity<UserReturnedDTO> update(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId, @Valid @RequestBody UserDTOOld newData) {
 		return new ResponseEntity<UserReturnedDTO>(service.update(driverId, newData), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/{id}/documents", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<DocumentReturnedDTO>> getDocuments(@PathVariable("id") int driverId) {
+	public ResponseEntity<List<DocumentReturnedDTO>> getDocuments(@PathVariable("id")  int driverId) {
 		return new ResponseEntity<List<DocumentReturnedDTO>>(service.getDocuments(driverId), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/{id}/documents", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<DocumentReturnedDTO> addDocument(@PathVariable int id, @RequestBody DocumentDTO newDocument) {
+	public ResponseEntity<DocumentReturnedDTO> addDocument(@PathVariable int id, @Valid @RequestBody DocumentDTO newDocument) {
 		return new ResponseEntity<DocumentReturnedDTO>(service.addDocument(id, newDocument), HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/document/{document-id}")
-	public ResponseEntity<Document> deleteDocument(@PathVariable("document-id") int documentId) {
+	public ResponseEntity<Document> deleteDocument(@PathVariable("document-id")  int documentId) {
 		//TODO: kako je ovo zamisljeno
 		return new ResponseEntity<Document>(HttpStatus.NO_CONTENT);
 	}
@@ -100,17 +109,17 @@ public class DriverController {
 	}
 	
 	@PostMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<VehicleReturnedDTO> insertVehicle(@PathVariable("id") int driverId, @RequestBody VehicleDTO vehicle) {
+	public ResponseEntity<VehicleReturnedDTO> insertVehicle(@PathVariable("id") int driverId, @Valid @RequestBody VehicleDTO vehicle) {
 		return new ResponseEntity<VehicleReturnedDTO>(service.insertVehicle(driverId, vehicle), HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<VehicleReturnedDTO> updateVehicle(@PathVariable("id") int driverId, @RequestBody VehicleDTO vehicle) {
+	public ResponseEntity<VehicleReturnedDTO> updateVehicle(@PathVariable("id") int driverId, @Valid @RequestBody VehicleDTO vehicle) {
 		return new ResponseEntity<VehicleReturnedDTO>(service.updateVehicle(driverId, vehicle), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllUserRidesReturnedDTO> getAllRides(@PathVariable("id") int driverId, @RequestParam int page, @RequestParam int size, @RequestParam String sort, 
+	public ResponseEntity<AllUserRidesReturnedDTO> getAllRides(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam String sort, 
 													@RequestParam String from, @RequestParam String to) {
 		return new ResponseEntity<AllUserRidesReturnedDTO>(service.getAllRides(driverId, page, size, sort, from, to), HttpStatus.OK);
 	}
