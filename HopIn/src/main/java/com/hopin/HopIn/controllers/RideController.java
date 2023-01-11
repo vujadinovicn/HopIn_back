@@ -26,6 +26,7 @@ import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/ride")
 public class RideController {
 
@@ -124,7 +125,6 @@ public class RideController {
 		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/price", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody UnregisteredRideSuggestionDTO dto) {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);

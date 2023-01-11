@@ -31,4 +31,6 @@ public interface IPassengerService {
 	public Boolean verifyRegistration(String verificationCode);
 
 	public Boolean resendVerificationMail(String verificationCode);
+
+	public UserReturnedDTO getByEmail(String email);
 }
