@@ -67,7 +67,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         
-        http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
+        http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
     	http.authorizeRequests()
     		.requestMatchers("/api/**").permitAll()
 			.requestMatchers("/h2-console/**").permitAll()	
