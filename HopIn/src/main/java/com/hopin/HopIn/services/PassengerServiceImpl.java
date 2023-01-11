@@ -1,11 +1,6 @@
 package com.hopin.HopIn.services;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +31,6 @@ import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.tokens.ISecureTokenService;
 import com.hopin.HopIn.tokens.SecureToken;
-
-import net.bytebuddy.utility.RandomString;
 
 @Service
 public class PassengerServiceImpl implements IPassengerService {
@@ -78,6 +71,15 @@ public class PassengerServiceImpl implements IPassengerService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
 		}
 		return new UserReturnedDTO(found.get());
+	}
+	
+	@Override 
+	public Passenger getPassenger(int id) {
+		Optional<Passenger> found = allPassengers.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return found.get();
 	}
 	
 	@Override
@@ -121,12 +123,6 @@ public class PassengerServiceImpl implements IPassengerService {
 			res.add(new RouteDTO(route));
 		}
 		return res;
-	}
-
-	@Override
-	public UserReturnedDTO getPassenger(int id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

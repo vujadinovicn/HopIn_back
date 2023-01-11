@@ -6,6 +6,7 @@ import java.util.Set;
 import com.hopin.HopIn.dtos.FavoriteRideDTO;
 import com.hopin.HopIn.dtos.RouteLocsDTO;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +25,7 @@ public class FavoriteRide {
 
 	private String favoriteName;
 
-	@ManyToMany(cascade = {})
+	@ManyToMany(cascade = {CascadeType.ALL})
 	private Set<Route> routes = new HashSet<Route>();
 
 	@ManyToMany(cascade = {})
@@ -51,15 +52,12 @@ public class FavoriteRide {
 		this.babyTransport = babyTransport;
 	}
 	
-	public FavoriteRide(FavoriteRideDTO dto, VehicleType vehicleType) {
+	public FavoriteRide(FavoriteRideDTO dto, Set<Passenger> passengers, VehicleType vehicleType) {
 		this.favoriteName = dto.getFavoriteName();
 		this.vehicleType = vehicleType;
 		this.petTransport = dto.isPetTransport();
 		this.babyTransport = dto.isBabyTransport();
-		
-		for (Passenger passenger : dto.getPassengers()) {
-			this.passengers.add(passenger);
-		}
+		this.passengers = passengers;
 		
 		for (RouteLocsDTO rt : dto.getLocations()) {
 			this.routes.add(new Route(new Location(rt.getDeparture()), new Location(rt.getDestination())));

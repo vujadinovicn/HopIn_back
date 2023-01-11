@@ -10,12 +10,12 @@ public class FavoriteRideDTO {
 
 	private String favoriteName;
 	private List<RouteLocsDTO> locations;
-	private List<Passenger> passengers = new ArrayList<Passenger>();
+	private List<UserInRideDTO> passengers = new ArrayList<UserInRideDTO>();
 	private VehicleTypeName vehicleType;
 	private boolean petTransport;
 	private boolean babyTransport;
 
-	public FavoriteRideDTO(String favoriteName, List<RouteLocsDTO> locations, List<Passenger> passengers,
+	public FavoriteRideDTO(String favoriteName, List<RouteLocsDTO> locations, List<UserInRideDTO> passengers,
 			VehicleTypeName vehicleType, boolean petTransport, boolean babyTransport) {
 		super();
 		this.favoriteName = favoriteName;
@@ -42,11 +42,11 @@ public class FavoriteRideDTO {
 		this.locations = locations;
 	}
 
-	public List<Passenger> getPassengers() {
+	public List<UserInRideDTO> getPassengers() {
 		return passengers;
 	}
 
-	public void setPassengers(List<Passenger> passengers) {
+	public void setPassengers(List<UserInRideDTO> passengers) {
 		this.passengers = passengers;
 	}
 

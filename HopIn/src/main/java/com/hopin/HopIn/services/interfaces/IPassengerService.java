@@ -7,6 +7,7 @@ import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.Passenger;
 
 public interface IPassengerService {
 	
@@ -14,7 +15,7 @@ public interface IPassengerService {
 	
 	public AllUsersDTO getAll();
 	
-	public UserReturnedDTO getPassenger(int id);
+	public Passenger getPassenger(int id);
 	
 	public boolean Activate(int id);
 	

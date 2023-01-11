@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
+import com.hopin.HopIn.dtos.FavoriteRideDTO;
+import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
@@ -41,5 +43,7 @@ public interface IRideService {
 
 
 	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto);
+
+	FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto);
 
 }

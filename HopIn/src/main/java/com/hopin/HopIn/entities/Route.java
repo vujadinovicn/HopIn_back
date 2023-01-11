@@ -1,5 +1,6 @@
 package com.hopin.HopIn.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,9 +17,10 @@ public class Route {
 	private int id;
 	private double distance;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Location departure;
-	@ManyToOne
+	
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Location destination;
 	
 	public Route() {}

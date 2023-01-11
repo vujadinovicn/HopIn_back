@@ -23,8 +23,10 @@ import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
+import com.hopin.HopIn.dtos.UserInRideDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.FavoriteRide;
+import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
@@ -35,6 +37,7 @@ import com.hopin.HopIn.repositories.FavoriteRideRepository;
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.IVehicleTypeService;
 
@@ -55,6 +58,9 @@ public class RideServiceImpl implements IRideService {
 	
 	@Autowired
 	private IVehicleTypeService vehicleTypeService;
+	
+	@Autowired 
+	IPassengerService passengerService;
 	
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
@@ -86,8 +92,11 @@ public class RideServiceImpl implements IRideService {
 		if (this.allFavoriteRides.count() > 10) {
 			throw new FavoriteRideException();
 		}
-		
-		FavoriteRide favoriteRide = new FavoriteRide(dto, this.vehicleTypeService.getByName(dto.getVehicleType()));
+		Set<Passenger> passengers = new HashSet<Passenger>();
+		for (UserInRideDTO user : dto.getPassengers()) {
+			passengers.add(this.passengerService.getPassenger(user.getId()));
+		}
+		FavoriteRide favoriteRide = new FavoriteRide(dto, passengers, this.vehicleTypeService.getByName(dto.getVehicleType()));
 		this.allFavoriteRides.save(favoriteRide);
 		this.allFavoriteRides.flush();
 		

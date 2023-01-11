@@ -12,12 +12,12 @@ public class FavoriteRideReturnedDTO {
 	private int id;
 	private String favoriteName;
 	private List<RouteLocsDTO> locations = new ArrayList<RouteLocsDTO>();
-	private List<Passenger> passengers = new ArrayList<Passenger>();
+	private List<UserInRideDTO> passengers = new ArrayList<UserInRideDTO>();
 	private VehicleTypeName vehicleType;
 	private boolean petTransport;
 	private boolean babyTransport;
 
-	public FavoriteRideReturnedDTO(int id, String favoriteName, List<RouteLocsDTO> locations, List<Passenger> passengers,
+	public FavoriteRideReturnedDTO(int id, String favoriteName, List<RouteLocsDTO> locations, List<UserInRideDTO> passengers,
 			VehicleTypeName vehicleType, boolean petTransport, boolean babyTransport) {
 		super();
 		this.id = id;
@@ -37,7 +37,7 @@ public class FavoriteRideReturnedDTO {
 		this.babyTransport = ride.isBabyTransport();
 		
 		for (Passenger passenger : ride.getPassengers()) {
-			this.passengers.add(passenger);
+			this.passengers.add(new UserInRideDTO(passenger));
 		}
 		
 		for (Route route : ride.getRoutes()) {
@@ -70,11 +70,11 @@ public class FavoriteRideReturnedDTO {
 		this.locations = locations;
 	}
 
-	public List<Passenger> getPassengers() {
+	public List<UserInRideDTO> getPassengers() {
 		return passengers;
 	}
 
-	public void setPassengers(List<Passenger> passengers) {
+	public void setPassengers(List<UserInRideDTO> passengers) {
 		this.passengers = passengers;
 	}
 
