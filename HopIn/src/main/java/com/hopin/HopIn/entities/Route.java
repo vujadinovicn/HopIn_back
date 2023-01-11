@@ -32,6 +32,12 @@ public class Route {
 		this.distance = distance;
 	}
 	
+	public Route(Location departure, Location destination) {
+		this.distance = 0;
+		this.departure = departure;
+		this.destination = destination;
+	}
+	
 	public int getId() {
 		return id;
 	}
