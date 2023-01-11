@@ -63,13 +63,13 @@ public class PassengerController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> getPassenger(@PathVariable int id) {
+	public ResponseEntity<?> getPassenger(@PathVariable int id) {
 		UserReturnedDTO passenger = passengerService.getById(id);
 		if (passenger != null) {
 			passengerService.getFavouriteRoutes(id);
 			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
 		}
-		return new ResponseEntity<UserReturnedDTO>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
