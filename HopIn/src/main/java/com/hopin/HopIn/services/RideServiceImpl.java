@@ -10,13 +10,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
+import com.hopin.HopIn.dtos.FavoriteRideDTO;
+import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
@@ -25,15 +24,19 @@ import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.entities.FavoriteRide;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
+import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.repositories.FavoriteRideRepository;
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.services.interfaces.IVehicleTypeService;
 
 @Service
 public class RideServiceImpl implements IRideService {
@@ -42,10 +45,16 @@ public class RideServiceImpl implements IRideService {
 	private RideRepository allRides;
 	
 	@Autowired
+	private FavoriteRideRepository allFavoriteRides;
+	
+	@Autowired
 	private VehicleTypeRepository allVehicleTypes;
 	
 	@Autowired 
 	private IDriverService driverService;
+	
+	@Autowired
+	private IVehicleTypeService vehicleTypeService;
 	
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
@@ -70,6 +79,19 @@ public class RideServiceImpl implements IRideService {
 			res.add(new RideForReportDTO(ride));
 		}
 		return res;
+	}
+	
+	@Override
+	public FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto) {
+		if (this.allFavoriteRides.count() > 10) {
+			throw new FavoriteRideException();
+		}
+		
+		FavoriteRide favoriteRide = new FavoriteRide(dto, this.vehicleTypeService.getByName(dto.getVehicleType()));
+		this.allFavoriteRides.save(favoriteRide);
+		this.allFavoriteRides.flush();
+		
+		return new FavoriteRideReturnedDTO(favoriteRide);
 	}
 	
 	
