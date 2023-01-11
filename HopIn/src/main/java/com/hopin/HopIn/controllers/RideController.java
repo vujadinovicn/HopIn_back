@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hopin.HopIn.dtos.ExceptionDTO;
+import com.hopin.HopIn.dtos.FavoriteRideDTO;
+import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
@@ -22,6 +24,7 @@ import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInPanicRideDTO;
 import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
@@ -130,7 +133,14 @@ public class RideController {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
 	}
 	
-
+	@PostMapping(value = "/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> addFavoriteRide(@RequestBody FavoriteRideDTO dto) {
+		try {
+			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
+		} catch (FavoriteRideException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Number of favorite rides cannot exceed 10!"), HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	
 }
