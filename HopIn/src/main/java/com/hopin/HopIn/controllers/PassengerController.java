@@ -28,8 +28,10 @@ import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.validations.ExceptionDTO;
 
-@Validated
+import jakarta.validation.Valid;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/passenger")
@@ -49,8 +51,11 @@ public class PassengerController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> insertPassenger(@RequestBody UserDTO dto) {
+	public ResponseEntity<?> insertPassenger(@Valid @RequestBody UserDTO dto) {
 		UserReturnedDTO passenger = passengerService.insert(dto);
+		if (passenger == null) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User with that email already exists!"), HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
 	}
 
