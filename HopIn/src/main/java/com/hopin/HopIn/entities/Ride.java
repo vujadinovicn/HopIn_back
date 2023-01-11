@@ -49,6 +49,12 @@ public class Ride {
 
 	@ManyToMany(cascade = {})
 	private Set<Route> routes = new HashSet<Route>();
+	
+	@ManyToOne(cascade = {})
+	private Location departureLocation;
+	
+	@ManyToOne(cascade = {})
+	private Location destinationLocation;
 
 	@OneToOne(cascade = { CascadeType.ALL })
 	private RejectionNotice rejectionNotice;
@@ -59,6 +65,8 @@ public class Ride {
 	public Ride(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost, double totalDistance,
 			int estimatedTimeInMinutes, boolean petTransport, boolean babyTransport, boolean panic, RideStatus status,
 			Set<Passenger> passengers, Driver driver, Set<Review> reviews, VehicleType vehicleType, Set<Route> routes,
+			Location departureLocation,
+			Location destinationLocation,
 			RejectionNotice rejectionNotice) {
 		super();
 		this.id = id;
@@ -76,6 +84,8 @@ public class Ride {
 		this.reviews = reviews;
 		this.vehicleType = vehicleType;
 		this.routes = routes;
+		this.departureLocation = departureLocation;
+		this.destinationLocation = destinationLocation;
 		this.rejectionNotice = rejectionNotice;
 	}
 
@@ -234,5 +244,33 @@ public class Ride {
 	public void setDistance(double distance) {
 		this.distance = distance;
 	}
+	
+	public Location getDepartureLocation() {
+		return departureLocation;
+	}
+
+	public void setDepartureLocation(Location departureLocation) {
+		this.departureLocation = departureLocation;
+	}
+
+	public Location getDestinationLocation() {
+		return destinationLocation;
+	}
+
+	public void setDestinationLocation(Location destinationLocation) {
+		this.destinationLocation = destinationLocation;
+	}
+
+	@Override
+	public String toString() {
+		return "Ride [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", totalCost=" + totalCost
+				+ ", totalDistance=" + totalDistance + ", estimatedTimeInMinutes=" + estimatedTimeInMinutes
+				+ ", petTransport=" + petTransport + ", babyTransport=" + babyTransport + ", panic=" + panic
+				+ ", status=" + status + ", distance=" + distance + ", passengers=" + passengers + ", driver=" + driver
+				+ ", reviews=" + reviews + ", vehicleType=" + vehicleType + ", routes=" + routes + ", rejectionNotice="
+				+ rejectionNotice + "]";
+	}
+	
+	
 
 }

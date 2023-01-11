@@ -15,4 +15,17 @@ public interface RideRepository extends JpaRepository<Ride, Integer> {
 	
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"start_time\" between :from and :to order by \"start_time\"", nativeQuery=true)
 	public List<Ride> getAllDriverRidesBetweenDates(int id, LocalDateTime from, LocalDateTime to);
+
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"start_time\" between :startTime and :endTime order by \"start_time\"", nativeQuery=true)
+	public List<Ride> getAllDriverRidesUntilEndOfNewRide(int id, LocalDateTime startTime, LocalDateTime endTime);
+
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"start_time\" < :now and \"end_time\" > :now", nativeQuery=true)
+	public Ride getActiveRideForDriver(int id, LocalDateTime now);
+	
+	@Query(value = "select * from \"rides\" where \"start_time\" < :now and \"end_time\" > :now and "
+			+ "\"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id)", nativeQuery=true)
+	public Ride getActiveRideForPassenger(int id, LocalDateTime now);
+	
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 1 order by \"start_time\" limit 1", nativeQuery=true)
+	public Ride getFirstUpcomingRideForDriver(int id);
 }

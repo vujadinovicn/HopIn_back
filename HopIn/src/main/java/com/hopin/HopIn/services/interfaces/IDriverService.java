@@ -10,6 +10,7 @@ import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
+import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -68,6 +69,10 @@ public interface IDriverService {
 	public void setDriverActivity(int driverId, boolean isActive);
 
 	Driver getDriver(int id);
+	
+	public boolean isDriverVehicleAppropriateForRide(int id, RideDTO rideDTO);
+	
+	public List<Driver> getDriversWithAppropriateVehicleForRide(List<Driver> drivers, RideDTO rideDTO);
 
 
 }

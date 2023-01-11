@@ -21,6 +21,7 @@ import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
+import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -105,8 +106,6 @@ public class DriverServiceImpl implements IDriverService {
 		}
 		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
 			if (!this.checkPasswordMatch(driver.get().getPassword(), dto.getPassword())) {
-				System.out.println(driver.get().getPassword());
-				System.out.println(dto.getPassword());
 				return null;	
 			}
 			dto.setPassword(dto.getNewPassword());
@@ -247,7 +246,6 @@ public class DriverServiceImpl implements IDriverService {
 		vehicle.setPassengerSeats(dto.getPassengerSeats());
 		vehicle.setBabyTransport(dto.isBabyTransport());
 		vehicle.setPetTransport(dto.isPetTransport());
-		System.out.println(dto.getVehicleType());
 		if (dto.getVehicleType().equals(VehicleTypeName.CAR)) {
 			vehicle.getVehicleType().setName(VehicleTypeName.CAR);
 		} else if (dto.getVehicleType().equals(VehicleTypeName.VAN)) {
@@ -362,6 +360,27 @@ public class DriverServiceImpl implements IDriverService {
 		driver.setActive(isActive);
 		this.allDrivers.save(driver);
 		this.allDrivers.flush();
-		
+	}
+
+	@Override
+	public boolean isDriverVehicleAppropriateForRide(int id, RideDTO rideDTO) {
+		Driver driver = this.getDriver(id);
+		Vehicle vehicle = driver.getVehicle();
+		if (vehicle.isBabyTransport() != rideDTO.isBabyTransport() ||
+				vehicle.isPetTransport() != rideDTO.isPetTransport() ||
+				vehicle.getPassengerSeats() < rideDTO.getPassengers().size() ||
+				vehicle.getVehicleType().getName() != rideDTO.getVehicleType())
+			return false;
+		return true;
+	}
+
+	@Override
+	public List<Driver> getDriversWithAppropriateVehicleForRide(List<Driver> activeDrivers, RideDTO rideDTO) {
+		List<Driver> driversWithAppropriateVehicle = new ArrayList<Driver>();
+		for (Driver driver: activeDrivers) {
+			if (this.isDriverVehicleAppropriateForRide(driver.getId(), rideDTO))
+				driversWithAppropriateVehicle.add(driver);
+		}
+		return driversWithAppropriateVehicle;
 	}
 }

@@ -23,6 +23,9 @@ import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInPanicRideDTO;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.exceptions.NoAvailableDriversException;
+import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
+import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
 @RestController
@@ -38,8 +41,17 @@ public class RideController {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.add(dto), HttpStatus.OK);
 		} catch (NoActiveDriverException e) {
-			ExceptionDTO ex = new ExceptionDTO("There are not any active drivers!");
+			ExceptionDTO ex = new ExceptionDTO("There are no any active drivers!");
 			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+		} catch (NoDriverWithAppropriateVehicleForRideException e) {
+			ExceptionDTO ex = new ExceptionDTO("There are no drivers with requested vehicle!");
+			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+		} catch (PassengerAlreadyInRideException e) {
+			ExceptionDTO ex = new ExceptionDTO("Passenger already in drive!");
+			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+		} catch (NoAvailableDriversException e) {
+				ExceptionDTO ex = new ExceptionDTO("No available drivers!");
+				return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
 		}
 	}
 	

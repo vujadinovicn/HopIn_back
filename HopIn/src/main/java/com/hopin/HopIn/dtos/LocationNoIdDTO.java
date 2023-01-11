@@ -47,4 +47,19 @@ public class LocationNoIdDTO {
 		this.longitude = longitude;
 	}
 	
+	public String getLatitudeString() {
+		return Double.toString(latitude);
+	}
+	
+	public String getLongitudeString() {
+		return Double.toString(longitude);
+	}
+
+	@Override
+	public String toString() {
+		return "LocationNoIdDTO [address=" + address + ", latitude=" + latitude + ", longitude=" + longitude + "]";
+	}
+	
+	
+	
 }

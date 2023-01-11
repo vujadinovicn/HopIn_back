@@ -44,26 +44,22 @@ public class RideReturnedDTO {
 		this.id = id;
 	}
 
-//	public RideReturnedDTO(Ride ride) {
-//		this.startTime = ride.getStartTime();
-//		this.endTime = ride.getEndTime();
-//		this.totalCost = ride.getTotalCost();
-//		this.driver = ride.getDriver();
-//		this.passengers = ride.getPassengers();
-//		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
-//		this.status = ride.getStatus();
-//		this.petTransport = ride.isPet();
-//		this.babyTransport = ride.isBaby();
-//		this.vehicleType = ride.getVehicleType();
-//		this.locations = new ArrayList<LocationDTO>();
-//		for(int i = 0; i < ride.getLocations().size(); i =+ 2) {
-//			this.locations.add(new LocationDTO(ride.getLocations().get(i), ride.getLocations().get(i+1)));
-//		}
-//		this.rejection = ride.getRejectionNotice();
-//	}
-	
-	
-	
+	public RideReturnedDTO(Ride ride) {
+		this.startTime = ride.getStartTime();
+		this.endTime = ride.getEndTime();
+		this.totalCost = ride.getTotalCost();
+		this.driver = new UserInRideDTO(ride.getDriver());
+		this.passengers = null;
+		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
+		this.status = ride.getStatus();
+		this.petTransport = ride.isPet();
+		this.babyTransport = ride.isBaby();
+		this.vehicleType = null;
+		this.locations = new ArrayList<LocationDTO>();
+		this.locations.add(new LocationDTO(new LocationNoIdDTO(ride.getDepartureLocation()), new LocationNoIdDTO(ride.getDestinationLocation())));
+		this.rejection = ride.getRejectionNotice();
+	}
+
 	public int getId() {
 		return id;
 	}
