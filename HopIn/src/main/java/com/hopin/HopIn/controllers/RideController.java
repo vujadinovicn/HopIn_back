@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,10 +25,12 @@ import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInPanicRideDTO;
+import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.services.interfaces.ITokenService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -35,6 +39,9 @@ public class RideController {
 
 	@Autowired
 	private IRideService service;
+	
+	@Autowired
+	private ITokenService tokenService;
 
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -134,7 +141,11 @@ public class RideController {
 	}
 	
 	@PostMapping(value = "/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> addFavoriteRide(@RequestBody FavoriteRideDTO dto) {
+	@PreAuthorize("hasRole('DRIVER')")
+	public ResponseEntity<?> addFavoriteRide(@RequestBody FavoriteRideDTO dto, @RequestHeader("Authorization") String token) {
+		System.out.println(token);
+		User user = tokenService.getUserFromToken(token);
+		System.out.println(user.getName());
 		try {
 			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
 		} catch (FavoriteRideException ex) {
