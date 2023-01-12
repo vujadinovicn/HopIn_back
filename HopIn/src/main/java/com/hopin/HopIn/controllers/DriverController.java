@@ -29,6 +29,7 @@ import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
+import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -40,6 +41,7 @@ import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.exceptions.BadDateTimeFormatException;
 import com.hopin.HopIn.exceptions.BadIdFormatException;
 import com.hopin.HopIn.exceptions.DriverAlreadyActiveException;
+import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.exceptions.WorkingHoursException;
 import com.hopin.HopIn.services.interfaces.IDriverService;
@@ -79,8 +81,12 @@ public class DriverController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> insert(@Valid @RequestBody UserDTOOld dto) {
-		return new ResponseEntity<UserReturnedDTO>(service.insert(dto), HttpStatus.OK);
+	public ResponseEntity<?> insert(@Valid @RequestBody UserDTO dto) {
+		try {
+			return new ResponseEntity<UserReturnedDTO>(service.insert(dto), HttpStatus.OK);
+		} catch (EmailAlreadyInUseException e) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User with that email already exists!"), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

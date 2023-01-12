@@ -12,6 +12,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,14 +40,19 @@ import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.VehicleTypeName;
+import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
 import com.hopin.HopIn.repositories.DocumentRepository;
 import com.hopin.HopIn.repositories.DriverRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IUserService;
 
 @Service
 public class DriverServiceImpl implements IDriverService {
 
+	@Autowired 
+	private PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private DriverRepository allDrivers;
 	
@@ -56,6 +62,9 @@ public class DriverServiceImpl implements IDriverService {
 	@Autowired
 	private DocumentRepository allDocuments;
 	
+	@Autowired
+	private IUserService userService;
+	
 	private Map<Integer, Driver> allDriversMap = new HashMap<Integer, Driver>();
 	private int currId = 1;
 	private int currDocId = 1;
@@ -63,11 +72,17 @@ public class DriverServiceImpl implements IDriverService {
 	private int currHoursId = 1;
 
 	@Override
-	public UserReturnedDTO insert(UserDTOOld dto) {
+	public UserReturnedDTO insert(UserDTO dto) {
+		if (this.userService.userAlreadyExists(dto.getEmail())) {
+			throw new EmailAlreadyInUseException();
+		}
 		Driver driver = dtoToDriver(dto, null);
+		driver.setPassword(passwordEncoder.encode(dto.getPassword()));
 		driver.setRole(Role.DRIVER);
+		
 		this.allDrivers.save(driver);
 		this.allDrivers.flush();
+		
 		return new UserReturnedDTO(driver);
 	}
 	
@@ -268,7 +283,7 @@ public class DriverServiceImpl implements IDriverService {
 
 	}
 
-	private Driver dtoToDriver(UserDTOOld dto, Driver driver) {
+	private Driver dtoToDriver(UserDTO dto, Driver driver) {
 		if (driver == null)
 			driver = new Driver();
 

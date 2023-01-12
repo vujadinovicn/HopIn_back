@@ -25,7 +25,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 
 public interface IDriverService {
 
-	public UserReturnedDTO insert(UserDTOOld driver);
+	public UserReturnedDTO insert(UserDTO driver);
 
 	public DriverReturnedDTO getById(int id);
 
@@ -72,6 +72,7 @@ public interface IDriverService {
 	public boolean isDriverVehicleAppropriateForRide(int id, RideDTO rideDTO);
 	
 	public List<Driver> getDriversWithAppropriateVehicleForRide(List<Driver> drivers, RideDTO rideDTO);
+
 
 
 }
