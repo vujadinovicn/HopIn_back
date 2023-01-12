@@ -39,7 +39,7 @@ public class VehicleReturnedDTO {
 		this.vehicleType = vehicle.getVehicleType().getName();
 		this.model = vehicle.getModel();
 		this.licenseNumber = vehicle.getLicenseNumber();
-		this.currentLocation = null;
+		this.currentLocation = new LocationNoIdDTO(vehicle.getCurrentLocation());
 		this.passengerSeats = vehicle.getPassengerSeats();
 		this.babyTransport = vehicle.isBabyTransport();
 		this.petTransport = vehicle.isPetTransport();

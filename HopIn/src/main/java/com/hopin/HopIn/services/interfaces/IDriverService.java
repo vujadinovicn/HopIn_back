@@ -39,7 +39,7 @@ public interface IDriverService {
 
 	public VehicleReturnedDTO insertVehicle(int driverId, VehicleDTO dto);
 
-	public VehicleDTO getVehicle(int driverId);
+	public VehicleReturnedDTO getVehicle(int driverId);
 
 	public VehicleReturnedDTO updateVehicle(int driverId, VehicleDTO vehicle);
 

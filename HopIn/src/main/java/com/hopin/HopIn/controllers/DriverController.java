@@ -44,6 +44,7 @@ import com.hopin.HopIn.exceptions.DriverAlreadyActiveException;
 import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
+import com.hopin.HopIn.exceptions.VehicleNotAssignedException;
 import com.hopin.HopIn.exceptions.WorkingHoursException;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -78,7 +79,7 @@ public class DriverController {
 			return new ResponseEntity<DriverReturnedDTO>(service.getById(id), HttpStatus.OK);
 		}
 		catch (UserNotFoundException e){
-			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Driver does not exist!"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -108,7 +109,7 @@ public class DriverController {
 		try {
 			return new ResponseEntity<List<DocumentReturnedDTO>>(service.getDocuments(driverId), HttpStatus.OK);
 		} catch (UserNotFoundException e){
-			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Driver does not exist!"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -124,8 +125,15 @@ public class DriverController {
 	}
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<VehicleDTO> getVehicle(@PathVariable("id") int driverId) {
-		return new ResponseEntity<VehicleDTO>(service.getVehicle(driverId), HttpStatus.OK);
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	public ResponseEntity<?> getVehicle(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
+		try {
+			return new ResponseEntity<VehicleReturnedDTO>(service.getVehicle(driverId), HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
+		} catch (VehicleNotAssignedException e) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Vehicle is not assigned!"), HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@PostMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

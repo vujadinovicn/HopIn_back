@@ -42,6 +42,7 @@ import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
+import com.hopin.HopIn.exceptions.VehicleNotAssignedException;
 import com.hopin.HopIn.repositories.DocumentRepository;
 import com.hopin.HopIn.repositories.DriverRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
@@ -174,12 +175,16 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public VehicleDTO getVehicle(int driverId) {
+	public VehicleReturnedDTO getVehicle(int driverId) {
 		Optional<Driver> driver = allDrivers.findById(driverId);
 		if (driver.isEmpty()){
-			return null;
+			throw new UserNotFoundException();
 		}
-		VehicleDTO vehicleDTO = new VehicleDTO(driver.get().getVehicle());
+		Vehicle vehicle = driver.get().getVehicle();
+		if (vehicle == null) {
+			throw new VehicleNotAssignedException();
+		}
+		VehicleReturnedDTO vehicleDTO = new VehicleReturnedDTO(driver.get().getVehicle());
 		return vehicleDTO;
 	}
 
