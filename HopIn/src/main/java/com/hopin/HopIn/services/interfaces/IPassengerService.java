@@ -7,6 +7,7 @@ import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.FavoriteRide;
 import com.hopin.HopIn.entities.Passenger;
 
 public interface IPassengerService {
@@ -34,4 +35,8 @@ public interface IPassengerService {
 	public Boolean resendVerificationMail(String verificationCode);
 
 	public UserReturnedDTO getByEmail(String email);
+
+	public List<FavoriteRide> getFavoriteRides(int id);
+
+	boolean addFavoriteRide(int passengerId, FavoriteRide ride);
 }

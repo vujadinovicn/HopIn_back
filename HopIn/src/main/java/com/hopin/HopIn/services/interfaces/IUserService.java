@@ -48,4 +48,8 @@ public interface IUserService {
 
 	public void activateUser(User user);
 
+	public User getCurrentUser();
+
+	boolean isIdMatching(int id);
+
 }

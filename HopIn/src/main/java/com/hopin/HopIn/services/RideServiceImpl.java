@@ -28,6 +28,7 @@ import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.FavoriteRide;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
@@ -39,6 +40,7 @@ import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.services.interfaces.IVehicleTypeService;
 
 @Service
@@ -60,7 +62,10 @@ public class RideServiceImpl implements IRideService {
 	private IVehicleTypeService vehicleTypeService;
 	
 	@Autowired 
-	IPassengerService passengerService;
+	private IPassengerService passengerService;
+	
+	@Autowired
+	private IUserService userService;
 	
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
@@ -89,16 +94,17 @@ public class RideServiceImpl implements IRideService {
 	
 	@Override
 	public FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto) {
-		if (this.allFavoriteRides.count() > 10) {
+		User user = userService.getCurrentUser();
+		if (passengerService.getFavoriteRides(user.getId()).size() >= 10) {
 			throw new FavoriteRideException();
 		}
 		Set<Passenger> passengers = new HashSet<Passenger>();
-		for (UserInRideDTO user : dto.getPassengers()) {
-			passengers.add(this.passengerService.getPassenger(user.getId()));
+		for (UserInRideDTO currUser : dto.getPassengers()) {
+			passengers.add(this.passengerService.getPassenger(currUser.getId()));
 		}
 		FavoriteRide favoriteRide = new FavoriteRide(dto, passengers, this.vehicleTypeService.getByName(dto.getVehicleType()));
 		this.allFavoriteRides.save(favoriteRide);
-		this.allFavoriteRides.flush();
+		this.passengerService.addFavoriteRide(user.getId(), favoriteRide);
 		
 		return new FavoriteRideReturnedDTO(favoriteRide);
 	}

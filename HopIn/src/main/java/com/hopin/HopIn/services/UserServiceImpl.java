@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -177,6 +179,18 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		user.setActivated(true);
 		this.allUsers.save(user);
 		this.allUsers.flush();
+	}
+	
+	@Override 
+	public boolean isIdMatching(int id) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return this.getByEmail(auth.getName()).getId() == id;
+	}
+	
+	@Override
+	public User getCurrentUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return this.getByEmail(auth.getName());
 	}
 
 //	@Override

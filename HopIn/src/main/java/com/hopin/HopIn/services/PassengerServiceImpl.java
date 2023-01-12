@@ -18,6 +18,7 @@ import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.FavoriteRide;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.User;
@@ -124,6 +125,11 @@ public class PassengerServiceImpl implements IPassengerService {
 		}
 		return res;
 	}
+	
+	@Override
+	public List<FavoriteRide>  getFavoriteRides(int id) {
+		return this.allPassengers.findAllFavoriteRidesById(id);
+	}
 
 	@Override
 	public boolean Activate(int id) {
@@ -179,6 +185,18 @@ public class PassengerServiceImpl implements IPassengerService {
 			return false;
 		}
 		passenger.getFavouriteRoutes().add(route.get());
+		this.allPassengers.save(passenger);
+		this.allPassengers.flush();
+		return true;
+	}
+	
+	@Override
+	public boolean addFavoriteRide(int passengerId, FavoriteRide ride) {
+		Passenger passenger = this.allPassengers.findById(passengerId).get();
+		if (passenger == null) {
+			return false;
+		}
+		passenger.getFavouriteRides().add(ride);
 		this.allPassengers.save(passenger);
 		this.allPassengers.flush();
 		return true;

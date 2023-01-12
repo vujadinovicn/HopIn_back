@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -141,11 +143,8 @@ public class RideController {
 	}
 	
 	@PostMapping(value = "/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('DRIVER')")
+	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> addFavoriteRide(@RequestBody FavoriteRideDTO dto, @RequestHeader("Authorization") String token) {
-		System.out.println(token);
-		User user = tokenService.getUserFromToken(token);
-		System.out.println(user.getName());
 		try {
 			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
 		} catch (FavoriteRideException ex) {
