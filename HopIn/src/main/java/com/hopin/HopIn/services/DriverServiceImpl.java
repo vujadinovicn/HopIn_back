@@ -41,6 +41,7 @@ import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.repositories.DocumentRepository;
 import com.hopin.HopIn.repositories.DriverRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
@@ -100,7 +101,7 @@ public class DriverServiceImpl implements IDriverService {
 	public DriverReturnedDTO getById(int id) {
 		Optional<Driver> found = allDrivers.findById(id);
 		if (found.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+			throw new UserNotFoundException();
 		}
 		return new DriverReturnedDTO(found.get(), found.get().getVehicle());
 	}

@@ -43,6 +43,7 @@ import com.hopin.HopIn.exceptions.BadIdFormatException;
 import com.hopin.HopIn.exceptions.DriverAlreadyActiveException;
 import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.exceptions.WorkingHoursException;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -71,8 +72,14 @@ public class DriverController {
 	private IWorkingHoursService workingHoursService;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<DriverReturnedDTO> getById(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
-		return new ResponseEntity<DriverReturnedDTO>(service.getById(id), HttpStatus.OK);
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	public ResponseEntity<?> getById(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		try {
+			return new ResponseEntity<DriverReturnedDTO>(service.getById(id), HttpStatus.OK);
+		}
+		catch (UserNotFoundException e){
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Driver does not exist!"), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -81,6 +88,7 @@ public class DriverController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> insert(@Valid @RequestBody UserDTO dto) {
 		try {
 			return new ResponseEntity<UserReturnedDTO>(service.insert(dto), HttpStatus.OK);
