@@ -160,8 +160,12 @@ public class UserController {
 	}
 	
 	@GetMapping(value="{id}/message", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllMessagesDTO> getMessages(@PathVariable int id){
-		return new ResponseEntity<AllMessagesDTO>(userService.getMessages(id), HttpStatus.OK);
+	public ResponseEntity<?> getMessages(@PathVariable int id){
+		try {
+			return new ResponseEntity<AllMessagesDTO>(userService.getMessages(id), HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping(value="{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)

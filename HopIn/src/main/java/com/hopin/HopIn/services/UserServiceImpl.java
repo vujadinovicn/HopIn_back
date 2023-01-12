@@ -2,6 +2,7 @@ package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,7 +31,6 @@ import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.entities.Note;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
-import com.hopin.HopIn.enums.MessageType;
 import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
@@ -157,8 +157,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 	
 	private MessageReturnedDTO createDetailedMessage(Message sentMessage) {
-		return new MessageReturnedDTO(sentMessage.getReceiverId(),
-				sentMessage.getReceiverId(),
+		return new MessageReturnedDTO(sentMessage.getId(),
+				sentMessage.getSenderId(),
 				sentMessage.getReceiverId(),
 				sentMessage.getTimeOfSending(),
 				sentMessage.getMessage(),
@@ -168,12 +168,9 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
 	@Override
 	public AllMessagesDTO getMessages(int userId) {
-		User user = getById(userId);
-		if (allMessagesMap.size() == 0) {
-			Message message = new Message(1, 123, 123, LocalDateTime.now(), "Message is here!", MessageType.RIDE, 123);
-			allMessagesMap.put(message.getId(), message);
-		}
-		return new AllMessagesDTO(this.allMessagesMap);
+		getById(userId);
+		List<Message> messages = allMessages.findAll();
+		return new AllMessagesDTO(messages);
 	}
 
 	@Override

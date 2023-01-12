@@ -25,6 +25,8 @@ public class Message {
 	private MessageType type;
 	private int rideId;
 	
+	public Message() {}
+	
 	public Message(int id, int senderId, int receiverId, LocalDateTime timeOfSending, String message,
 			MessageType type, int rideId) {
 		super();
