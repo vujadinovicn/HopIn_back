@@ -102,10 +102,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
 	@Override
 	public User getById(int userId) {
-		User user = allUsersMap.get(userId);
-		if (user == null)
-			return null;
-		return user;
+		Optional<User> found = allUsers.findById(userId);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return found.get();
 	}
 
 	@Override
