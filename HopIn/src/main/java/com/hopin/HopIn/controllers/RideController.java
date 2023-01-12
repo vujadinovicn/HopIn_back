@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInPanicRideDTO;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
 import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
@@ -80,12 +82,13 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> getActiveRideForPassenger(@PathVariable int passengerId) {
-		RideReturnedDTO activeRide = service.getActiveRideForPassenger(passengerId);
-		if (activeRide != null) {
-			return new ResponseEntity<RideReturnedDTO>(activeRide, HttpStatus.OK);
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> getActiveRideForPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int passengerId) {
+		try {
+			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForPassenger(passengerId), HttpStatus.OK);
+		} catch (NoActivePassengerRideException e){
+			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@PutMapping(value = "/{id}/withdraw")
