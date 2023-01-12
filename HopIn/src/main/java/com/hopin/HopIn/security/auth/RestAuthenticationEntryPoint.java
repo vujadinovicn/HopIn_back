@@ -38,6 +38,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @ExceptionHandler (value = {Exception.class})
     public void commence(HttpServletRequest request, HttpServletResponse response, Exception exception) throws IOException {
         // 403
+    	exception.printStackTrace();
         setResponseError(response, HttpServletResponse.SC_FORBIDDEN, String.format("Access Denies: %s", exception.getMessage()));
     }
     

@@ -109,6 +109,16 @@ public class RideServiceImpl implements IRideService {
 		return new FavoriteRideReturnedDTO(favoriteRide);
 	}
 	
+	@Override
+	public List<FavoriteRideReturnedDTO> getFavoriteRides() {
+		List<FavoriteRide> favoriteRides = this.passengerService.getFavoriteRides(userService.getCurrentUser().getId());
+		List<FavoriteRideReturnedDTO> retRides = new ArrayList<FavoriteRideReturnedDTO>();
+		for (FavoriteRide ride : favoriteRides) {
+			retRides.add(new FavoriteRideReturnedDTO(ride));
+		}
+		return retRides;
+	}
+	
 	
 //	public RideServiceImpl() {
 //		List<LocationNoIdDTO> locs = new ArrayList<LocationNoIdDTO>();

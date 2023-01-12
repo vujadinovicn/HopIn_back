@@ -46,4 +46,6 @@ public interface IRideService {
 
 	FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto);
 
+	List<FavoriteRideReturnedDTO> getFavoriteRides();
+
 }

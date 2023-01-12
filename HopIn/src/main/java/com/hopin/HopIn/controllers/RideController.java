@@ -1,5 +1,7 @@
 package com.hopin.HopIn.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -144,12 +146,18 @@ public class RideController {
 	
 	@PostMapping(value = "/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> addFavoriteRide(@RequestBody FavoriteRideDTO dto, @RequestHeader("Authorization") String token) {
+	public ResponseEntity<?> addFavoriteRide(@RequestBody FavoriteRideDTO dto) {
 		try {
 			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
 		} catch (FavoriteRideException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Number of favorite rides cannot exceed 10!"), HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@GetMapping(value = "/favorites", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> getFavoriteRides() {
+		return new ResponseEntity<List<FavoriteRideReturnedDTO>>(this.service.getFavoriteRides(), HttpStatus.OK);
 	}
 	
 	
