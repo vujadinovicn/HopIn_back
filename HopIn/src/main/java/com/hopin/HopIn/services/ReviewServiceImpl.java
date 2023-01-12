@@ -106,11 +106,9 @@ public class ReviewServiceImpl implements IReviewService{
 	
 	@Override
 	public ArrayList<CompleteRideReviewDTO> getRideReviews(int rideId) {
-		ArrayList<CompleteRideReviewDTO> completeReviews = new ArrayList<CompleteRideReviewDTO>();
-		ReviewReturnedDTO review = new ReviewReturnedDTO(1, 1, "Partizan", null);
-		CompleteRideReviewDTO completeReview = new CompleteRideReviewDTO(review, review);
-		completeReviews.add(completeReview);
-		return completeReviews;
+		Ride ride = getRideIfExists(rideId);
+		System.out.println(ride.getReviews().size());
+		return this.extractReviewFromRide(ride);
 	}
 
 	public ArrayList<Review> getByDriver(int driverId){
@@ -119,5 +117,29 @@ public class ReviewServiceImpl implements IReviewService{
 	
 	private Review generateReview(int id, ReviewDTO reviewDTO) {
 		return new Review(id, reviewDTO.getRating(), reviewDTO.getComment(), null, null);
+	}
+	
+	private ArrayList<CompleteRideReviewDTO> extractReviewFromRide(Ride ride) {
+		ReviewReturnedDTO driverReview = null;
+		ReviewReturnedDTO vehicleReview = null;
+		ArrayList<CompleteRideReviewDTO> ret = new ArrayList<CompleteRideReviewDTO>();
+		
+		for (Passenger passenger : ride.getPassengers()) {
+			for (Review review : ride.getReviews()) {
+				if (passenger == review.getPassenger() && review.getType() == ReviewType.DRIVER) {
+					driverReview = new ReviewReturnedDTO(review);
+				} 
+				else if (passenger == review.getPassenger() && review.getType() == ReviewType.VEHICLE) {
+					vehicleReview = new ReviewReturnedDTO(review);
+				}
+			}
+			if (driverReview != null || vehicleReview != null) {
+				ret.add(new CompleteRideReviewDTO(vehicleReview, driverReview));
+				driverReview = null;
+				vehicleReview = null;
+			}
+		}
+		
+		return ret;
 	}
 }
