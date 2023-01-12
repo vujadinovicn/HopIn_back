@@ -77,7 +77,7 @@ public class RideReturnedDTO {
 		this.babyTransport = ride.isBabyTransport();
 		this.petTransport = ride.isPetTransport();
 		this.endTime = ride.getEndTime();
-		this.startTime = ride.getEndTime();
+		this.startTime = ride.getStartTime();
 		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
 		this.locations = new ArrayList<LocationDTO>();
 		this.locations.add(new LocationDTO(new LocationNoIdDTO(ride.getDepartureLocation()),
@@ -85,6 +85,7 @@ public class RideReturnedDTO {
 		this.totalCost = ride.getTotalCost();
 		this.status = ride.getStatus();
 		this.scheduledTime = ride.getScheduledTime();
+		this.rejection = ride.getRejectionNotice();
 	}
 
 	public int getId() {

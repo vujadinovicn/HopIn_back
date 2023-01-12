@@ -27,7 +27,6 @@ import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
-import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Panic;
@@ -219,7 +218,7 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	@Override
-	public RideReturnedWithRejectionDTO getRide(int id) {
+	public RideReturnedDTO getRide(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -294,7 +293,7 @@ public class RideServiceImpl implements IRideService {
 					"Cannot accept a ride that is not in status PENDING!");
 		}
 
-		Ride savedRide = this.changeRideStatus(ride, RideStatus.STARTED);
+		Ride savedRide = this.changeRideStatus(ride, RideStatus.ACCEPTED);
 
 		return new RideReturnedDTO(savedRide);
 	}

@@ -17,6 +17,8 @@ public class RejectionNotice {
 	private String reason;
 	private LocalDateTime timeOfRejection;
 	
+	public RejectionNotice() {}
+	
 	public RejectionNotice(String reason) {
 		this.id = 1;
 		this.timeOfRejection = LocalDateTime.now();

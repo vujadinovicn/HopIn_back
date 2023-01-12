@@ -10,7 +10,6 @@ import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
-import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.enums.RideStatus;
 
@@ -23,7 +22,7 @@ public interface IRideService {
 	
 	public RideReturnedDTO getActiveRideForPassenger(int id);
 	
-	public RideReturnedWithRejectionDTO getRide(int id);
+	public RideReturnedDTO getRide(int id);
 	
 	public RideReturnedDTO cancelRide(int id);
 	

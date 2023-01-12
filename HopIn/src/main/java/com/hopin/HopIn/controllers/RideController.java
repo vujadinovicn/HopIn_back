@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,6 @@ import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
-import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInPanicRideDTO;
 import com.hopin.HopIn.enums.RideStatus;
@@ -29,6 +29,7 @@ import com.hopin.HopIn.validations.ExceptionDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
+@Validated
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/ride")
@@ -48,12 +49,12 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedWithRejectionDTO> getRide(@PathVariable int id) {
-		RideReturnedWithRejectionDTO ride = service.getRide(id);
+	public ResponseEntity<RideReturnedDTO> getRide(@PathVariable int id) {
+		RideReturnedDTO ride = service.getRide(id);
 		if (ride != null) {
-			return new ResponseEntity<RideReturnedWithRejectionDTO>(ride, HttpStatus.OK);
+			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		}
-		return new ResponseEntity<RideReturnedWithRejectionDTO>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -150,7 +151,7 @@ public class RideController {
 	@PutMapping(value = "/{id}/cancel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> rejectRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@RequestBody ReasonDTO dto) {
+			@Valid @RequestBody ReasonDTO dto) {
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
