@@ -73,12 +73,13 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> getActiveRideForDriver(@PathVariable int driverId) {
-		RideReturnedDTO activeRide = service.getActiveRideForDriver(driverId);
-		if (activeRide != null) {
-			return new ResponseEntity<RideReturnedDTO>(activeRide, HttpStatus.OK);
+	@PreAuthorize("hasRole('DRIVER')")
+	public ResponseEntity<?> getActiveRideForDriver(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
+		try {
+			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForDriver(driverId), HttpStatus.OK);
+		} catch (NoActivePassengerRideException e){
+			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)

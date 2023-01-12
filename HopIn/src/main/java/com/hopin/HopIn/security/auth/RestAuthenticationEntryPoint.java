@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.validation.FieldError;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.hopin.HopIn.validations.ExceptionDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,6 +57,12 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         }
 
         return new ResponseEntity<>(sb.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(HttpMessageConversionException.class)
+	protected ResponseEntity<Object> handleJSONParseException(HttpMessageConversionException e) {
+		// 400
+		return new ResponseEntity<>(new ExceptionDTO(e.getMessage().split(": ")[1]), HttpStatus.BAD_REQUEST);
 	}
     
     @ExceptionHandler (value = {AccessDeniedException.class})

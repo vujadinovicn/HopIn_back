@@ -19,8 +19,8 @@ public interface RideRepository extends JpaRepository<Ride, Integer> {
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"start_time\" between :startTime and :endTime order by \"start_time\"", nativeQuery=true)
 	public List<Ride> getAllDriverRidesUntilEndOfNewRide(int id, LocalDateTime startTime, LocalDateTime endTime);
 
-	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"start_time\" < :now and \"end_time\" > :now", nativeQuery=true)
-	public Ride getActiveRideForDriver(int id, LocalDateTime now);
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 3", nativeQuery=true)
+	public Ride getActiveRideForDriver(int id);
 	
 	@Query(value = "select * from \"rides\" where \"status\" = 3 and "
 			+ "\"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id)", nativeQuery=true)

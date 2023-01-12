@@ -45,6 +45,7 @@ import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.exceptions.NoActiveDriverRideException;
 import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
 import com.hopin.HopIn.repositories.PanicRepository;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
@@ -329,10 +330,9 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public RideReturnedDTO getActiveRideForDriver(int id) {
-		LocalDateTime now = LocalDateTime.now();
-		Ride activeRide = this.allRides.getActiveRideForDriver(id, now);
+		Ride activeRide = this.allRides.getActiveRideForDriver(id);
 		if (activeRide == null)
-			return null;
+			throw new NoActiveDriverRideException();
 		return new RideReturnedDTO(activeRide);
 	}
 	
