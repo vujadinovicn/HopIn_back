@@ -114,13 +114,14 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public boolean unblock(int userId) {
+	public void unblock(int userId) {
 		User user = getById(userId);
-		if (user != null) {
-			user.setActivated(true);
-			return true;
+		if (user.isBlocked() == false) {
+			throw new BlockedUserException();
 		}
-		return false;
+		user.setBlocked(false);
+		allUsers.save(user);
+		allUsers.flush();
 	}
 
 	@Override

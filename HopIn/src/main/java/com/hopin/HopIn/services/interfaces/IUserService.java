@@ -26,7 +26,7 @@ public interface IUserService {
 
 	public void block(int userId);
 	
-	public boolean unblock(int userId);
+	public void unblock(int userId);
 	
 	public NoteReturnedDTO addNote(int userId, NoteDTO note);
 	

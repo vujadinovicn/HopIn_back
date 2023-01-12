@@ -129,9 +129,9 @@ public class UserController {
 	public ResponseEntity<?> unblock(@PathVariable int id){
 		try {
 			this.userService.block(id);
-			return new ResponseEntity<String>("User is successfully blocked", HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>("User is successfully unblocked", HttpStatus.NO_CONTENT);
 		} catch (BlockedUserException ex) {
-			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User already blocked!"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User is not blocked!"), HttpStatus.BAD_REQUEST);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
 		}
