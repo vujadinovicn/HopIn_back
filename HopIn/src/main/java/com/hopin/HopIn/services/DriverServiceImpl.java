@@ -149,7 +149,7 @@ public class DriverServiceImpl implements IDriverService {
 	public List<DocumentReturnedDTO> getDocuments(int driverId) {
 		Optional<Driver> driver = allDrivers.findById(driverId);
 		if (driver.isEmpty()){
-			return null;
+			throw new UserNotFoundException();
 		}
 		List<DocumentReturnedDTO> documents = new ArrayList<DocumentReturnedDTO>();
 		driver.get().getDocuments().forEach((document) -> {documents.add(new DocumentReturnedDTO(document));});

@@ -103,8 +103,13 @@ public class DriverController {
 	}
 
 	@GetMapping(value = "/{id}/documents", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<DocumentReturnedDTO>> getDocuments(@PathVariable("id")  int driverId) {
-		return new ResponseEntity<List<DocumentReturnedDTO>>(service.getDocuments(driverId), HttpStatus.OK);
+	@PreAuthorize("hasRole('DRIVER')")
+	public ResponseEntity<?> getDocuments(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
+		try {
+			return new ResponseEntity<List<DocumentReturnedDTO>>(service.getDocuments(driverId), HttpStatus.OK);
+		} catch (UserNotFoundException e){
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Driver does not exist!"), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PostMapping(value = "/{id}/documents", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
