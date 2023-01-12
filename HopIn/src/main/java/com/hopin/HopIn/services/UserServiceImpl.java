@@ -35,6 +35,7 @@ import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
 import com.hopin.HopIn.repositories.UserRepository;
+import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.IUserService;
 
 @Service
@@ -46,6 +47,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	private MessageRepository allMessages;
 	@Autowired
 	private NoteRepository allNotes;
+	@Autowired
+	private IRideService rideService;
 	
 	Map<Integer, User> allUsersMap = new HashMap<Integer, User>();
 	Map<Integer, Note> allNotesMap = new HashMap<Integer, Note>();
@@ -141,16 +144,23 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public MessageReturnedDTO sendMessage(int userId, MessageDTO sentMessage) {
-		User user = getById(userId);
-		return createDetailedMessage(sentMessage);
+	public MessageReturnedDTO sendMessage(int receiverId, MessageDTO dto) {
+		getById(receiverId);
+		rideService.getRide(dto.getRideId());
+		if (getCurrentUser() == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiver does not exist!");
+		}
+		Message message = new Message(getCurrentUser().getId(), receiverId, dto);
+		allMessages.save(message);
+		allMessages.flush();
+		return createDetailedMessage(message);
 	}
 	
-	private MessageReturnedDTO createDetailedMessage(MessageDTO sentMessage) {
+	private MessageReturnedDTO createDetailedMessage(Message sentMessage) {
 		return new MessageReturnedDTO(sentMessage.getReceiverId(),
 				sentMessage.getReceiverId(),
 				sentMessage.getReceiverId(),
-				LocalDateTime.now(),
+				sentMessage.getTimeOfSending(),
 				sentMessage.getMessage(),
 				sentMessage.getType(),
 				sentMessage.getRideId());

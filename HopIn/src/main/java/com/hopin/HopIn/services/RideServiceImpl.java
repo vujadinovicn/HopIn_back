@@ -56,9 +56,6 @@ import com.hopin.HopIn.util.TokenUtils;
 public class RideServiceImpl implements IRideService {
 
 	@Autowired
-	private TokenUtils tokenUtils;
-
-	@Autowired
 	private PanicRepository allPanics;
 
 	@Autowired
