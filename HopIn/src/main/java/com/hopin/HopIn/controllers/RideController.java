@@ -7,15 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +27,6 @@ import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInPanicRideDTO;
-import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
@@ -158,6 +155,17 @@ public class RideController {
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> getFavoriteRides() {
 		return new ResponseEntity<List<FavoriteRideReturnedDTO>>(this.service.getFavoriteRides(), HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value = "favorites/{id}")
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> deleteFavoriteRide(@PathVariable int id) {
+		try {
+			this.service.deleteFavoriteRide(id);
+			return new ResponseEntity<String>("Successful deletion of favorite location!", HttpStatus.NO_CONTENT);
+		} catch (FavoriteRideException ex) {
+			return new ResponseEntity<String>("Favorite location does not exist!", HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	

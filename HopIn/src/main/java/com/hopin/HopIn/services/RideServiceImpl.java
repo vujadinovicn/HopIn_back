@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +118,20 @@ public class RideServiceImpl implements IRideService {
 			retRides.add(new FavoriteRideReturnedDTO(ride));
 		}
 		return retRides;
+	}
+	
+	@Override 
+	public void deleteFavoriteRide(int id) {
+		Optional<FavoriteRide> found = allFavoriteRides.findById(id);
+		Passenger passenger = passengerService.getPassenger(userService.getCurrentUser().getId());
+		
+		if (found.isEmpty()) {
+			throw new FavoriteRideException();
+		}
+		
+		passenger.getFavouriteRides().remove(found.get());
+		allFavoriteRides.delete(found.get());
+		allFavoriteRides.flush();
 	}
 	
 	

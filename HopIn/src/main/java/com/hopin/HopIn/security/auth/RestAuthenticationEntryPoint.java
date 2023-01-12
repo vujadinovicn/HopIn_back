@@ -1,9 +1,9 @@
 package com.hopin.HopIn.security.auth;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -38,7 +38,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @ExceptionHandler (value = {Exception.class})
     public void commence(HttpServletRequest request, HttpServletResponse response, Exception exception) throws IOException {
         // 403
-    	exception.printStackTrace();
         setResponseError(response, HttpServletResponse.SC_FORBIDDEN, String.format("Access Denies: %s", exception.getMessage()));
     }
     

@@ -1,6 +1,5 @@
 package com.hopin.HopIn.services.interfaces;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
@@ -15,37 +14,39 @@ import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.enums.RideStatus;
-public interface IRideService {
-	
-	public RideReturnedDTO add(RideDTO dto);
-	
-	public RideReturnedDTO getActiveRideForDriver(int id);
-	
-	public RideReturnedDTO getActiveRideForPassenger(int id);
-	
-	public RideReturnedWithRejectionDTO getRide(int id);
-	
-	public RideReturnedDTO cancelRide(int id);
-	
-	public PanicRideDTO panicRide(int id, ReasonDTO reason);
-	
-	public RideReturnedDTO changeRideStatus(int id, RideStatus status);
-	
-	public RideReturnedDTO rejectRide(int id, ReasonDTO reason);
-	
-	public AllPanicRidesDTO getAllPanicRides();
-		
-	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to);
-	
-	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to);
-	
-	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to);
 
+public interface IRideService {
+
+	public RideReturnedDTO add(RideDTO dto);
+
+	public RideReturnedDTO getActiveRideForDriver(int id);
+
+	public RideReturnedDTO getActiveRideForPassenger(int id);
+
+	public RideReturnedWithRejectionDTO getRide(int id);
+
+	public RideReturnedDTO cancelRide(int id);
+
+	public PanicRideDTO panicRide(int id, ReasonDTO reason);
+
+	public RideReturnedDTO changeRideStatus(int id, RideStatus status);
+
+	public RideReturnedDTO rejectRide(int id, ReasonDTO reason);
+
+	public AllPanicRidesDTO getAllPanicRides();
+
+	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to);
+
+	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to);
+
+	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to);
 
 	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto);
 
-	FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto);
+	public FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto);
 
-	List<FavoriteRideReturnedDTO> getFavoriteRides();
+	public List<FavoriteRideReturnedDTO> getFavoriteRides();
+
+	public void deleteFavoriteRide(int id);
 
 }
