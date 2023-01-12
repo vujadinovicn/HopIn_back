@@ -26,6 +26,7 @@ import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
 import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
+import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.validations.ExceptionDTO;
 
@@ -61,12 +62,12 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> getRide(@PathVariable int id) {
-		RideReturnedDTO ride = service.getRide(id);
-		if (ride != null) {
-			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
+	public ResponseEntity<?> getRide(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		try {
+			return new ResponseEntity<RideReturnedDTO>(service.getRide(id), HttpStatus.OK);
+		} catch (RideNotFoundException e){
+			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)

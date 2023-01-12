@@ -49,6 +49,7 @@ import com.hopin.HopIn.repositories.PanicRepository;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
 import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
+import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
@@ -355,8 +356,10 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public RideReturnedDTO getRide(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Ride ride = this.allRides.findById(id).orElse(null);
+		if (ride == null)
+			throw new RideNotFoundException();
+		return new RideReturnedDTO(ride);
 	}
 
 	private Ride getRideIfExists(int id) {

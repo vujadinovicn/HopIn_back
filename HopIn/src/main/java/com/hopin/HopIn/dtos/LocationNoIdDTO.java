@@ -1,5 +1,6 @@
 package com.hopin.HopIn.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hopin.HopIn.entities.Location;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -55,10 +56,11 @@ public class LocationNoIdDTO {
 		this.longitude = longitude;
 	}
 	
+	@JsonIgnore
 	public String getLatitudeString() {
 		return Double.toString(latitude);
 	}
-	
+	@JsonIgnore
 	public String getLongitudeString() {
 		return Double.toString(longitude);
 	}

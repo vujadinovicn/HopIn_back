@@ -242,4 +242,17 @@ public class Ride {
 		this.reviews.add(review);
 	}
 
+	@Override
+	public String toString() {
+		return "Ride [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", totalCost=" + totalCost
+				+ ", totalDistance=" + totalDistance + ", estimatedTimeInMinutes=" + estimatedTimeInMinutes
+				+ ", petTransport=" + petTransport + ", babyTransport=" + babyTransport + ", panic=" + panic
+				+ ", status=" + status + ", distance=" + distance + ", scheduledTime=" + scheduledTime + ", passengers="
+				+ passengers + ", driver=" + driver + ", reviews=" + reviews + ", vehicleType=" + vehicleType
+				+ ", departureLocation=" + departureLocation + ", destinationLocation=" + destinationLocation
+				+ ", rejectionNotice=" + rejectionNotice + "]";
+	}
+	
+	
+
 }

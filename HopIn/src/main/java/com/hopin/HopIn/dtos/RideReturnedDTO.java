@@ -67,6 +67,7 @@ public class RideReturnedDTO {
 //	}
 
 	public RideReturnedDTO(Ride ride) {
+		System.out.println(ride);
 		this.id = ride.getId();
 		this.driver = new UserInRideDTO(ride.getDriver());
 		this.passengers = new ArrayList<UserInRideDTO>();
