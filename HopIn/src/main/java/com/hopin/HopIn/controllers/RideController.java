@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
@@ -25,6 +26,9 @@ import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.validations.ExceptionDTO;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/ride")
@@ -33,7 +37,6 @@ public class RideController {
 	@Autowired
 	private IRideService service;
 
-	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> add(@RequestBody RideDTO dto) {
 		try {
@@ -43,94 +46,126 @@ public class RideController {
 			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RideReturnedWithRejectionDTO> getRide(@PathVariable int id) {
 		RideReturnedWithRejectionDTO ride = service.getRide(id);
-		if(ride != null) {
+		if (ride != null) {
 			return new ResponseEntity<RideReturnedWithRejectionDTO>(ride, HttpStatus.OK);
 		}
 		return new ResponseEntity<RideReturnedWithRejectionDTO>(HttpStatus.NOT_FOUND);
 	}
-	
-	  
+
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RideReturnedDTO> getActiveRideForDriver(@PathVariable int driverId) {
 		RideReturnedDTO activeRide = service.getActiveRideForDriver(driverId);
-		if(activeRide != null) {
+		if (activeRide != null) {
 			return new ResponseEntity<RideReturnedDTO>(activeRide, HttpStatus.OK);
 		}
 		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
-	
-	
+
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RideReturnedDTO> getActiveRideForPassenger(@PathVariable int passengerId) {
 		RideReturnedDTO activeRide = service.getActiveRideForPassenger(passengerId);
-		if(activeRide != null) {
+		if (activeRide != null) {
 			return new ResponseEntity<RideReturnedDTO>(activeRide, HttpStatus.OK);
 		}
 		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
-	
-	
+
 	@PutMapping(value = "/{id}/withdraw")
-	public ResponseEntity<RideReturnedDTO> cancelRide(@PathVariable int id) {
-		RideReturnedDTO ride = service.cancelRide(id);
-		if(ride != null) {
+	public ResponseEntity<?> cancelRide(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		try {
+			RideReturnedDTO ride = service.cancelRide(id);
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+			}
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
-	
-	
+
 	@PutMapping(value = "/{id}/panic", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PanicRideDTO> panicRide(@PathVariable int id, @RequestBody ReasonDTO dto) {
+	public ResponseEntity<?> panicRide(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
+			@Valid @RequestBody ReasonDTO dto) {
 		PanicRideDTO ride = service.panicRide(id, dto);
-		if (ride != null) {
-//			TODO: add getting user from other service
-			ride.setUser(new UserInPanicRideDTO("Pera", "Perić", "+381123123", "pera.peric@email.com", "Bulevar Oslobodjenja 74", "U3dhZ2dlciByb2Nrcw=="));
-			return new ResponseEntity<PanicRideDTO>(ride, HttpStatus.OK);
+		if (ride == null) {
+			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<PanicRideDTO>(HttpStatus.NOT_FOUND);
+
+		return new ResponseEntity<PanicRideDTO>(ride, HttpStatus.OK);
 	}
-	
-	
+
 	@PutMapping(value = "/{id}/accept", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> acceptRide(@PathVariable int id) {
-		RideReturnedDTO ride = service.changeRideStatus(id, RideStatus.ACCEPTED);
-		if(ride != null) {
+	public ResponseEntity<?> acceptRide(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		try {
+			RideReturnedDTO ride = service.acceptRide(id);
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+			}
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
-	
-	
+
+	@PutMapping(value = "/{id}/start", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> startRide(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		try {
+			RideReturnedDTO ride = service.startRide(id);
+			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+			}
+		}
+
+	}
+
 	@PutMapping(value = "/{id}/end", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> endRide(@PathVariable int id) {
-		RideReturnedDTO ride = service.changeRideStatus(id, RideStatus.FINISHED);
-		if(ride != null) {
+	public ResponseEntity<?> endRide(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		try {
+			RideReturnedDTO ride = service.finishRide(id);
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+			}
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
-	
-	
+
 	@PutMapping(value = "/{id}/cancel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> rejectRide(@PathVariable int id, @RequestBody ReasonDTO dto) {
-		RideReturnedDTO ride = service.rejectRide(id, dto);
-		if(ride != null) {
+	public ResponseEntity<?> rejectRide(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
+			@RequestBody ReasonDTO dto) {
+		try {
+			RideReturnedDTO ride = service.rejectRide(id, dto);
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+			}
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
-	
+
 	@PostMapping(value = "/price", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody UnregisteredRideSuggestionDTO dto) {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
 	}
-	
 
-	
-	
 }
