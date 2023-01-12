@@ -394,8 +394,8 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public AllPanicRidesDTO getAllPanicRides() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Panic> panics = allPanics.findAll();
+		return new AllPanicRidesDTO(panics);
 	}
 
 	@Override
