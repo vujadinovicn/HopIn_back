@@ -22,7 +22,7 @@ public interface IRideService {
 
 	public RideReturnedDTO getActiveRideForPassenger(int id);
 
-	public RideReturnedWithRejectionDTO getRide(int id);
+	public RideReturnedDTO getRide(int id);
 
 	public RideReturnedDTO cancelRide(int id);
 

@@ -12,13 +12,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
@@ -33,8 +31,8 @@ import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInRideDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.FavoriteRide;
-import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Panic;
+import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
@@ -53,8 +51,6 @@ import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.services.interfaces.IVehicleTypeService;
 import com.hopin.HopIn.util.TokenUtils;
-
-import jakarta.validation.constraints.Min;
 
 @Service
 public class RideServiceImpl implements IRideService {
@@ -413,6 +409,12 @@ public class RideServiceImpl implements IRideService {
 		VehicleType vehicleType = this.allVehicleTypes
 				.getByName(VehicleTypeName.valueOf(VehicleTypeName.class, dto.getVehicleTypeName()));
 		return vehicleType.getPricePerKm() * dto.getDistance();
+	}
+
+	@Override
+	public RideReturnedDTO changeRideStatus(int id, RideStatus status) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
