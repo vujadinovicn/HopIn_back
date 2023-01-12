@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -114,6 +115,7 @@ public class UserController {
 	}
 	
 	@PutMapping(value="{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> block(@PathVariable int id){
 		try {
 			this.userService.block(id);
@@ -126,9 +128,10 @@ public class UserController {
 	}
 	
 	@PutMapping(value="{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> unblock(@PathVariable int id){
 		try {
-			this.userService.block(id);
+			this.userService.unblock(id);
 			return new ResponseEntity<String>("User is successfully unblocked", HttpStatus.NO_CONTENT);
 		} catch (BlockedUserException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User is not blocked!"), HttpStatus.BAD_REQUEST);

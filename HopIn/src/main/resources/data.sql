@@ -31,7 +31,7 @@ insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1);
 insert into "routes"("distance", "departure_id", "destination_id") values (95, 1, 2);
 insert into "passengers_favourite_routes"("passenger_id", "favourite_routes_id") values (1,1);
 
-insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'pera.peric@gmail.com', false, false, 'Mika', 'Password123', null, 'Mikic', '+3819720132 ', 2);
+insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'pera.peric@gmail.com', false, false, 'Mika', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', null, 'Mikic', '+3819720132 ', 2);
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'peraa@gmail.com', false, false, 'Mika', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', null, 'Mikic', '+3819720132 ', 2);
 insert into "admins" ("id") values (3);
