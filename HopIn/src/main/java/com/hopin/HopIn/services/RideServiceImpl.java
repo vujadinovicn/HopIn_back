@@ -1,8 +1,14 @@
 package com.hopin.HopIn.services;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -22,12 +29,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
+import com.hopin.HopIn.dtos.UserInRideDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Panic;
 import com.hopin.HopIn.entities.RejectionNotice;
@@ -37,13 +46,17 @@ import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.repositories.PanicRepository;
+import com.hopin.HopIn.exceptions.NoAvailableDriversException;
+import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
+import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IRideEstimationService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.util.TokenUtils;
-
 import jakarta.validation.constraints.Min;
+import com.hopin.HopIn.services.interfaces.IWorkingHoursService;
 
 @Service
 public class RideServiceImpl implements IRideService {
@@ -62,6 +75,12 @@ public class RideServiceImpl implements IRideService {
 
 	@Autowired
 	private IDriverService driverService;
+	
+	@Autowired
+	private IRideEstimationService rideEstimationService;
+	
+	@Autowired 
+	private IWorkingHoursService workingHoursService;
 
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
@@ -197,24 +216,141 @@ public class RideServiceImpl implements IRideService {
 //	
 
 	@Override
-	public RideReturnedDTO add(RideDTO dto) {
-		List<Driver> activeDrivers = this.driverService.getActiveDrivers();
-		if (activeDrivers.size() == 0) {
+	public RideReturnedDTO add(RideDTO dto){
+		List<Driver> availableDrivers = new ArrayList<Driver>();
+		Driver driverForRide = new Driver();
+		
+		List<Driver> driversForRide = new ArrayList<Driver>();
+		
+		driversForRide = this.driverService.getActiveDrivers();
+		if (driversForRide.size() == 0) {
 			throw new NoActiveDriverException();
 		}
+		
+		driversForRide = this.driverService.getDriversWithAppropriateVehicleForRide(driversForRide, dto);
+		if (driversForRide.size() == 0) {
+			throw new NoDriverWithAppropriateVehicleForRideException();
+		}
+		
+		dto.getPassengers().forEach((UserInRideDTO passenger) -> {
+			if (this.getActiveRideForPassenger(passenger.getId()) != null)
+				{
+				System.out.println(passenger.getId());
+				throw new PassengerAlreadyInRideException();
+				}
+		});
+		
+		int newRideDuration = this.rideEstimationService.getEstimatedTime(dto.getDepartureLocation(), dto.getDestinationLocation());
+		System.out.println("newrideduration" + newRideDuration);
+		
+		List<Driver> driversWithNoActiveRide = this.getAllDriversWithNoActiveRide(driversForRide);
+		List<Driver> driversWithActiveRide = new ArrayList<Driver>(driversForRide);
+		driversWithActiveRide.removeAll(driversWithNoActiveRide);
+		
+		boolean availabilityOfDrivers = driversWithNoActiveRide.size() != 0 ? true : false;
+		
+		if (availabilityOfDrivers) {
+			driverForRide = this.getBestDriver(dto, driversWithNoActiveRide, newRideDuration, availabilityOfDrivers);
+		} else {
+			driverForRide = this.getBestDriver(dto, driversWithActiveRide, newRideDuration, availabilityOfDrivers);
+		}
+		
+		if (driverForRide.getId() == 0)
+			throw new NoAvailableDriversException();
+		
+		System.out.println(driverForRide.getId());
 		return null;
 	}
-
+	
+	private Driver getBestDriver(RideDTO rideDTO, List<Driver> drivers, int newRideDuration, boolean availability) {
+		Driver foundDriver = new Driver();
+		int bestTime = Integer.MAX_VALUE;
+		
+		for (Driver driver: drivers) {
+			//LocalDateTime rideStart = rideDTO.getTime();
+			LocalDateTime startOfDrivingToDeparture = LocalDateTime.now();
+			
+			int timeForNewRideDepartureArrival = 0;
+			
+			if (availability)
+				timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), driver.getVehicleLocation());
+			else {
+				RideReturnedDTO currentRide = this.getActiveRideForDriver(driver.getId());
+				startOfDrivingToDeparture = currentRide.getStartTime().plusMinutes(currentRide.getEstimatedTimeInMinutes());
+				timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), currentRide.getLocations().get(0).getDestination());
+			}
+			
+			Ride nextRide = this.allRides.getFirstUpcomingRideForDriver(driver.getId());
+			
+			int timeFromStartOfNewToStartOfNext = timeForNewRideDepartureArrival + newRideDuration;
+			
+			int timeForUpcomingRideDepartureArrival = 0;
+			if (nextRide != null) {
+				timeForUpcomingRideDepartureArrival= this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), new LocationNoIdDTO(nextRide.getDepartureLocation()));
+				timeFromStartOfNewToStartOfNext += timeForUpcomingRideDepartureArrival;
+				
+				if (startOfDrivingToDeparture.plusMinutes(timeFromStartOfNewToStartOfNext).isAfter(nextRide.getStartTime())) {
+					System.out.println("ne moze ovaj driver" + driver.getId());
+					continue;
+				}
+			}
+			int totalTimeForDepartureArrival = timeForNewRideDepartureArrival;
+			if (!availability)
+				totalTimeForDepartureArrival += this.getMinutesUntilEndOfCurrentRideForDriver(driver);
+			if (totalTimeForDepartureArrival < bestTime) {
+				foundDriver = driver;
+				bestTime = (int) (totalTimeForDepartureArrival);
+			}
+	//			double workingHoursForCurrentDay = this.workingHoursService.getWorkedHoursForCurrentDay(driver.getId());
+	//			double workingHoursWithNewRide = this.workingHoursService.getWorkedHoursForDateWithNewRide(workingHoursForCurrentDay, timeFromStartOfNewToStartOfNext);
+	//			if (workingHoursWithNewRide <= 8) {
+	//				availableDrivers.add(driver);
+	//			}
+				//availableDrivers.add(driver);
+		}
+		return foundDriver;
+	}
+	
+	private double getMinutesUntilEndOfCurrentRideForDriver(Driver driver) {
+		RideReturnedDTO currentRide = this.getActiveRideForDriver(driver.getId());
+		LocalDateTime now = LocalDateTime.now();
+		return ChronoUnit.MINUTES.between(now, currentRide.getStartTime().plusMinutes(currentRide.getEstimatedTimeInMinutes()));
+	}
+	
 	@Override
 	public RideReturnedDTO getActiveRideForPassenger(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		LocalDateTime now = LocalDateTime.now();
+		Ride activeRide = this.allRides.getActiveRideForPassenger(id, now);
+		if (activeRide == null)
+			return null;
+		return new RideReturnedDTO(activeRide);
 	}
 
 	@Override
 	public RideReturnedDTO getActiveRideForDriver(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		LocalDateTime now = LocalDateTime.now();
+		Ride activeRide = this.allRides.getActiveRideForDriver(id, now);
+		if (activeRide == null)
+			return null;
+		return new RideReturnedDTO(activeRide);
+	}
+	
+	private List<RideReturnedDTO> getAllActiveRidesForDrivers(List<Driver> drivers){
+		List<RideReturnedDTO> rides = new ArrayList<RideReturnedDTO>();
+		for (Driver driver: drivers) {
+			rides.add(this.getActiveRideForDriver(driver.getId()));
+		}
+		return rides;
+	}
+	
+	private List<Driver> getAllDriversWithNoActiveRide(List<Driver> drivers){
+		List<Driver> availableDrivers = new ArrayList<Driver>();
+		for (Driver driver: drivers) {
+			if (this.getActiveRideForDriver(driver.getId()) == null) 
+				availableDrivers.add(driver);
+		}
+		
+		return availableDrivers;
 	}
 
 	@Override

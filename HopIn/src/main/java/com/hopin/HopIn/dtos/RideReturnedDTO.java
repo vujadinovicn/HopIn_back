@@ -48,7 +48,6 @@ public class RideReturnedDTO {
 		this.status = status;
 		this.scheduledTime = scheduledTime;
 	}
-
 //	public RideReturnedDTO(Ride ride) {
 //		this.startTime = ride.getStartTime();
 //		this.endTime = ride.getEndTime();
@@ -85,8 +84,7 @@ public class RideReturnedDTO {
 		this.totalCost = ride.getTotalCost();
 		this.status = ride.getStatus();
 		this.scheduledTime = ride.getScheduledTime();
-		this.rejection = ride.getRejectionNotice();
-	}
+}
 
 	public int getId() {
 		return id;

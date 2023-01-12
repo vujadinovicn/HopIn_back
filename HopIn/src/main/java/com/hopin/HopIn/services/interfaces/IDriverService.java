@@ -11,18 +11,17 @@ import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.VehicleReturnedDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
-import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
-import com.hopin.HopIn.entities.Vehicle;
 
 public interface IDriverService {
 
@@ -69,6 +68,10 @@ public interface IDriverService {
 	public void setDriverActivity(int driverId, boolean isActive);
 
 	Driver getDriver(int id);
+	
+	public boolean isDriverVehicleAppropriateForRide(int id, RideDTO rideDTO);
+	
+	public List<Driver> getDriversWithAppropriateVehicleForRide(List<Driver> drivers, RideDTO rideDTO);
 
 
 }

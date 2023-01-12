@@ -85,34 +85,7 @@ public class Ride {
 		this.rejectionNotice = rejectionNotice;
 		this.scheduledTime = null;
 	}
-
-	public Ride(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost, double totalDistance,
-			int estimatedTimeInMinutes, boolean petTransport, boolean babyTransport, boolean panic, RideStatus status,
-			double distance, LocalDateTime scheduledTime, Set<Passenger> passengers, Driver driver, Set<Review> reviews,
-			VehicleType vehicleType, Location departureLocation, Location destinationLocation,
-			RejectionNotice rejectionNotice) {
-		super();
-		this.id = id;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.totalCost = totalCost;
-		this.totalDistance = totalDistance;
-		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
-		this.petTransport = petTransport;
-		this.babyTransport = babyTransport;
-		this.panic = panic;
-		this.status = status;
-		this.distance = distance;
-		this.scheduledTime = scheduledTime;
-		this.passengers = passengers;
-		this.driver = driver;
-		this.reviews = reviews;
-		this.vehicleType = vehicleType;
-		this.departureLocation = departureLocation;
-		this.destinationLocation = destinationLocation;
-		this.rejectionNotice = rejectionNotice;
-	}
-
+	
 	public int getId() {
 		return id;
 	}

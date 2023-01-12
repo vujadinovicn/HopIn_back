@@ -2,6 +2,7 @@ package com.hopin.HopIn.services;
 
 import java.text.DecimalFormat;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,6 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	@Override
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursStartDTO dto) {
 		Driver driver = this.driverService.getDriver(driverId);
-		
 		if (driver.isActive()) {
 			throw new DriverAlreadyActiveException();
 		} else if (this.getWorkedHoursForDate(driverId, dto.getStart()) > 8) {
@@ -77,7 +77,8 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	
 	@Override
 	public double getWorkedHoursForDate(int driverId, LocalDateTime end) {
-		LocalDateTime start = end.minusDays(1);
+		LocalDate date = LocalDate.now();
+		LocalDateTime start = date.atStartOfDay();
 		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriverAndDates(driverId, start, end);
 		
 		double hours = 0;
@@ -95,5 +96,22 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 			}
 		}
 		return Double.valueOf(df.format(hours));
+	}
+	
+	
+	
+	@Override
+	public double getWorkedHoursForDateWithNewRide(double workedHours, int rideMinutes) {
+		double hours = workedHours + (rideMinutes/60);
+		DecimalFormat df = new DecimalFormat("#.##");
+		return Double.valueOf(df.format(hours));
+	}
+
+	@Override
+	public double getWorkedHoursForCurrentDay(int driverId) {
+		LocalDate date = LocalDate.now();
+		LocalDateTime start = date.atStartOfDay();
+		LocalDateTime end = start.plusDays(1);
+		return this.getWorkedHoursForDate(driverId, end);
 	}
 }

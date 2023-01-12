@@ -14,5 +14,9 @@ public interface IWorkingHoursService {
 	WorkingHoursDTO updateWorkingHours(int id, WorkingHoursEndDTO dto);
 
 	double getWorkedHoursForDate(int driverId, LocalDateTime end);
+	
+	double getWorkedHoursForDateWithNewRide(double workedHours, int rideMinutes);
+	
+	double getWorkedHoursForCurrentDay(int driverId);
 
 }
