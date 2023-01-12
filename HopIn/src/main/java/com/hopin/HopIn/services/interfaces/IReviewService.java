@@ -6,6 +6,7 @@ import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
 import com.hopin.HopIn.dtos.CompleteRideReviewDTO;
 import com.hopin.HopIn.dtos.ReviewDTO;
 import com.hopin.HopIn.dtos.ReviewReturnedDTO;
+import com.hopin.HopIn.enums.ReviewType;
 
 public interface IReviewService {
 	
@@ -15,7 +16,5 @@ public interface IReviewService {
 	
 	public AllReviewsReturnedDTO getVehicleReviews(int vehicleId);
 	
-	public ReviewReturnedDTO addVehicleReview(int vehicleId, int rideId, ReviewDTO review);
-	
-	public ReviewReturnedDTO addDriverReview(int driverId, int rideId, ReviewDTO review);
+	public ReviewReturnedDTO addReview(int vehicleId, ReviewDTO review, ReviewType vehicle);
 }

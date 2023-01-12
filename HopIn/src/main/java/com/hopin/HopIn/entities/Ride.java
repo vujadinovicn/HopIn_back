@@ -264,5 +264,9 @@ public class Ride {
 	public void setScheduledTime(LocalDateTime scheduledTime) {
 		this.scheduledTime = scheduledTime;
 	}
+	
+	public void addReview(Review review) {
+		this.reviews.add(review);
+	}
 
 }
