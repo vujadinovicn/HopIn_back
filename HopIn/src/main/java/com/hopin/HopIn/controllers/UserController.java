@@ -1,7 +1,6 @@
 package com.hopin.HopIn.controllers;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +34,6 @@ import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.User;
-import com.hopin.HopIn.services.WorkingHoursServiceImpl;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -47,9 +45,6 @@ import com.hopin.HopIn.validations.ExceptionDTO;
 public class UserController {
 	@Autowired
 	IUserService userService;
-	
-	@Autowired
-	WorkingHoursServiceImpl workingHoursService;
 	
 	@Autowired
 	private TokenUtils tokenUtils;

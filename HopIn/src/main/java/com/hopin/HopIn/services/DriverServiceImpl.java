@@ -21,6 +21,7 @@ import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
+import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -98,19 +99,19 @@ public class DriverServiceImpl implements IDriverService {
 	}
 	
 	@Override
-	public UserReturnedDTO update(int id, UserDTOOld dto) {
+	public UserReturnedDTO update(int id, UserDTO dto) {
 		Optional<Driver> driver = allDrivers.findById(id);
 		if (driver.isEmpty()) {
 			return null;
 		}
-		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
-			if (!this.checkPasswordMatch(driver.get().getPassword(), dto.getPassword())) {
-				System.out.println(driver.get().getPassword());
-				System.out.println(dto.getPassword());
-				return null;	
-			}
-			dto.setPassword(dto.getNewPassword());
-		}
+//		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
+//			if (!this.checkPasswordMatch(driver.get().getPassword(), dto.getPassword())) {
+//				System.out.println(driver.get().getPassword());
+//				System.out.println(dto.getPassword());
+//				return null;	
+//			}
+//			dto.setPassword(dto.getNewPassword());
+//		}
 		driver.get().copy(dto);
 		this.allDrivers.save(driver.get());
 		this.allDrivers.flush();

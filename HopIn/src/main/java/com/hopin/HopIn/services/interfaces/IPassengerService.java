@@ -17,8 +17,8 @@ public interface IPassengerService {
 	public UserReturnedDTO getPassenger(int id);
 	
 	public boolean Activate(int id);
-	
-	public UserReturnedDTO update(int id, UserDTOOld dto);
+
+	UserReturnedDTO update(int id, UserDTO dto);
 	
 	public List<RouteDTO> getFavouriteRoutes(int id);
 	

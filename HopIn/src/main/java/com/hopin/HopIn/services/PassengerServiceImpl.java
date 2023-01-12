@@ -28,6 +28,8 @@ import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.SecureTokenType;
+import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.repositories.LocationRepository;
 import com.hopin.HopIn.repositories.PassengerRepository;
@@ -136,21 +138,30 @@ public class PassengerServiceImpl implements IPassengerService {
 	}
 
 	@Override
-	public UserReturnedDTO update(int id, UserDTOOld dto) {
-		Passenger passenger = this.allPassengers.findById(id).get();
-		if (passenger == null) {
-			return null;
+	public UserReturnedDTO update(int id, UserDTO dto) {
+		Optional<Passenger> passenger = this.allPassengers.findById(id);
+		if (passenger.isEmpty()) {
+			throw new UserNotFoundException();
 		}
-		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
-			if (!this.checkPasswordMatch(passenger.getPassword(), dto.getPassword())) {
-				return null;
-			}
-			dto.setPassword(dto.getNewPassword());
+		if (this.userService.userAlreadyExists(dto.getEmail())) {
+			throw new EmailAlreadyInUseException();
 		}
-		passenger.copy(dto);
-		this.allPassengers.save(passenger);
+//		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
+//			if (!this.checkPasswordMatch(passenger.getPassword(), dto.getPassword())) {
+//				return null;
+//			}
+//			dto.setPassword(dto.getNewPassword());
+//		}
+		this.changeDtoEmailAndPasswordToPrevious(dto, passenger);
+		passenger.get().copy(dto);
+		this.allPassengers.save(passenger.get());
 		this.allPassengers.flush();
-		return new UserReturnedDTO(passenger);
+		return new UserReturnedDTO(passenger.get());
+	}
+
+	private void changeDtoEmailAndPasswordToPrevious(UserDTO dto, Optional<Passenger> passenger) {
+		dto.setPassword(passenger.get().getPassword());
+		dto.setEmail(passenger.get().getEmail());
 	}
 
 	private boolean checkPasswordMatch(String password, String subbmitedPassword) {

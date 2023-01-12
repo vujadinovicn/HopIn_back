@@ -10,6 +10,7 @@ import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
+import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -29,7 +30,7 @@ public interface IDriverService {
 
 	public DriverReturnedDTO getById(int id);
 
-	public UserReturnedDTO update(int id, UserDTOOld newData);
+	public UserReturnedDTO update(int id, UserDTO newData);
 
 	public AllUsersDTO getAll(int page, int size);
 
