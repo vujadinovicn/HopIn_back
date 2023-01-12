@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import com.hopin.HopIn.enums.ReviewType;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,25 +10,32 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="reviews")
+@Table(name = "reviews")
 public class Review {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int id;
-	int rating;
-	String comment;
-	
+	private int id;
+	private int rating;
+	private String comment;
+
+	private ReviewType type;
+
 	@ManyToOne
 	private Passenger passenger;
-	
-	public Review() {}
 
-	public Review(int id, int rating, String comment, Passenger passenger) {
+	@ManyToOne
+	private Ride ride;
+
+	public Review() {
+	}
+
+	public Review(int id, int rating, String comment, ReviewType type, Passenger passenger) {
 		super();
 		this.id = id;
 		this.rating = rating;
 		this.comment = comment;
+		this.type = type;
 		this.passenger = passenger;
 	}
 
@@ -62,6 +71,20 @@ public class Review {
 		this.passenger = passenger;
 	}
 
-	
-	
+	public ReviewType getType() {
+		return type;
+	}
+
+	public void setType(ReviewType type) {
+		this.type = type;
+	}
+
+	public Ride getRide() {
+		return ride;
+	}
+
+	public void setRide(Ride ride) {
+		this.ride = ride;
+	}
+
 }

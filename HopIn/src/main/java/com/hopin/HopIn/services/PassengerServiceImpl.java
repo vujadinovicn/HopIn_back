@@ -93,12 +93,8 @@ public class PassengerServiceImpl implements IPassengerService {
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
-		if (!Pattern.matches("^([0-9a-zA-Z]{3,}$)", dto.getPassword())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid password format!");
-		}
-		
 		if (this.userService.userAlreadyExists(dto.getEmail())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with that email already exists!");
+			return null;
 		}
 		
 		Passenger passenger = new Passenger(dto);

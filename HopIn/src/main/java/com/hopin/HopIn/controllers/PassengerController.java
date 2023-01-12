@@ -36,6 +36,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 @Validated
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/passenger")
 public class PassengerController {
@@ -54,8 +55,11 @@ public class PassengerController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> insertPassenger(@RequestBody UserDTO dto) {
+	public ResponseEntity<?> insertPassenger(@Valid @RequestBody UserDTO dto) {
 		UserReturnedDTO passenger = passengerService.insert(dto);
+		if (passenger == null) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User with that email already exists!"), HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
 	}
 

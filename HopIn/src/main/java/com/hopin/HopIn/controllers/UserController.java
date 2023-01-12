@@ -40,7 +40,7 @@ import com.hopin.HopIn.validations.ExceptionDTO;
 
 @Validated
 @RestController
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/user")
 public class UserController {
 	@Autowired

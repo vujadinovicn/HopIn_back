@@ -10,9 +10,10 @@ import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
-import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.enums.RideStatus;
+
+import jakarta.validation.constraints.Min;
 public interface IRideService {
 	
 	public RideReturnedDTO add(RideDTO dto);
@@ -21,13 +22,11 @@ public interface IRideService {
 	
 	public RideReturnedDTO getActiveRideForPassenger(int id);
 	
-	public RideReturnedWithRejectionDTO getRide(int id);
+	public RideReturnedDTO getRide(int id);
 	
 	public RideReturnedDTO cancelRide(int id);
 	
 	public PanicRideDTO panicRide(int id, ReasonDTO reason);
-	
-	public RideReturnedDTO changeRideStatus(int id, RideStatus status);
 	
 	public RideReturnedDTO rejectRide(int id, ReasonDTO reason);
 	
@@ -41,5 +40,11 @@ public interface IRideService {
 
 
 	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto);
+
+	public RideReturnedDTO startRide(int id);
+
+	public RideReturnedDTO acceptRide(int id);
+
+	public RideReturnedDTO finishRide(int id);
 
 }

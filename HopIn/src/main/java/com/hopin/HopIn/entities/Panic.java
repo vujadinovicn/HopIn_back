@@ -33,6 +33,13 @@ public class Panic {
 		this.ride = ride;
 	}
 
+	public Panic(LocalDateTime time, String reason, User user, Ride ride) {
+		this.time = time;
+		this.reason = reason;
+		this.user = user;
+		this.ride = ride;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -63,6 +70,14 @@ public class Panic {
 
 	public void setRide(Ride ride) {
 		this.ride = ride;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }
