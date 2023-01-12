@@ -72,6 +72,9 @@ public class WebSecurityConfig {
         http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
 
     	http.authorizeRequests()
+			.requestMatchers("/api/unregisteredUser/").hasRole("ANONYMOUS")
+			.and()
+			.authorizeRequests()
     		.requestMatchers("/api/**").permitAll()
     		.and()
     		.authorizeRequests()

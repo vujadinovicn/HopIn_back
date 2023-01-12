@@ -35,8 +35,22 @@ public class RideEstimationService implements IRideEstimationService{
 		String url = setDistanceMatrixUrl(location11, location12, location21, location22);
 		
 		String durationText = getEstimatedInfo(url, "duration");
+		System.out.println(durationText);
 		
 		return Integer.parseInt(durationText.split(" ")[0]);
+	}
+	
+	@Override
+	public double getEstimatedDistance(LocationNoIdDTO departureLocation, LocationNoIdDTO destinationLocation) {
+		String location11 = departureLocation.getLatitudeString();
+		String location12 = departureLocation.getLongitudeString();
+		String location21 = destinationLocation.getLatitudeString();
+		String location22 = destinationLocation.getLongitudeString();
+		String url = setDistanceMatrixUrl(location11, location12, location21, location22);
+		
+		String distanceText = getEstimatedInfo(url, "distance");
+		System.out.println(distanceText);
+		return Double.parseDouble(distanceText.split(" ")[0]);
 	}
 
 	private String getEstimatedInfo(String url, String query) {

@@ -13,5 +13,7 @@ public interface IRideEstimationService {
 	public int getEstimatedTime(LocationNoIdDTO departureLocation, LocationNoIdDTO destinationLocation);
 	
 	public Driver getDriverClosestToDeparture(RideDTO dto, List<Driver> drivers);
+
+	double getEstimatedDistance(LocationNoIdDTO departureLocation, LocationNoIdDTO destinationLocation);
 	
 }
