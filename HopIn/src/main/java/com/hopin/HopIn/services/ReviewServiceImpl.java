@@ -2,7 +2,6 @@ package com.hopin.HopIn.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +18,12 @@ import com.hopin.HopIn.dtos.ReviewReturnedDTO;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Review;
 import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.enums.ReviewType;
 import com.hopin.HopIn.repositories.PassengerRepository;
 import com.hopin.HopIn.repositories.ReviewRepository;
 import com.hopin.HopIn.repositories.RideRepository;
-import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
+import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IReviewService;
 
 @Service
@@ -43,18 +41,17 @@ public class ReviewServiceImpl implements IReviewService{
 	@Autowired
 	private ReviewRepository allReviews;
 	
+	@Autowired
+	private IDriverService driverService;
+	
 	Map<Integer, ArrayList<Review>> allVehicleReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allDriverReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allRideReviews = new HashMap<Integer, ArrayList<Review>>();
 
 	@Override
 	public AllReviewsReturnedDTO getDriverReviews(int driverId) {
-		ArrayList<Review> currentDriverReviews = getByDriver(driverId);
-		if (currentDriverReviews == null) {
-			currentDriverReviews = new ArrayList<Review>();
-			currentDriverReviews.add(new Review(1, 3, "Stinky driver!", ReviewType.DRIVER, null));
-		}
-		return new AllReviewsReturnedDTO(currentDriverReviews);
+		driverService.getById(driverId);
+		return new AllReviewsReturnedDTO(allReviews.findAllReviewsByDriverId(driverId));
 	}
 
 	@Override
