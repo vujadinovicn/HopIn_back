@@ -2,20 +2,43 @@ package com.hopin.HopIn.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
 import com.hopin.HopIn.dtos.CompleteRideReviewDTO;
 import com.hopin.HopIn.dtos.ReviewDTO;
 import com.hopin.HopIn.dtos.ReviewReturnedDTO;
+import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Review;
+import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.Vehicle;
+import com.hopin.HopIn.enums.ReviewType;
+import com.hopin.HopIn.repositories.PassengerRepository;
 import com.hopin.HopIn.repositories.ReviewRepository;
+import com.hopin.HopIn.repositories.RideRepository;
+import com.hopin.HopIn.repositories.UserRepository;
+import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IReviewService;
 
 @Service
 public class ReviewServiceImpl implements IReviewService{
+	
+	@Autowired
+	private RideRepository allRides;
+	
+	@Autowired
+	private PassengerRepository allPassengers;
+	
+	@Autowired
+	private VehicleRepository allVehicles;
 	
 	@Autowired
 	private ReviewRepository allReviews;
@@ -29,49 +52,59 @@ public class ReviewServiceImpl implements IReviewService{
 		ArrayList<Review> currentDriverReviews = getByDriver(driverId);
 		if (currentDriverReviews == null) {
 			currentDriverReviews = new ArrayList<Review>();
-			currentDriverReviews.add(new Review(1, 3, "Stinky driver!", null));
+			currentDriverReviews.add(new Review(1, 3, "Stinky driver!", ReviewType.DRIVER, null));
 		}
 		return new AllReviewsReturnedDTO(currentDriverReviews);
 	}
 
 	@Override
 	public AllReviewsReturnedDTO getVehicleReviews(int vehicleId) {
-		ArrayList<Review> currentVehicleReviews = getByVehicle(vehicleId);
-		if (currentVehicleReviews == null) {
-			currentVehicleReviews = new ArrayList<Review>();
-			currentVehicleReviews.add(new Review(1, 3, "Messy vehicle!", null));
-		}
-		return new AllReviewsReturnedDTO(currentVehicleReviews);
+		this.allVehicles.findById(vehicleId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist!"));
+		
+		ArrayList<Review> reviews = (ArrayList<Review>) this.allReviews.findAllReviewsByVehicleId(vehicleId);
+		
+		return new AllReviewsReturnedDTO(reviews);
+	}
+	
+	private Ride getRideIfExists(int id) {
+		return this.allRides.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ride does not exist!"));
 	}
 
 	@Override
-	public ReviewReturnedDTO addVehicleReview(int vehicleId, int rideId, ReviewDTO reviewDTO) {
-		ArrayList<Review> currentVehicleReviews = getByVehicle(vehicleId);
-		int generatedId;
-		if (currentVehicleReviews == null) {
-			generatedId = 1;
-			currentVehicleReviews = new ArrayList<Review>();
-		} else {
-			generatedId = currentVehicleReviews.size()+1;
-		}
-		Review review = generateReview(generatedId, reviewDTO);
-		currentVehicleReviews.add(review);
-		return new ReviewReturnedDTO(review);
-	}
+	public ReviewReturnedDTO addReview(int rideId, ReviewDTO reviewDTO, ReviewType type) {
+		Ride ride = this.getRideIfExists(rideId);
+		
+		if (ride.getDriver() == null || ride.getDriver().getVehicle() == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist!");
+		
+		Review review = this.dtoToReview(reviewDTO);
+		review.setType(type);
+		review.setRide(ride);
+		Review savedReview = allReviews.save(review);
+		allReviews.flush();
+		
+		ride.addReview(savedReview);
+		allRides.save(ride);
+		allRides.flush();
+		
+		return new ReviewReturnedDTO(savedReview);
 	
-	@Override
-	public ReviewReturnedDTO addDriverReview(int driverId, int rideId, ReviewDTO reviewDTO) {
-		ArrayList<Review> currentDriverReviews = getByDriver(driverId);
-		int generatedId;
-		if (currentDriverReviews == null) {
-			generatedId = 1;
-			currentDriverReviews = new ArrayList<Review>();
-		} else {
-			generatedId = currentDriverReviews.size()+1;
-		}
-		Review review = generateReview(generatedId, reviewDTO);
-		currentDriverReviews.add(review);
-		return new ReviewReturnedDTO(review);
+	}
+
+	private Review dtoToReview(ReviewDTO reviewDTO) {
+		Review review = new Review();
+		review.setComment(reviewDTO.getComment());
+		review.setPassenger(null);
+		review.setRating(reviewDTO.getRating());
+		review.setType(ReviewType.VEHICLE);
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
+		review.setPassenger(passenger);
+		
+		return review;
 	}
 	
 	@Override
@@ -82,16 +115,12 @@ public class ReviewServiceImpl implements IReviewService{
 		completeReviews.add(completeReview);
 		return completeReviews;
 	}
-	
-	public ArrayList<Review> getByVehicle(int vehicleId){
-		return allVehicleReviews.get(vehicleId);
-	}
-	
+
 	public ArrayList<Review> getByDriver(int driverId){
 		return allDriverReviews.get(driverId);
 	}
 	
 	private Review generateReview(int id, ReviewDTO reviewDTO) {
-		return new Review(id, reviewDTO.getRating(), reviewDTO.getComment(), null);
+		return new Review(id, reviewDTO.getRating(), reviewDTO.getComment(), null, null);
 	}
 }

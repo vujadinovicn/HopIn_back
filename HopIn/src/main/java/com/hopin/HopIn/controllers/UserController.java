@@ -28,7 +28,6 @@ import com.hopin.HopIn.dtos.AllNotesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
-import com.hopin.HopIn.dtos.ExceptionDTO;
 import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
@@ -39,10 +38,11 @@ import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.services.WorkingHoursServiceImpl;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
+import com.hopin.HopIn.validations.ExceptionDTO;
 
 @Validated
 @RestController
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/user")
 public class UserController {
 	@Autowired

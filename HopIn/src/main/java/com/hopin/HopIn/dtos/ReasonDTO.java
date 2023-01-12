@@ -1,6 +1,9 @@
 package com.hopin.HopIn.dtos;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class ReasonDTO {
+	@NotEmpty(message="is required")
 	private String reason;
 	
 	public ReasonDTO() {}
