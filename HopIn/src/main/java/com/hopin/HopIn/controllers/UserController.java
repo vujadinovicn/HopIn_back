@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllMessagesDTO;
 import com.hopin.HopIn.dtos.AllNotesDTO;
@@ -35,6 +36,7 @@ import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.services.WorkingHoursServiceImpl;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
@@ -97,7 +99,7 @@ public class UserController {
 		try {
 			String email = tokenUtils.getUsernameFromToken(dto.getRefreshToken());
 			if (this.refreshTokens.get(dto.getRefreshToken()) == null) {
-				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("null"), HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("CAN'T FIND REFRESH TOKEN."), HttpStatus.UNAUTHORIZED);
 			}
 			else if (!this.refreshTokens.get(dto.getRefreshToken()).equals(email)) {
 				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("CAN'T FIND REFRESH TOKEN."), HttpStatus.UNAUTHORIZED);
@@ -112,15 +114,27 @@ public class UserController {
 	}
 	
 	@PutMapping(value="{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> block(@PathVariable int id){
-		boolean isSuccesfullyBlocked = userService.block(id);
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+	public ResponseEntity<?> block(@PathVariable int id){
+		try {
+			this.userService.block(id);
+			return new ResponseEntity<String>("User is successfully blocked", HttpStatus.NO_CONTENT);
+		} catch (BlockedUserException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User already blocked!"), HttpStatus.BAD_REQUEST);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PutMapping(value="{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> unblock(@PathVariable int id){
-		boolean isSuccesfullyUnblocked = userService.unblock(id);
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+	public ResponseEntity<?> unblock(@PathVariable int id){
+		try {
+			this.userService.block(id);
+			return new ResponseEntity<String>("User is successfully blocked", HttpStatus.NO_CONTENT);
+		} catch (BlockedUserException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User already blocked!"), HttpStatus.BAD_REQUEST);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PostMapping(value="{id}/note", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

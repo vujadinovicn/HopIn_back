@@ -31,6 +31,7 @@ import com.hopin.HopIn.entities.Note;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.MessageType;
+import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
 import com.hopin.HopIn.repositories.UserRepository;
@@ -93,20 +94,21 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public boolean block(int userId) {
+	public void block(int userId) {
 		User user = getById(userId);
-		if (user != null) {
-			user.setActivated(false);	
-			return true;
+		if (user.isBlocked() == true) {
+			throw new BlockedUserException();
 		}
-		return false;
+		user.setBlocked(true);
+		allUsers.save(user);
+		allUsers.flush();
 	}
 
 	@Override
 	public User getById(int userId) {
 		Optional<User> found = allUsers.findById(userId);
 		if (found.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist!");
 		}
 		return found.get();
 	}
