@@ -67,6 +67,11 @@ public class UserController {
 		return new ResponseEntity<UserReturnedDTO>(userService.getUser(id), HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/email", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UserReturnedDTO> getByEmail(@RequestParam String email) {
+		return new ResponseEntity<UserReturnedDTO>(new UserReturnedDTO(userService.getByEmail(email)), HttpStatus.OK);
+	}
+	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AllUsersDTO> getAll(@RequestParam int page, @RequestParam int size) {
 		return new ResponseEntity<AllUsersDTO>(userService.getAll(page, size), HttpStatus.OK);
