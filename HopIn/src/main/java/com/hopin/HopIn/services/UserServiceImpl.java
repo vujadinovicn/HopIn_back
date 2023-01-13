@@ -29,6 +29,7 @@ import com.hopin.HopIn.entities.Note;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.MessageType;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
 import com.hopin.HopIn.repositories.UserRepository;
@@ -119,9 +120,17 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public NoteReturnedDTO addNote(int userId, NoteDTO note) {
-		User user = getById(userId);
-		return new NoteReturnedDTO(15, LocalDateTime.now(), note.getMessage());	
+	public NoteReturnedDTO addNote(int userId, NoteDTO noteDTO) {
+		User user = this.allUsers.findById(userId).orElse(null);
+		if (user == null){
+			throw new UserNotFoundException();
+		}
+		
+		Note note = new Note(LocalDateTime.now(), noteDTO.getMessage());
+		this.allNotes.save(note);
+		this.allNotes.flush();
+		
+		return new NoteReturnedDTO(note);	
 	}
 
 	@Override

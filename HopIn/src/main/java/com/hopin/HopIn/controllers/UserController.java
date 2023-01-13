@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,10 +36,14 @@ import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.services.WorkingHoursServiceImpl;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
 import com.hopin.HopIn.validations.ExceptionDTO;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 @Validated
 @RestController
@@ -124,8 +129,13 @@ public class UserController {
 	}
 	
 	@PostMapping(value="{id}/note", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<NoteReturnedDTO> addNote(@PathVariable int id, @RequestBody NoteDTO note){
-		return new ResponseEntity<NoteReturnedDTO>(userService.addNote(id, note), HttpStatus.OK);
+	
+	public ResponseEntity<?> addNote(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody NoteDTO note){
+		try {
+			return new ResponseEntity<NoteReturnedDTO>(userService.addNote(id, note), HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping(value="{id}/note", produces = MediaType.APPLICATION_JSON_VALUE)

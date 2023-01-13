@@ -7,6 +7,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 
 @Entity
 @Table(name="notes")
@@ -15,12 +18,16 @@ public class Note {
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@Past
+	@NotNull
 	private LocalDateTime date;
+	
+	@NotEmpty
 	private String message;
 	
-	public Note(int id, LocalDateTime date, String message) {
+	public Note(LocalDateTime date, String message) {
 		super();
-		this.id = id;
 		this.date = date;
 		this.message = message;
 	}
