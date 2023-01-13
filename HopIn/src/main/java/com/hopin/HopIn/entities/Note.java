@@ -2,10 +2,12 @@ package com.hopin.HopIn.entities;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +27,9 @@ public class Note {
 	
 	@NotEmpty
 	private String message;
+	
+	@ManyToOne(cascade = CascadeType.REFRESH)
+	private User user;
 	
 	public Note(LocalDateTime date, String message) {
 		super();
@@ -56,4 +61,11 @@ public class Note {
 		this.message = message;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

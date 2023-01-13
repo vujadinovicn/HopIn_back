@@ -127,6 +127,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		}
 		
 		Note note = new Note(LocalDateTime.now(), noteDTO.getMessage());
+		note.setUser(user);
 		this.allNotes.save(note);
 		this.allNotes.flush();
 		
