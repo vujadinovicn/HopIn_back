@@ -21,7 +21,6 @@ public class Note {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Past
 	@NotNull
 	private LocalDateTime date;
 	
@@ -30,6 +29,8 @@ public class Note {
 	
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	private User user;
+	
+	public Note() {}
 	
 	public Note(LocalDateTime date, String message) {
 		super();

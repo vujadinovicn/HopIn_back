@@ -2,10 +2,13 @@ package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -136,12 +139,13 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
 	@Override
 	public AllNotesDTO getNotes(int userId, int page, int size) {
-		User user = getById(userId);
-		if (allNotesMap.size() == 0) {
-			Note note = new Note(15, LocalDateTime.now(), "Message is here!");
-			allNotesMap.put(1, note);
+		User user = this.allUsers.findById(userId).orElse(null);
+		if (user == null){
+			throw new UserNotFoundException();
 		}
-		return new AllNotesDTO(this.allNotesMap);
+		Pageable pageable = PageRequest.of(page, size);
+		List<Note> notes = this.allNotes.findAllByUserId(userId, pageable);
+		return new AllNotesDTO(notes);
 	}
 
 	@Override

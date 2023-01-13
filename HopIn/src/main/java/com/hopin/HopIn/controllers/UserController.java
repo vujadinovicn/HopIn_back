@@ -129,7 +129,7 @@ public class UserController {
 	}
 	
 	@PostMapping(value="{id}/note", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> addNote(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody NoteDTO note){
 		try {
 			return new ResponseEntity<NoteReturnedDTO>(userService.addNote(id, note), HttpStatus.OK);
@@ -139,8 +139,13 @@ public class UserController {
 	}
 	
 	@GetMapping(value="{id}/note", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllNotesDTO> getNotes(@PathVariable int id, @RequestParam int page, @RequestParam int size){
-		return new ResponseEntity<AllNotesDTO>(userService.getNotes(id, page, size), HttpStatus.OK);
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> getNotes(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @RequestParam @Min(value = 0, message = "Field page must be greater than 0.") int page, @RequestParam @Min(value = 1, message = "Field size must be greater than 1.") int size){
+		try {
+			return new ResponseEntity<AllNotesDTO>(userService.getNotes(id, page, size), HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PostMapping(value="{id}/message", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
