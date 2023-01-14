@@ -3,8 +3,15 @@ package com.hopin.HopIn.dtos;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.UserType;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+
 public class UserInRideDTO {
+	
 	private int id;
+	
+	@NotEmpty(message="is required")
+	@Email(message="format is not valid")
 	private String email;
 	
 	public UserInRideDTO() {}

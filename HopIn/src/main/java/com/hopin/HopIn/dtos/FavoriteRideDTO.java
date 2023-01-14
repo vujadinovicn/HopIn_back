@@ -6,13 +6,26 @@ import java.util.List;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.enums.VehicleTypeName;
 
-public class FavoriteRideDTO {
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
+public class FavoriteRideDTO {
+	@NotEmpty(message="is required")
 	private String favoriteName;
+	
+	@NotNull(message="is required")
 	private List<RouteLocsDTO> locations;
+	
+	@NotNull(message="is required")
 	private List<UserInRideDTO> passengers = new ArrayList<UserInRideDTO>();
+	
+	@NotNull(message="is required")
 	private VehicleTypeName vehicleType;
+	
+	@NotNull(message="is required")
 	private boolean petTransport;
+	
+	@NotNull(message="is required")
 	private boolean babyTransport;
 
 	public FavoriteRideDTO(String favoriteName, List<RouteLocsDTO> locations, List<UserInRideDTO> passengers,
