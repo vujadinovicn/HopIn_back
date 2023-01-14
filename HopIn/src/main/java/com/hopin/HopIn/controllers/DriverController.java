@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
@@ -120,9 +121,9 @@ public class DriverController {
 	}
 	
 	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllUserRidesReturnedDTO> getAllRides(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam String sort, 
+	public ResponseEntity<AllPassengerRidesDTO> getAllRides(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam String sort, 
 													@RequestParam String from, @RequestParam String to) {
-		return new ResponseEntity<AllUserRidesReturnedDTO>(service.getAllRides(driverId, page, size, sort, from, to), HttpStatus.OK);
+		return new ResponseEntity<AllPassengerRidesDTO>(rideService.getAllDriverRides(driverId, page, size, sort, from, to), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/{id}/working-hour", produces = MediaType.APPLICATION_JSON_VALUE)

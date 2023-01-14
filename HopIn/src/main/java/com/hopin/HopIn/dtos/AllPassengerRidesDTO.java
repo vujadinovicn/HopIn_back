@@ -1,7 +1,10 @@
 package com.hopin.HopIn.dtos;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import com.hopin.HopIn.entities.Ride;
 
 public class AllPassengerRidesDTO {
 	private int totalCount;
@@ -15,6 +18,14 @@ public class AllPassengerRidesDTO {
 		super();
 		this.totalCount = totalCount;
 		this.results = result;
+	}
+	
+	public AllPassengerRidesDTO(List<Ride> rides) {
+		super();
+		this.totalCount = rides.size();
+		this.results = new HashSet<PassengerRideDTO>();
+		for (Ride ride : rides)
+			this.results.add(new PassengerRideDTO(ride));
 	}
 	
 	public void add(PassengerRideDTO ride) {

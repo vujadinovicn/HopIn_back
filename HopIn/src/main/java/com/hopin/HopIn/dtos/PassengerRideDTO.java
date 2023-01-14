@@ -7,6 +7,7 @@ import java.util.List;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
 
@@ -44,23 +45,24 @@ public class PassengerRideDTO {
 		this.rejection = rejection;
 	}
 	
-//	public PassengerRideDTO(Ride ride) {
-//		this.id = ride.getId();
-//		this.locations = new ArrayList<LocationDTO>();
-//		for(int i = 0; i < ride.getLocations().size(); i =+ 2) {
-//			this.locations.add(new LocationDTO(ride.getLocations().get(i), ride.getLocations().get(i+1)));
-//		}
-//		this.startTime = ride.getStartTime();
-//		this.endTime = ride.getEndTime();
-//		this.totalCost = ride.getTotalCost();
-//		this.driver = ride.getDriver();
-//		this.passengers = ride.getPassengers();
-//		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
-//		this.vehicleType = ride.getVehicleType();
-//		this.babyTransport = ride.isBaby();
-//		this.petTransport = ride.isPet();
-//		this.rejection = ride.getRejectionNotice();
-//	}
+	public PassengerRideDTO(Ride ride) {
+		this.id = ride.getId();
+		this.driver = new UserInRideDTO(ride.getDriver());
+		this.passengers = new ArrayList<UserInRideDTO>();
+		for (User passenger : ride.getPassengers()) {
+			this.passengers.add(new UserInRideDTO(passenger));
+		}
+		this.babyTransport = ride.isBabyTransport();
+		this.petTransport = ride.isPetTransport();
+		this.endTime = ride.getEndTime();
+		this.startTime = ride.getStartTime();
+		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
+		this.locations = new ArrayList<LocationDTO>();
+		this.locations.add(new LocationDTO(new LocationNoIdDTO(ride.getDepartureLocation()),
+				new LocationNoIdDTO(ride.getDepartureLocation())));
+		this.totalCost = ride.getTotalCost();
+		this.rejection = ride.getRejectionNotice();
+	}
 	
 	public int getId() {
 		return id;

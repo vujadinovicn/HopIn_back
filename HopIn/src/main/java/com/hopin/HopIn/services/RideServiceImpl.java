@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -337,8 +339,17 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to) {
-		// TODO Auto-generated method stub
-		return null;
+		Pageable pageable = PageRequest.of(page, size);
+		List<Ride> rides = this.allRides.getAllPassengerRides(id, pageable);
+		return new AllPassengerRidesDTO(rides);
+	}
+	
+	@Override
+	public AllPassengerRidesDTO getAllDriverRides(int id, int page, int size, String sort, String from,
+			String to) {
+		Pageable pageable = PageRequest.of(page, size);
+		List<Ride> rides = this.allRides.findAllByDriverId(id, pageable);
+		return new AllPassengerRidesDTO(rides);
 	}
 
 	@Override

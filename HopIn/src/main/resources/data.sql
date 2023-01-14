@@ -20,8 +20,8 @@ insert into "drivers_documents" values (2,1);
 insert into "drivers_documents" values (2,2);   
 
 insert into "rides"("id", "baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (3, false, 5, null, 5, false, false, '2022-12-23T11:11:11', null, 5, 5, 2, null, null, 1, 2);
-insert into "rides"("id", "baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id") values (2, false, 5, null, 5, false, false, '2022-12-21T11:11:11', null, 5, 5, 2, null, null);
-insert into "rides"("id", "baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id") values (1, false, 5, null, 5, false, false, '2022-12-21T11:11:11', null, 5, 5, 2, null, null);
+insert into "rides"("id", "baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (2, false, 5, null, 5, false, false, '2022-12-21T11:11:11', null, 5, 5, 2, null, null,1,2);
+insert into "rides"("id", "baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (1, false, 5, null, 5, false, false, '2022-12-21T11:11:11', null, 5, 5, 2, null, null,1,2);
 
 insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1);
 insert into "rides_passengers"("ride_id", "passengers_id") values (2, 1);
