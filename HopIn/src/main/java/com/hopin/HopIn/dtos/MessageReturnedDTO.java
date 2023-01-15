@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.enums.MessageType;
 
-public class MessageReturnedDTO {
+public class MessageReturnedDTO implements Comparable<MessageReturnedDTO> {
 	
 	int id;
 	LocalDateTime timeOfSending;
@@ -93,4 +93,14 @@ public class MessageReturnedDTO {
 	public void setRideId(int rideId) {
 		this.rideId = rideId;
 	}
+	
+	@Override
+    public boolean equals(Object obj) {
+        return ((MessageReturnedDTO) obj).getTimeOfSending().equals(getTimeOfSending());
+    }
+
+    @Override
+    public int compareTo(MessageReturnedDTO m) {
+        return getTimeOfSending().compareTo(m.getTimeOfSending());
+    }
 }
