@@ -1,7 +1,11 @@
 package com.hopin.HopIn.dtos;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class NoteDTO {
 	
+	@NotEmpty(message = "is required")
+	//@Length max 200
 	String message;
 	
 	public NoteDTO() {}

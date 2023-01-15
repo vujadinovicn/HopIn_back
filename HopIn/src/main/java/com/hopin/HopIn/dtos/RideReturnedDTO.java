@@ -17,6 +17,7 @@ public class RideReturnedDTO {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private double totalCost;
+	private double distance;
 	private UserInRideDTO driver;
 	private List<UserInRideDTO> passengers;
 	private int estimatedTimeInMinutes;
@@ -31,7 +32,7 @@ public class RideReturnedDTO {
 	public RideReturnedDTO(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost,
 			UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
 			VehicleTypeName vehicleType, boolean petTransport, boolean babyTransport, RejectionNotice rejection,
-			List<LocationDTO> locations, RideStatus status, LocalDateTime scheduledTime) {
+			List<LocationDTO> locations, RideStatus status, LocalDateTime scheduledTime, double distance) {
 		super();
 		this.id = id;
 		this.startTime = startTime;
@@ -47,6 +48,7 @@ public class RideReturnedDTO {
 		this.locations = locations;
 		this.status = status;
 		this.scheduledTime = scheduledTime;
+		this.distance = distance;
 	}
 
 	public RideReturnedDTO(RideDTO ride) {
@@ -61,6 +63,7 @@ public class RideReturnedDTO {
 		this.babyTransport = ride.isBabyTransport();
 		this.vehicleType = ride.getVehicleType();
 		this.locations = ride.getLocations();
+		this.distance = ride.getDistance();
 		
 		this.rejection = null;
 	}
@@ -84,6 +87,17 @@ public class RideReturnedDTO {
 		this.status = ride.getStatus();
 		this.scheduledTime = ride.getScheduledTime();
 		this.rejection = ride.getRejectionNotice();
+		this.distance = ride.getTotalDistance();
+	}
+	
+	
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 
 	public int getId() {

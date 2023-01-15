@@ -12,6 +12,12 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
+=======
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+>>>>>>> 80f56bd09ca07586c0a5bcdc4bda6005cab1d212
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -398,8 +404,17 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to) {
-		// TODO Auto-generated method stub
-		return null;
+		Pageable pageable = PageRequest.of(page, size);
+		List<Ride> rides = this.allRides.getAllPassengerRides(id, pageable);
+		return new AllPassengerRidesDTO(rides);
+	}
+	
+	@Override
+	public AllPassengerRidesDTO getAllDriverRides(int id, int page, int size, String sort, String from,
+			String to) {
+		Pageable pageable = PageRequest.of(page, size);
+		List<Ride> rides = this.allRides.findAllByDriverId(id, pageable);
+		return new AllPassengerRidesDTO(rides);
 	}
 
 	@Override

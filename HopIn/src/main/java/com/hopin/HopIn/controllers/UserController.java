@@ -37,11 +37,18 @@ import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.User;
+<<<<<<< HEAD
 import com.hopin.HopIn.exceptions.BlockedUserException;
+=======
+import com.hopin.HopIn.exceptions.UserNotFoundException;
+>>>>>>> 80f56bd09ca07586c0a5bcdc4bda6005cab1d212
 import com.hopin.HopIn.services.WorkingHoursServiceImpl;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
 import com.hopin.HopIn.validations.ExceptionDTO;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 @Validated
 @RestController
@@ -146,13 +153,23 @@ public class UserController {
 	}
 	
 	@PostMapping(value="{id}/note", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<NoteReturnedDTO> addNote(@PathVariable int id, @RequestBody NoteDTO note){
-		return new ResponseEntity<NoteReturnedDTO>(userService.addNote(id, note), HttpStatus.OK);
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> addNote(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody NoteDTO note){
+		try {
+			return new ResponseEntity<NoteReturnedDTO>(userService.addNote(id, note), HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping(value="{id}/note", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllNotesDTO> getNotes(@PathVariable int id, @RequestParam int page, @RequestParam int size){
-		return new ResponseEntity<AllNotesDTO>(userService.getNotes(id, page, size), HttpStatus.OK);
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> getNotes(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @RequestParam @Min(value = 0, message = "Field page must be greater than 0.") int page, @RequestParam @Min(value = 1, message = "Field size must be greater than 1.") int size){
+		try {
+			return new ResponseEntity<AllNotesDTO>(userService.getNotes(id, page, size), HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@PostMapping(value="{id}/message", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

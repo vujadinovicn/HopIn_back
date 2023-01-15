@@ -1,6 +1,7 @@
 package com.hopin.HopIn.dtos;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,15 +13,15 @@ public class AllNotesDTO {
 	
 	public AllNotesDTO() {}
 
-	public AllNotesDTO(Map<Integer, Note> allNotes) {
+	public AllNotesDTO(List<Note> notes) {
 		super();
-		this.totalCount = allNotes.size();
+		this.totalCount = notes.size();
 		
 		this.results = new HashSet<NoteReturnedDTO>();
-		for(Note note : allNotes.values()) {
+		for (Note note: notes)
 			this.results.add(new NoteReturnedDTO(note));
-		}
 	}
+
 
 	public int getTotalCount() {
 		return totalCount;
