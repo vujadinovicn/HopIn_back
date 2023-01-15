@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -270,7 +271,10 @@ public class RideServiceImpl implements IRideService {
 		int bestTime = Integer.MAX_VALUE;
 		
 		for (Driver driver: drivers) {
-			//LocalDateTime rideStart = rideDTO.getTime();
+			LocalDateTime scheduledTime = rideDTO.getScheduledTime();
+			if (scheduledTime != null)
+				return null;
+			
 			LocalDateTime startOfDrivingToDeparture = LocalDateTime.now();
 			
 			int timeForNewRideDepartureArrival = 0;
@@ -300,16 +304,19 @@ public class RideServiceImpl implements IRideService {
 			int totalTimeForDepartureArrival = timeForNewRideDepartureArrival;
 			if (!availability)
 				totalTimeForDepartureArrival += this.getMinutesUntilEndOfCurrentRideForDriver(driver);
-			if (totalTimeForDepartureArrival < bestTime) {
+			
+			double workingHoursWithNewRide = this.workingHoursService.getWorkedHoursForTodayWithNewRide(driver.getId(), timeFromStartOfNewToStartOfNext);
+			double workingHorusOfScheduledRides = this.getWorkingHoursOfAllScheduledRideForDay(driver.getId());
+			double totalWorkingHours = workingHorusOfScheduledRides + workingHoursWithNewRide;
+			
+			if (!availability) 
+				totalWorkingHours += this.getMinutesUntilEndOfCurrentRideForDriver(driver)/60;
+			
+			if (totalWorkingHours < 8 && totalTimeForDepartureArrival < bestTime) {
 				foundDriver = driver;
 				bestTime = (int) (totalTimeForDepartureArrival);
 			}
-	//			double workingHoursForCurrentDay = this.workingHoursService.getWorkedHoursForCurrentDay(driver.getId());
-	//			double workingHoursWithNewRide = this.workingHoursService.getWorkedHoursForDateWithNewRide(workingHoursForCurrentDay, timeFromStartOfNewToStartOfNext);
-	//			if (workingHoursWithNewRide <= 8) {
-	//				availableDrivers.add(driver);
-	//			}
-				//availableDrivers.add(driver);
+				
 		}
 		return foundDriver;
 	}
@@ -318,6 +325,19 @@ public class RideServiceImpl implements IRideService {
 		RideReturnedDTO currentRide = this.getActiveRideForDriver(driver.getId());
 		LocalDateTime now = LocalDateTime.now();
 		return ChronoUnit.MINUTES.between(now, currentRide.getStartTime().plusMinutes(currentRide.getEstimatedTimeInMinutes()));
+	}
+	
+	private double getWorkingHoursOfAllScheduledRideForDay(int driverId) {
+		LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+		LocalDateTime end = startOfToday.plusDays(1);
+		List<Ride> scheduledRides = this.allRides.getAllScheduledRideForTodayForDriver(driverId, end);
+		int minutes = 0;
+		for (Ride ride: scheduledRides) {
+			minutes += ride.getEstimatedTimeInMinutes();
+		}
+		
+		DecimalFormat df = new DecimalFormat("#.##");
+		return Double.valueOf(df.format(minutes/60));
 	}
 	
 	@Override

@@ -38,7 +38,7 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		Driver driver = this.driverService.getDriver(driverId);
 		if (driver.isActive()) {
 			throw new DriverAlreadyActiveException();
-		} else if (this.getWorkedHoursForDate(driverId, dto.getStart()) > 8) {
+		} else if (this.getWorkedHoursForToday(driverId, dto.getStart()) > 8) {
 			throw new WorkingHoursException();
 		}
 		
@@ -76,10 +76,10 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	}
 	
 	@Override
-	public double getWorkedHoursForDate(int driverId, LocalDateTime end) {
+	public double getWorkedHoursForToday(int driverId, LocalDateTime end) {
 		LocalDate date = LocalDate.now();
 		LocalDateTime start = date.atStartOfDay();
-		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriverAndDates(driverId, start, end);
+		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriverAndDates(driverId, start, date);
 		
 		double hours = 0;
 		DecimalFormat df = new DecimalFormat("#.##");
@@ -101,17 +101,9 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	
 	
 	@Override
-	public double getWorkedHoursForDateWithNewRide(double workedHours, int rideMinutes) {
-		double hours = workedHours + (rideMinutes/60);
+	public double getWorkedHoursForTodayWithNewRide(int driverId, int rideMinutes) {
+		double hours = getWorkedHoursForToday(driverId, LocalDateTime.now()) + (rideMinutes/60);
 		DecimalFormat df = new DecimalFormat("#.##");
 		return Double.valueOf(df.format(hours));
-	}
-
-	@Override
-	public double getWorkedHoursForCurrentDay(int driverId) {
-		LocalDate date = LocalDate.now();
-		LocalDateTime start = date.atStartOfDay();
-		LocalDateTime end = start.plusDays(1);
-		return this.getWorkedHoursForDate(driverId, end);
 	}
 }
