@@ -29,4 +29,11 @@ public class WebSocketController {
 		
 		return response;
 	}
+	
+	@MessageMapping("/send/driver/acceptance")
+	public String sendInvite(String message) {
+		this.simpMessagingTemplate.convertAndSend("/topic/driver-response", message);
+		
+		return message;
+	}
 }

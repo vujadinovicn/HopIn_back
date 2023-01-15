@@ -21,6 +21,7 @@ import org.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -96,6 +97,9 @@ public class RideServiceImpl implements IRideService {
 	
 	@Autowired
 	private IVehicleTypeService vehicleTypeService;
+	
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
 
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
@@ -277,6 +281,7 @@ public class RideServiceImpl implements IRideService {
 			throw new NoAvailableDriversException();
 		
 		Ride wantedRide = this.createWantedRide(dto, driverForRide);
+		this.simpMessagingTemplate.convertAndSend("/send/invite/driver/" + driverForRide.getId(), wantedRide);
 		this.allRides.save(wantedRide);
 		this.allRides.flush();
 		return new RideReturnedDTO(wantedRide);
