@@ -11,7 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.entities.Vehicle;
+import com.hopin.HopIn.exceptions.VehicleNotFoundException;
 import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IVehicleService;
 
@@ -20,16 +22,21 @@ public class VehicleServiceImpl implements IVehicleService {
 	
 	@Autowired
 	private VehicleRepository allVehicles;
-	
-	private Map<Integer, Vehicle> allVehiclesMap = new HashMap<Integer, Vehicle>();
-	int currId = 0;
 
 	@Override
-	public boolean updateLocation(int vehicleId, LocationNoIdDTO newLocation) {
-		Vehicle vehicle = allVehiclesMap.get(vehicleId);
-//		if (vehicle != null)
-//			vehicle.setCurrentLocation(newLocation);
-		return true;
+	public void updateLocation(int vehicleId, LocationNoIdDTO newLocation) {
+		Optional<Vehicle> vehicle = allVehicles.findById(vehicleId);
+		if (vehicle.isEmpty())
+			throw new VehicleNotFoundException();
+		
+		Location vehicleLocation = vehicle.get().getCurrentLocation();
+		
+		vehicleLocation.setAddress(newLocation.getAddress());
+		vehicleLocation.setLatitude(newLocation.getLatitude());
+		vehicleLocation.setLongitude(newLocation.getLongitude()); 
+		
+		this.allVehicles.save(vehicle.get());
+		this.allVehicles.flush();
 	}
 	
 	@Override

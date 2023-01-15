@@ -16,6 +16,7 @@ import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
+import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.enums.RideStatus;
 
 public interface IRideService {
@@ -51,6 +52,7 @@ public interface IRideService {
 	public List<FavoriteRideReturnedDTO> getFavoriteRides();
 
 	public void deleteFavoriteRide(int id);
+
 	public RideReturnedDTO startRide(int id);
 
 	public RideReturnedDTO acceptRide(int id);

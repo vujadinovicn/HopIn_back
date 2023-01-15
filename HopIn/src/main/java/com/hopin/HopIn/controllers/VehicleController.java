@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.MediaType;
 
 import com.hopin.HopIn.dtos.LocationNoIdDTO;
+import com.hopin.HopIn.exceptions.VehicleNotFoundException;
 import com.hopin.HopIn.services.interfaces.IVehicleService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/api/vehicle")
@@ -23,11 +27,13 @@ public class VehicleController {
 	private IVehicleService service;
 	
 	@PutMapping(value="/{id}/location", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) 
-	public ResponseEntity<LocationNoIdDTO> updateLocation(@PathVariable("id") int vehicleId, @RequestBody LocationNoIdDTO newLocation) {
-		if (service.updateLocation(vehicleId, newLocation))
-			return new ResponseEntity<LocationNoIdDTO>(HttpStatus.NO_CONTENT);
-		// for now
-		return new ResponseEntity<LocationNoIdDTO>(HttpStatus.NO_CONTENT);
+	public ResponseEntity<?> updateLocation(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int vehicleId, @Valid @RequestBody LocationNoIdDTO newLocation) {
+		try {
+			this.service.updateLocation(vehicleId, newLocation);
+			return new ResponseEntity<String>("Coordinates successfully updated!", HttpStatus.OK);
+		} catch (VehicleNotFoundException e){
+			return new ResponseEntity<String>("Vehicle does not exist!", HttpStatus.NOT_FOUND);	
+		}
 	}
 
 }

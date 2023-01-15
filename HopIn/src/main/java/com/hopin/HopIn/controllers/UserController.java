@@ -1,7 +1,6 @@
 package com.hopin.HopIn.controllers;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +42,7 @@ import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 
 import com.hopin.HopIn.services.WorkingHoursServiceImpl;
+
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -57,54 +57,50 @@ import jakarta.validation.constraints.Min;
 public class UserController {
 	@Autowired
 	IUserService userService;
-	
-	@Autowired
-	WorkingHoursServiceImpl workingHoursService;
-	
+
 	@Autowired
 	private TokenUtils tokenUtils;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
 	private HashMap<String, String> refreshTokens = new HashMap<String, String>();
-	
+
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
 		return new ResponseEntity<UserReturnedDTO>(userService.getUser(id), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/email", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getByEmail(@RequestParam String email) {
 		return new ResponseEntity<UserReturnedDTO>(new UserReturnedDTO(userService.getByEmail(email)), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AllUsersDTO> getAll(@RequestParam int page, @RequestParam int size) {
 		return new ResponseEntity<AllUsersDTO>(userService.getAll(page, size), HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentials){
+	public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentials) {
 		Authentication authentication;
 		try {
-			authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-					credentials.getEmail(), credentials.getPassword()));
-		}
-		catch(Exception ex) {
+			authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
+		} catch (Exception ex) {
 			return new ResponseEntity<TokenDTO>(HttpStatus.UNAUTHORIZED);
 		}
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		UserDetails user = (UserDetails) authentication.getPrincipal();
-		int userId = this.userService.getByEmail(credentials.getEmail()).getId(); 
+		int userId = this.userService.getByEmail(credentials.getEmail()).getId();
 		String jwt = tokenUtils.generateToken(user, userId);
 		String refreshToken = tokenUtils.generateRefreshToken(user, userId);
 		this.refreshTokens.put(refreshToken, credentials.getEmail());
 
 		return new ResponseEntity<TokenDTO>(new TokenDTO(jwt, refreshToken), HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/refresh")
 	public ResponseEntity<?> refresh(@RequestBody TokenDTO dto) {
 		dto.setRefreshToken(dto.getRefreshToken().substring(1, dto.getRefreshToken().length() - 1));
@@ -112,23 +108,24 @@ public class UserController {
 		try {
 			String email = tokenUtils.getUsernameFromToken(dto.getRefreshToken());
 			if (this.refreshTokens.get(dto.getRefreshToken()) == null) {
-				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("CAN'T FIND REFRESH TOKEN."), HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("CAN'T FIND REFRESH TOKEN."),
+						HttpStatus.UNAUTHORIZED);
+			} else if (!this.refreshTokens.get(dto.getRefreshToken()).equals(email)) {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("CAN'T FIND REFRESH TOKEN."),
+						HttpStatus.UNAUTHORIZED);
 			}
-			else if (!this.refreshTokens.get(dto.getRefreshToken()).equals(email)) {
-				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("CAN'T FIND REFRESH TOKEN."), HttpStatus.UNAUTHORIZED);
-			}
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			this.refreshTokens.remove(dto.getRefreshToken());
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("UNAUTHORIZED"), HttpStatus.UNAUTHORIZED);
 		}
-		
+
 		String newToken = tokenUtils.renewToken(dto.getRefreshToken());
 		return new ResponseEntity<TokenDTO>(new TokenDTO(newToken, dto.getRefreshToken()), HttpStatus.OK);
 	}
-	
-	@PutMapping(value="{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@PutMapping(value = "{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> block(@PathVariable int id){
+	public ResponseEntity<?> block(@PathVariable int id) {
 		try {
 			this.userService.block(id);
 			return new ResponseEntity<String>("User is successfully blocked", HttpStatus.NO_CONTENT);
@@ -138,10 +135,10 @@ public class UserController {
 			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	@PutMapping(value="{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@PutMapping(value = "{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> unblock(@PathVariable int id){
+	public ResponseEntity<?> unblock(@PathVariable int id) {
 		try {
 			this.userService.unblock(id);
 			return new ResponseEntity<String>("User is successfully unblocked", HttpStatus.NO_CONTENT);
@@ -151,48 +148,54 @@ public class UserController {
 			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	@PostMapping(value="{id}/note", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@PostMapping(value = "{id}/note", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> addNote(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody NoteDTO note){
+	public ResponseEntity<?> addNote(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
+			@Valid @RequestBody NoteDTO note) {
 		try {
 			return new ResponseEntity<NoteReturnedDTO>(userService.addNote(id, note), HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	@GetMapping(value="{id}/note", produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@GetMapping(value = "{id}/note", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> getNotes(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @RequestParam @Min(value = 0, message = "Field page must be greater than 0.") int page, @RequestParam @Min(value = 1, message = "Field size must be greater than 1.") int size){
+	public ResponseEntity<?> getNotes(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
+			@RequestParam @Min(value = 0, message = "Field page must be greater than 0.") int page,
+			@RequestParam @Min(value = 1, message = "Field size must be greater than 1.") int size) {
 		try {
 			return new ResponseEntity<AllNotesDTO>(userService.getNotes(id, page, size), HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	@PostMapping(value="{id}/message", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> sendMessage(@PathVariable int id, @RequestBody MessageDTO message){
+
+	@PostMapping(value = "{id}/message", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> sendMessage(@PathVariable int id, @RequestBody MessageDTO message) {
 		try {
 			return new ResponseEntity<MessageReturnedDTO>(userService.sendMessage(id, message), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	@GetMapping(value="{id}/message", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getMessages(@PathVariable int id){
+
+	@GetMapping(value = "{id}/message", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getMessages(@PathVariable int id) {
 		try {
 			return new ResponseEntity<AllMessagesDTO>(userService.getMessages(id), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	@GetMapping(value="{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllUserRidesReturnedDTO> getRides(@PathVariable int id, @RequestParam int page, @RequestParam int size, @RequestParam String sort, @RequestParam String from, @RequestParam String to){
-		return new ResponseEntity<AllUserRidesReturnedDTO>(userService.getRides(id, page, size, sort, from, to), HttpStatus.OK);
+
+	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AllUserRidesReturnedDTO> getRides(@PathVariable int id, @RequestParam int page,
+			@RequestParam int size, @RequestParam String sort, @RequestParam String from, @RequestParam String to) {
+		return new ResponseEntity<AllUserRidesReturnedDTO>(userService.getRides(id, page, size, sort, from, to),
+				HttpStatus.OK);
 	}
-	
+
 }

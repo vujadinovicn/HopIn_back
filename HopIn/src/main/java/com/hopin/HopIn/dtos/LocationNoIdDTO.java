@@ -1,13 +1,20 @@
 package com.hopin.HopIn.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hopin.HopIn.entities.Location;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+
 
 public class LocationNoIdDTO {
+	
 	@NotEmpty(message="is required")
+	@Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$", message="format is not valid")
 	private String address;
+	
 	private double latitude;
+	
 	private double longitude;
 	
 	public LocationNoIdDTO() {}
@@ -49,5 +56,21 @@ public class LocationNoIdDTO {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
+	
+	@JsonIgnore
+	public String getLatitudeString() {
+		return Double.toString(latitude);
+	}
+	@JsonIgnore
+	public String getLongitudeString() {
+		return Double.toString(longitude);
+	}
+
+	@Override
+	public String toString() {
+		return "LocationNoIdDTO [address=" + address + ", latitude=" + latitude + ", longitude=" + longitude + "]";
+	}
+	
+	
 	
 }

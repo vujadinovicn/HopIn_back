@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -32,7 +34,7 @@ public class Driver extends User {
 	public Driver(int id, String name, String surname, String email, String password, String address,
 			String telephoneNumber, byte[] profilePicture) {
 		super(id, name, surname, email, password, address, telephoneNumber, profilePicture);
-		this.isActive = false;
+		this.isActive = true;
 	}
 	
 	public void setInfoByRequest(DriverAccountUpdateInfoRequest request) {
@@ -74,6 +76,18 @@ public class Driver extends User {
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+	
+	public LocationNoIdDTO getVehicleLocation() {
+		return new LocationNoIdDTO(this.getVehicle().getCurrentLocation());
+	}
+	
+	public String getVehicleLocationLat() {
+		return Double.toString(this.getVehicle().getCurrentLocation().getLatitude());
+	}
+	
+	public String getVehicleLocationLng() {
+		return Double.toString(this.getVehicle().getCurrentLocation().getLongitude());
 	}
 
 }

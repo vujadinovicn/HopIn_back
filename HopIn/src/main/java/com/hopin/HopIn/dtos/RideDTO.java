@@ -83,7 +83,7 @@ public class RideDTO {
 	public void setPetTransport(boolean petTransport) {
 		this.petTransport = petTransport;
 	}
-
+	
 	public double getDistance() {
 		return distance;
 	}
@@ -115,5 +115,29 @@ public class RideDTO {
 	public void setScheduledTime(LocalDateTime scheduledTime) {
 		this.scheduledTime = scheduledTime;
 	}
+	
+	public LocationNoIdDTO getDepartureLocation() {
+		return this.getLocations().get(0).getDeparture();
+	}
+	
+	public LocationNoIdDTO getDestinationLocation() {
+		return this.getLocations().get(0).getDestination();
+	}
+	
 
+	public String getDepartureLocationLat() {
+		return Double.toString(this.getDepartureLocation().getLatitude());
+	}
+	
+	public String getDepartureLocationLng() {
+		return Double.toString(this.getDepartureLocation().getLongitude());
+	}
+	
+	public String getDestinationLocationLat() {
+		return Double.toString(this.getDestinationLocation().getLatitude());
+	}
+	
+	public String getDestinationLocationLng() {
+		return Double.toString(this.getDestinationLocation().getLongitude());
+	}
 }

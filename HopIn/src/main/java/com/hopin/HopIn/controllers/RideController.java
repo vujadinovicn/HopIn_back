@@ -28,6 +28,11 @@ import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
+import com.hopin.HopIn.exceptions.NoAvailableDriversException;
+import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
+import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
+import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.ITokenService;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -49,49 +54,50 @@ public class RideController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> add(@RequestBody RideDTO dto) {
-//		try {
-//			return new ResponseEntity<RideReturnedDTO>(service.add(dto), HttpStatus.OK);
-//		} catch (NoActiveDriverException e) {
-//			ExceptionDTO ex = new ExceptionDTO("There are not any active drivers!");
-//			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
-//		}
-		
 		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new ResponseEntity<RideReturnedDTO>(service.add(dto), HttpStatus.OK);
+		} catch (NoActiveDriverException e) {
+			ExceptionDTO ex = new ExceptionDTO("There are no any active drivers!");
+			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+		} catch (NoDriverWithAppropriateVehicleForRideException e) {
+			ExceptionDTO ex = new ExceptionDTO("There are no drivers with requested vehicle!");
+			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+		} catch (PassengerAlreadyInRideException e) {
+			ExceptionDTO ex = new ExceptionDTO("Passenger already in drive!");
+			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+		} catch (NoAvailableDriversException e) {
+				ExceptionDTO ex = new ExceptionDTO("No available drivers!");
+				return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<RideReturnedDTO>(new RideReturnedDTO(dto), HttpStatus.OK);
-
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> getRide(@PathVariable int id) {
-		
-		RideReturnedDTO ride = service.getRide(id);
-		if (ride != null) {
-			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
+	public ResponseEntity<?> getRide(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		try {
+			return new ResponseEntity<RideReturnedDTO>(service.getRide(id), HttpStatus.OK);
+		} catch (RideNotFoundException e){
+			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> getActiveRideForDriver(@PathVariable int driverId) {
-		RideReturnedDTO activeRide = service.getActiveRideForDriver(driverId);
-		if (activeRide != null) {
-			return new ResponseEntity<RideReturnedDTO>(activeRide, HttpStatus.OK);
+	@PreAuthorize("hasRole('DRIVER')")
+	public ResponseEntity<?> getActiveRideForDriver(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
+		try {
+			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForDriver(driverId), HttpStatus.OK);
+		} catch (NoActivePassengerRideException e){
+			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RideReturnedDTO> getActiveRideForPassenger(@PathVariable int passengerId) {
-		RideReturnedDTO activeRide = service.getActiveRideForPassenger(passengerId);
-		if (activeRide != null) {
-			return new ResponseEntity<RideReturnedDTO>(activeRide, HttpStatus.OK);
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> getActiveRideForPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int passengerId) {
+		try {
+			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForPassenger(passengerId), HttpStatus.OK);
+		} catch (NoActivePassengerRideException e){
+			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<RideReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@PutMapping(value = "/{id}/withdraw")

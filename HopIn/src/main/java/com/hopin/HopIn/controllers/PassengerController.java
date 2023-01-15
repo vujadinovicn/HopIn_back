@@ -25,6 +25,8 @@ import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -33,11 +35,12 @@ import com.hopin.HopIn.validations.ExceptionDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
+@Validated
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/passenger")
 public class PassengerController {
-
+	
 	@Autowired
 	private IPassengerService passengerService;
 
@@ -90,12 +93,16 @@ public class PassengerController {
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updatePassenger(@RequestBody UserDTOOld dto, @PathVariable int id) {
-		UserReturnedDTO passenger = passengerService.update(id, dto);
-		if (passenger != null) {
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> update(@Valid @RequestBody UserDTO dto, @PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		try {
+			UserReturnedDTO passenger = passengerService.update(id, dto);
 			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("Passenger does not exist", HttpStatus.NOT_FOUND);
+		} catch (EmailAlreadyInUseException e) {
+			return new ResponseEntity<String>("Email already in use", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)

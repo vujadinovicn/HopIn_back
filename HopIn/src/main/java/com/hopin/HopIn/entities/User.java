@@ -119,7 +119,7 @@ public class User {
 		this.isActivated = false;
 	}
 	
-	public void copy(UserDTOOld dto) {
+	public void copy(UserDTO dto) {
 		this.name = dto.getName();
 		this.surname = dto.getSurname();
 		this.email = dto.getEmail();
@@ -127,7 +127,6 @@ public class User {
 		this.address = dto.getAddress();
 		this.telephoneNumber = dto.getTelephoneNumber();
 		this.setProfilePicture(dto.getProfilePicture());
-		this.password = dto.getPassword();
 	}
 
 	public String getPassword() {
