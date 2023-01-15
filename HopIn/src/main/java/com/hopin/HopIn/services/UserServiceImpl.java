@@ -33,12 +33,12 @@ import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.entities.Note;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
-<<<<<<< HEAD
+
 import com.hopin.HopIn.exceptions.BlockedUserException;
-=======
+
 import com.hopin.HopIn.enums.MessageType;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
->>>>>>> 80f56bd09ca07586c0a5bcdc4bda6005cab1d212
+
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
 import com.hopin.HopIn.repositories.UserRepository;

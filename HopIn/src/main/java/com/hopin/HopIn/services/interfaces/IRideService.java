@@ -4,12 +4,12 @@ import java.util.List;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
-<<<<<<< HEAD
+
 import com.hopin.HopIn.dtos.FavoriteRideDTO;
 import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
-=======
+
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
->>>>>>> 80f56bd09ca07586c0a5bcdc4bda6005cab1d212
+
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;

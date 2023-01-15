@@ -37,11 +37,11 @@ import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.User;
-<<<<<<< HEAD
+
 import com.hopin.HopIn.exceptions.BlockedUserException;
-=======
+
 import com.hopin.HopIn.exceptions.UserNotFoundException;
->>>>>>> 80f56bd09ca07586c0a5bcdc4bda6005cab1d212
+
 import com.hopin.HopIn.services.WorkingHoursServiceImpl;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
