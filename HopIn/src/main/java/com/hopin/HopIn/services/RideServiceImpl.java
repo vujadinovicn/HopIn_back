@@ -30,6 +30,7 @@ import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Panic;
+import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.VehicleType;
@@ -37,6 +38,7 @@ import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.repositories.PanicRepository;
+import com.hopin.HopIn.repositories.PassengerRepository;
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
@@ -66,6 +68,8 @@ public class RideServiceImpl implements IRideService {
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
 	private int currId = 0;
+
+	private PassengerRepository allPassengers;
 
 	@Override
 	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to) {
@@ -219,8 +223,7 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public RideReturnedDTO getRide(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return new RideReturnedDTO(allRides.findById(id).orElse(null));
 	}
 
 	private Ride getRideIfExists(int id) {
@@ -258,11 +261,10 @@ public class RideServiceImpl implements IRideService {
 			return null;
 		}
 
-		// TODO: sta je ovo, dodati usera ulogovanog umesto null
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println(authentication.getName());
+		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
 
-		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), null, ride);
+		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), passenger, ride);
 		this.allPanics.save(panic);
 		this.allPanics.flush();
 

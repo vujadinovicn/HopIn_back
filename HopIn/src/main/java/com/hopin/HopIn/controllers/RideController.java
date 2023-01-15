@@ -50,6 +50,7 @@ public class RideController {
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RideReturnedDTO> getRide(@PathVariable int id) {
+		
 		RideReturnedDTO ride = service.getRide(id);
 		if (ride != null) {
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
@@ -94,6 +95,7 @@ public class RideController {
 	public ResponseEntity<?> panicRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
 			@Valid @RequestBody ReasonDTO dto) {
+		System.out.println("panic");
 		PanicRideDTO ride = service.panicRide(id, dto);
 		if (ride == null) {
 			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);

@@ -81,7 +81,7 @@ public class RideReturnedDTO {
 		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
 		this.locations = new ArrayList<LocationDTO>();
 		this.locations.add(new LocationDTO(new LocationNoIdDTO(ride.getDepartureLocation()),
-				new LocationNoIdDTO(ride.getDepartureLocation())));
+				new LocationNoIdDTO(ride.getDestinationLocation())));
 		this.totalCost = ride.getTotalCost();
 		this.status = ride.getStatus();
 		this.scheduledTime = ride.getScheduledTime();

@@ -1,8 +1,8 @@
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'pera@gmail.com', true, false, 'Pera', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Peric', '+3819720132 ', 0);
 insert into "passengers"("id") values (1);
 
-insert into "locations"("id", "address", "latitude", "longitude") values (1, 'Novi Sad', 43.20, 44.20);
-insert into "locations"("id", "address", "latitude", "longitude") values (2, 'Beograd', 43.20, 44.20);
+insert into "locations"("id", "address", "latitude", "longitude") values (1, 'Novi Sad', 45.26, 19.83);
+insert into "locations"("id", "address", "latitude", "longitude") values (2, 'Beograd', 44.78, 20.45);
 
 insert into "vehicle_types" ("name", "price_per_km") values (0, 60);
 insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
