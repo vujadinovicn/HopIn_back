@@ -1,11 +1,15 @@
 package com.hopin.HopIn.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,15 +19,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.hopin.HopIn.dtos.FavoriteRideDTO;
+import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
-import com.hopin.HopIn.dtos.UserInPanicRideDTO;
-import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.services.interfaces.ITokenService;
 import com.hopin.HopIn.validations.ExceptionDTO;
 
 import jakarta.validation.Valid;
@@ -37,15 +43,27 @@ public class RideController {
 
 	@Autowired
 	private IRideService service;
+	
+	@Autowired
+	private ITokenService tokenService;
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> add(@RequestBody RideDTO dto) {
+//		try {
+//			return new ResponseEntity<RideReturnedDTO>(service.add(dto), HttpStatus.OK);
+//		} catch (NoActiveDriverException e) {
+//			ExceptionDTO ex = new ExceptionDTO("There are not any active drivers!");
+//			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+//		}
+		
 		try {
-			return new ResponseEntity<RideReturnedDTO>(service.add(dto), HttpStatus.OK);
-		} catch (NoActiveDriverException e) {
-			ExceptionDTO ex = new ExceptionDTO("There are not any active drivers!");
-			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return new ResponseEntity<RideReturnedDTO>(new RideReturnedDTO(dto), HttpStatus.OK);
+
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -170,5 +188,33 @@ public class RideController {
 	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody UnregisteredRideSuggestionDTO dto) {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
 	}
-
+	
+	@PostMapping(value = "/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> addFavoriteRide(@RequestBody FavoriteRideDTO dto) {
+		try {
+			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
+		} catch (FavoriteRideException ex) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Number of favorite rides cannot exceed 10!"), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping(value = "/favorites", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> getFavoriteRides() {
+		return new ResponseEntity<List<FavoriteRideReturnedDTO>>(this.service.getFavoriteRides(), HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value = "favorites/{id}")
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> deleteFavoriteRide(@PathVariable int id) {
+		try {
+			this.service.deleteFavoriteRide(id);
+			return new ResponseEntity<String>("Successful deletion of favorite location!", HttpStatus.NO_CONTENT);
+		} catch (FavoriteRideException ex) {
+			return new ResponseEntity<String>("Favorite location does not exist!", HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
 }

@@ -2,11 +2,14 @@ package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,10 +31,11 @@ import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.entities.Note;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
-import com.hopin.HopIn.enums.MessageType;
+import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
 import com.hopin.HopIn.repositories.UserRepository;
+import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.IUserService;
 
 @Service
@@ -43,6 +47,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	private MessageRepository allMessages;
 	@Autowired
 	private NoteRepository allNotes;
+	@Autowired
+	private IRideService rideService;
 	
 	Map<Integer, User> allUsersMap = new HashMap<Integer, User>();
 	Map<Integer, Note> allNotesMap = new HashMap<Integer, Note>();
@@ -91,31 +97,34 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public boolean block(int userId) {
+	public void block(int userId) {
 		User user = getById(userId);
-		if (user != null) {
-			user.setActivated(false);	
-			return true;
+		if (user.isBlocked() == true) {
+			throw new BlockedUserException();
 		}
-		return false;
+		user.setBlocked(true);
+		allUsers.save(user);
+		allUsers.flush();
 	}
 
 	@Override
 	public User getById(int userId) {
-		User user = allUsersMap.get(userId);
-		if (user == null)
-			return null;
-		return user;
+		Optional<User> found = allUsers.findById(userId);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist!");
+		}
+		return found.get();
 	}
 
 	@Override
-	public boolean unblock(int userId) {
+	public void unblock(int userId) {
 		User user = getById(userId);
-		if (user != null) {
-			user.setActivated(true);
-			return true;
+		if (user.isBlocked() == false) {
+			throw new BlockedUserException();
 		}
-		return false;
+		user.setBlocked(false);
+		allUsers.save(user);
+		allUsers.flush();
 	}
 
 	@Override
@@ -135,16 +144,23 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public MessageReturnedDTO sendMessage(int userId, MessageDTO sentMessage) {
-		User user = getById(userId);
-		return createDetailedMessage(sentMessage);
+	public MessageReturnedDTO sendMessage(int receiverId, MessageDTO dto) {
+		getById(receiverId);
+		rideService.getRide(dto.getRideId());
+		if (getCurrentUser() == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiver does not exist!");
+		}
+		Message message = new Message(getCurrentUser().getId(), receiverId, dto);
+		allMessages.save(message);
+		allMessages.flush();
+		return createDetailedMessage(message);
 	}
 	
-	private MessageReturnedDTO createDetailedMessage(MessageDTO sentMessage) {
-		return new MessageReturnedDTO(sentMessage.getReceiverId(),
+	private MessageReturnedDTO createDetailedMessage(Message sentMessage) {
+		return new MessageReturnedDTO(sentMessage.getId(),
+				sentMessage.getSenderId(),
 				sentMessage.getReceiverId(),
-				sentMessage.getReceiverId(),
-				LocalDateTime.now(),
+				sentMessage.getTimeOfSending(),
 				sentMessage.getMessage(),
 				sentMessage.getType(),
 				sentMessage.getRideId());
@@ -152,12 +168,9 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
 	@Override
 	public AllMessagesDTO getMessages(int userId) {
-		User user = getById(userId);
-		if (allMessagesMap.size() == 0) {
-			Message message = new Message(1, 123, 123, LocalDateTime.now(), "Message is here!", MessageType.RIDE, 123);
-			allMessagesMap.put(message.getId(), message);
-		}
-		return new AllMessagesDTO(this.allMessagesMap);
+		getById(userId);
+		List<Message> messages = allMessages.findAll();
+		return new AllMessagesDTO(messages);
 	}
 
 	@Override
@@ -176,6 +189,18 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		user.setActivated(true);
 		this.allUsers.save(user);
 		this.allUsers.flush();
+	}
+	
+	@Override 
+	public boolean isIdMatching(int id) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return this.getByEmail(auth.getName()).getId() == id;
+	}
+	
+	@Override
+	public User getCurrentUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return this.getByEmail(auth.getName());
 	}
 
 //	@Override

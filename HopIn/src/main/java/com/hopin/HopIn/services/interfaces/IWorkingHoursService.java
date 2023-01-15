@@ -15,4 +15,6 @@ public interface IWorkingHoursService {
 
 	double getWorkedHoursForDate(int driverId, LocalDateTime end);
 
+	WorkingHoursDTO getWorkingHoursById(int id);
+
 }

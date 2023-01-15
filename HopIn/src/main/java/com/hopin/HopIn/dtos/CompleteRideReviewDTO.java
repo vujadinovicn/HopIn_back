@@ -5,6 +5,8 @@ public class CompleteRideReviewDTO {
 	ReviewReturnedDTO vehicleReview;
 	ReviewReturnedDTO driverReview;
 	
+	public CompleteRideReviewDTO() {}
+	
 	public CompleteRideReviewDTO(ReviewReturnedDTO vehicleReview, ReviewReturnedDTO driverReview) {
 		super();
 		this.vehicleReview = vehicleReview;

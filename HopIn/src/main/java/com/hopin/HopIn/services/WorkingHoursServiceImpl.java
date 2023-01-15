@@ -32,6 +32,17 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	@Autowired
 	private IDriverService driverService;
 	
+	@Override 
+	public WorkingHoursDTO getWorkingHoursById(int id) {
+		Optional<WorkingHours> found = allWorkingHours.findById(id);
+		
+		if (found.isEmpty()) {
+			throw new WorkingHoursException();
+		}
+		
+		return new WorkingHoursDTO(found.get());
+	}
+	
 	@Override
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursStartDTO dto) {
 		Driver driver = this.driverService.getDriver(driverId);

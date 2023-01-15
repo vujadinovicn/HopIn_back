@@ -71,7 +71,7 @@ public class WebSecurityConfig {
     	http.authorizeRequests()
     		.requestMatchers("/api/**").permitAll()
 			.requestMatchers("/h2-console/**").permitAll()	
-			.requestMatchers("/api/user/login").permitAll()	;
+			.requestMatchers("/api/user/login").permitAll();
 //			.anyRequest().authenticated().and()
 //			.cors().and()
 //			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);

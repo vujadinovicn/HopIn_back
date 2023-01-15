@@ -14,4 +14,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer>{
 	
 	@Query("select r from Review r where r.ride.driver.vehicle.id = ?1 and r.type = 0")
 	public List<Review> findAllReviewsByVehicleId(int id);
+	
+	@Query(value = "select * from \"reviews\" where \"type\" = 1 and \"ride_id\" in (select \"id\" from \"rides\" where \"driver_id\" = ?1);", nativeQuery=true)
+	public List<Review> findAllReviewsByDriverId(int id);
 }

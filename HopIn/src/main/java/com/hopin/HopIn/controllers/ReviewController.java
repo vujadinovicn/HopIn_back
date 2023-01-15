@@ -67,12 +67,19 @@ public class ReviewController {
 	}
 	
 	@GetMapping(value="/driver/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllReviewsReturnedDTO> getDriverReviews(@PathVariable int id){
-		return new ResponseEntity<AllReviewsReturnedDTO>(reviewService.getDriverReviews(id), HttpStatus.OK);
+	public ResponseEntity<?> getDriverReviews(@PathVariable int id){
+		try {
+			return new ResponseEntity<AllReviewsReturnedDTO>(reviewService.getDriverReviews(id), HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping(value="/{rideId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ArrayList<CompleteRideReviewDTO>> getRideReviews(@PathVariable int rideId){
-		return new ResponseEntity<ArrayList<CompleteRideReviewDTO>>(reviewService.getRideReviews(rideId), HttpStatus.OK);
-	}
+	public ResponseEntity<?> getRideReviews(@PathVariable int rideId){
+		try {
+			return new ResponseEntity<ArrayList<CompleteRideReviewDTO>>(reviewService.getRideReviews(rideId), HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		}	}
 }

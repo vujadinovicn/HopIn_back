@@ -31,6 +31,7 @@ import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.validations.ExceptionDTO;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -68,7 +69,8 @@ public class PassengerController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getPassenger(@PathVariable int id) {
+	@PreAuthorize("hasAnyRole('ADMIN', 'PASSENGER')")
+	public ResponseEntity<?> getPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		UserReturnedDTO passenger = passengerService.getById(id);
 		if (passenger != null) {
 			passengerService.getFavouriteRoutes(id);

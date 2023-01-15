@@ -34,6 +34,7 @@ public class PanicRideDTO {
 		this.ride = new RideReturnedDTO(panic.getRide());
 		this.time = panic.getTime();
 		this.reason = panic.getReason();
+		this.user = new UserInPanicRideDTO(panic.getUser());
 	}
 
 	public int getId() {

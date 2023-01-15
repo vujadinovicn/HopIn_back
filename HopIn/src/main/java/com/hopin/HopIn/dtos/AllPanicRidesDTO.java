@@ -1,6 +1,10 @@
 package com.hopin.HopIn.dtos;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import com.hopin.HopIn.entities.Panic;
 
 public class AllPanicRidesDTO {
 	private int totalCount;
@@ -16,6 +20,15 @@ public class AllPanicRidesDTO {
 		super();
 		this.totalCount = rides.size();
 		this.setResults(rides);
+	}
+	
+	public AllPanicRidesDTO(List<Panic> panics) {
+		this.results = new HashSet<PanicRideDTO>();
+		this.totalCount = 0;
+		for (Panic panic : panics) {
+			this.results.add(new PanicRideDTO(panic));
+			this.totalCount++;
+		}
 	}
 	
 	public int getTotalCount() {
