@@ -28,6 +28,24 @@ public class RideReturnedDTO {
 	private RideStatus status;
 	private LocalDateTime scheduledTime;
 
+	
+	public RideReturnedDTO(RideDTO rideDTO) {
+		this.id = id;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.totalCost = totalCost;
+		this.driver = driver;
+		this.passengers = passengers;
+		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
+		this.vehicleType = vehicleType;
+		this.petTransport = petTransport;
+		this.babyTransport = babyTransport;
+		this.rejection = rejection;
+		this.locations = locations;
+		this.status = status;
+		this.scheduledTime = scheduledTime;
+	}
+	
 	public RideReturnedDTO(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost,
 			UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
 			VehicleTypeName vehicleType, boolean petTransport, boolean babyTransport, RejectionNotice rejection,

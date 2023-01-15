@@ -1,6 +1,5 @@
 package com.hopin.HopIn.services.interfaces;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.hopin.HopIn.dtos.WorkingHoursDTO;

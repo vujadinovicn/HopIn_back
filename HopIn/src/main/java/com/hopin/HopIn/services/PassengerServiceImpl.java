@@ -122,9 +122,8 @@ public class PassengerServiceImpl implements IPassengerService {
 	}
 
 	@Override
-	public UserReturnedDTO getPassenger(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Passenger getPassenger(int id) {
+		return this.allPassengers.findById(id).orElse(null);
 	}
 
 	@Override

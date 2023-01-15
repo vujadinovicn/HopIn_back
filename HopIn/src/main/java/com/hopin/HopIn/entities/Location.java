@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +27,12 @@ public class Location {
 		this.address = address;
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+	
+	public Location(LocationNoIdDTO locationDTO) {
+		this.address = locationDTO.getAddress();
+		this.latitude = locationDTO.getLatitude();
+		this.longitude = locationDTO.getLongitude();
 	}
 
 	public int getId() {

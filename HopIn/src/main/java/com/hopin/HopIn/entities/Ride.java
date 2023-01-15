@@ -48,10 +48,10 @@ public class Ride {
 	@ManyToOne(cascade = {})
 	private VehicleType vehicleType;
 
-	@ManyToOne(cascade = {})
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Location departureLocation;
 
-	@ManyToOne(cascade = {})
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Location destinationLocation;
 
 	@OneToOne(cascade = { CascadeType.ALL })

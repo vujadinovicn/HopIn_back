@@ -76,12 +76,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // 404
         setResponseError(response, HttpServletResponse.SC_NOT_FOUND, String.format("Not found: %s", notFoundException.getMessage()));
     }
-
-    @ExceptionHandler (value = {Exception.class})
-    public void commence(HttpServletRequest request, HttpServletResponse response, Exception exception) throws IOException {
-        // 403
-        setResponseError(response, HttpServletResponse.SC_FORBIDDEN, String.format("Access Denies: %s", exception.getMessage()));
-    }
     
     
     private void setResponseError(HttpServletResponse response, int errorCode, String errorMessage) throws IOException{
