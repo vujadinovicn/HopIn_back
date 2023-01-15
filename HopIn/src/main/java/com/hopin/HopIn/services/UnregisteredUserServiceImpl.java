@@ -31,7 +31,7 @@ public class UnregisteredUserServiceImpl implements IUnregisteredUserService{
 		int durationInMinutes = this.rideEstimationService.getEstimatedTime(departureLocation, destinationLocation);
 		double distance = this.rideEstimationService.getEstimatedDistance(departureLocation, destinationLocation);
 		int price = (int) calculatePrice(distance, ride.getVehicleType().toString());
-		return new EstimatedRideDetailsDTO(durationInMinutes, price);
+		return new EstimatedRideDetailsDTO(durationInMinutes, price, distance);
 	}
 	
 	private double calculatePrice(double distance, String vehicleTypeName) {

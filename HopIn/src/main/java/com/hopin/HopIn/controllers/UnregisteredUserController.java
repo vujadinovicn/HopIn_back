@@ -18,7 +18,7 @@ import jakarta.validation.Valid;
 
 @Validated
 @RestController
-@RequestMapping("/api/unregisteredUser/")
+@RequestMapping("/api/unregisteredUser")
 public class UnregisteredUserController {
 	
 	@Autowired
@@ -26,6 +26,7 @@ public class UnregisteredUserController {
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EstimatedRideDetailsDTO> getEstimatedRideDetails(@Valid @RequestBody UnregisteredUserRideDTO ride){
+		System.err.println("TU");
 		EstimatedRideDetailsDTO details = unregisteredUserService.getEstimatedRideDetails(ride);
 		return new ResponseEntity<EstimatedRideDetailsDTO>(details, HttpStatus.OK);
 	}

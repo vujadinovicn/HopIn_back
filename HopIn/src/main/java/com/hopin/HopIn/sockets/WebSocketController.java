@@ -25,6 +25,7 @@ public class WebSocketController {
 	
 	@MessageMapping("/send/invite-response/{to}")
 	public String sendInviteResponse(@DestinationVariable String to, String response) {
+		System.out.println("RES: " + response);
 		this.simpMessagingTemplate.convertAndSend("/topic/invite-response/" + to, response);
 		
 		return response;
