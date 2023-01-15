@@ -49,12 +49,21 @@ public class RideController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> add(@RequestBody RideDTO dto) {
+//		try {
+//			return new ResponseEntity<RideReturnedDTO>(service.add(dto), HttpStatus.OK);
+//		} catch (NoActiveDriverException e) {
+//			ExceptionDTO ex = new ExceptionDTO("There are not any active drivers!");
+//			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+//		}
+		
 		try {
-			return new ResponseEntity<RideReturnedDTO>(service.add(dto), HttpStatus.OK);
-		} catch (NoActiveDriverException e) {
-			ExceptionDTO ex = new ExceptionDTO("There are not any active drivers!");
-			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return new ResponseEntity<RideReturnedDTO>(new RideReturnedDTO(dto), HttpStatus.OK);
+
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
