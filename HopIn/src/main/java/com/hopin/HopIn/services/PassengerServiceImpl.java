@@ -24,6 +24,7 @@ import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.SecureTokenType;
+import com.hopin.HopIn.exceptions.BadIdFormatException;
 import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.repositories.LocationRepository;
 import com.hopin.HopIn.repositories.PassengerRepository;
@@ -190,7 +191,7 @@ public class PassengerServiceImpl implements IPassengerService {
 	public boolean addFavoriteRide(int passengerId, FavoriteRide ride) {
 		Passenger passenger = this.allPassengers.findById(passengerId).get();
 		if (passenger == null) {
-			return false;
+			throw new BadIdFormatException();
 		}
 		passenger.getFavouriteRides().add(ride);
 		this.allPassengers.save(passenger);
