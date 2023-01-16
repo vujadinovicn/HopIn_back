@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
@@ -25,7 +25,6 @@ import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -71,12 +70,11 @@ public class PassengerController {
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('ADMIN', 'PASSENGER')")
 	public ResponseEntity<?> getPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
-		UserReturnedDTO passenger = passengerService.getById(id);
-		if (passenger != null) {
-			passengerService.getFavouriteRoutes(id);
-			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
+		try {
+			return new ResponseEntity<UserReturnedDTO>(passengerService.getById(id), HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);			
 		}
-		return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
