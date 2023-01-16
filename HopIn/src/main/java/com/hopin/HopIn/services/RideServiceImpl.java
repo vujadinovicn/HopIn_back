@@ -361,7 +361,7 @@ public class RideServiceImpl implements IRideService {
 		for (Driver driver: drivers) {
 			LocalDateTime scheduledTime = rideDTO.getScheduledTime();
 			if (scheduledTime != null)
-				return null;
+				scheduledTime = null;
 			
 			LocalDateTime startOfDrivingToDeparture = LocalDateTime.now();
 			

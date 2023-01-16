@@ -60,6 +60,7 @@ public class RideEstimationService implements IRideEstimationService{
 		String queryResponse = null;
 		try {
 			response = client.send(r, HttpResponse.BodyHandlers.ofString()).body();
+			System.out.println(response);
 			JSONObject obj = new JSONObject(response);
 			JSONArray rows = obj.getJSONArray("rows");
 			JSONArray elements = rows.getJSONObject(0).getJSONArray("elements");

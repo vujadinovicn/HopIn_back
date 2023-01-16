@@ -67,10 +67,10 @@ public class RideController {
 			ride.setScheduledTime(null);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.findAndRegisterModules();
-			// Java object to JSON string
+			// Java object to JSON string 
 			String jsonString = mapper.writeValueAsString(ride);
 			System.out.println("/topic/driver/ride-offers/" + ride.getDriver().getId());
-			this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offers/" + dto.getPassengers().get(0).getId(),
+			this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offers/" + ride.getDriver().getId(),
 					jsonString);
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (NoActiveDriverException e) {
@@ -94,7 +94,7 @@ public class RideController {
 			e.printStackTrace();
 			res = new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
 		}
-		this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offer-response" + dto.getPassengers().get(0).getId(), "noDriver");
+		this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offer-response/" + dto.getPassengers().get(0).getId(), "noDriver");
 		return res;
 	}
 
