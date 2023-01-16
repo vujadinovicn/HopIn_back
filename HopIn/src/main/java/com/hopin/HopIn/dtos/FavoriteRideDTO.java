@@ -3,14 +3,17 @@ package com.hopin.HopIn.dtos;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hopin.HopIn.entities.Passenger;
+import org.hibernate.validator.constraints.Length;
+
 import com.hopin.HopIn.enums.VehicleTypeName;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public class FavoriteRideDTO {
+	@NotNull
 	@NotEmpty(message="is required")
+	@Length(max=100)
 	private String favoriteName;
 	
 	@NotNull(message="is required")
@@ -23,10 +26,10 @@ public class FavoriteRideDTO {
 	private VehicleTypeName vehicleType;
 	
 	@NotNull(message="is required")
-	private boolean petTransport;
+	private Boolean petTransport;
 	
 	@NotNull(message="is required")
-	private boolean babyTransport;
+	private Boolean babyTransport;
 
 	public FavoriteRideDTO(String favoriteName, List<RouteLocsDTO> locations, List<UserInRideDTO> passengers,
 			VehicleTypeName vehicleType, boolean petTransport, boolean babyTransport) {

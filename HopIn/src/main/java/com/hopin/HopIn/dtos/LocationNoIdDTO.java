@@ -2,13 +2,24 @@ package com.hopin.HopIn.dtos;
 
 import com.hopin.HopIn.entities.Location;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class LocationNoIdDTO {
 	@NotEmpty(message="is required")
 	private String address;
-	private double latitude;
-	private double longitude;
+	
+	@NotNull
+	@Max(value=90)
+	@Min(value=-90)
+	private Double latitude;
+	
+	@NotNull
+	@Max(value=90)
+	@Min(value=-90)
+	private Double longitude;
 	
 	public LocationNoIdDTO() {}
 
