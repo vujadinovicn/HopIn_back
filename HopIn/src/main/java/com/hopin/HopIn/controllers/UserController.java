@@ -1,7 +1,6 @@
 package com.hopin.HopIn.controllers;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,12 +35,14 @@ import com.hopin.HopIn.dtos.NoteDTO;
 import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.services.WorkingHoursServiceImpl;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
 import com.hopin.HopIn.validations.ExceptionDTO;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 @Validated
 @RestController
@@ -121,7 +122,7 @@ public class UserController {
 	
 	@PutMapping(value="{id}/block", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> block(@PathVariable int id){
+	public ResponseEntity<?> block(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id){
 		try {
 			this.userService.block(id);
 			return new ResponseEntity<String>("User is successfully blocked", HttpStatus.NO_CONTENT);
@@ -134,7 +135,7 @@ public class UserController {
 	
 	@PutMapping(value="{id}/unblock", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> unblock(@PathVariable int id){
+	public ResponseEntity<?> unblock(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id){
 		try {
 			this.userService.unblock(id);
 			return new ResponseEntity<String>("User is successfully unblocked", HttpStatus.NO_CONTENT);
@@ -156,7 +157,7 @@ public class UserController {
 	}
 	
 	@PostMapping(value="{id}/message", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> sendMessage(@PathVariable int id, @RequestBody MessageDTO message){
+	public ResponseEntity<?> sendMessage(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody MessageDTO message){
 		try {
 			return new ResponseEntity<MessageReturnedDTO>(userService.sendMessage(id, message), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {

@@ -2,9 +2,15 @@ package com.hopin.HopIn.dtos;
 
 import com.hopin.HopIn.enums.MessageType;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class MessageDTO {
+	@NotEmpty(message="is required")
 	String message;
+	
+	@NotEmpty(message="is required")
 	MessageType type;
+	
 	int rideId;
 
 	public MessageDTO(String message, MessageType type, int rideId) {

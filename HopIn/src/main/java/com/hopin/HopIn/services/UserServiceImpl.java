@@ -68,7 +68,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	public User getByEmail(String email) {
 		Optional<User> found = allUsers.findByEmail(email);
 		if (found.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist.");
 		}
 		return found.get();
 	}
@@ -145,10 +145,16 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
 	@Override
 	public MessageReturnedDTO sendMessage(int receiverId, MessageDTO dto) {
-		getById(receiverId);
-		rideService.getRide(dto.getRideId());
-		if (getCurrentUser() == null) {
+		try {
+			getById(receiverId);
+		} catch (ResponseStatusException ex) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiver does not exist!");
+		}
+		
+		try {
+			rideService.getRide(dto.getRideId());
+		} catch (ResponseStatusException ex) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ride does not exist!");
 		}
 		Message message = new Message(getCurrentUser().getId(), receiverId, dto);
 		allMessages.save(message);
@@ -169,7 +175,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	@Override
 	public AllMessagesDTO getMessages(int userId) {
 		getById(userId);
-		List<Message> messages = allMessages.findAll();
+		List<Message> messages = allMessages.findAllMessagesById(userId);
 		return new AllMessagesDTO(messages);
 	}
 

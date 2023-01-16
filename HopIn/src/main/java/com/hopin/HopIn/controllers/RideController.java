@@ -205,7 +205,7 @@ public class RideController {
 	
 	@DeleteMapping(value = "favorites/{id}")
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> deleteFavoriteRide(@PathVariable int id) {
+	public ResponseEntity<?> deleteFavoriteRide(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			this.service.deleteFavoriteRide(id);
 			return new ResponseEntity<String>("Successful deletion of favorite location!", HttpStatus.NO_CONTENT);

@@ -76,10 +76,11 @@ public class ReviewController {
 	}
 	
 	@GetMapping(value="/{rideId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getRideReviews(@PathVariable int rideId){
+	public ResponseEntity<?> getRideReviews(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int rideId){
 		try {
 			return new ResponseEntity<ArrayList<CompleteRideReviewDTO>>(reviewService.getRideReviews(rideId), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
-		}	}
+		}	
+	}
 }
