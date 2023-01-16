@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopin.HopIn.dtos.FavoriteRideDTO;
 import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
@@ -48,54 +51,81 @@ public class RideController {
 
 	@Autowired
 	private IRideService service;
-	
+
 	@Autowired
 	private ITokenService tokenService;
 
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
+
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> add(@RequestBody RideDTO dto) {
+		System.out.println(dto.getVehicleType());
+		ResponseEntity<ExceptionDTO> res;
 		try {
-			return new ResponseEntity<RideReturnedDTO>(service.add(dto), HttpStatus.OK);
+			RideReturnedDTO ride = service.add(dto);
+			ride.setScheduledTime(null);
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.findAndRegisterModules();
+			// Java object to JSON string
+			String jsonString = mapper.writeValueAsString(ride);
+			System.out.println("/topic/driver/ride-offers/" + ride.getDriver().getId());
+			this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offers/" + dto.getPassengers().get(0).getId(),
+					jsonString);
+			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (NoActiveDriverException e) {
 			ExceptionDTO ex = new ExceptionDTO("There are no any active drivers!");
-			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+			System.out.println("There are no any active drivers!");
+			res = new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
 		} catch (NoDriverWithAppropriateVehicleForRideException e) {
 			ExceptionDTO ex = new ExceptionDTO("There are no drivers with requested vehicle!");
-			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+			System.out.println("There are no drivers with requested vehicle!");
+			res = new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
 		} catch (PassengerAlreadyInRideException e) {
 			ExceptionDTO ex = new ExceptionDTO("Passenger already in drive!");
-			return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+			System.out.println("Passenger already in drive!");
+			res = new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
 		} catch (NoAvailableDriversException e) {
-				ExceptionDTO ex = new ExceptionDTO("No available drivers!");
-				return new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+			ExceptionDTO ex = new ExceptionDTO("No available drivers!");
+			System.out.println("No available drivers!");
+			res = new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			res = new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
 		}
+		this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offer-response" + dto.getPassengers().get(0).getId(), "noDriver");
+		return res;
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getRide(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+	public ResponseEntity<?> getRide(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.getRide(id), HttpStatus.OK);
-		} catch (RideNotFoundException e){
+		} catch (RideNotFoundException e) {
 			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('DRIVER')")
-	public ResponseEntity<?> getActiveRideForDriver(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
+	public ResponseEntity<?> getActiveRideForDriver(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForDriver(driverId), HttpStatus.OK);
-		} catch (NoActivePassengerRideException e){
+		} catch (NoActivePassengerRideException e) {
 			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> getActiveRideForPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int passengerId) {
+	public ResponseEntity<?> getActiveRideForPassenger(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int passengerId) {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForPassenger(passengerId), HttpStatus.OK);
-		} catch (NoActivePassengerRideException e){
+		} catch (NoActivePassengerRideException e) {
 			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
@@ -131,8 +161,10 @@ public class RideController {
 	@PutMapping(value = "/{id}/accept", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> acceptRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		System.out.println("ACCEPT REQ: " + id);
 		try {
 			RideReturnedDTO ride = service.acceptRide(id);
+			this.simpMessagingTemplate.convertAndSend("/topic/ride-offer-response/" + ride.getPassengers().get(0).getId(), "true");
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
@@ -178,8 +210,11 @@ public class RideController {
 	public ResponseEntity<?> rejectRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
 			@Valid @RequestBody ReasonDTO dto) {
+		System.out.println("DECLINE REQ: " + id);
+		System.out.println("DECLINE RES: " + dto.getReason());
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
+			this.simpMessagingTemplate.convertAndSend("/topic/ride-offer-response/" + ride.getPassengers().get(0).getId(), "false");
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
@@ -194,23 +229,24 @@ public class RideController {
 	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody UnregisteredRideSuggestionDTO dto) {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> addFavoriteRide(@RequestBody FavoriteRideDTO dto) {
 		try {
 			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
 		} catch (FavoriteRideException ex) {
-			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Number of favorite rides cannot exceed 10!"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Number of favorite rides cannot exceed 10!"),
+					HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping(value = "/favorites", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> getFavoriteRides() {
 		return new ResponseEntity<List<FavoriteRideReturnedDTO>>(this.service.getFavoriteRides(), HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping(value = "favorites/{id}")
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> deleteFavoriteRide(@PathVariable int id) {
@@ -221,6 +257,5 @@ public class RideController {
 			return new ResponseEntity<String>("Favorite location does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	
+
 }

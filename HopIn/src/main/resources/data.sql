@@ -1,18 +1,18 @@
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'pera@gmail.com', true, false, 'Pera', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Peric', '+3819720132 ', 0);
 insert into "passengers"("id") values (1);
 
-insert into "locations"("id", "address", "latitude", "longitude") values (1, 'Novi Sad', 45.26, 19.83);
-insert into "locations"("id", "address", "latitude", "longitude") values (2, 'Beograd', 44.78, 20.45);
+insert into "locations"("address", "latitude", "longitude") values ('Novi Sad', 45.26, 19.83);
+insert into "locations"("address", "latitude", "longitude") values ('Beograd', 44.78, 20.45);
 
 
 insert into "vehicle_types" ("name", "price_per_km") values (0, 60);
 insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
 insert into "vehicle_types" ("name", "price_per_km") values (2, 100);
 
-insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Veljka', 'driver@gmail.com', false, false, 'Mark', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', null , 'Jacobs', '+381603454212', 1);
+insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Veljka', 'driver@gmail.com', false, false, 'Mark', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Jacobs', '+381603454212', 1);
 insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-030-HR', 'AUDI A6', 4, true, 2, 1);
 
-insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, false);
+insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, true);
 
 insert into "documents"("name", "document_image", "driver_id") values ('Drivers license 1', 'sss', 2);
 insert into "documents"("name", "document_image", "driver_id") values ('Registration license 1', 'sss', 2);

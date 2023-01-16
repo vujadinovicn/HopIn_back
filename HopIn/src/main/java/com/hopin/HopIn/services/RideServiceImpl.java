@@ -347,6 +347,7 @@ public class RideServiceImpl implements IRideService {
 		if (driverForRide == null)
 			throw new NoAvailableDriversException();
 		
+		
 		Ride wantedRide = this.createWantedRide(dto, driverForRide);
 		this.allRides.save(wantedRide);
 		this.allRides.flush();

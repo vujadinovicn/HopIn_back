@@ -30,4 +30,19 @@ public class WebSocketController {
 		
 		return response;
 	}
+	
+
+	@MessageMapping("/send/driver/ride-offer/{to}")
+	public String sendRideOffer(@DestinationVariable String to, String message) {
+        this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offers" + to, message);
+
+        return message;
+    }
+	
+	@MessageMapping("/send/driver/ride-offer-response/{to}")
+	public String sendRideOfferResponse(@DestinationVariable String to, String message) {
+        this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offer-response" + to, message);
+
+        return message;
+    }
 }
