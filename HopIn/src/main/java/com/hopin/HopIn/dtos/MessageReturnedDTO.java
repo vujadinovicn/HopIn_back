@@ -94,4 +94,10 @@ public class MessageReturnedDTO {
 		this.rideId = rideId;
 	}
 
+	@Override
+	public String toString() {
+		return "MessageReturnedDTO [id=" + id + ", timeOfSending=" + timeOfSending + ", senderId=" + senderId
+				+ ", receiverId=" + receiverId + ", message=" + message + ", type=" + type + ", rideId=" + rideId + "]";
+	}
+
 }

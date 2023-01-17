@@ -60,6 +60,10 @@ public class UserRidesReturnedDTO {
 //		this.rejection = new RejectionNoticeDTO(ride.getRejectionNotice());
 //	}
 
+	public UserRidesReturnedDTO(Ride ride) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() {
 		return id;
 	}

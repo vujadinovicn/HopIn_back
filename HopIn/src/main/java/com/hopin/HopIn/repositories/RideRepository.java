@@ -42,7 +42,12 @@ public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndS
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :driverId and \"status\" = 1 and \"start_time\" < :tomorrow ", nativeQuery=true)
 	public List<Ride> getAllScheduledRideForTodayForDriver(int driverId, LocalDateTime tomorrow);
 	
+
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :userId or \"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :userId order by \"start_time\")", nativeQuery=true)
+	public List<Ride> getAllUserRides(int userId, Pageable pageable);
+
 	@Query(value = "select * from \"rides\" where \"status\" = 1 and \"start_time\" < :tomorrow and "
 			+ "\"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id)", nativeQuery=true)
 	public List<Ride> getAllScheduledRideForTodayForPassenger(int id, LocalDateTime tomorrow);
+
 }

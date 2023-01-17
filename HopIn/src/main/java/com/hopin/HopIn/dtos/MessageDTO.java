@@ -15,7 +15,6 @@ public class MessageDTO {
 	String message;
 	
 	@NotNull
-	@NotEmpty(message="is required")
 	MessageType type;
 	
 	@NotNull

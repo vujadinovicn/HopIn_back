@@ -1,4 +1,4 @@
-insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'pera@gmail.com', true, false, 'Pera', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Peric', '+3819720132 ', 0);
+insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'pera@gmail.com', true, false, 'Pera', '$2a$12$t9Nsxg2fYHtDyJdnuZaRNeBPbg6EGxkUy7wpwZxbK5v2BKIIIWgK2', null, 'Peric', '+3819720132 ', 0);
 insert into "passengers"("id") values (1);
 
 insert into "locations"("address", "latitude", "longitude") values ('Novi Sad', 45.26, 19.83);
@@ -33,10 +33,11 @@ insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1);
 insert into "routes"("distance", "departure_id", "destination_id") values (95, 1, 2);
 insert into "passengers_favourite_routes"("passenger_id", "favourite_routes_id") values (1,1);
 
-insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'admin@gmail.com', false, false, 'Mika', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Mikic', '+3819720132 ', 2);
+insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'admin@gmail.com', true, false, 'Mika', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Mikic', '+3819720132 ', 2);
+insert into "admins" ("id") values (3);
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'peraa@gmail.com', false, false, 'Mika', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', null, 'Mikic', '+3819720132 ', 2);
-insert into "admins" ("id") values (3);
+insert into "admins" ("id") values (4);
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'mika@gmail.com', true, false, 'Mika', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Peric', '+3819720132 ', 0);
 insert into "passengers"("id") values (5);
@@ -56,3 +57,6 @@ insert into "driver_account_update_document_requests"("document_id", "document_i
 
 insert into "driver_account_update_requests"("reason", "status", "type", "admin_id", "driver_id") values ('blablatruc', 1, 2, 3, 2);
 insert into "driver_account_update_info_requests"("address", "email", "name", "profile_picture", "surname", "telephone_number", "id") values('Beograd', 'mark@gmail.com', 'Neca', 'a', 'Vijic', '+3816492031', 5);
+
+insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2023-12-23T11:11:11', 1, 1, 'hdeuwir49834574hnfdj43829449302');
+insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2022-12-22T11:11:11', 1, 5, 'hdeuwir49834574hnfdj43829449301');

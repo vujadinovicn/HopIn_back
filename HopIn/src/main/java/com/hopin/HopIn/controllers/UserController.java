@@ -4,10 +4,12 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,18 +28,21 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllMessagesDTO;
 import com.hopin.HopIn.dtos.AllNotesDTO;
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.ChangePasswordDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
 import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
 import com.hopin.HopIn.dtos.NoteReturnedDTO;
+import com.hopin.HopIn.dtos.ResetPasswordDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.exceptions.BlockedUserException;
-
+import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 
 import com.hopin.HopIn.services.WorkingHoursServiceImpl;
@@ -65,8 +70,10 @@ public class UserController {
 
 	private HashMap<String, String> refreshTokens = new HashMap<String, String>();
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
+		System.out.println("USAO SAMMMM");
 		return new ResponseEntity<UserReturnedDTO>(userService.getUser(id), HttpStatus.OK);
 	}
 
@@ -75,18 +82,22 @@ public class UserController {
 		return new ResponseEntity<UserReturnedDTO>(new UserReturnedDTO(userService.getByEmail(email)), HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AllUsersDTO> getAll(@RequestParam int page, @RequestParam int size) {
 		return new ResponseEntity<AllUsersDTO>(userService.getAll(page, size), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentials) {
+	public ResponseEntity<?> login(@RequestBody CredentialsDTO credentials) {
 		Authentication authentication;
 		try {
 			authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
+		} catch (BadCredentialsException e) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Wrong username or password!"), HttpStatus.BAD_REQUEST);
 		} catch (Exception ex) {
+			System.out.println(ex.getStackTrace());
 			return new ResponseEntity<TokenDTO>(HttpStatus.UNAUTHORIZED);
 		}
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -131,7 +142,7 @@ public class UserController {
 		} catch (BlockedUserException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User already blocked!"), HttpStatus.BAD_REQUEST);
 		} catch (ResponseStatusException ex) {
-			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -144,7 +155,7 @@ public class UserController {
 		} catch (BlockedUserException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User is not blocked!"), HttpStatus.BAD_REQUEST);
 		} catch (ResponseStatusException ex) {
-			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -153,7 +164,9 @@ public class UserController {
 	public ResponseEntity<?> addNote(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
 			@Valid @RequestBody NoteDTO note) {
 		try {
-			return new ResponseEntity<NoteReturnedDTO>(userService.addNote(id, note), HttpStatus.OK);
+			NoteReturnedDTO noteR = userService.addNote(id, note);
+			System.out.println(noteR);
+			return new ResponseEntity<NoteReturnedDTO>(noteR, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
 		}
@@ -166,36 +179,93 @@ public class UserController {
 			@RequestParam @Min(value = 0, message = "Field page must be greater than 0.") int page,
 			@RequestParam @Min(value = 1, message = "Field size must be greater than 1.") int size) {
 		try {
-			return new ResponseEntity<AllNotesDTO>(userService.getNotes(id, page, size), HttpStatus.OK);
+			AllNotesDTO all = userService.getNotes(id, page, size);
+			System.out.println(all);
+			return new ResponseEntity<AllNotesDTO>(all, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
 
-	
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
 	@PostMapping(value="{id}/message", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> sendMessage(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody MessageDTO message){
+		System.out.println("EVOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 		try {
-			return new ResponseEntity<MessageReturnedDTO>(userService.sendMessage(id, message), HttpStatus.OK);
+			MessageReturnedDTO mess = userService.sendMessage(id, message);
+			System.out.println(mess);
+			return new ResponseEntity<MessageReturnedDTO>(mess, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
-			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		} catch (RideNotFoundException e) {
+			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
 	@GetMapping(value = "{id}/message", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getMessages(@PathVariable int id) {
 		try {
-			return new ResponseEntity<AllMessagesDTO>(userService.getMessages(id), HttpStatus.OK);
+			AllMessagesDTO all = userService.getMessages(id);
+			System.out.println(all);
+			return new ResponseEntity<AllMessagesDTO>(all, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
-			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllUserRidesReturnedDTO> getRides(@PathVariable int id, @RequestParam int page,
-			@RequestParam int size, @RequestParam String sort, @RequestParam String from, @RequestParam String to) {
-		return new ResponseEntity<AllUserRidesReturnedDTO>(userService.getRides(id, page, size, sort, from, to),
+	public ResponseEntity<?> getRides(@PathVariable int id, @RequestParam int page,
+			@RequestParam int size, @RequestParam(required = false) String sort, @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
+		try {
+		return new ResponseEntity<AllPassengerRidesDTO>(userService.getRides(id, page, size, sort, from, to),
 				HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		}
+	}
+	
+//	@PreAuthorize("hasRole('ANONYMOUS')")
+	@GetMapping(value = "{id}/resetPassword")
+	public ResponseEntity<?> resetPassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		System.out.println("TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+		try {
+			this.userService.sendResetPasswordMail(id);
+			return new ResponseEntity<String>("Email with reset code has been sent!", HttpStatus.NO_CONTENT);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		}
+		
+	}
+	
+//	@PreAuthorize("hasRole('ANONYMOUS')")
+	@PutMapping(value = "{id}/resetPassword", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> resetPassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody ResetPasswordDTO dto) {
+		System.out.println("TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+		try {
+			this.userService.resetPassword(id, dto);
+			return new ResponseEntity<String>("Password successfully changed!", HttpStatus.NO_CONTENT);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		} catch (ResponseStatusException e) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(e.getReason()), HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
+	@PutMapping(value = "{id}/changePassword", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> changePassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody ChangePasswordDTO dto) {
+		try {
+			this.userService.changePassword(id, dto);
+			return new ResponseEntity<String>("Password successfully changed!", HttpStatus.NO_CONTENT);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		} catch (ResponseStatusException e) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Current password is not matching!"), HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 
 }

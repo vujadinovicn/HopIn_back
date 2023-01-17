@@ -15,17 +15,8 @@ public class AllUsersDTO {
 	private Set<UserReturnedDTO> results;
 	
 	public AllUsersDTO() {}
-
-	public AllUsersDTO(Map<Integer, User> allUsers) {
-		super();
-		this.totalCount = allUsers.size();
-		
-		this.results = new HashSet<UserReturnedDTO>();
-		for(User user : allUsers.values()) {
-			this.results.add(new UserReturnedDTO(user));
-		}
-	}
 	
+
 	public AllUsersDTO(List<Passenger> passengers) {
 		super();
 		this.totalCount = passengers.size();
@@ -44,6 +35,15 @@ public class AllUsersDTO {
 			this.results.add(new UserReturnedDTO(user));
 		}
 	}
+	
+	
+
+	public AllUsersDTO(int totalCount, Set<UserReturnedDTO> results) {
+		super();
+		this.totalCount = totalCount;
+		this.results = results;
+	}
+
 
 	public int getTotalCount() {
 		return totalCount;

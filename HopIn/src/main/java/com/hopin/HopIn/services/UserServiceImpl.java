@@ -2,9 +2,11 @@ package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -15,35 +17,46 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllMessagesDTO;
 import com.hopin.HopIn.dtos.AllNotesDTO;
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.ChangePasswordDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
 import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
 import com.hopin.HopIn.dtos.NoteReturnedDTO;
+import com.hopin.HopIn.dtos.ResetPasswordDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.entities.Note;
+import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
 
 import com.hopin.HopIn.exceptions.BlockedUserException;
 
 import com.hopin.HopIn.enums.MessageType;
+import com.hopin.HopIn.enums.SecureTokenType;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
+import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.services.interfaces.ITokenService;
 import com.hopin.HopIn.services.interfaces.IUserService;
+import com.hopin.HopIn.tokens.ISecureTokenService;
+import com.hopin.HopIn.tokens.SecureToken;
 
 @Service
 public class UserServiceImpl implements IUserService, UserDetailsService {
@@ -56,11 +69,18 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	private NoteRepository allNotes;
 	@Autowired
 	private IRideService rideService;
+	@Autowired
+	private RideRepository allRides;
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+	@Autowired
+	private ISecureTokenService tokenService;
+	
 	
 	Map<Integer, User> allUsersMap = new HashMap<Integer, User>();
 	Map<Integer, Note> allNotesMap = new HashMap<Integer, Note>();
 	Map<Integer, Message> allMessagesMap = new HashMap<Integer, Message>();
-	Map<Integer, Ride> allRides = new HashMap<Integer, Ride>();
+	Map<Integer, Ride> allRidesss = new HashMap<Integer, Ride>();
 	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -91,11 +111,15 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
-		if (allUsersMap.size() == 0) {
-			User user = new User();
-			allUsersMap.put(1, user);
+		Pageable pageable = PageRequest.of(page, size);
+		
+		List<User> users = allUsers.findAll(pageable).getContent();
+		int totalCount = users.size();
+		Set<UserReturnedDTO> results =  new HashSet<UserReturnedDTO>();
+		for(User user : users) {
+			results.add(new UserReturnedDTO(user));
 		}
-		return new AllUsersDTO(this.allUsersMap);
+		return new AllUsersDTO(totalCount, results);
 	}
 	
 	@Override
@@ -168,13 +192,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiver does not exist!");
 		}
 		
-		try {
-			rideService.getRide(dto.getRideId());
-		} catch (ResponseStatusException ex) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ride does not exist!");
-		}
+		rideService.getRide(dto.getRideId());
+		
 		Message message = new Message(getCurrentUser().getId(), receiverId, dto);
 		allMessages.save(message);
+		System.out.println(message);
 		allMessages.flush();
 		return createDetailedMessage(message);
 	}
@@ -197,9 +219,17 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public AllUserRidesReturnedDTO getRides(int userId, int page, int size, String sort, String from, String to) {
-		// TODO Auto-generated method stub
-		return null;
+	public AllPassengerRidesDTO getRides(int userId, int page, int size, String sort, String from, String to) {
+		Pageable pageable = PageRequest.of(page, size);
+		
+		Optional<User> user = this.allUsers.findById(userId);
+		if (user.isEmpty()) {
+			throw new UserNotFoundException();
+		}
+		
+		
+		List<Ride> rides = this.allRides.getAllUserRides(userId, pageable);
+		return new AllPassengerRidesDTO(rides);
 	}
 
 	@Override
@@ -224,6 +254,56 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	public User getCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return this.getByEmail(auth.getName());
+	}
+
+	@Override
+	public void sendResetPasswordMail(int id) {
+		User user = this.allUsers.findById(id).orElse(null);
+		if (user == null){
+			throw new UserNotFoundException();
+		}
+		
+		SecureToken token = tokenService.createToken(user, SecureTokenType.FORGOT_PASSWORD);
+		System.out.println(token.getToken());
+		
+//		TODO: ispraviti template da pise da je za sifru
+//		this.mailService.sendVerificationMail(passenger, token.getToken());
+	}
+
+	@Override
+	public void resetPassword(int id, ResetPasswordDTO dto) {
+		User user = this.allUsers.findById(id).orElse(null);
+		if (user == null){
+			throw new UserNotFoundException();
+		}
+		
+		SecureToken token = this.tokenService.findByToken(dto.getCode());
+
+		if (!this.tokenService.isValid(token) || token.isExpired() || token.getType() != SecureTokenType.FORGOT_PASSWORD) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code is expired or not correct!");
+		}
+		
+		user.setPassword(encoder.encode(dto.getNewPassword()));
+		allUsers.save(user);
+		allUsers.flush();
+	
+	}
+
+	@Override
+	public void changePassword(int id, ChangePasswordDTO dto) {
+		User user = this.allUsers.findById(id).orElse(null);
+		if (user == null){
+			throw new UserNotFoundException();
+		}
+		
+		if (!encoder.matches(dto.getOldPassword(), user.getPassword())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+		
+		user.setPassword(encoder.encode(dto.getNewPassword()));
+		allUsers.save(user);
+		allUsers.flush();
+		
 	}
 
 //	@Override
