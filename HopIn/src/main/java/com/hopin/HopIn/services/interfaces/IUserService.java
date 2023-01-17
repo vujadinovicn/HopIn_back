@@ -24,9 +24,9 @@ public interface IUserService {
 	
 	public TokenDTO login(CredentialsDTO credentials);
 
-	public boolean block(int userId);
+	public void block(int userId);
 	
-	public boolean unblock(int userId);
+	public void unblock(int userId);
 	
 	public NoteReturnedDTO addNote(int userId, NoteDTO note);
 	
@@ -47,5 +47,9 @@ public interface IUserService {
 	public User getByEmail(String email);
 
 	public void activateUser(User user);
+
+	public User getCurrentUser();
+
+	boolean isIdMatching(int id);
 
 }

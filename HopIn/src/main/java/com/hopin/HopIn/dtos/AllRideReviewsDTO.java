@@ -6,29 +6,30 @@ import java.util.List;
 import com.hopin.HopIn.entities.Review;
 
 public class AllRideReviewsDTO {
-	
-	List<Review> vehicleReview = new ArrayList<Review>();
-	List<Review> driverReview = new ArrayList<Review>();
-	
-	public AllRideReviewsDTO(ArrayList<Review> vehicleReview, ArrayList<Review> driverReview) {
+
+	private Review vehicleReview;
+	private Review driverReview;
+
+	public AllRideReviewsDTO(Review vehicleReview, Review driverReview) {
 		super();
 		this.vehicleReview = vehicleReview;
 		this.driverReview = driverReview;
 	}
 
-	public List<Review> getVehicleReview() {
+	public Review getVehicleReview() {
 		return vehicleReview;
 	}
 
-	public void setVehicleReview(List<Review> vehicleReview) {
+	public void setVehicleReview(Review vehicleReview) {
 		this.vehicleReview = vehicleReview;
 	}
 
-	public List<Review> getDriverReview() {
+	public Review getDriverReview() {
 		return driverReview;
 	}
 
-	public void setDriverReview(List<Review> driverReview) {
+	public void setDriverReview(Review driverReview) {
 		this.driverReview = driverReview;
 	}
+
 }

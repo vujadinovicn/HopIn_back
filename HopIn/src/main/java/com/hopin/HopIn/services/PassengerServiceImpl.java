@@ -1,11 +1,6 @@
 package com.hopin.HopIn.services;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +18,13 @@ import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.FavoriteRide;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.SecureTokenType;
+import com.hopin.HopIn.exceptions.BadIdFormatException;
 import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.repositories.LocationRepository;
 import com.hopin.HopIn.repositories.PassengerRepository;
@@ -36,8 +33,6 @@ import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.tokens.ISecureTokenService;
 import com.hopin.HopIn.tokens.SecureToken;
-
-import net.bytebuddy.utility.RandomString;
 
 @Service
 public class PassengerServiceImpl implements IPassengerService {
@@ -80,6 +75,15 @@ public class PassengerServiceImpl implements IPassengerService {
 		return new UserReturnedDTO(found.get());
 	}
 	
+	@Override 
+	public Passenger getPassenger(int id) {
+		Optional<Passenger> found = allPassengers.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+		}
+		return found.get();
+	}
+	
 	@Override
 	public UserReturnedDTO getByEmail(String email) {
 		Optional<Passenger> found = allPassengers.findPassengerByEmail(email);
@@ -91,12 +95,8 @@ public class PassengerServiceImpl implements IPassengerService {
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
-		if (!Pattern.matches("^([0-9a-zA-Z]{3,}$)", dto.getPassword())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid password format!");
-		}
-		
 		if (this.userService.userAlreadyExists(dto.getEmail())) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with that email already exists!");
+			return null;
 		}
 		
 		Passenger passenger = new Passenger(dto);
@@ -122,11 +122,10 @@ public class PassengerServiceImpl implements IPassengerService {
 		}
 		return res;
 	}
-
+	
 	@Override
-	public UserReturnedDTO getPassenger(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<FavoriteRide>  getFavoriteRides(int id) {
+		return this.allPassengers.findAllFavoriteRidesById(id);
 	}
 
 	@Override
@@ -183,6 +182,18 @@ public class PassengerServiceImpl implements IPassengerService {
 			return false;
 		}
 		passenger.getFavouriteRoutes().add(route.get());
+		this.allPassengers.save(passenger);
+		this.allPassengers.flush();
+		return true;
+	}
+	
+	@Override
+	public boolean addFavoriteRide(int passengerId, FavoriteRide ride) {
+		Passenger passenger = this.allPassengers.findById(passengerId).get();
+		if (passenger == null) {
+			throw new BadIdFormatException();
+		}
+		passenger.getFavouriteRides().add(ride);
 		this.allPassengers.save(passenger);
 		this.allPassengers.flush();
 		return true;

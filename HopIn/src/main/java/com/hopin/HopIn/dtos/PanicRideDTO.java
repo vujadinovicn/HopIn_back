@@ -2,6 +2,8 @@ package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
 
+import com.hopin.HopIn.entities.Panic;
+
 public class PanicRideDTO {
 	private int id;
 	private UserInPanicRideDTO user;
@@ -27,6 +29,14 @@ public class PanicRideDTO {
 		this.reason = reason;
 	}
 	
+	public PanicRideDTO(Panic panic) {
+		this.id = panic.getId();
+		this.ride = new RideReturnedDTO(panic.getRide());
+		this.time = panic.getTime();
+		this.reason = panic.getReason();
+		this.user = new UserInPanicRideDTO(panic.getUser());
+	}
+
 	public int getId() {
 		return id;
 	}

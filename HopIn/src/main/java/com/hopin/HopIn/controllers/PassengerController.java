@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
@@ -25,11 +25,13 @@ import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.validations.ExceptionDTO;
 
-@Validated
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/passenger")
@@ -49,8 +51,11 @@ public class PassengerController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserReturnedDTO> insertPassenger(@RequestBody UserDTO dto) {
+	public ResponseEntity<?> insertPassenger(@Valid @RequestBody UserDTO dto) {
 		UserReturnedDTO passenger = passengerService.insert(dto);
+		if (passenger == null) {
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User with that email already exists!"), HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
 	}
 
@@ -63,13 +68,12 @@ public class PassengerController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getPassenger(@PathVariable int id) {
-		UserReturnedDTO passenger = passengerService.getById(id);
-		if (passenger != null) {
-			passengerService.getFavouriteRoutes(id);
-			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
+	public ResponseEntity<?> getPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		try {
+			return new ResponseEntity<UserReturnedDTO>(passengerService.getById(id), HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);			
 		}
-		return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")

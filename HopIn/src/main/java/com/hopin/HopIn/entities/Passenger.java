@@ -1,12 +1,9 @@
 package com.hopin.HopIn.entities;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.hopin.HopIn.dtos.UserDTO;
-import com.hopin.HopIn.dtos.UserDTOOld;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -22,6 +19,9 @@ public class Passenger extends User {
 
 	@ManyToMany(cascade = CascadeType.REFRESH)
 	private Set<Route> favouriteRoutes = new HashSet<Route>();
+
+	@ManyToMany(cascade = CascadeType.REFRESH)
+	private Set<FavoriteRide> favouriteRides = new HashSet<FavoriteRide>();
 
 	public Passenger() {
 	}
@@ -57,6 +57,14 @@ public class Passenger extends User {
 
 	public void setFavouriteRoutes(Set<Route> favouriteRoutes) {
 		this.favouriteRoutes = favouriteRoutes;
+	}
+
+	public Set<FavoriteRide> getFavouriteRides() {
+		return favouriteRides;
+	}
+
+	public void setFavouriteRides(Set<FavoriteRide> favouriteRides) {
+		this.favouriteRides = favouriteRides;
 	}
 
 }

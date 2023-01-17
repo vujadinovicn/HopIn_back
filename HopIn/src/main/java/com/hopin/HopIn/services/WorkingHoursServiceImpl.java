@@ -18,6 +18,7 @@ import com.hopin.HopIn.exceptions.BadDateTimeFormatException;
 import com.hopin.HopIn.exceptions.BadIdFormatException;
 import com.hopin.HopIn.exceptions.DriverAlreadyActiveException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.exceptions.NoVehicleException;
 import com.hopin.HopIn.exceptions.WorkingHoursException;
 import com.hopin.HopIn.repositories.WorkingHoursRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
@@ -32,6 +33,17 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 	@Autowired
 	private IDriverService driverService;
 	
+	@Override 
+	public WorkingHoursDTO getWorkingHoursById(int id) {
+		Optional<WorkingHours> found = allWorkingHours.findById(id);
+		
+		if (found.isEmpty()) {
+			throw new WorkingHoursException();
+		}
+		
+		return new WorkingHoursDTO(found.get());
+	}
+	
 	@Override
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursStartDTO dto) {
 		Driver driver = this.driverService.getDriver(driverId);
@@ -40,6 +52,8 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 			throw new DriverAlreadyActiveException();
 		} else if (this.getWorkedHoursForDate(driverId, dto.getStart()) > 8) {
 			throw new WorkingHoursException();
+		} else if (driver.getVehicle() == null) {
+			throw new NoVehicleException();
 		}
 		
 		WorkingHours workingHours = new WorkingHours(driverId, dto);
@@ -63,6 +77,8 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		Driver driver = this.driverService.getDriver(found.get().getDriverId());
 		if (!driver.isActive()) {
 			throw new NoActiveDriverException();
+		} else if (driver.getVehicle() == null) {
+			throw new NoVehicleException();
 		}
 		
 		found.get().setEnd(dto.getEnd());

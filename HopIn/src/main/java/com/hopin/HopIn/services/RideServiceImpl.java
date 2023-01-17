@@ -1,78 +1,155 @@
 package com.hopin.HopIn.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
+import com.hopin.HopIn.dtos.FavoriteRideDTO;
+import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
-import com.hopin.HopIn.dtos.RideReturnedWithRejectionDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
+import com.hopin.HopIn.dtos.UserInRideDTO;
 import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.entities.FavoriteRide;
+import com.hopin.HopIn.entities.Panic;
+import com.hopin.HopIn.entities.Passenger;
+import com.hopin.HopIn.entities.RejectionNotice;
 import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
+import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.repositories.FavoriteRideRepository;
+import com.hopin.HopIn.repositories.PanicRepository;
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
+import com.hopin.HopIn.services.interfaces.IUserService;
+import com.hopin.HopIn.services.interfaces.IVehicleTypeService;
+import com.hopin.HopIn.util.TokenUtils;
 
 @Service
 public class RideServiceImpl implements IRideService {
-	
+
+	@Autowired
+	private PanicRepository allPanics;
+
 	@Autowired
 	private RideRepository allRides;
+
+	@Autowired
+	private FavoriteRideRepository allFavoriteRides;
 	
 	@Autowired
 	private VehicleTypeRepository allVehicleTypes;
-	
-	@Autowired 
+
+	@Autowired
 	private IDriverService driverService;
 	
+	@Autowired
+	private IVehicleTypeService vehicleTypeService;
+	
+	@Autowired 
+	private IPassengerService passengerService;
+	
+	@Autowired
+	private IUserService userService;
+	
+
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
 	private int currId = 0;
-	
+
 	@Override
 	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to) {
-		DateTimeFormatter formatter = DateTimeFormatter. ofPattern("yyyy/MM/dd"); 
-		List<Ride> rides = allRides.getAllPassengerRidesBetweenDates(id, LocalDate.parse(from, formatter).atStartOfDay(), LocalDate.parse(to, formatter).atStartOfDay());
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		List<Ride> rides = allRides.getAllPassengerRidesBetweenDates(id,
+				LocalDate.parse(from, formatter).atStartOfDay(), LocalDate.parse(to, formatter).atStartOfDay());
 		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
-		for(Ride ride: rides) {
+		for (Ride ride : rides) {
 			res.add(new RideForReportDTO(ride));
 		}
 		return res;
 	}
-	
+
 	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to) {
-		DateTimeFormatter formatter = DateTimeFormatter. ofPattern("yyyy/MM/dd"); 
-		List<Ride> rides = allRides.getAllDriverRidesBetweenDates(id, LocalDate.parse(from, formatter).atStartOfDay(), LocalDate.parse(to, formatter).atStartOfDay());
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		List<Ride> rides = allRides.getAllDriverRidesBetweenDates(id, LocalDate.parse(from, formatter).atStartOfDay(),
+				LocalDate.parse(to, formatter).atStartOfDay());
 		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
-		for(Ride ride: rides) {
+		for (Ride ride : rides) {
 			res.add(new RideForReportDTO(ride));
 		}
 		return res;
 	}
 	
+	@Override
+	public FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto) {
+		User user = userService.getCurrentUser();
+		if (passengerService.getFavoriteRides(user.getId()).size() >= 10) {
+			throw new FavoriteRideException();
+		}
+		Set<Passenger> passengers = new HashSet<Passenger>();
+		for (UserInRideDTO currUser : dto.getPassengers()) {
+			passengers.add(this.passengerService.getPassenger(currUser.getId()));
+		}
+		FavoriteRide favoriteRide = new FavoriteRide(dto, passengers, this.vehicleTypeService.getByName(dto.getVehicleType()));
+		this.allFavoriteRides.save(favoriteRide);
+		this.passengerService.addFavoriteRide(user.getId(), favoriteRide);
+		
+		return new FavoriteRideReturnedDTO(favoriteRide);
+	}
 	
+	@Override
+	public List<FavoriteRideReturnedDTO> getFavoriteRides() {
+		List<FavoriteRide> favoriteRides = this.passengerService.getFavoriteRides(userService.getCurrentUser().getId());
+		List<FavoriteRideReturnedDTO> retRides = new ArrayList<FavoriteRideReturnedDTO>();
+		for (FavoriteRide ride : favoriteRides) {
+			retRides.add(new FavoriteRideReturnedDTO(ride));
+		}
+		return retRides;
+	}
+	
+	@Override 
+	public void deleteFavoriteRide(int id) {
+		Optional<FavoriteRide> found = allFavoriteRides.findById(id);
+		Passenger passenger = passengerService.getPassenger(userService.getCurrentUser().getId());
+		
+		if (found.isEmpty()) {
+			throw new FavoriteRideException();
+		}
+		
+		passenger.getFavouriteRides().remove(found.get());
+		allFavoriteRides.delete(found.get());
+		allFavoriteRides.flush();
+	}
+	
+	
+
 //	public RideServiceImpl() {
 //		List<LocationNoIdDTO> locs = new ArrayList<LocationNoIdDTO>();
 //		locs.add(new LocationNoIdDTO("Bulevar oslobodjenja 46", 45.267136, 19.833549));
@@ -87,14 +164,14 @@ public class RideServiceImpl implements IRideService {
 //		
 //		this.allRides.put(1, ride);
 //	}
-	
+
 //	@Override
 //	public RideReturnedDTO create(RideDTO dto) {
 //		Ride ride = new Ride(dto, ++this.currId);
 //		this.allRides.put(ride.getId(), ride);
 //		return new RideReturnedDTO(ride);
 //	}
-	
+
 //	@Override
 //	public RideReturnedDTO getActiveRideForDriver(int id) {
 //		for(Ride ride : this.allRides.values()) {
@@ -105,7 +182,7 @@ public class RideServiceImpl implements IRideService {
 //		}
 //		return null;
 //	}
-	
+
 //	@Override
 //	public RideReturnedDTO getActiveRideForPassenger(int id) {
 //		for(Ride ride : this.allRides.values()) {
@@ -119,7 +196,7 @@ public class RideServiceImpl implements IRideService {
 //		}
 //		return null;
 //	}
-	
+
 //	@Override
 //	public RideReturnedWithRejectionDTO getRide(int id) {
 //		for(int key: this.allRides.keySet()) {
@@ -179,7 +256,6 @@ public class RideServiceImpl implements IRideService {
 //	}
 //	
 
-
 	@Override
 	public RideReturnedDTO add(RideDTO dto) {
 		List<Driver> activeDrivers = this.driverService.getActiveDrivers();
@@ -202,39 +278,121 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	@Override
-	public RideReturnedWithRejectionDTO getRide(int id) {
+	public RideReturnedDTO getRide(int id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	private Ride getRideIfExists(int id) {
+		return this.allRides.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ride does not exist!"));
+	}
+
+	private Ride changeRideStatus(Ride ride, RideStatus status) {
+		ride.setStatus(status);
+		Ride savedRide = this.allRides.save(ride);
+		this.allRides.flush();
+
+		return savedRide;
 	}
 
 	@Override
 	public RideReturnedDTO cancelRide(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Ride ride = this.getRideIfExists(id);
+
+		if (ride.getStatus() != RideStatus.PENDING && ride.getStatus() != RideStatus.STARTED) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot cancel a ride that is not in status PENDING or STARTED!");
+		}
+
+		Ride savedRide = this.changeRideStatus(ride, RideStatus.CANCELED);
+
+		return new RideReturnedDTO(savedRide);
 	}
 
 	@Override
 	public PanicRideDTO panicRide(int id, ReasonDTO reason) {
-		// TODO Auto-generated method stub
-		return null;
+		Ride ride = this.allRides.findById(id).orElse(null);
+
+		if (ride == null) {
+			return null;
+		}
+
+		// TODO: sta je ovo, dodati usera ulogovanog umesto null
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println(authentication.getName());
+
+		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), null, ride);
+		this.allPanics.save(panic);
+		this.allPanics.flush();
+
+		return new PanicRideDTO(panic);
 	}
 
 	@Override
-	public RideReturnedDTO changeRideStatus(int id, RideStatus status) {
-		// TODO Auto-generated method stub
-		return null;
+	public RideReturnedDTO startRide(int id) {
+		Ride ride = this.getRideIfExists(id);
+
+		if (ride.getStatus() != RideStatus.ACCEPTED) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot start a ride that is not in status ACCEPTED!");
+		}
+
+		ride.setStartTime(LocalDateTime.now());
+		Ride savedRide = this.changeRideStatus(ride, RideStatus.STARTED);
+
+		return new RideReturnedDTO(savedRide);
+	}
+
+	@Override
+	public RideReturnedDTO acceptRide(int id) {
+		Ride ride = this.getRideIfExists(id);
+
+		if (ride.getStatus() != RideStatus.PENDING) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot accept a ride that is not in status PENDING!");
+		}
+
+		Ride savedRide = this.changeRideStatus(ride, RideStatus.ACCEPTED);
+
+		return new RideReturnedDTO(savedRide);
+	}
+
+	@Override
+	public RideReturnedDTO finishRide(int id) {
+		Ride ride = this.getRideIfExists(id);
+
+		if (ride.getStatus() != RideStatus.STARTED) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot end a ride that is not in status STARTED!");
+		}
+
+		ride.setEndTime(LocalDateTime.now());
+		Ride savedRide = this.changeRideStatus(ride, RideStatus.FINISHED);
+
+		return new RideReturnedDTO(savedRide);
 	}
 
 	@Override
 	public RideReturnedDTO rejectRide(int id, ReasonDTO reason) {
-		// TODO Auto-generated method stub
-		return null;
+		Ride ride = this.getRideIfExists(id);
+
+		if (ride.getStatus() != RideStatus.PENDING && ride.getStatus() != RideStatus.ACCEPTED) {
+			//MOZE LI DA SE PROMENI PORUKA OVDE, NEMA RAZLIKE IZMEDJU CANCEL PUTNIKA I REJECT VOZACA OVAKO, BUDE ZBUNJUJUCE?
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot cancel a ride that is not in status PENDING or ACCEPTED!");
+		}
+
+		ride.setRejectionNotice(new RejectionNotice(reason.getReason()));
+		Ride savedRide = this.changeRideStatus(ride, RideStatus.REJECTED);
+
+		return new RideReturnedDTO(savedRide);
 	}
 
 	@Override
 	public AllPanicRidesDTO getAllPanicRides() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Panic> panics = allPanics.findAll();
+		return new AllPanicRidesDTO(panics);
 	}
 
 	@Override
@@ -245,8 +403,15 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto) {
-		VehicleType vehicleType = this.allVehicleTypes.getByName(VehicleTypeName.valueOf(VehicleTypeName.class, dto.getVehicleTypeName()));
+		VehicleType vehicleType = this.allVehicleTypes
+				.getByName(VehicleTypeName.valueOf(VehicleTypeName.class, dto.getVehicleTypeName()));
 		return vehicleType.getPricePerKm() * dto.getDistance();
 	}
-	
+
+	@Override
+	public RideReturnedDTO changeRideStatus(int id, RideStatus status) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

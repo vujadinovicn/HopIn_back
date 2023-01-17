@@ -2,8 +2,11 @@ package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
 
-public class WorkingHoursEndDTO {
+import jakarta.validation.constraints.NotEmpty;
 
+public class WorkingHoursEndDTO {
+	
+	@NotEmpty(message="is required")
 	private LocalDateTime end;
 
 	public WorkingHoursEndDTO() {

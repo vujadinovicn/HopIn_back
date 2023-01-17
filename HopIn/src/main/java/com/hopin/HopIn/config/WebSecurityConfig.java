@@ -69,12 +69,13 @@ public class WebSecurityConfig {
         
         http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
     	http.authorizeRequests()
-    		.requestMatchers("/api/**").permitAll()
+    		//.requestMatchers("/api/**").permitAll()
 			.requestMatchers("/h2-console/**").permitAll()	
-			.requestMatchers("/api/user/login").permitAll()	;
-//			.anyRequest().authenticated().and()
-//			.cors().and()
-//			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
+			.requestMatchers("/api/user/login").permitAll()
+			.requestMatchers("/api/passenger/{id}").permitAll()
+			.anyRequest().authenticated().and()
+			.cors().and()
+			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
 		
 		http.csrf().disable();
 		http.headers().frameOptions().disable();
