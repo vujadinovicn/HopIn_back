@@ -50,4 +50,11 @@ public class VehicleType {
 	public void setPricePerKm(double pricePerKm) {
 		this.pricePerKm = pricePerKm;
 	}
+
+	@Override
+	public String toString() {
+		return "VehicleType [id=" + id + ", name=" + name + ", pricePerKm=" + pricePerKm + "]";
+	}
+
+	
 }
