@@ -1,19 +1,42 @@
 package com.hopin.HopIn.entities;
 
-public class Review {
-	int id;
-	int rating;
-	String comment;
-	User user;
-	
-	public Review() {}
+import com.hopin.HopIn.enums.ReviewType;
 
-	public Review(int id, int rating, String comment, User user) {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "reviews")
+public class Review {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	private int rating;
+	private String comment;
+
+	private ReviewType type;
+
+	@ManyToOne
+	private Passenger passenger;
+
+	@ManyToOne
+	private Ride ride;
+
+	public Review() {
+	}
+
+	public Review(int id, int rating, String comment, ReviewType type, Passenger passenger) {
 		super();
 		this.id = id;
 		this.rating = rating;
 		this.comment = comment;
-		this.user = user;
+		this.type = type;
+		this.passenger = passenger;
 	}
 
 	public int getId() {
@@ -40,13 +63,28 @@ public class Review {
 		this.comment = comment;
 	}
 
-	public User getUser() {
-		return user;
+	public Passenger getPassenger() {
+		return passenger;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setPassenger(Passenger passenger) {
+		this.passenger = passenger;
 	}
-	
-	
+
+	public ReviewType getType() {
+		return type;
+	}
+
+	public void setType(ReviewType type) {
+		this.type = type;
+	}
+
+	public Ride getRide() {
+		return ride;
+	}
+
+	public void setRide(Ride ride) {
+		this.ride = ride;
+	}
+
 }

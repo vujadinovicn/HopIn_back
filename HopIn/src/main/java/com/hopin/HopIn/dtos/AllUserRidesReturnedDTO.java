@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
 
 public class AllUserRidesReturnedDTO {
 	
@@ -15,12 +15,22 @@ public class AllUserRidesReturnedDTO {
 	
 	public AllUserRidesReturnedDTO() {}
 
-	public AllUserRidesReturnedDTO(Map<Integer, Ride> allRides) {
+//	public AllUserRidesReturnedDTO(Map<Integer, Ride> allRides) {
+//		super();
+//		this.totalCount = allRides.size();
+//		
+//		this.results = new HashSet<UserRidesReturnedDTO>();
+//		for(Ride ride : allRides.values()) {
+//			this.results.add(new UserRidesReturnedDTO(ride));
+//		}
+//	}
+
+	public AllUserRidesReturnedDTO(List<Ride> rides) {
 		super();
-		this.totalCount = allRides.size();
+		this.totalCount = rides.size();
 		
 		this.results = new HashSet<UserRidesReturnedDTO>();
-		for(Ride ride : allRides.values()) {
+		for(Ride ride : rides) {
 			this.results.add(new UserRidesReturnedDTO(ride));
 		}
 	}

@@ -1,18 +1,46 @@
 package com.hopin.HopIn.dtos;
 
-import com.hopin.HopIn.enums.VehicleType;
+import org.hibernate.validator.constraints.Length;
+
+import com.hopin.HopIn.entities.Vehicle;
+import com.hopin.HopIn.enums.VehicleTypeName;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class VehicleDTO {
-
-	private VehicleType vehicleType;
+	
+	@NotNull
+	private VehicleTypeName vehicleType;
+	
+	@NotNull
+	@NotEmpty(message="is required")
+	@Length(max=100)
 	private String model;
+	
+	@NotNull
+	@NotEmpty(message="is required")
+	@Length(max=20)
 	private String licenseNumber;
+	
+	@NotNull
+	@Valid
 	private LocationNoIdDTO currentLocation;
-	private int passengerSeats;
-	private boolean babyTransport;
-	private boolean petTransport;
+	
+	@NotNull
+	@Min(value=1)
+	@Max(value=20)
+	private Integer passengerSeats;
+	
+	@NotNull
+	private Boolean babyTransport;
+	@NotNull
+	private Boolean petTransport;
 
-	public VehicleDTO(VehicleType vehicleType, String model, String licenseNumber, LocationNoIdDTO currentLocation,
+	public VehicleDTO(VehicleTypeName vehicleType, String model, String licenseNumber, LocationNoIdDTO currentLocation,
 			int passengerSeats, boolean babyTransport, boolean petTransport) {
 		super();
 		this.vehicleType = vehicleType;
@@ -24,11 +52,21 @@ public class VehicleDTO {
 		this.petTransport = petTransport;
 	}
 
-	public VehicleType getVehicleType() {
+	public VehicleDTO(Vehicle vehicle) {
+		this.vehicleType = vehicle.getVehicleType().getName();
+		this.model = vehicle.getModel();
+		this.licenseNumber = vehicle.getLicenseNumber();
+		this.currentLocation = new LocationNoIdDTO(vehicle.getCurrentLocation());
+		this.passengerSeats = vehicle.getPassengerSeats();
+		this.babyTransport = vehicle.isBabyTransport();
+		this.petTransport = vehicle.isPetTransport();
+	}
+
+	public VehicleTypeName getVehicleType() {
 		return vehicleType;
 	}
 
-	public void setVehicleType(VehicleType vehicleType) {
+	public void setVehicleType(VehicleTypeName vehicleType) {
 		this.vehicleType = vehicleType;
 	}
 

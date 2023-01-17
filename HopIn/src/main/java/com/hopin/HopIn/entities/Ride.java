@@ -1,100 +1,98 @@
 package com.hopin.HopIn.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.hopin.HopIn.enums.RideStatus;
-import com.hopin.HopIn.dtos.LocationDTO;
-import com.hopin.HopIn.dtos.LocationNoIdDTO;
-import com.hopin.HopIn.dtos.RideDTO;
-import com.hopin.HopIn.dtos.UserInRideDTO;
-import com.hopin.HopIn.enums.UserType;
-import com.hopin.HopIn.enums.VehicleType;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "rides")
 public class Ride {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private double totalCost;
-	private UserInRideDTO driver;
-	private List<UserInRideDTO> passengers;
+	private double totalDistance;
 	private int estimatedTimeInMinutes;
-	private VehicleType vehicleType;
 	private boolean petTransport;
 	private boolean babyTransport;
-	private List<Review> reviews;
-	private RejectionNotice rejectionNotice;
-	private List<LocationNoIdDTO> locations;
+	private boolean panic;
 	private RideStatus status;
+	private double distance;
+	private LocalDateTime scheduledTime;
 
-	
-	
-	public Ride() {}
+	@ManyToMany(cascade = {})
+	private Set<Passenger> passengers = new HashSet<Passenger>();
 
-	public Ride(LocalDateTime startTime, LocalDateTime endTime, double price, int estimatedDuration,
-			RideStatus status, boolean pet, boolean baby, VehicleType vehicleType, List<Review> reviews,
-			RejectionNotice rejectionNotice, List<UserInRideDTO> passengers, List<LocationNoIdDTO> locations) {
-		super();
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.totalCost = price;
-		this.estimatedTimeInMinutes = estimatedDuration;
-		this.status = status;
-		this.petTransport = pet;
-		this.babyTransport = baby;
-		this.vehicleType = vehicleType;
-		this.reviews = reviews;
-		this.rejectionNotice = rejectionNotice;
-		this.passengers = passengers;
-		this.locations = locations;
+	@ManyToOne(cascade = CascadeType.REFRESH)
+	private Driver driver;
+
+	@OneToMany(cascade = { CascadeType.ALL })
+	private Set<Review> reviews = new HashSet<Review>();
+
+	@ManyToOne(cascade = {})
+	private VehicleType vehicleType;
+
+	@ManyToOne(cascade = {CascadeType.ALL})
+	private Location departureLocation;
+
+	@ManyToOne(cascade = {CascadeType.ALL})
+	private Location destinationLocation;
+
+	@OneToOne(cascade = { CascadeType.ALL })
+	private RejectionNotice rejectionNotice;
+
+	public Ride() {
 	}
-	
-	
-	
-	public Ride(int id, LocalDateTime startTime, LocalDateTime endTime, double price, int estimatedTimeInMinutes,
-			RideStatus status, boolean pet, boolean baby, VehicleType vehicleType, List<Review> reviews,
-			RejectionNotice rejectionNotice, List<UserInRideDTO> passengers, List<LocationNoIdDTO> locations, UserInRideDTO driver) {
+
+	public Ride(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost, double totalDistance,
+			int estimatedTimeInMinutes, boolean petTransport, boolean babyTransport, boolean panic, RideStatus status,
+			double distance, Set<Passenger> passengers, Driver driver, Set<Review> reviews, VehicleType vehicleType,
+			Location departureLocation, Location destinationLocation, RejectionNotice rejectionNotice) {
 		super();
-		this.setId(id);
+		this.id = id;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.totalCost = price;
+		this.totalCost = totalCost;
+		this.totalDistance = totalDistance;
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
+		this.petTransport = petTransport;
+		this.babyTransport = babyTransport;
+		this.panic = panic;
 		this.status = status;
-		this.petTransport = pet;
-		this.babyTransport = baby;
-		this.vehicleType = vehicleType;
-		this.reviews = reviews;
-		this.rejectionNotice = rejectionNotice;
+		this.distance = distance;
 		this.passengers = passengers;
-		this.locations = locations;
 		this.driver = driver;
+		this.reviews = reviews;
+		this.vehicleType = vehicleType;
+		this.departureLocation = departureLocation;
+		this.destinationLocation = destinationLocation;
+		this.rejectionNotice = rejectionNotice;
+		this.scheduledTime = null;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
-	
-	public Ride(RideDTO dto, int id) {
-		this.setId(id);
-		this.locations = new ArrayList<LocationNoIdDTO>();
-		for(LocationDTO locDto : dto.getLocations()) {
-			this.locations.add(locDto.getDeparture());
-			this.locations.add(locDto.getDestination());
-		}
-		this.passengers = dto.getPassengers();
-		this.vehicleType = dto.getVehicleType();
-		this.babyTransport = dto.isBabyTransport();
-		this.petTransport = dto.isPetTransport();
-		
-		// dummy data
-		this.startTime = LocalDateTime.now().minusHours(1);
-		this.endTime = LocalDateTime.now().plusHours(1);
-		this.totalCost = 2000;
-		this.estimatedTimeInMinutes = 5;
-		this.status = RideStatus.PENDING;
-		this.driver = new UserInRideDTO(1, "driver@gmail.com");
+	public void setId(int id) {
+		this.id = id;
 	}
-	
 
 	public LocalDateTime getStartTime() {
 		return startTime;
@@ -116,28 +114,48 @@ public class Ride {
 		return totalCost;
 	}
 
-	public UserInRideDTO getDriver() {
-		return driver;
+	public void setTotalCost(double totalCost) {
+		this.totalCost = totalCost;
 	}
 
-	public void setDriver(UserInRideDTO driver) {
-		this.driver = driver;
+	public double getTotalDistance() {
+		return totalDistance;
 	}
 
-	public void setEstimatedTimeInMinutes(int estimatedTimeInMinutes) {
-		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
-	}
-
-	public void setTotalCost(double price) {
-		this.totalCost = price;
+	public void setTotalDistance(double totalDistance) {
+		this.totalDistance = totalDistance;
 	}
 
 	public int getEstimatedTimeInMinutes() {
 		return estimatedTimeInMinutes;
 	}
 
-	public void setEstimatedTimeInMinutesDuration(int estimatedDuration) {
-		this.estimatedTimeInMinutes = estimatedDuration;
+	public void setEstimatedTimeInMinutes(int estimatedTimeInMinutes) {
+		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
+	}
+
+	public boolean isPetTransport() {
+		return petTransport;
+	}
+
+	public void setPetTransport(boolean petTransport) {
+		this.petTransport = petTransport;
+	}
+
+	public boolean isBabyTransport() {
+		return babyTransport;
+	}
+
+	public void setBabyTransport(boolean babyTransport) {
+		this.babyTransport = babyTransport;
+	}
+
+	public boolean isPanic() {
+		return panic;
+	}
+
+	public void setPanic(boolean panic) {
+		this.panic = panic;
 	}
 
 	public RideStatus getStatus() {
@@ -148,20 +166,36 @@ public class Ride {
 		this.status = status;
 	}
 
-	public boolean isPet() {
-		return petTransport;
+	public double getDistance() {
+		return distance;
 	}
 
-	public void setPet(boolean pet) {
-		this.petTransport = pet;
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 
-	public boolean isBaby() {
-		return babyTransport;
+	public Set<Passenger> getPassengers() {
+		return passengers;
 	}
 
-	public void setBaby(boolean baby) {
-		this.babyTransport = baby;
+	public void setPassengers(Set<Passenger> passengers) {
+		this.passengers = passengers;
+	}
+
+	public Driver getDriver() {
+		return driver;
+	}
+
+	public void setDriver(Driver driver) {
+		this.driver = driver;
+	}
+
+	public Set<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<Review> reviews) {
+		this.reviews = reviews;
 	}
 
 	public VehicleType getVehicleType() {
@@ -172,12 +206,20 @@ public class Ride {
 		this.vehicleType = vehicleType;
 	}
 
-	public List<Review> getReviews() {
-		return reviews;
+	public Location getDepartureLocation() {
+		return departureLocation;
 	}
 
-	public void setReviews(List<Review> reviews) {
-		this.reviews = reviews;
+	public void setDepartureLocation(Location departureLocation) {
+		this.departureLocation = departureLocation;
+	}
+
+	public Location getDestinationLocation() {
+		return destinationLocation;
+	}
+
+	public void setDestinationLocation(Location destinationLocation) {
+		this.destinationLocation = destinationLocation;
 	}
 
 	public RejectionNotice getRejectionNotice() {
@@ -188,27 +230,29 @@ public class Ride {
 		this.rejectionNotice = rejectionNotice;
 	}
 
-	public List<UserInRideDTO> getPassengers() {
-		return passengers;
+	public LocalDateTime getScheduledTime() {
+		return scheduledTime;
 	}
 
-	public void setPassengers(List<UserInRideDTO> passengers) {
-		this.passengers = passengers;
+	public void setScheduledTime(LocalDateTime scheduledTime) {
+		this.scheduledTime = scheduledTime;
+	}
+	
+	public void addReview(Review review) {
+		this.reviews.add(review);
 	}
 
-	public int getId() {
-		return id;
+	@Override
+	public String toString() {
+		return "Ride [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", totalCost=" + totalCost
+				+ ", totalDistance=" + totalDistance + ", estimatedTimeInMinutes=" + estimatedTimeInMinutes
+				+ ", petTransport=" + petTransport + ", babyTransport=" + babyTransport + ", panic=" + panic
+				+ ", status=" + status + ", distance=" + distance + ", scheduledTime=" + scheduledTime + ", passengers="
+				+ passengers + ", driver=" + driver + ", reviews=" + reviews + ", vehicleType=" + vehicleType
+				+ ", departureLocation=" + departureLocation + ", destinationLocation=" + destinationLocation
+				+ ", rejectionNotice=" + rejectionNotice + "]";
 	}
+	
+	
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public List<LocationNoIdDTO> getLocations() {
-		return locations;
-	}
-
-	public void setLocations(List<LocationNoIdDTO> locations) {
-		this.locations = locations;
-	}
 }

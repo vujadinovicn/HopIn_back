@@ -5,18 +5,18 @@ import java.time.LocalDateTime;
 import com.hopin.HopIn.entities.Note;
 
 public class NoteReturnedDTO {
-	
+
 	int id;
 	LocalDateTime date;
 	String message;
-	
+
 	public NoteReturnedDTO(int id, LocalDateTime date, String message) {
 		super();
 		this.id = id;
 		this.date = date;
 		this.message = message;
 	}
-	
+
 	public NoteReturnedDTO(Note note) {
 		super();
 		this.id = note.getId();
@@ -47,4 +47,10 @@ public class NoteReturnedDTO {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	@Override
+	public String toString() {
+		return "NoteReturnedDTO [id=" + id + ", date=" + date + ", message=" + message + "]";
+	}
+
 }

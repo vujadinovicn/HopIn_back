@@ -1,16 +1,25 @@
 package com.hopin.HopIn.dtos;
 
-public class DocumentDTO {
+import org.hibernate.validator.constraints.Length;
 
-	private String name;
-	private String documentImage;
-	private int driverId;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+public class DocumentDTO {
 	
-	public DocumentDTO(String name, String documentImage, int driverId) {
+	@NotNull
+	@NotEmpty(message="is required")
+	@Length(max=100)
+	private String name;
+	
+	@NotNull
+	@NotEmpty(message="is required")
+	private String documentImage;
+	
+	public DocumentDTO(String name, String documentImage) {
 		super();
 		this.name = name;
 		this.documentImage = documentImage;
-		this.driverId = driverId;
 	}
 
 	public String getName() {
@@ -28,13 +37,4 @@ public class DocumentDTO {
 	public void setDocumentImage(String documentImage) {
 		this.documentImage = documentImage;
 	}
-
-	public int getDriverId() {
-		return driverId;
-	}
-
-	public void setDriverId(int driverId) {
-		this.driverId = driverId;
-	}
-	
 }

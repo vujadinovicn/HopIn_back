@@ -1,10 +1,24 @@
 package com.hopin.HopIn.dtos;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.hopin.HopIn.entities.User;
-import com.hopin.HopIn.enums.UserType;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class UserInRideDTO {
-	private int id;
+	
+	@NotNull
+	@Min(value=0)
+	private Integer id;
+	
+	@NotNull
+	@NotEmpty(message="is required")
+	@Email(message="format is not valid")
+	@Length(max=100)
 	private String email;
 	
 	public UserInRideDTO() {}

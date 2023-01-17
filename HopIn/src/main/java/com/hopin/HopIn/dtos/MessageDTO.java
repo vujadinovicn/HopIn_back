@@ -1,28 +1,31 @@
 package com.hopin.HopIn.dtos;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.hopin.HopIn.enums.MessageType;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 public class MessageDTO {
-	
-	int receiverId;
+	@NotNull
+	@NotEmpty(message="is required")
+	@Length(min=1, max=500)
 	String message;
-	MessageType type;
-	int rideId;
 	
-	public MessageDTO(int receiverId, String message, MessageType type, int rideId) {
+	@NotNull
+	MessageType type;
+	
+	@NotNull
+	@Min(value=1)
+	Integer rideId;
+
+	public MessageDTO(String message, MessageType type, int rideId) {
 		super();
-		this.receiverId = receiverId;
 		this.message = message;
 		this.type = type;
 		this.rideId = rideId;
-	}
-
-	public int getReceiverId() {
-		return receiverId;
-	}
-
-	public void setReceiverId(int receiverId) {
-		this.receiverId = receiverId;
 	}
 
 	public String getMessage() {

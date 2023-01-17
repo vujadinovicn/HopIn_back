@@ -1,14 +1,35 @@
 package com.hopin.HopIn.dtos;
 
-import com.hopin.HopIn.entities.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 
 public class UserDTO {
+	@NotEmpty(message="is required")
+//	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$", message="format is not valid")
 	private String name;
+	
+	@NotEmpty(message="is required")
+//	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$", message="format is not valid")
 	private String surname;
+	
+	@NotEmpty(message="is required")
+	@Email(message="format is not valid")
 	private String email;
+	
+//	@NotEmpty(message="is required")
+//	@Pattern(regexp="^([0-9a-zA-Z]{3,}$)", message="format is not valid")
 	private String password;
+	
+	@NotEmpty(message="is required")
+	@Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$", message="format is not valid")
 	private String address;
+	
+	@NotEmpty(message="is required")
+	@Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*", message="format is not valid")
 	private String telephoneNumber;
+	
+	@NotEmpty(message="is required")
 	private String profilePicture;
 
 	public UserDTO(String name, String surname, String email, String password, String address, String telephoneNumber,
@@ -21,17 +42,6 @@ public class UserDTO {
 		this.address = address;
 		this.telephoneNumber = telephoneNumber;
 		this.profilePicture = profilePicture;
-	}
-	
-	public UserDTO(User user) {
-		super();
-		this.name = user.getName();
-		this.surname = user.getSurname();
-		this.email = user.getEmail();
-		this.password = user.getPassword();
-		this.address = user.getAddress();
-		this.telephoneNumber = user.getTelephoneNumber();
-		this.profilePicture = user.getProfilePicture();
 	}
 
 	public String getName() {
@@ -78,8 +88,8 @@ public class UserDTO {
 		return telephoneNumber;
 	}
 
-	public void setTelephoneNumber(String phone) {
-		this.telephoneNumber = phone;
+	public void setTelephoneNumber(String telephoneNumber) {
+		this.telephoneNumber = telephoneNumber;
 	}
 
 	public String getProfilePicture() {
@@ -89,5 +99,5 @@ public class UserDTO {
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
-		
+
 }

@@ -2,6 +2,7 @@ package com.hopin.HopIn.dtos;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,13 +15,13 @@ public class AllUsersDTO {
 	private Set<UserReturnedDTO> results;
 	
 	public AllUsersDTO() {}
+	
 
-	public AllUsersDTO(Map<Integer, User> allUsers) {
+	public AllUsersDTO(List<Passenger> passengers) {
 		super();
-		this.totalCount = allUsers.size();
-		
+		this.totalCount = passengers.size();
 		this.results = new HashSet<UserReturnedDTO>();
-		for(User user : allUsers.values()) {
+		for(User user : passengers) {
 			this.results.add(new UserReturnedDTO(user));
 		}
 	}
@@ -34,6 +35,15 @@ public class AllUsersDTO {
 			this.results.add(new UserReturnedDTO(user));
 		}
 	}
+	
+	
+
+	public AllUsersDTO(int totalCount, Set<UserReturnedDTO> results) {
+		super();
+		this.totalCount = totalCount;
+		this.results = results;
+	}
+
 
 	public int getTotalCount() {
 		return totalCount;

@@ -1,8 +1,7 @@
 package com.hopin.HopIn.dtos;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 import com.hopin.HopIn.entities.Review;
@@ -13,7 +12,7 @@ public class AllReviewsReturnedDTO {
 	
 	public AllReviewsReturnedDTO() {}
 
-	public AllReviewsReturnedDTO(ArrayList<Review> allReviews) {
+	public AllReviewsReturnedDTO(List<Review> allReviews) {
 		super();
 		this.totalCount = allReviews.size();
 		

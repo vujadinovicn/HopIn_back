@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
 
 public class UserRidesReturnedDTO {
 	
@@ -16,7 +16,7 @@ public class UserRidesReturnedDTO {
 	UserInRideDTO driver;
 	List<UserInRideDTO> passengers;
 	int estimatedTimeInMinutes;
-	VehicleType vehicleType;
+	VehicleTypeName vehicleType;
 	boolean babyTransport;
 	boolean petTransport;
 	RejectionNoticeDTO rejection;
@@ -24,7 +24,7 @@ public class UserRidesReturnedDTO {
 	
 	public UserRidesReturnedDTO(int id, List<LocationNoIdDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
 			int totalCost, UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
-			VehicleType vehicleType, boolean babyTransport, boolean petTransport, RejectionNoticeDTO rejection) {
+			VehicleTypeName vehicleType, boolean babyTransport, boolean petTransport, RejectionNoticeDTO rejection) {
 		super();
 		this.id = id;
 		this.locations = locations;
@@ -40,24 +40,28 @@ public class UserRidesReturnedDTO {
 		this.rejection = rejection;
 	}
 	
+//	public UserRidesReturnedDTO(Ride ride) {
+//		super();
+//		this.id = ride.getId();
+//		this.startTime = ride.getStartTime();
+//		this.endTime = ride.getEndTime();
+//		this.totalCost = (int) ride.getTotalCost();
+//		this.driver = ride.getDriver();
+//		if (ride.getPassengers() == null)
+//			this.passengers = null;
+//		else {
+//			for (UserInRideDTO p : ride.getPassengers())
+//				this.passengers.add(p);
+//		}
+//		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
+//		this.petTransport = ride.isPet();
+//		this.babyTransport = ride.isBaby();
+//		this.vehicleType = ride.getVehicleType();
+//		this.rejection = new RejectionNoticeDTO(ride.getRejectionNotice());
+//	}
+
 	public UserRidesReturnedDTO(Ride ride) {
-		super();
-		this.id = ride.getId();
-		this.startTime = ride.getStartTime();
-		this.endTime = ride.getEndTime();
-		this.totalCost = (int) ride.getTotalCost();
-		this.driver = ride.getDriver();
-		if (ride.getPassengers() == null)
-			this.passengers = null;
-		else {
-			for (UserInRideDTO p : ride.getPassengers())
-				this.passengers.add(p);
-		}
-		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
-		this.petTransport = ride.isPet();
-		this.babyTransport = ride.isBaby();
-		this.vehicleType = ride.getVehicleType();
-		this.rejection = new RejectionNoticeDTO(ride.getRejectionNotice());
+		// TODO Auto-generated constructor stub
 	}
 
 	public int getId() {
@@ -124,11 +128,11 @@ public class UserRidesReturnedDTO {
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
 	}
 
-	public VehicleType getVehicleType() {
+	public VehicleTypeName getVehicleType() {
 		return vehicleType;
 	}
 
-	public void setVehicleType(VehicleType vehicleType) {
+	public void setVehicleType(VehicleTypeName vehicleType) {
 		this.vehicleType = vehicleType;
 	}
 

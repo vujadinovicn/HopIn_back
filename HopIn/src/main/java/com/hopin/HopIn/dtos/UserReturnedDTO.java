@@ -1,6 +1,7 @@
 package com.hopin.HopIn.dtos;
 
 import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.entities.Vehicle;
 
 public class UserReturnedDTO {
 	private int id;
@@ -10,17 +11,21 @@ public class UserReturnedDTO {
 	private String telephoneNumber;
 	private String email;
 	private String address;
+	private String password;
 	
-	public UserReturnedDTO(int id, String name, String surname, String email, String address, String telephoneNumber,
-			String profilePicture) {
+	public UserReturnedDTO() {}
+
+	public UserReturnedDTO(int id, String name, String surname, String profilePicture, String telephoneNumber,
+			String email, String address, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
+		this.profilePicture = profilePicture;
+		this.telephoneNumber = telephoneNumber;
 		this.email = email;
 		this.address = address;
-		this.telephoneNumber = telephoneNumber;
-		this.profilePicture = profilePicture;
+		this.password = password;
 	}
 
 	public UserReturnedDTO(User user) {
@@ -32,6 +37,19 @@ public class UserReturnedDTO {
 		this.address = user.getAddress();
 		this.telephoneNumber = user.getTelephoneNumber();
 		this.profilePicture = user.getProfilePicture();
+		this.password = user.getPassword();
+	}
+
+	public UserReturnedDTO(User user, Vehicle vehicle) {
+		super();
+		this.id = user.getId();
+		this.name = user.getName();
+		this.surname = user.getSurname();
+		this.email = user.getEmail();
+		this.address = user.getAddress();
+		this.telephoneNumber = user.getTelephoneNumber();
+		this.profilePicture = user.getProfilePicture();
+		this.password = null;
 	}
 
 	public int getId() {
@@ -89,5 +107,12 @@ public class UserReturnedDTO {
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
-	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }

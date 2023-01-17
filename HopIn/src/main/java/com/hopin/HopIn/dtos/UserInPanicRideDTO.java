@@ -78,5 +78,4 @@ public class UserInPanicRideDTO {
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
-	
 }

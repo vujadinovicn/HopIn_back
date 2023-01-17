@@ -1,24 +1,66 @@
 package com.hopin.HopIn.dtos;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hopin.HopIn.enums.VehicleType;
+import com.hopin.HopIn.enums.VehicleTypeName;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public class RideDTO {
-	private List<LocationDTO> locations;
-	private List<UserInRideDTO> passengers;
-	private VehicleType vehicleType;
-	private boolean babyTransport;
-	private boolean petTransport;
 	
-	public RideDTO(List<LocationDTO> locations, List<UserInRideDTO> passengers, VehicleType vehicleType,
-			boolean babyTransport, boolean petTransport) {
+	@Valid
+	@NotNull(message="is required")
+	private List<LocationDTO> locations;
+	
+	@Valid
+	@NotNull(message="is required")
+	private List<UserInRideDTO> passengers;
+	
+	@NotNull(message="is required")
+	private VehicleTypeName vehicleType;
+	
+	@NotNull(message="is required")
+	private Boolean babyTransport;
+	
+	@NotNull(message="is required")
+	private Boolean petTransport;
+	
+	private Double distance;
+	
+	private Double duration;
+	
+	private Double price;
+	
+	private LocalDateTime scheduledTime;
+
+	public RideDTO() {
+	}
+
+	public RideDTO(List<LocationDTO> locations, List<UserInRideDTO> passengers, VehicleTypeName vehicleType,
+			Boolean babyTransport, Boolean petTransport) {
 		super();
 		this.locations = locations;
 		this.passengers = passengers;
 		this.vehicleType = vehicleType;
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
+	}
+
+	public RideDTO(List<LocationDTO> locations, List<UserInRideDTO> passengers, VehicleTypeName vehicleType,
+			Boolean babyTransport, Boolean petTransport, Double distance, Double duration, Double price,
+			LocalDateTime scheduledTime) {
+		super();
+		this.locations = locations;
+		this.passengers = passengers;
+		this.vehicleType = vehicleType;
+		this.babyTransport = babyTransport;
+		this.petTransport = petTransport;
+		this.distance = distance;
+		this.duration = duration;
+		this.price = price;
+		this.scheduledTime = scheduledTime;
 	}
 
 	public List<LocationDTO> getLocations() {
@@ -37,28 +79,84 @@ public class RideDTO {
 		this.passengers = passengers;
 	}
 
-	public VehicleType getVehicleType() {
+	public VehicleTypeName getVehicleType() {
 		return vehicleType;
 	}
 
-	public void setVehicleType(VehicleType vehicleType) {
+	public void setVehicleType(VehicleTypeName vehicleType) {
 		this.vehicleType = vehicleType;
 	}
 
-	public boolean isBabyTransport() {
+	public Boolean isBabyTransport() {
 		return babyTransport;
 	}
 
-	public void setBabyTransport(boolean babyTransport) {
+	public void setBabyTransport(Boolean babyTransport) {
 		this.babyTransport = babyTransport;
 	}
 
-	public boolean isPetTransport() {
+	public Boolean isPetTransport() {
 		return petTransport;
 	}
 
-	public void setPetTransport(boolean petTransport) {
+	public void setPetTransport(Boolean petTransport) {
 		this.petTransport = petTransport;
 	}
 	
+	public Double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+
+	public Double getDuration() {
+		return duration;
+	}
+
+	public void setDuration(Double duration) {
+		this.duration = duration;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public LocalDateTime getScheduledTime() {
+		return scheduledTime;
+	}
+
+	public void setScheduledTime(LocalDateTime scheduledTime) {
+		this.scheduledTime = scheduledTime;
+	}
+	
+	public LocationNoIdDTO getDepartureLocation() {
+		return this.getLocations().get(0).getDeparture();
+	}
+	
+	public LocationNoIdDTO getDestinationLocation() {
+		return this.getLocations().get(0).getDestination();
+	}
+	
+
+	public String getDepartureLocationLat() {
+		return Double.toString(this.getDepartureLocation().getLatitude());
+	}
+	
+	public String getDepartureLocationLng() {
+		return Double.toString(this.getDepartureLocation().getLongitude());
+	}
+	
+	public String getDestinationLocationLat() {
+		return Double.toString(this.getDestinationLocation().getLatitude());
+	}
+	
+	public String getDestinationLocationLng() {
+		return Double.toString(this.getDestinationLocation().getLongitude());
+	}
 }

@@ -2,17 +2,30 @@ package com.hopin.HopIn.entities;
 
 import java.time.LocalDateTime;
 
+import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.enums.MessageType;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="messages")
 public class Message {
 
-	int id;
-	LocalDateTime timeOfSending;
-	int senderId;
-	int receiverId;
-	String message;
-	MessageType type;
-	int rideId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	private LocalDateTime timeOfSending;
+	private int senderId;
+	private int receiverId;
+	private String message;
+	private MessageType type;
+	private int rideId;
+	
+	public Message() {}
 	
 	public Message(int id, int senderId, int receiverId, LocalDateTime timeOfSending, String message,
 			MessageType type, int rideId) {
@@ -24,6 +37,15 @@ public class Message {
 		this.message = message;
 		this.type = type;
 		this.rideId = rideId;
+	}
+	
+	public Message(int senderId, int receiverId, MessageDTO dto) {
+		this.senderId = senderId;
+		this.receiverId = receiverId;
+		this.message = dto.getMessage();
+		this.type = dto.getType();
+		this.rideId = dto.getRideId();
+		this.timeOfSending = LocalDateTime.now();
 	}
 
 	public int getId() {

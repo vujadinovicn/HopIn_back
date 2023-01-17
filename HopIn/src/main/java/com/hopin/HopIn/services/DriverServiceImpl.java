@@ -1,36 +1,76 @@
 package com.hopin.HopIn.services;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
-import com.hopin.HopIn.dtos.LocationNoIdDTO;
+import com.hopin.HopIn.dtos.DocumentReturnedDTO;
+import com.hopin.HopIn.dtos.DriverReturnedDTO;
+import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
+import com.hopin.HopIn.dtos.VehicleReturnedDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.entities.Document;
 import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
+import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
+import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.entities.Vehicle;
-import com.hopin.HopIn.entities.WorkingHours;
+import com.hopin.HopIn.enums.DocumentOperationType;
+import com.hopin.HopIn.enums.Role;
+import com.hopin.HopIn.enums.VehicleTypeName;
+import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
+import com.hopin.HopIn.exceptions.VehicleNotAssignedException;
+import com.hopin.HopIn.repositories.DocumentRepository;
+import com.hopin.HopIn.repositories.DriverRepository;
+import com.hopin.HopIn.repositories.LocationRepository;
+import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IUserService;
 
 @Service
 public class DriverServiceImpl implements IDriverService {
 
-	private Map<Integer, Driver> allDrivers = new HashMap<Integer, Driver>();
+	@Autowired 
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private DriverRepository allDrivers;
+	
+	@Autowired
+	private VehicleRepository allVehicles;
+	
+	@Autowired
+	private DocumentRepository allDocuments;
+	
+	@Autowired
+	private LocationRepository allLocations;
+	
+	@Autowired
+	private IUserService userService;
+	
+	private Map<Integer, Driver> allDriversMap = new HashMap<Integer, Driver>();
 	private int currId = 1;
 	private int currDocId = 1;
 	private int currVehicleId = 1;
@@ -38,36 +78,74 @@ public class DriverServiceImpl implements IDriverService {
 
 	@Override
 	public UserReturnedDTO insert(UserDTO dto) {
+		if (this.userService.userAlreadyExists(dto.getEmail())) {
+			throw new EmailAlreadyInUseException();
+		}
 		Driver driver = dtoToDriver(dto, null);
-		driver.setId(currId);
-		this.allDrivers.put(currId++, driver);
+		driver.setPassword(passwordEncoder.encode(dto.getPassword()));
+		driver.setRole(Role.DRIVER);
+		
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
 		return new UserReturnedDTO(driver);
 	}
 	
 	@Override
-	public AllUsersDTO getAllPaginated(Pageable pageable) {
-		if (allDrivers.size() == 0) {
-			Driver driver = new Driver(0, "Pera", "Peric", "pera.peric@email.com", "123", "Bulevar Oslobodjenja 74", "+381123123", "U3dhZ2dlciByb2Nrcw==");
-			allDrivers.put(driver.getId(), driver);
+	public AllUsersDTO getAllPaginated(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Driver> drivers = this.allDrivers.findAll(pageable);
+		List<Driver> res = new ArrayList<Driver>();
+		for (Driver d : drivers) {
+			res.add(d);
 		}
-		
-		return new AllUsersDTO(this.allDrivers.values());
+		return new AllUsersDTO(res); 
 	}
 
 	@Override
-	public UserReturnedDTO getById(int id) {
-		Driver driver = this.allDrivers.get(id);
-		if (driver == null)
-			driver = new Driver();
-		return new UserReturnedDTO(driver);
+	public DriverReturnedDTO getById(int id) {
+		Optional<Driver> found = allDrivers.findById(id);
+		if (found.isEmpty()) {
+			throw new UserNotFoundException();
+		}
+		if (found.get().getVehicle() == null)
+			return new DriverReturnedDTO(found.get());
+		else
+			return new DriverReturnedDTO(found.get(), found.get().getVehicle());
 	}
-
+	
+	@Override 
+	public Driver getDriver(int id) {
+		Optional<Driver> found = allDrivers.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
+		}
+		return found.get();
+	}
+	
 	@Override
-	public UserReturnedDTO update(int id, UserDTO newData) {
-		Driver driver = this.allDrivers.get(id);
-		driver = dtoToDriver(newData, driver);
-		return new UserReturnedDTO(driver);
+	public UserReturnedDTO update(int id, UserDTO dto) {
+		Optional<Driver> driver = allDrivers.findById(id);
+		if (driver.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
+		}
+//		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
+//			if (!this.checkPasswordMatch(driver.get().getPassword(), dto.getPassword())) {
+//				System.out.println(driver.get().getPassword());
+//				System.out.println(dto.getPassword());
+//				return null;	
+//			}
+//			dto.setPassword(dto.getNewPassword());
+//		}
+		driver.get().copy(dto);
+		this.allDrivers.save(driver.get());
+		this.allDrivers.flush();
+		return new UserReturnedDTO(driver.get());
 	}
+	
+	private boolean checkPasswordMatch(String password, String subbmitedPassword) {
+		return password.equals(subbmitedPassword);
+	}
+	
 	@Override
 	public AllUsersDTO getAll(int page, int size) {
 		// TODO Auto-generated method stub
@@ -75,90 +153,121 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public List<Document> getDocuments(int driverId) {
-		return this.allDrivers.get(driverId).getDocuments();
+	public List<DocumentReturnedDTO> getDocuments(int driverId) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			throw new UserNotFoundException();
+		}
+		List<DocumentReturnedDTO> documents = new ArrayList<DocumentReturnedDTO>();
+		driver.get().getDocuments().forEach((document) -> {documents.add(new DocumentReturnedDTO(document));});
+		return documents;
 	}
 
 	@Override
-	public Document addDocument(int driverId, DocumentDTO newDocument) {
-		Driver driver = this.allDrivers.get(driverId);
-		Document document = this.dtoToDocument(newDocument, null);
+	public DocumentReturnedDTO addDocument(int driverId, DocumentDTO documentDTO) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			return null;
+		}
+		Document document = new Document();
+		this.dtoToDocument(documentDTO, document);
 		document.setDriverId(driverId);
-		driver.getDocuments().add(document);
-
-		return document;
-	}
-
-	@Override
-	public Vehicle getVehicle(int driverId) {
-		Driver driver = this.allDrivers.get(driverId);
-		Vehicle vehicle = new Vehicle();
+		driver.get().getDocuments().add(document);
 		
-		if (driver != null)
-			vehicle = driver.getVehicle();
-		if (vehicle == null) {
-			vehicle = new Vehicle();
-			vehicle.setCurrentLocation(new LocationNoIdDTO());
-		}
+		allDocuments.save(document);
+		allDrivers.save(driver.get());
+		allDrivers.flush();
 		
-		return vehicle;
-	}
-
-	@Override
-	public Vehicle setVehicle(int driverId, VehicleDTO dto) {
-		Driver driver = this.allDrivers.get(driverId);
-		Vehicle vehicle;
-		if (driver != null) {
-			vehicle = dtoToVehicle(dto, driverId, null);
-			driver.setVehicle(vehicle);
-		} else {
-			vehicle = new Vehicle();
-		}
-		
-		return vehicle;
-	}
-
-	@Override
-	public Vehicle updateVehicle(int driverId, VehicleDTO dto) {
-		Driver driver = this.allDrivers.get(driverId);
-		Vehicle vehicle = driver.getVehicle();
-		if (vehicle == null)
-			vehicle = new Vehicle();
-		dtoToVehicle(dto, driverId, vehicle);
-		
-		return vehicle;
+		DocumentReturnedDTO res = new DocumentReturnedDTO(document);
+		res.setDocumentImage(documentDTO.getDocumentImage());
+		return res;
 	}
 	
 	@Override
-	public AllHoursDTO getAllHours(int id, int page, int size, String from, String to) {
-		return new AllHoursDTO(1, new ArrayList<WorkingHours>() {
-            {
-                add(new WorkingHours(0, LocalDateTime.now(), LocalDateTime.now(), 0));
-            }
-        });
+	public void deleteDocument(int id) {
+		Optional<Document> found = this.allDocuments.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document does not exist");
+		}
+		this.allDocuments.delete(found.get());
+		this.allDocuments.flush();
+	}
+
+	@Override
+	public VehicleReturnedDTO getVehicle(int driverId) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			throw new UserNotFoundException();
+		}
+		Vehicle vehicle = driver.get().getVehicle();
+		if (vehicle == null) {
+			throw new VehicleNotAssignedException();
+		}
+		VehicleReturnedDTO vehicleDTO = new VehicleReturnedDTO(driver.get().getVehicle());
+		return vehicleDTO;
+	}
+
+	@Override
+	public VehicleReturnedDTO insertVehicle(int driverId, VehicleDTO dto) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
+		}
+		
+		Vehicle vehicle = new Vehicle();
+		dtoToVehicle(dto, driverId, vehicle);
+		driver.get().setVehicle(vehicle);
+		allVehicles.save(vehicle);
+		allDrivers.save(driver.get());
+		allDrivers.flush();
+		
+		return new VehicleReturnedDTO(driver.get().getVehicle());
+	}
+
+	@Override
+	public VehicleReturnedDTO updateVehicle(int driverId, VehicleDTO dto) {
+		Optional<Driver> driver = allDrivers.findById(driverId);
+		if (driver.isEmpty()){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		Vehicle vehicle = driver.get().getVehicle();
+		dtoToVehicle(dto, driverId, vehicle);
+		allDrivers.save(driver.get());
+		allDrivers.flush();
+		
+		return new VehicleReturnedDTO(driver.get().getVehicle());
+	}
+	
+	@Override
+	public AllHoursDTO getAllHours(int id, int page, int size) {
+		return null;
 	}
 	
 	@Override
 	public WorkingHoursDTO getWorkingHours(int hoursId) {
-		return new WorkingHoursDTO(new WorkingHours(hoursId, LocalDateTime.now(), LocalDateTime.now(), 0));
+//		return new WorkingHoursDTO(new WorkingHours(hoursId, LocalDateTime.now(), LocalDateTime.now(), 0));
+		return null;
 	}
 	
 	@Override
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursDTO hours) {
-		Driver driver = this.allDrivers.get(driverId);
-		WorkingHours newHours = new WorkingHours(currHoursId++, hours.getStart(), hours.getEnd(), driverId);
-		driver.getWorkingHours().add(newHours);
+//		Driver driver = this.allDriversMap.get(driverId);
+//		WorkingHours newHours = new WorkingHours(currHoursId++, hours.getStart(), hours.getEnd(), driverId);
+//		driver.getWorkingHours().add(newHours);
+//		
+//		System.out.println(new Date());
+//		
+//		return new WorkingHoursDTO(newHours);
 		
-		System.out.println(new Date());
-		
-		return new WorkingHoursDTO(newHours);
+		return null;
 	}
 	
 	
 	@Override
 	public WorkingHoursDTO updateWorkingHours(int hoursId, WorkingHoursDTO hours) {
 		// vidi ovde kako bi zapravo sa repo bilo
-		return new WorkingHoursDTO(new WorkingHours(hoursId, hours.getStart(), hours.getEnd(), hoursId));
+//		return new WorkingHoursDTO(new WorkingHours(hoursId, hours.getStart(), hours.getEnd(), hoursId));
+		return null;
 	}
 
 	
@@ -169,29 +278,27 @@ public class DriverServiceImpl implements IDriverService {
 	
 	
 	private Vehicle dtoToVehicle(VehicleDTO dto, int driverId, Vehicle vehicle) {
-		if (vehicle == null) {
-			vehicle = new Vehicle();
-			vehicle.setId(currVehicleId++);
-		}
-		
+		vehicle.setDriverId(driverId);
 		vehicle.setModel(dto.getModel());
 		vehicle.setLicenseNumber(dto.getLicenseNumber());
-		vehicle.setCurrentLocation(dto.getCurrentLocation());
+		Location loc = new Location(dto.getCurrentLocation());
+		this.allLocations.save(loc);
+		vehicle.setCurrentLocation(loc);
 		vehicle.setPassengerSeats(dto.getPassengerSeats());
 		vehicle.setBabyTransport(dto.isBabyTransport());
-		vehicle.setPetTransport(dto.isBabyTransport());
-		vehicle.setVehicleType(dto.getVehicleType());
-		vehicle.setDriverId(driverId);
+		vehicle.setPetTransport(dto.isPetTransport());
+		if (dto.getVehicleType().equals(VehicleTypeName.STANDARD)) {
+			vehicle.getVehicleType().setName(VehicleTypeName.STANDARD);
+		} else if (dto.getVehicleType().equals(VehicleTypeName.VAN)) {
+			vehicle.getVehicleType().setName(VehicleTypeName.VAN);
+		} else {
+			vehicle.getVehicleType().setName(VehicleTypeName.LUXURY);
+		}
 
 		return vehicle;
 	}
 
 	private Document dtoToDocument(DocumentDTO dto, Document document) {
-		if (document == null) {
-			document = new Document();
-			document.setId(currDocId++);
-		}
-
 		document.setName(dto.getName());
 		document.setDocumentImage(dto.getDocumentImage());
 
@@ -214,4 +321,107 @@ public class DriverServiceImpl implements IDriverService {
 		return driver;
 	}
 	
+	@Override
+	public void updateByInfoRequest(DriverAccountUpdateInfoRequest request) {
+		Driver driver = request.getDriver();
+		driver.setInfoByRequest(request);
+		
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+	}
+	
+	@Override
+	public void updateByPasswordRequest(DriverAccountUpdatePasswordRequest request) {
+		Driver driver = request.getDriver();
+		if (request.getNewPassword() != "" && request.getNewPassword() != null) {
+			if (!this.checkPasswordMatch(driver.getPassword(), request.getOldPassword())) {
+				return;	
+			}
+			driver.setPassword(request.getNewPassword());
+		}
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+		
+	}
+	
+	@Override
+	public void updateByVehicleRequest(DriverAccountUpdateVehicleRequest request) {
+		Driver driver = request.getDriver();
+		Vehicle vehicle = request.getDriver().getVehicle();
+		vehicle.setInfoByRequest(request);
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+	}
+	
+	@Override
+	public void updateByDocumentRequest(DriverAccountUpdateDocumentRequest request) {
+		Driver driver = request.getDriver();
+		if (request.getDocumentOperationType() == DocumentOperationType.ADD) {
+			Document document = new Document();
+			document.setName(request.getName());
+			document.setDocumentImage(request.getDocumentImage());
+			document.setDriverId(driver.getId());
+			driver.getDocuments().add(document);	
+		} else {
+			if (request.getDocumentOperationType() == DocumentOperationType.UPDATE) {
+				Document document = this.getDocumentById(driver.getDocuments(), request.getDocumentId());
+				document.setName(request.getName());
+				document.setDocumentImage(request.getDocumentImage());
+			} else {
+				if (request.getDocumentOperationType() == DocumentOperationType.DELETE) {
+					Document document = this.getDocumentById(driver.getDocuments(), request.getDocumentId());
+					driver.getDocuments().remove(document);
+					this.allDocuments.delete(document);
+				}
+			}
+		}
+	
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+	}
+
+	private Document getDocumentById(Set<Document> documents, int id) {
+		for (Document elem: documents) {
+			if (elem.getId() == id) {
+				return elem;
+			}
+		}
+		
+		return null;
+	}
+	
+	public List<Driver> getActiveDrivers(){
+		List<Driver> drivers = this.allDrivers.findByIsActive(true);
+		return drivers;
+	}
+
+	@Override
+	public void setDriverActivity(int driverId, boolean isActive) {
+		Driver driver = this.getDriver(driverId);
+		driver.setActive(isActive);
+		this.allDrivers.save(driver);
+		this.allDrivers.flush();
+	}
+
+	@Override
+	public boolean isDriverVehicleAppropriateForRide(int id, RideDTO rideDTO) {
+		Driver driver = this.getDriver(id);
+		Vehicle vehicle = driver.getVehicle();
+		if (vehicle.isBabyTransport() != rideDTO.isBabyTransport() ||
+				vehicle.isPetTransport() != rideDTO.isPetTransport() ||
+				vehicle.getPassengerSeats() < rideDTO.getPassengers().size() ||
+				vehicle.getVehicleType().getName() != rideDTO.getVehicleType())
+			return false;
+		return true;
+	}
+
+	@Override
+	public List<Driver> getDriversWithAppropriateVehicleForRide(List<Driver> activeDrivers, RideDTO rideDTO) {
+		List<Driver> driversWithAppropriateVehicle = new ArrayList<Driver>();
+		for (Driver driver: activeDrivers) {
+			if (this.isDriverVehicleAppropriateForRide(driver.getId(), rideDTO))
+				driversWithAppropriateVehicle.add(driver);
+		}
+		return driversWithAppropriateVehicle;
+	}
 }

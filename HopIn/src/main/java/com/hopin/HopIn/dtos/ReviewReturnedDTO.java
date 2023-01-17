@@ -14,7 +14,7 @@ public class ReviewReturnedDTO {
 		this.id = review.getId();
 		this.rating = review.getRating();
 		this.comment = review.getComment();
-		this.passenger = new UserInRideDTO(123, "pera@peric.com");
+		this.passenger = new UserInRideDTO(review.getPassenger());
 	}
 
 	public ReviewReturnedDTO(int id, int rating, String comment, UserInRideDTO passenger) {
