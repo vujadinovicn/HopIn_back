@@ -75,14 +75,15 @@ public class WebSecurityConfig {
 			.requestMatchers("/api/unregisteredUser/").hasRole("ANONYMOUS")
 			.and()
 			.authorizeRequests()
-    		.requestMatchers("/api/**").permitAll()
+//    		.requestMatchers("/api/**").permitAll()
     		.and()
     		.authorizeRequests()
 			.requestMatchers("/h2-console/**").permitAll()	
-			.requestMatchers("/api/user/login").permitAll();
-//			.anyRequest().authenticated().and()
-//			.cors().and()
-//			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
+			.and().authorizeRequests()
+			.requestMatchers("/api/user/login").permitAll()
+			.anyRequest().authenticated().and()
+			.cors().and()
+			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
 		
 		http.csrf().disable();
 

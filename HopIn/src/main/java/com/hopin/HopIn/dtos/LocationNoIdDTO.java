@@ -21,8 +21,8 @@ public class LocationNoIdDTO {
 	private Double latitude;
 	
 	@NotNull(message="is required")
-	@Max(value=90, message="value is max 90")
-	@Min(value=-90, message="value is min -90")
+	@Max(value=180, message="value is max 90")
+	@Min(value=-180, message="value is min -90")
 	private Double longitude;
 	
 	public LocationNoIdDTO() {}
