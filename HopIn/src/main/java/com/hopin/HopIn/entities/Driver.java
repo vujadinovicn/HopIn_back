@@ -22,7 +22,7 @@ public class Driver extends User {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Vehicle vehicle;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.REFRESH, orphanRemoval = true)
 	private Set<Document> documents = new HashSet<Document>();
 
 	@OneToMany(cascade = CascadeType.ALL)

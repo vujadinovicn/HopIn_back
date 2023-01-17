@@ -51,10 +51,11 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		if (driver.isActive()) {
 			throw new DriverAlreadyActiveException();
 		} else if (this.getWorkedHoursForToday(driverId, dto.getStart()) > 8) {
-			throw new WorkingHoursException();
-		} else if (driver.getVehicle() == null) {
-			throw new NoVehicleException();
-		}
+			throw new WorkingHoursException(); 
+		} 
+//		else if (driver.getVehicle() == null) {
+//			throw new NoVehicleException();
+//		}
 		
 		WorkingHours workingHours = new WorkingHours(driverId, dto);
 		this.allWorkingHours.save(workingHours);
@@ -70,16 +71,18 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		Optional<WorkingHours> found = this.allWorkingHours.findById(id);
 		if (found.isEmpty()) {
 			throw new BadIdFormatException();
-		} else if (found.get().getStart().isAfter(dto.getEnd())) {
-			throw new BadDateTimeFormatException();
-		}
+		} 
+//		else if (found.get().getStart().isAfter(dto.getEnd())) {
+//			throw new BadDateTimeFormatException();
+//		}
 		
 		Driver driver = this.driverService.getDriver(found.get().getDriverId());
 		if (!driver.isActive()) {
 			throw new NoActiveDriverException();
-		} else if (driver.getVehicle() == null) {
-			throw new NoVehicleException();
-		}
+		} 
+//		else if (driver.getVehicle() == null) {
+//			throw new NoVehicleException();
+//		}
 		
 		found.get().setEnd(dto.getEnd());
 		this.allWorkingHours.save(found.get());

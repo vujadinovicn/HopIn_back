@@ -1,10 +1,6 @@
 package com.hopin.HopIn.services;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,21 +8,21 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
-import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
-import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.RideDTO;
-import com.hopin.HopIn.dtos.UserDTOOld;
+import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
 import com.hopin.HopIn.dtos.VehicleReturnedDTO;
@@ -37,9 +33,8 @@ import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
-import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.entities.Vehicle;
-import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.VehicleTypeName;
@@ -48,6 +43,7 @@ import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.exceptions.VehicleNotAssignedException;
 import com.hopin.HopIn.repositories.DocumentRepository;
 import com.hopin.HopIn.repositories.DriverRepository;
+import com.hopin.HopIn.repositories.LocationRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IUserService;
@@ -66,6 +62,9 @@ public class DriverServiceImpl implements IDriverService {
 	
 	@Autowired
 	private DocumentRepository allDocuments;
+	
+	@Autowired
+	private LocationRepository allLocations;
 	
 	@Autowired
 	private IUserService userService;
@@ -87,7 +86,6 @@ public class DriverServiceImpl implements IDriverService {
 		
 		this.allDrivers.save(driver);
 		this.allDrivers.flush();
-		System.out.println("aaaak");
 		return new UserReturnedDTO(driver);
 	}
 	
@@ -95,7 +93,7 @@ public class DriverServiceImpl implements IDriverService {
 	public AllUsersDTO getAllPaginated(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		List<Driver> drivers = this.allDrivers.getAll(pageable);
-		return new AllUsersDTO(drivers);
+		return new AllUsersDTO(drivers); 
 	}
 
 	@Override
@@ -120,7 +118,7 @@ public class DriverServiceImpl implements IDriverService {
 	public UserReturnedDTO update(int id, UserDTO dto) {
 		Optional<Driver> driver = allDrivers.findById(id);
 		if (driver.isEmpty()) {
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
 		}
 //		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
 //			if (!this.checkPasswordMatch(driver.get().getPassword(), dto.getPassword())) {
@@ -168,10 +166,23 @@ public class DriverServiceImpl implements IDriverService {
 		document.setDriverId(driverId);
 		driver.get().getDocuments().add(document);
 		
+		allDocuments.save(document);
 		allDrivers.save(driver.get());
 		allDrivers.flush();
 		
-		return new DocumentReturnedDTO(document);
+		DocumentReturnedDTO res = new DocumentReturnedDTO(document);
+		res.setDocumentImage(documentDTO.getDocumentImage());
+		return res;
+	}
+	
+	@Override
+	public void deleteDocument(int id) {
+		Optional<Document> found = this.allDocuments.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document does not exist");
+		}
+		this.allDocuments.delete(found.get());
+		this.allDocuments.flush();
 	}
 
 	@Override
@@ -192,12 +203,13 @@ public class DriverServiceImpl implements IDriverService {
 	public VehicleReturnedDTO insertVehicle(int driverId, VehicleDTO dto) {
 		Optional<Driver> driver = allDrivers.findById(driverId);
 		if (driver.isEmpty()){
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
 		}
 		
 		Vehicle vehicle = new Vehicle();
 		dtoToVehicle(dto, driverId, vehicle);
 		driver.get().setVehicle(vehicle);
+		allVehicles.save(vehicle);
 		allDrivers.save(driver.get());
 		allDrivers.flush();
 		
@@ -208,7 +220,7 @@ public class DriverServiceImpl implements IDriverService {
 	public VehicleReturnedDTO updateVehicle(int driverId, VehicleDTO dto) {
 		Optional<Driver> driver = allDrivers.findById(driverId);
 		if (driver.isEmpty()){
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		Vehicle vehicle = driver.get().getVehicle();
 		dtoToVehicle(dto, driverId, vehicle);
@@ -266,7 +278,9 @@ public class DriverServiceImpl implements IDriverService {
 		vehicle.setDriverId(driverId);
 		vehicle.setModel(dto.getModel());
 		vehicle.setLicenseNumber(dto.getLicenseNumber());
-		//vehicle.setCurrentLocation(dto.getCurrentLocation());
+		Location loc = new Location(dto.getCurrentLocation());
+		this.allLocations.save(loc);
+		vehicle.setCurrentLocation(loc);
 		vehicle.setPassengerSeats(dto.getPassengerSeats());
 		vehicle.setBabyTransport(dto.isBabyTransport());
 		vehicle.setPetTransport(dto.isPetTransport());

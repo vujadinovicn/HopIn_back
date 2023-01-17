@@ -73,6 +73,8 @@ public interface IDriverService {
 	
 	public List<Driver> getDriversWithAppropriateVehicleForRide(List<Driver> drivers, RideDTO rideDTO);
 
+	void deleteDocument(int id);
+
 
 
 
