@@ -22,16 +22,27 @@ public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndS
 	public List<Ride> getAllPassengerRides(int id, Pageable pageable);
 	
 	public List<Ride> findAllByDriverId(int id, Pageable pageable);
-	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 3", nativeQuery=true)
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 6", nativeQuery=true)
 	public Ride getActiveRideForDriver(int id);
 	
-	@Query(value = "select * from \"rides\" where \"status\" = 3 and "
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 0", nativeQuery=true)
+	public Ride getPendingRideForDriver(int id);
+	
+	@Query(value = "select * from \"rides\" where \"status\" = 6 and "
 			+ "\"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id)", nativeQuery=true)
 	public Ride getActiveRideForPassenger(int id);
+	
+	@Query(value = "select * from \"rides\" where \"status\" = 0 and "
+			+ "\"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id)", nativeQuery=true)
+	public Ride getPendingRideForPassenger(int id);
 	
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 1 order by \"start_time\" limit 1", nativeQuery=true)
 	public Ride getFirstUpcomingRideForDriver(int id);
 	
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :driverId and \"status\" = 1 and \"start_time\" < :tomorrow ", nativeQuery=true)
 	public List<Ride> getAllScheduledRideForTodayForDriver(int driverId, LocalDateTime tomorrow);
+	
+	@Query(value = "select * from \"rides\" where \"status\" = 1 and \"start_time\" < :tomorrow and "
+			+ "\"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id)", nativeQuery=true)
+	public List<Ride> getAllScheduledRideForTodayForPassenger(int id, LocalDateTime tomorrow);
 }

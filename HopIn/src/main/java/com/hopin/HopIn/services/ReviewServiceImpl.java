@@ -3,11 +3,10 @@ package com.hopin.HopIn.services;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -49,17 +48,28 @@ public class ReviewServiceImpl implements IReviewService{
 	Map<Integer, ArrayList<Review>> allRideReviews = new HashMap<Integer, ArrayList<Review>>();
 
 	@Override
-	public AllReviewsReturnedDTO getDriverReviews(int driverId) {
-		driverService.getById(driverId);
-		return new AllReviewsReturnedDTO(allReviews.findAllReviewsByDriverId(driverId));
+	public AllReviewsReturnedDTO getDriverReviews(int rideId) {
+		Optional<Ride> found = allRides.findById(rideId);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
+		}
+		else if (found.get().getDriver() == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
+		}
+		return new AllReviewsReturnedDTO(allReviews.findAllReviewsByDriverId(found.get().getDriver().getId(), rideId));
 	}
 
 	@Override
-	public AllReviewsReturnedDTO getVehicleReviews(int vehicleId) {
-		this.allVehicles.findById(vehicleId)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist!"));
+	public AllReviewsReturnedDTO getVehicleReviews(int rideId) {
+		Optional<Ride> found = allRides.findById(rideId);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist!");
+		}
+		else if (found.get().getDriver().getVehicle() == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist!");
+		}
 		
-		ArrayList<Review> reviews = (ArrayList<Review>) this.allReviews.findAllReviewsByVehicleId(vehicleId);
+		ArrayList<Review> reviews = (ArrayList<Review>) this.allReviews.findAllReviewsByRideId(rideId);
 		
 		return new AllReviewsReturnedDTO(reviews);
 	}

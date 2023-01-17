@@ -110,6 +110,7 @@ public class RideReturnedDTO {
 		this.scheduledTime = ride.getScheduledTime();
 		this.rejection = ride.getRejectionNotice();
 		this.distance = ride.getTotalDistance();
+		this.vehicleType = ride.getVehicleType().getName();
 	}
 	
 	
@@ -234,4 +235,16 @@ public class RideReturnedDTO {
 		this.scheduledTime = scheduledTime;
 	}
 
+
+	@Override
+	public String toString() {
+		return "RideReturnedDTO [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", totalCost="
+				+ totalCost + ", distance=" + distance + ", driver=" + driver + ", passengers=" + passengers
+				+ ", estimatedTimeInMinutes=" + estimatedTimeInMinutes + ", vehicleType=" + vehicleType
+				+ ", petTransport=" + petTransport + ", babyTransport=" + babyTransport + ", rejection=" + rejection
+				+ ", locations=" + locations + ", status=" + status + ", scheduledTime=" + scheduledTime + "]";
+	}
+
+	
+	
 }

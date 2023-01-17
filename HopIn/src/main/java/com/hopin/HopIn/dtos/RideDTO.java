@@ -5,22 +5,41 @@ import java.util.List;
 
 import com.hopin.HopIn.enums.VehicleTypeName;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 public class RideDTO {
+	
+	@Valid
+	@NotNull(message="is required")
 	private List<LocationDTO> locations;
+	
+	@Valid
+	@NotNull(message="is required")
 	private List<UserInRideDTO> passengers;
+	
+	@NotNull(message="is required")
 	private VehicleTypeName vehicleType;
-	private boolean babyTransport;
-	private boolean petTransport;
-	private double distance;
-	private double duration;
-	private double price;
+	
+	@NotNull(message="is required")
+	private Boolean babyTransport;
+	
+	@NotNull(message="is required")
+	private Boolean petTransport;
+	
+	private Double distance;
+	
+	private Double duration;
+	
+	private Double price;
+	
 	private LocalDateTime scheduledTime;
 
 	public RideDTO() {
 	}
 
 	public RideDTO(List<LocationDTO> locations, List<UserInRideDTO> passengers, VehicleTypeName vehicleType,
-			boolean babyTransport, boolean petTransport) {
+			Boolean babyTransport, Boolean petTransport) {
 		super();
 		this.locations = locations;
 		this.passengers = passengers;
@@ -30,7 +49,7 @@ public class RideDTO {
 	}
 
 	public RideDTO(List<LocationDTO> locations, List<UserInRideDTO> passengers, VehicleTypeName vehicleType,
-			boolean babyTransport, boolean petTransport, double distance, double duration, double price,
+			Boolean babyTransport, Boolean petTransport, Double distance, Double duration, Double price,
 			LocalDateTime scheduledTime) {
 		super();
 		this.locations = locations;
@@ -68,43 +87,43 @@ public class RideDTO {
 		this.vehicleType = vehicleType;
 	}
 
-	public boolean isBabyTransport() {
+	public Boolean isBabyTransport() {
 		return babyTransport;
 	}
 
-	public void setBabyTransport(boolean babyTransport) {
+	public void setBabyTransport(Boolean babyTransport) {
 		this.babyTransport = babyTransport;
 	}
 
-	public boolean isPetTransport() {
+	public Boolean isPetTransport() {
 		return petTransport;
 	}
 
-	public void setPetTransport(boolean petTransport) {
+	public void setPetTransport(Boolean petTransport) {
 		this.petTransport = petTransport;
 	}
 	
-	public double getDistance() {
+	public Double getDistance() {
 		return distance;
 	}
 
-	public void setDistance(double distance) {
+	public void setDistance(Double distance) {
 		this.distance = distance;
 	}
 
-	public double getDuration() {
+	public Double getDuration() {
 		return duration;
 	}
 
-	public void setDuration(double duration) {
+	public void setDuration(Double duration) {
 		this.duration = duration;
 	}
 
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 

@@ -25,6 +25,7 @@ public class PassengerRideDTO {
 	private RejectionNotice rejection;
 	private List<LocationDTO> locations;
 	private double distance;
+	private LocalDateTime scheduledTime;
 
 	public PassengerRideDTO(int id, List<LocationDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
 			double totalCost, UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
@@ -64,6 +65,8 @@ public class PassengerRideDTO {
 		this.totalCost = ride.getTotalCost();
 		this.rejection = ride.getRejectionNotice();
 		this.distance = ride.getDistance();
+		this.vehicleType = ride.getVehicleType().getName();
+		this.scheduledTime = ride.getScheduledTime();
 	}
 
 	public int getId() {
@@ -168,6 +171,23 @@ public class PassengerRideDTO {
 
 	public void setDistance(double distance) {
 		this.distance = distance;
+	}
+
+	@Override
+	public String toString() {
+		return "PassengerRideDTO [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", totalCost="
+				+ totalCost + ", driver=" + driver + ", passengers=" + passengers + ", estimatedTimeInMinutes="
+				+ estimatedTimeInMinutes + ", vehicleType=" + vehicleType + ", babyTransport=" + babyTransport
+				+ ", petTransport=" + petTransport + ", rejection=" + rejection + ", locations=" + locations
+				+ ", distance=" + distance + "]";
+	}
+
+	public LocalDateTime getScheduledTime() {
+		return scheduledTime;
+	}
+
+	public void setScheduledTime(LocalDateTime scheduledTime) {
+		this.scheduledTime = scheduledTime;
 	}
 
 }

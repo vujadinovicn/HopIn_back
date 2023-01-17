@@ -62,4 +62,8 @@ public interface IRideService {
 	public AllPassengerRidesDTO getAllDriverRides(int driverId, int page, int size, String sort, String from,
 			String to);
 
+	public RideReturnedDTO getPendingRideForPassenger(int id);
+
+	RideReturnedDTO getPendingRideForDriver(int id);
+
 }
