@@ -75,14 +75,14 @@ public class WebSecurityConfig {
 			.requestMatchers("/api/unregisteredUser/").hasRole("ANONYMOUS")
 			.and()
 			.authorizeRequests()
-    		.requestMatchers("/api/**").permitAll()
+//    		.requestMatchers("/api/**").permitAll()
     		.and()
     		.authorizeRequests()
 			.requestMatchers("/h2-console/**").permitAll()	
-			.requestMatchers("/api/user/login").permitAll();
-//			.anyRequest().authenticated().and()
-//			.cors().and()
-//			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
+			.requestMatchers("/api/user/login").permitAll()
+			.anyRequest().authenticated().and()
+			.cors().and()
+			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
 		
 		http.csrf().disable();
 
@@ -106,6 +106,6 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
     	// Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
-    	return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/api/user/login");	 
+    	return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/api/user/login").requestMatchers(HttpMethod.POST, "/api/passenger");	 
     }
 }

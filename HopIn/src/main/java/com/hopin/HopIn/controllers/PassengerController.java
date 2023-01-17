@@ -74,6 +74,7 @@ public class PassengerController {
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAnyRole('ADMIN', 'PASSENGER')")
 	public ResponseEntity<?> getPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		System.out.println("EVO ME");
 		UserReturnedDTO passenger = passengerService.getById(id);
 		if (passenger != null) {
 			passengerService.getFavouriteRoutes(id);
@@ -106,8 +107,10 @@ public class PassengerController {
 	}
 
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAnyRole('ADMIN', 'PASSENGER')")
 	public ResponseEntity<AllPassengerRidesDTO> getAllRides(@PathVariable int id, @RequestParam int page,
 			@RequestParam int size, @RequestParam String sort, @RequestParam String from, @RequestParam String to) {
+		System.out.println("SVE VOZNJE");
 		return new ResponseEntity<AllPassengerRidesDTO>(
 				this.rideService.getAllPassengerRides(id, page, size, sort, from, to), HttpStatus.OK);
 	}

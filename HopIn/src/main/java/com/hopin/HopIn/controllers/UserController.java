@@ -175,6 +175,7 @@ public class UserController {
 
 	@PostMapping(value = "{id}/message", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> sendMessage(@PathVariable int id, @RequestBody MessageDTO message) {
+		System.out.println(message);
 		try {
 			return new ResponseEntity<MessageReturnedDTO>(userService.sendMessage(id, message), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {

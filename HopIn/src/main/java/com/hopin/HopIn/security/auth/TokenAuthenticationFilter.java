@@ -44,7 +44,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		try {
 	
 			if (authToken != null) {
-				authToken = authToken.substring(1, authToken.length() - 1);
+				if (authToken.contains("\""))
+					authToken = authToken.substring(1, authToken.length() - 1);
 
 				username = tokenUtils.getUsernameFromToken(authToken);
 				if (username != null) {

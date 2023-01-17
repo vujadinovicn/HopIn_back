@@ -180,6 +180,7 @@ public class RideController {
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			RideReturnedDTO ride = service.startRide(id);
+			this.simpMessagingTemplate.convertAndSend("/topic/ride-start-finish/" + ride.getDriver().getId(), "start");
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
@@ -196,6 +197,7 @@ public class RideController {
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			RideReturnedDTO ride = service.finishRide(id);
+			this.simpMessagingTemplate.convertAndSend("/topic/ride-start-finish/" + ride.getDriver().getId(), "finish");
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
