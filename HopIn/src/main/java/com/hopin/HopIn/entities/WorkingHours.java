@@ -34,7 +34,7 @@ public class WorkingHours {
 	public WorkingHours(int driverId, WorkingHoursStartDTO dto) {
 		super();
 		this.start = dto.getStart();
-		this.end = dto.getStart();
+		this.end = null;
 		this.driverId = driverId;
 	}
 

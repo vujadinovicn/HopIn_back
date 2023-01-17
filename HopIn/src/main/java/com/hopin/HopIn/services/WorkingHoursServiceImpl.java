@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.dtos.WorkingHoursEndDTO;
 import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
@@ -51,10 +54,11 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		if (driver.isActive()) {
 			throw new DriverAlreadyActiveException();
 		} else if (this.getWorkedHoursForToday(driverId, dto.getStart()) > 8) {
-			throw new WorkingHoursException();
-		} else if (driver.getVehicle() == null) {
-			throw new NoVehicleException();
-		}
+			throw new WorkingHoursException(); 
+		} 
+//		else if (driver.getVehicle() == null) {
+//			throw new NoVehicleException();
+//		}
 		
 		WorkingHours workingHours = new WorkingHours(driverId, dto);
 		this.allWorkingHours.save(workingHours);
@@ -70,16 +74,18 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		Optional<WorkingHours> found = this.allWorkingHours.findById(id);
 		if (found.isEmpty()) {
 			throw new BadIdFormatException();
-		} else if (found.get().getStart().isAfter(dto.getEnd())) {
-			throw new BadDateTimeFormatException();
-		}
+		} 
+//		else if (found.get().getStart().isAfter(dto.getEnd())) {
+//			throw new BadDateTimeFormatException();
+//		}
 		
 		Driver driver = this.driverService.getDriver(found.get().getDriverId());
 		if (!driver.isActive()) {
 			throw new NoActiveDriverException();
-		} else if (driver.getVehicle() == null) {
-			throw new NoVehicleException();
-		}
+		} 
+//		else if (driver.getVehicle() == null) {
+//			throw new NoVehicleException();
+//		}
 		
 		found.get().setEnd(dto.getEnd());
 		this.allWorkingHours.save(found.get());
@@ -121,5 +127,13 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		double hours = getWorkedHoursForToday(driverId, LocalDateTime.now()) + (rideMinutes/60);
 		DecimalFormat df = new DecimalFormat("#.##");
 		return Double.valueOf(df.format(hours));
+	}
+	
+	@Override
+	public AllHoursDTO getAllHours(int id, int page, int size) {
+		driverService.getById(id);
+		Pageable pageable = PageRequest.of(page, size);
+		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriver(id, pageable);
+		return new AllHoursDTO(allWorkingHours.size(), allWorkingHours);
 	}
 }

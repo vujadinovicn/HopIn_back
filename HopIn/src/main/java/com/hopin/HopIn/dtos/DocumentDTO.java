@@ -1,8 +1,19 @@
 package com.hopin.HopIn.dtos;
 
-public class DocumentDTO {
+import org.hibernate.validator.constraints.Length;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+public class DocumentDTO {
+	
+	@NotNull
+	@NotEmpty(message="is required")
+	@Length(max=100)
 	private String name;
+	
+	@NotNull
+	@NotEmpty(message="is required")
 	private String documentImage;
 	
 	public DocumentDTO(String name, String documentImage) {
