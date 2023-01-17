@@ -35,6 +35,7 @@ import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
 import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
+import com.hopin.HopIn.exceptions.PassengerHasAlreadyPendingRide;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.ITokenService;
@@ -59,6 +60,7 @@ public class RideController {
 	private SimpMessagingTemplate simpMessagingTemplate;
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> add(@RequestBody RideDTO dto) {
 		System.out.println(dto.getVehicleType());
 		ResponseEntity<ExceptionDTO> res;
@@ -94,6 +96,10 @@ public class RideController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			res = new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
+		} catch (PassengerHasAlreadyPendingRide e) {
+			ExceptionDTO ex = new ExceptionDTO("Cannot create a ride while you have one already pending!");
+			System.out.println("Cannot create a ride while you have one already pending!");
+			res = new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
 		}
 		this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offer-response/" + dto.getPassengers().get(0).getId(), "noDriver");
 		return res;
@@ -110,7 +116,7 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('DRIVER')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getActiveRideForDriver(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {

@@ -12,9 +12,9 @@ public interface ReviewRepository extends JpaRepository<Review, Integer>{
 	@Query("select favouriteRoutes from Passenger p where p.id = ?1")
 	public List<Route> findAllRoutesById(int id);
 	
-	@Query("select r from Review r where r.ride.driver.vehicle.id = ?1 and r.type = 0")
-	public List<Review> findAllReviewsByVehicleId(int id);
+	@Query("select r from Review r where r.ride.id = ?1 and r.type = 0")
+	public List<Review> findAllReviewsByRideId(int id);
 	
-	@Query(value = "select * from \"reviews\" where \"type\" = 1 and \"ride_id\" in (select \"id\" from \"rides\" where \"driver_id\" = ?1);", nativeQuery=true)
-	public List<Review> findAllReviewsByDriverId(int id);
+	@Query(value = "select * from \"reviews\" where \"type\" = 1 and \"ride_id\" = (select \"id\" from \"rides\" where \"driver_id\" = ?1 and \"id\" = ?2);", nativeQuery=true)
+	public List<Review> findAllReviewsByDriverId(int driverId, int rideId);
 }

@@ -71,6 +71,7 @@ import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
 import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
+import com.hopin.HopIn.exceptions.PassengerHasAlreadyPendingRide;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
 
 import com.hopin.HopIn.repositories.RideRepository;
@@ -126,7 +127,8 @@ public class RideServiceImpl implements IRideService {
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
 	private int currId = 0;
-
+	
+	@Autowired
 	private PassengerRepository allPassengers;
 
 	@Override
@@ -317,6 +319,10 @@ public class RideServiceImpl implements IRideService {
 			throw new NoDriverWithAppropriateVehicleForRideException();
 		}
 		
+		if (this.getPendingRideForPassenger(dto.getPassengers().get(0).getId()) != null) {
+			throw new PassengerHasAlreadyPendingRide();
+		}
+		
 		dto.getPassengers().forEach((UserInRideDTO passenger) -> {
 			try 
 			{
@@ -327,7 +333,7 @@ public class RideServiceImpl implements IRideService {
 			} catch (NoActivePassengerRideException e){
 				e.printStackTrace();
 			}
-		});
+		}); 
 		
 		int newRideDuration = this.rideEstimationService.getEstimatedTime(dto.getDepartureLocation(), dto.getDestinationLocation());
 		System.out.println("newrideduration" + newRideDuration);
@@ -477,6 +483,15 @@ public class RideServiceImpl implements IRideService {
 		if (activeRide == null)
 			throw new NoActivePassengerRideException();
 		return new RideReturnedDTO(activeRide);
+	}
+	
+	@Override
+	public RideReturnedDTO getPendingRideForPassenger(int id) {
+		Ride pendingRide = this.allRides.getPendingRideForPassenger(id);
+		if (pendingRide != null) {
+			return new RideReturnedDTO(pendingRide);
+		}
+		return null;
 	}
 
 	@Override
