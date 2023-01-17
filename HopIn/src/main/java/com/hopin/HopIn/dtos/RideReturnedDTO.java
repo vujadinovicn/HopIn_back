@@ -17,6 +17,7 @@ public class RideReturnedDTO {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private double totalCost;
+	private double distance;
 	private UserInRideDTO driver;
 	private List<UserInRideDTO> passengers;
 	private int estimatedTimeInMinutes;
@@ -28,10 +29,11 @@ public class RideReturnedDTO {
 	private RideStatus status;
 	private LocalDateTime scheduledTime;
 
+	
 	public RideReturnedDTO(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost,
 			UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
 			VehicleTypeName vehicleType, boolean petTransport, boolean babyTransport, RejectionNotice rejection,
-			List<LocationDTO> locations, RideStatus status, LocalDateTime scheduledTime) {
+			List<LocationDTO> locations, RideStatus status, LocalDateTime scheduledTime, double distance) {
 		super();
 		this.id = id;
 		this.startTime = startTime;
@@ -47,7 +49,9 @@ public class RideReturnedDTO {
 		this.locations = locations;
 		this.status = status;
 		this.scheduledTime = scheduledTime;
+		this.distance = distance;
 	}
+
 
 	public RideReturnedDTO(RideDTO ride) {
 		this.startTime = LocalDateTime.now();
@@ -61,11 +65,32 @@ public class RideReturnedDTO {
 		this.babyTransport = ride.isBabyTransport();
 		this.vehicleType = ride.getVehicleType();
 		this.locations = ride.getLocations();
+		this.distance = ride.getDistance();
 		
 		this.rejection = null;
 	}
 
+//	public RideReturnedDTO(Ride ride) {
+//		this.startTime = ride.getStartTime();
+//		this.endTime = ride.getEndTime();
+//		this.totalCost = ride.getTotalCost();
+//		this.driver = ride.getDriver();
+//		this.passengers = ride.getPassengers();
+//		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
+//		this.status = ride.getStatus();
+//		this.petTransport = ride.isPet();
+//		this.babyTransport = ride.isBaby();
+//		this.vehicleType = ride.getVehicleType();
+//		this.locations = new ArrayList<LocationDTO>();
+//		for(int i = 0; i < ride.getLocations().size(); i =+ 2) {
+//			this.locations.add(new LocationDTO(ride.getLocations().get(i), ride.getLocations().get(i+1)));
+//		}
+//		this.rejection = ride.getRejectionNotice();
+//	}
+
+
 	public RideReturnedDTO(Ride ride) {
+		System.out.println(ride);
 		this.id = ride.getId();
 		this.driver = new UserInRideDTO(ride.getDriver());
 		this.passengers = new ArrayList<UserInRideDTO>();
@@ -79,11 +104,22 @@ public class RideReturnedDTO {
 		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
 		this.locations = new ArrayList<LocationDTO>();
 		this.locations.add(new LocationDTO(new LocationNoIdDTO(ride.getDepartureLocation()),
-				new LocationNoIdDTO(ride.getDepartureLocation())));
+				new LocationNoIdDTO(ride.getDestinationLocation())));
 		this.totalCost = ride.getTotalCost();
 		this.status = ride.getStatus();
 		this.scheduledTime = ride.getScheduledTime();
 		this.rejection = ride.getRejectionNotice();
+		this.distance = ride.getTotalDistance();
+	}
+	
+	
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
 	}
 
 	public int getId() {

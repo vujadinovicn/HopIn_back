@@ -7,6 +7,7 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.validation.FieldError;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.hopin.HopIn.validations.ExceptionDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,6 +55,12 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         return new ResponseEntity<>(sb.toString(), HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(HttpMessageConversionException.class)
+	protected ResponseEntity<Object> handleJSONParseException(HttpMessageConversionException e) {
+		// 400
+		return new ResponseEntity<>(new ExceptionDTO(e.getMessage().split(": ")[1]), HttpStatus.BAD_REQUEST);
+	}
     
     @ExceptionHandler (value = {AccessDeniedException.class})
     public void commence(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
@@ -64,12 +72,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, NotFoundException notFoundException) throws IOException {
         // 404
         setResponseError(response, HttpServletResponse.SC_NOT_FOUND, String.format("Not found: %s", notFoundException.getMessage()));
-    }
-
-    @ExceptionHandler (value = {Exception.class})
-    public void commence(HttpServletRequest request, HttpServletResponse response, Exception exception) throws IOException {
-        // 403
-        setResponseError(response, HttpServletResponse.SC_FORBIDDEN, String.format("Access Denies: %s", exception.getMessage()));
     }
     
     

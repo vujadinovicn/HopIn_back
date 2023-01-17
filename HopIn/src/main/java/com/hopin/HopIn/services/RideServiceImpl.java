@@ -1,8 +1,15 @@
 package com.hopin.HopIn.services;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +19,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,17 +32,25 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
+
 import com.hopin.HopIn.dtos.FavoriteRideDTO;
 import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
+
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
+import com.hopin.HopIn.dtos.RideOfferEstimationDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInRideDTO;
 import com.hopin.HopIn.entities.Driver;
+
 import com.hopin.HopIn.entities.FavoriteRide;
+
+import com.hopin.HopIn.entities.Location;
+
 import com.hopin.HopIn.entities.Panic;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.RejectionNotice;
@@ -41,16 +61,32 @@ import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+
 import com.hopin.HopIn.repositories.FavoriteRideRepository;
 import com.hopin.HopIn.repositories.PanicRepository;
+import com.hopin.HopIn.repositories.PassengerRepository;
+
+import com.hopin.HopIn.exceptions.NoActiveDriverRideException;
+import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
+import com.hopin.HopIn.exceptions.NoAvailableDriversException;
+import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
+import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
+import com.hopin.HopIn.exceptions.RideNotFoundException;
+
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
+
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.services.interfaces.IVehicleTypeService;
 import com.hopin.HopIn.util.TokenUtils;
+
+import com.hopin.HopIn.services.interfaces.IRideEstimationService;
+
+import jakarta.validation.constraints.Min;
+import com.hopin.HopIn.services.interfaces.IWorkingHoursService;
 
 @Service
 public class RideServiceImpl implements IRideService {
@@ -69,7 +105,7 @@ public class RideServiceImpl implements IRideService {
 
 	@Autowired
 	private IDriverService driverService;
-	
+
 	@Autowired
 	private IVehicleTypeService vehicleTypeService;
 	
@@ -79,10 +115,19 @@ public class RideServiceImpl implements IRideService {
 	@Autowired
 	private IUserService userService;
 	
+	@Autowired
+	private IRideEstimationService rideEstimationService;
+	
+	@Autowired 
+	private IWorkingHoursService workingHoursService;
+
+
 
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
 	private int currId = 0;
+
+	private PassengerRepository allPassengers;
 
 	@Override
 	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to) {
@@ -257,30 +302,212 @@ public class RideServiceImpl implements IRideService {
 //	
 
 	@Override
-	public RideReturnedDTO add(RideDTO dto) {
-		List<Driver> activeDrivers = this.driverService.getActiveDrivers();
-		if (activeDrivers.size() == 0) {
+	public RideReturnedDTO add(RideDTO dto){
+		Driver driverForRide = new Driver();
+		
+		List<Driver> driversForRide = new ArrayList<Driver>();
+		
+		driversForRide = this.driverService.getActiveDrivers();
+		if (driversForRide.size() == 0) {
 			throw new NoActiveDriverException();
 		}
-		return null;
+		
+		driversForRide = this.driverService.getDriversWithAppropriateVehicleForRide(driversForRide, dto);
+		if (driversForRide.size() == 0) {
+			throw new NoDriverWithAppropriateVehicleForRideException();
+		}
+		
+		dto.getPassengers().forEach((UserInRideDTO passenger) -> {
+			try 
+			{
+			if (this.getActiveRideForPassenger(passenger.getId()) != null)
+				{
+				throw new PassengerAlreadyInRideException();
+				}
+			} catch (NoActivePassengerRideException e){
+				e.printStackTrace();
+			}
+		});
+		
+		int newRideDuration = this.rideEstimationService.getEstimatedTime(dto.getDepartureLocation(), dto.getDestinationLocation());
+		System.out.println("newrideduration" + newRideDuration);
+		
+		List<Driver> driversWithNoActiveRide = this.getAllDriversWithNoActiveRide(driversForRide);
+		List<Driver> driversWithActiveRide = new ArrayList<Driver>(driversForRide);
+		driversWithActiveRide.removeAll(driversWithNoActiveRide);
+		
+		boolean availabilityOfDrivers = driversWithNoActiveRide.size() != 0 ? true : false;
+		
+		if (availabilityOfDrivers) {
+			driverForRide = this.getBestDriver(dto, driversWithNoActiveRide, newRideDuration, availabilityOfDrivers);
+		} else {
+			driverForRide = this.getBestDriver(dto, driversWithActiveRide, newRideDuration, availabilityOfDrivers);
+		}
+		
+		if (driverForRide == null)
+			throw new NoAvailableDriversException();
+		
+		
+		Ride wantedRide = this.createWantedRide(dto, driverForRide);
+		this.allRides.save(wantedRide);
+		this.allRides.flush();
+		return new RideReturnedDTO(wantedRide);
 	}
+	
+	private Driver getBestDriver(RideDTO rideDTO, List<Driver> drivers, int newRideDuration, boolean availability) {
+		Driver foundDriver = new Driver();
+		int bestTime = Integer.MAX_VALUE;
+		
+		for (Driver driver: drivers) {
+			LocalDateTime scheduledTime = rideDTO.getScheduledTime();
+			if (scheduledTime != null)
+				scheduledTime = null;
+			
+			LocalDateTime startOfDrivingToDeparture = LocalDateTime.now();
+			
+			int timeForNewRideDepartureArrival = 0;
+			
+			if (availability)
+				timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), driver.getVehicleLocation());
+			else {
+				RideReturnedDTO currentRide = this.getActiveRideForDriver(driver.getId());
+				startOfDrivingToDeparture = currentRide.getStartTime().plusMinutes(currentRide.getEstimatedTimeInMinutes());
+				timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), currentRide.getLocations().get(0).getDestination());
+			}
+			
+			Ride nextRide = this.allRides.getFirstUpcomingRideForDriver(driver.getId());
+			
+			int timeFromStartOfNewToStartOfNext = timeForNewRideDepartureArrival + newRideDuration;
+			
+			int timeForUpcomingRideDepartureArrival = 0;
+			if (nextRide != null) {
+				timeForUpcomingRideDepartureArrival= this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), new LocationNoIdDTO(nextRide.getDepartureLocation()));
+				timeFromStartOfNewToStartOfNext += timeForUpcomingRideDepartureArrival;
+				
+				if (startOfDrivingToDeparture.plusMinutes(timeFromStartOfNewToStartOfNext).isAfter(nextRide.getStartTime())) {
+					System.out.println("ne moze ovaj driver" + driver.getId());
+					continue;
+				}
+			}
+			int totalTimeForDepartureArrival = timeForNewRideDepartureArrival;
+			if (!availability)
+				totalTimeForDepartureArrival += this.getMinutesUntilEndOfCurrentRideForDriver(driver);
+			
+			double workingHoursWithNewRide = this.workingHoursService.getWorkedHoursForTodayWithNewRide(driver.getId(), timeFromStartOfNewToStartOfNext);
+			double workingHorusOfScheduledRides = this.getWorkingHoursOfAllScheduledRideForDay(driver.getId());
+			double totalWorkingHours = workingHorusOfScheduledRides + workingHoursWithNewRide;
+			
+			if (!availability) 
+				totalWorkingHours += this.getMinutesUntilEndOfCurrentRideForDriver(driver)/60;
+			
+			if (totalWorkingHours < 8 && totalTimeForDepartureArrival < bestTime) {
+				foundDriver = driver;
+				bestTime = (int) (totalTimeForDepartureArrival);
+			}
+				
+		}
+		return foundDriver;
+	}
+	
 
+	
+	private Ride createWantedRide(RideDTO rideDTO, Driver driver){
+		Ride ride = new Ride();
+		
+		ride.setStartTime(null);
+		ride.setEndTime(null);
+		ride.setScheduledTime(LocalDateTime.now());
+		
+		ride.setPetTransport(rideDTO.isPetTransport());
+		ride.setBabyTransport(rideDTO.isBabyTransport());
+		ride.setPanic(false);
+		
+		ride.setStatus(RideStatus.PENDING);
+		
+		for (UserInRideDTO passenger: rideDTO.getPassengers()) {
+			ride.getPassengers().add(this.passengerService.getPassenger(passenger.getId()));
+		}
+		ride.setDriver(driver);
+		
+		ride.setReviews(null);
+		ride.setVehicleType(this.vehicleTypeService.getByName(rideDTO.getVehicleType()));
+		ride.setDepartureLocation(new Location(rideDTO.getDepartureLocation()));
+		ride.setDestinationLocation(new Location(rideDTO.getDestinationLocation()));
+		ride.setRejectionNotice(null);
+		
+		int estimatedTimeInMinutes = this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), rideDTO.getDestinationLocation());
+		double distance = this.rideEstimationService.getEstimatedDistance(rideDTO.getDepartureLocation(), rideDTO.getDestinationLocation());
+		
+		ride.setDistance(distance);
+		ride.setTotalDistance(distance);
+		ride.setTotalCost(calculatePrice(distance, rideDTO.getVehicleType().toString()));
+		ride.setEstimatedTimeInMinutes(estimatedTimeInMinutes);
+		
+		return ride;
+	}
+	
+	private double calculatePrice(double distance, String vehicleTypeName) {
+		VehicleType vehicleType = this.allVehicleTypes
+				.getByName(VehicleTypeName.valueOf(VehicleTypeName.class, vehicleTypeName));
+		return vehicleType.getPricePerKm() * distance;
+	}
+	
+	private double getMinutesUntilEndOfCurrentRideForDriver(Driver driver) {
+		RideReturnedDTO currentRide = this.getActiveRideForDriver(driver.getId());
+		LocalDateTime now = LocalDateTime.now();
+		return ChronoUnit.MINUTES.between(now, currentRide.getStartTime().plusMinutes(currentRide.getEstimatedTimeInMinutes()));
+	}
+	
+	private double getWorkingHoursOfAllScheduledRideForDay(int driverId) {
+		LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+		LocalDateTime end = startOfToday.plusDays(1);
+		List<Ride> scheduledRides = this.allRides.getAllScheduledRideForTodayForDriver(driverId, end);
+		int minutes = 0;
+		for (Ride ride: scheduledRides) {
+			minutes += ride.getEstimatedTimeInMinutes();
+		}
+		
+		DecimalFormat df = new DecimalFormat("#.##");
+		return Double.valueOf(df.format(minutes/60));
+	}
+	
 	@Override
 	public RideReturnedDTO getActiveRideForPassenger(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Ride activeRide = this.allRides.getActiveRideForPassenger(id);
+		if (activeRide == null)
+			throw new NoActivePassengerRideException();
+		return new RideReturnedDTO(activeRide);
 	}
 
 	@Override
 	public RideReturnedDTO getActiveRideForDriver(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Ride activeRide = this.allRides.getActiveRideForDriver(id);
+		if (activeRide == null)
+			throw new NoActiveDriverRideException();
+		return new RideReturnedDTO(activeRide);
+	}
+	
+	private List<Driver> getAllDriversWithNoActiveRide(List<Driver> drivers){
+		List<Driver> availableDrivers = new ArrayList<Driver>();
+		for (Driver driver: drivers) {
+			try {
+				if (this.getActiveRideForDriver(driver.getId()) == null) 
+					availableDrivers.add(driver);	
+			} catch (NoActiveDriverRideException e) {
+				availableDrivers.add(driver);	
+				e.printStackTrace();
+			}
+		}
+		
+		return availableDrivers;
 	}
 
 	@Override
 	public RideReturnedDTO getRide(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Ride ride = this.allRides.findById(id).orElse(null);
+		if (ride == null)
+			throw new RideNotFoundException();
+		return new RideReturnedDTO(ride);
 	}
 
 	private Ride getRideIfExists(int id) {
@@ -318,11 +545,10 @@ public class RideServiceImpl implements IRideService {
 			return null;
 		}
 
-		// TODO: sta je ovo, dodati usera ulogovanog umesto null
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println(authentication.getName());
+		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
 
-		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), null, ride);
+		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), passenger, ride);
 		this.allPanics.save(panic);
 		this.allPanics.flush();
 
@@ -397,8 +623,17 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to) {
-		// TODO Auto-generated method stub
-		return null;
+		Pageable pageable = PageRequest.of(page, size);
+		List<Ride> rides = this.allRides.getAllPassengerRides(id, pageable);
+		return new AllPassengerRidesDTO(rides);
+	}
+	
+	@Override
+	public AllPassengerRidesDTO getAllDriverRides(int id, int page, int size, String sort, String from,
+			String to) {
+		Pageable pageable = PageRequest.of(page, size);
+		List<Ride> rides = this.allRides.findAllByDriverId(id, pageable);
+		return new AllPassengerRidesDTO(rides);
 	}
 
 	@Override

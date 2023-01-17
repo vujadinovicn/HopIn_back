@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +33,12 @@ import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.entities.Note;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
+
 import com.hopin.HopIn.exceptions.BlockedUserException;
+
+import com.hopin.HopIn.enums.MessageType;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
+
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
 import com.hopin.HopIn.repositories.UserRepository;
@@ -128,19 +135,29 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public NoteReturnedDTO addNote(int userId, NoteDTO note) {
-		User user = getById(userId);
-		return new NoteReturnedDTO(15, LocalDateTime.now(), note.getMessage());	
+	public NoteReturnedDTO addNote(int userId, NoteDTO noteDTO) {
+		User user = this.allUsers.findById(userId).orElse(null);
+		if (user == null){
+			throw new UserNotFoundException();
+		}
+		
+		Note note = new Note(LocalDateTime.now(), noteDTO.getMessage());
+		note.setUser(user);
+		this.allNotes.save(note);
+		this.allNotes.flush();
+		
+		return new NoteReturnedDTO(note);	
 	}
 
 	@Override
 	public AllNotesDTO getNotes(int userId, int page, int size) {
-		User user = getById(userId);
-		if (allNotesMap.size() == 0) {
-			Note note = new Note(15, LocalDateTime.now(), "Message is here!");
-			allNotesMap.put(1, note);
+		User user = this.allUsers.findById(userId).orElse(null);
+		if (user == null){
+			throw new UserNotFoundException();
 		}
-		return new AllNotesDTO(this.allNotesMap);
+		Pageable pageable = PageRequest.of(page, size);
+		List<Note> notes = this.allNotes.findAllByUserId(userId, pageable);
+		return new AllNotesDTO(notes);
 	}
 
 	@Override

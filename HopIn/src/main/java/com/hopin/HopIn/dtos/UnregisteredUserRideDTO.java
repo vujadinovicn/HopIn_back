@@ -4,14 +4,26 @@ import java.util.List;
 
 import com.hopin.HopIn.enums.VehicleTypeName;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 public class UnregisteredUserRideDTO {
-	List<LocationNoIdDTO> locations;
-	VehicleTypeName vehicleType;
-	boolean babyTransport;
-	boolean petTransport;
+	@Valid
+	@NotNull
+	List<LocationDTO> locations;
 	
-	public UnregisteredUserRideDTO(List<LocationNoIdDTO> locations, VehicleTypeName vehicleType, boolean babyTransport,
-			boolean petTransport) {
+	@Valid
+	@NotNull(message = "is required")
+	VehicleTypeName vehicleType;
+	
+	@NotNull(message = "is required")
+	Boolean babyTransport;
+	
+	@NotNull(message = "is required")
+	Boolean petTransport;
+	
+	public UnregisteredUserRideDTO(List<LocationDTO> locations, VehicleTypeName vehicleType, Boolean babyTransport,
+			Boolean petTransport) {
 		super();
 		this.locations = locations;
 		this.vehicleType = vehicleType;
@@ -19,11 +31,11 @@ public class UnregisteredUserRideDTO {
 		this.petTransport = petTransport;
 	}
 
-	public List<LocationNoIdDTO> getLocations() {
+	public List<LocationDTO> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<LocationNoIdDTO> locations) {
+	public void setLocations(List<LocationDTO> locations) {
 		this.locations = locations;
 	}
 
@@ -35,19 +47,19 @@ public class UnregisteredUserRideDTO {
 		this.vehicleType = vehicleType;
 	}
 
-	public boolean isBabyTransport() {
+	public Boolean isBabyTransport() {
 		return babyTransport;
 	}
 
-	public void setBabyTransport(boolean babyTransport) {
+	public void setBabyTransport(Boolean babyTransport) {
 		this.babyTransport = babyTransport;
 	}
 
-	public boolean isPetTransport() {
+	public Boolean isPetTransport() {
 		return petTransport;
 	}
 
-	public void setPetTransport(boolean petTransport) {
+	public void setPetTransport(Boolean petTransport) {
 		this.petTransport = petTransport;
 	}
 		

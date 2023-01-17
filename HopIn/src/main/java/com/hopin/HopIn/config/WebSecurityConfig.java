@@ -1,5 +1,6 @@
 package com.hopin.HopIn.config;
 
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -68,8 +70,12 @@ public class WebSecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         
         http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
+
     	http.authorizeRequests()
-    		//.requestMatchers("/api/**").permitAll()
+			.requestMatchers("/api/unregisteredUser/").hasRole("ANONYMOUS")
+			.and()
+			.authorizeRequests()
+//    		.requestMatchers("/api/**").permitAll()
 			.requestMatchers("/h2-console/**").permitAll()	
 			.requestMatchers("/api/user/login").permitAll()
 			.requestMatchers("/api/passenger/{id}").permitAll()
@@ -78,8 +84,18 @@ public class WebSecurityConfig {
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
 		
 		http.csrf().disable();
+
+//		SA NEMANJINE GRANE
+//			.and()
+//    		.authorizeRequests()
+//			.requestMatchers("/api/user/login").permitAll()
+//			.and()
+//			.cors().and()
+//			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
+//
+//    	http.csrf().disable();
+
 		http.headers().frameOptions().disable();
-        
         http.authenticationProvider(authenticationProvider());
        
         return http.build();
@@ -89,6 +105,6 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
     	// Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
-    	return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/api/user/login");	 
+    	return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/api/user/login").requestMatchers(HttpMethod.POST, "/api/passenger");	 
     }
 }

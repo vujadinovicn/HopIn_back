@@ -97,9 +97,11 @@ public class ReviewServiceImpl implements IReviewService{
 		review.setRating(reviewDTO.getRating());
 		review.setType(ReviewType.VEHICLE);
 		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
-		review.setPassenger(passenger);
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
+//		review.setPassenger(passenger);
+		
+		review.setPassenger(allPassengers.findById(1).orElse(null));
 		
 		return review;
 	}

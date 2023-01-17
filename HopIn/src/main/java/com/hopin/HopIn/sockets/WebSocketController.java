@@ -25,8 +25,24 @@ public class WebSocketController {
 	
 	@MessageMapping("/send/invite-response/{to}")
 	public String sendInviteResponse(@DestinationVariable String to, String response) {
+		System.out.println("RES: " + response);
 		this.simpMessagingTemplate.convertAndSend("/topic/invite-response/" + to, response);
 		
 		return response;
 	}
+	
+
+	@MessageMapping("/send/driver/ride-offer/{to}")
+	public String sendRideOffer(@DestinationVariable String to, String message) {
+        this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offers" + to, message);
+
+        return message;
+    }
+	
+	@MessageMapping("/send/driver/ride-offer-response/{to}")
+	public String sendRideOfferResponse(@DestinationVariable String to, String message) {
+        this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offer-response" + to, message);
+
+        return message;
+    }
 }

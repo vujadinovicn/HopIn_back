@@ -48,10 +48,10 @@ public class Ride {
 	@ManyToOne(cascade = {})
 	private VehicleType vehicleType;
 
-	@ManyToOne(cascade = {})
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Location departureLocation;
 
-	@ManyToOne(cascade = {})
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Location destinationLocation;
 
 	@OneToOne(cascade = { CascadeType.ALL })
@@ -85,34 +85,7 @@ public class Ride {
 		this.rejectionNotice = rejectionNotice;
 		this.scheduledTime = null;
 	}
-
-	public Ride(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost, double totalDistance,
-			int estimatedTimeInMinutes, boolean petTransport, boolean babyTransport, boolean panic, RideStatus status,
-			double distance, LocalDateTime scheduledTime, Set<Passenger> passengers, Driver driver, Set<Review> reviews,
-			VehicleType vehicleType, Location departureLocation, Location destinationLocation,
-			RejectionNotice rejectionNotice) {
-		super();
-		this.id = id;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.totalCost = totalCost;
-		this.totalDistance = totalDistance;
-		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
-		this.petTransport = petTransport;
-		this.babyTransport = babyTransport;
-		this.panic = panic;
-		this.status = status;
-		this.distance = distance;
-		this.scheduledTime = scheduledTime;
-		this.passengers = passengers;
-		this.driver = driver;
-		this.reviews = reviews;
-		this.vehicleType = vehicleType;
-		this.departureLocation = departureLocation;
-		this.destinationLocation = destinationLocation;
-		this.rejectionNotice = rejectionNotice;
-	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -268,5 +241,18 @@ public class Ride {
 	public void addReview(Review review) {
 		this.reviews.add(review);
 	}
+
+	@Override
+	public String toString() {
+		return "Ride [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", totalCost=" + totalCost
+				+ ", totalDistance=" + totalDistance + ", estimatedTimeInMinutes=" + estimatedTimeInMinutes
+				+ ", petTransport=" + petTransport + ", babyTransport=" + babyTransport + ", panic=" + panic
+				+ ", status=" + status + ", distance=" + distance + ", scheduledTime=" + scheduledTime + ", passengers="
+				+ passengers + ", driver=" + driver + ", reviews=" + reviews + ", vehicleType=" + vehicleType
+				+ ", departureLocation=" + departureLocation + ", destinationLocation=" + destinationLocation
+				+ ", rejectionNotice=" + rejectionNotice + "]";
+	}
+	
+	
 
 }

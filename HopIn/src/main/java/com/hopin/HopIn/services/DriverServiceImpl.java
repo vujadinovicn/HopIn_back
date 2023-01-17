@@ -12,6 +12,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,6 +22,8 @@ import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
+import com.hopin.HopIn.dtos.UserDTO;
+import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -37,14 +40,21 @@ import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.VehicleTypeName;
+import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
+import com.hopin.HopIn.exceptions.VehicleNotAssignedException;
 import com.hopin.HopIn.repositories.DocumentRepository;
 import com.hopin.HopIn.repositories.DriverRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
+import com.hopin.HopIn.services.interfaces.IUserService;
 
 @Service
 public class DriverServiceImpl implements IDriverService {
 
+	@Autowired 
+	private PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private DriverRepository allDrivers;
 	
@@ -54,6 +64,9 @@ public class DriverServiceImpl implements IDriverService {
 	@Autowired
 	private DocumentRepository allDocuments;
 	
+	@Autowired
+	private IUserService userService;
+	
 	private Map<Integer, Driver> allDriversMap = new HashMap<Integer, Driver>();
 	private int currId = 1;
 	private int currDocId = 1;
@@ -61,11 +74,17 @@ public class DriverServiceImpl implements IDriverService {
 	private int currHoursId = 1;
 
 	@Override
-	public UserReturnedDTO insert(UserDTOOld dto) {
+	public UserReturnedDTO insert(UserDTO dto) {
+		if (this.userService.userAlreadyExists(dto.getEmail())) {
+			throw new EmailAlreadyInUseException();
+		}
 		Driver driver = dtoToDriver(dto, null);
+		driver.setPassword(passwordEncoder.encode(dto.getPassword()));
 		driver.setRole(Role.DRIVER);
+		
 		this.allDrivers.save(driver);
 		this.allDrivers.flush();
+		
 		return new UserReturnedDTO(driver);
 	}
 	
@@ -83,7 +102,7 @@ public class DriverServiceImpl implements IDriverService {
 	public DriverReturnedDTO getById(int id) {
 		Optional<Driver> found = allDrivers.findById(id);
 		if (found.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
+			throw new UserNotFoundException();
 		}
 		return new DriverReturnedDTO(found.get(), found.get().getVehicle());
 	}
@@ -98,19 +117,19 @@ public class DriverServiceImpl implements IDriverService {
 	}
 	
 	@Override
-	public UserReturnedDTO update(int id, UserDTOOld dto) {
+	public UserReturnedDTO update(int id, UserDTO dto) {
 		Optional<Driver> driver = allDrivers.findById(id);
 		if (driver.isEmpty()) {
 			return null;
 		}
-		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
-			if (!this.checkPasswordMatch(driver.get().getPassword(), dto.getPassword())) {
-				System.out.println(driver.get().getPassword());
-				System.out.println(dto.getPassword());
-				return null;	
-			}
-			dto.setPassword(dto.getNewPassword());
-		}
+//		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
+//			if (!this.checkPasswordMatch(driver.get().getPassword(), dto.getPassword())) {
+//				System.out.println(driver.get().getPassword());
+//				System.out.println(dto.getPassword());
+//				return null;	
+//			}
+//			dto.setPassword(dto.getNewPassword());
+//		}
 		driver.get().copy(dto);
 		this.allDrivers.save(driver.get());
 		this.allDrivers.flush();
@@ -131,7 +150,7 @@ public class DriverServiceImpl implements IDriverService {
 	public List<DocumentReturnedDTO> getDocuments(int driverId) {
 		Optional<Driver> driver = allDrivers.findById(driverId);
 		if (driver.isEmpty()){
-			return null;
+			throw new UserNotFoundException();
 		}
 		List<DocumentReturnedDTO> documents = new ArrayList<DocumentReturnedDTO>();
 		driver.get().getDocuments().forEach((document) -> {documents.add(new DocumentReturnedDTO(document));});
@@ -156,12 +175,16 @@ public class DriverServiceImpl implements IDriverService {
 	}
 
 	@Override
-	public VehicleDTO getVehicle(int driverId) {
+	public VehicleReturnedDTO getVehicle(int driverId) {
 		Optional<Driver> driver = allDrivers.findById(driverId);
 		if (driver.isEmpty()){
-			return null;
+			throw new UserNotFoundException();
 		}
-		VehicleDTO vehicleDTO = new VehicleDTO(driver.get().getVehicle());
+		Vehicle vehicle = driver.get().getVehicle();
+		if (vehicle == null) {
+			throw new VehicleNotAssignedException();
+		}
+		VehicleReturnedDTO vehicleDTO = new VehicleReturnedDTO(driver.get().getVehicle());
 		return vehicleDTO;
 	}
 
@@ -247,9 +270,8 @@ public class DriverServiceImpl implements IDriverService {
 		vehicle.setPassengerSeats(dto.getPassengerSeats());
 		vehicle.setBabyTransport(dto.isBabyTransport());
 		vehicle.setPetTransport(dto.isPetTransport());
-		System.out.println(dto.getVehicleType());
-		if (dto.getVehicleType().equals(VehicleTypeName.CAR)) {
-			vehicle.getVehicleType().setName(VehicleTypeName.CAR);
+		if (dto.getVehicleType().equals(VehicleTypeName.STANDARD)) {
+			vehicle.getVehicleType().setName(VehicleTypeName.STANDARD);
 		} else if (dto.getVehicleType().equals(VehicleTypeName.VAN)) {
 			vehicle.getVehicleType().setName(VehicleTypeName.VAN);
 		} else {
@@ -267,7 +289,7 @@ public class DriverServiceImpl implements IDriverService {
 
 	}
 
-	private Driver dtoToDriver(UserDTOOld dto, Driver driver) {
+	private Driver dtoToDriver(UserDTO dto, Driver driver) {
 		if (driver == null)
 			driver = new Driver();
 
@@ -362,6 +384,27 @@ public class DriverServiceImpl implements IDriverService {
 		driver.setActive(isActive);
 		this.allDrivers.save(driver);
 		this.allDrivers.flush();
-		
+	}
+
+	@Override
+	public boolean isDriverVehicleAppropriateForRide(int id, RideDTO rideDTO) {
+		Driver driver = this.getDriver(id);
+		Vehicle vehicle = driver.getVehicle();
+		if (vehicle.isBabyTransport() != rideDTO.isBabyTransport() ||
+				vehicle.isPetTransport() != rideDTO.isPetTransport() ||
+				vehicle.getPassengerSeats() < rideDTO.getPassengers().size() ||
+				vehicle.getVehicleType().getName() != rideDTO.getVehicleType())
+			return false;
+		return true;
+	}
+
+	@Override
+	public List<Driver> getDriversWithAppropriateVehicleForRide(List<Driver> activeDrivers, RideDTO rideDTO) {
+		List<Driver> driversWithAppropriateVehicle = new ArrayList<Driver>();
+		for (Driver driver: activeDrivers) {
+			if (this.isDriverVehicleAppropriateForRide(driver.getId(), rideDTO))
+				driversWithAppropriateVehicle.add(driver);
+		}
+		return driversWithAppropriateVehicle;
 	}
 }

@@ -10,22 +10,24 @@ public class ReviewDTO {
 	@NotNull(message="is required")
 	@Min(value=0, message="must be greater than 0")
 	@Max(value=5, message="must be less or equal to 5")
-	int rating;
+	Integer rating;
 	
 	@NotEmpty(message="is required")
 	String comment;
 	
-	public ReviewDTO(int rating, String comment) {
+	public ReviewDTO() {}
+	
+	public ReviewDTO(Integer rating, String comment) {
 		super();
 		this.rating = rating;
 		this.comment = comment;
 	}
 
-	public int getRating() {
+	public Integer getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(Integer rating) {
 		this.rating = rating;
 	}
 
