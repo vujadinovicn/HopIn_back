@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -92,8 +93,12 @@ public class DriverServiceImpl implements IDriverService {
 	@Override
 	public AllUsersDTO getAllPaginated(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		List<Driver> drivers = this.allDrivers.getAll(pageable);
-		return new AllUsersDTO(drivers); 
+		Page<Driver> drivers = this.allDrivers.findAll(pageable);
+		List<Driver> res = new ArrayList<Driver>();
+		for (Driver d : drivers) {
+			res.add(d);
+		}
+		return new AllUsersDTO(res); 
 	}
 
 	@Override
@@ -231,12 +236,7 @@ public class DriverServiceImpl implements IDriverService {
 	}
 	
 	@Override
-	public AllHoursDTO getAllHours(int id, int page, int size, String from, String to) {
-//		return new AllHoursDTO(1, new ArrayList<WorkingHours>() {
-//            {
-//                add(new WorkingHours(0, LocalDateTime.now(), LocalDateTime.now(), 0));
-//            }
-//        });
+	public AllHoursDTO getAllHours(int id, int page, int size) {
 		return null;
 	}
 	

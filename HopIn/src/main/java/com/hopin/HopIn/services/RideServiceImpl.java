@@ -126,7 +126,8 @@ public class RideServiceImpl implements IRideService {
 	private Map<Integer, Ride> allRidess = new HashMap<Integer, Ride>();
 	private Set<PanicRideDTO> allPanicRides = new HashSet<PanicRideDTO>();
 	private int currId = 0;
-
+	
+	@Autowired
 	private PassengerRepository allPassengers;
 
 	@Override
@@ -631,6 +632,7 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public AllPassengerRidesDTO getAllDriverRides(int id, int page, int size, String sort, String from,
 			String to) {
+		driverService.getById(id);
 		Pageable pageable = PageRequest.of(page, size);
 		List<Ride> rides = this.allRides.findAllByDriverId(id, pageable);
 		return new AllPassengerRidesDTO(rides);

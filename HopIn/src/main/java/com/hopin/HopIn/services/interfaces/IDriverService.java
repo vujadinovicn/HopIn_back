@@ -49,8 +49,6 @@ public interface IDriverService {
 
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursDTO hours);
 
-	public AllHoursDTO getAllHours(int id, int page, int size, String from, String to);
-
 	WorkingHoursDTO updateWorkingHours(int hoursId, WorkingHoursDTO hours);
 
 	public AllUserRidesReturnedDTO getAllRides(int driverId, int page, int size, String sort, String from, String to);
@@ -74,6 +72,8 @@ public interface IDriverService {
 	public List<Driver> getDriversWithAppropriateVehicleForRide(List<Driver> drivers, RideDTO rideDTO);
 
 	void deleteDocument(int id);
+
+	public AllHoursDTO getAllHours(int id, int page, int size);
 
 
 

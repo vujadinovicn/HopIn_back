@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.WorkingHoursDTO;
 import com.hopin.HopIn.dtos.WorkingHoursEndDTO;
 import com.hopin.HopIn.dtos.WorkingHoursStartDTO;
@@ -124,5 +127,13 @@ public class WorkingHoursServiceImpl implements IWorkingHoursService {
 		double hours = getWorkedHoursForToday(driverId, LocalDateTime.now()) + (rideMinutes/60);
 		DecimalFormat df = new DecimalFormat("#.##");
 		return Double.valueOf(df.format(hours));
+	}
+	
+	@Override
+	public AllHoursDTO getAllHours(int id, int page, int size) {
+		driverService.getById(id);
+		Pageable pageable = PageRequest.of(page, size);
+		List<WorkingHours> allWorkingHours = this.allWorkingHours.findByDriver(id, pageable);
+		return new AllHoursDTO(allWorkingHours.size(), allWorkingHours);
 	}
 }

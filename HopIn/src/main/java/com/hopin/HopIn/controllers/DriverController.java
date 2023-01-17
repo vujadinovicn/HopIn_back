@@ -169,17 +169,25 @@ public class DriverController {
 	}
 	
 	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllPassengerRidesDTO> getAllRides(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam String sort, 
-													@RequestParam String from, @RequestParam String to) {
-		return new ResponseEntity<AllPassengerRidesDTO>(rideService.getAllDriverRides(driverId, page, size, sort, from, to), HttpStatus.OK);
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	public ResponseEntity<?> getAllRides(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam(required = false) String sort, 
+			@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
+		try {
+			return new ResponseEntity<AllPassengerRidesDTO>(rideService.getAllDriverRides(driverId, page, size, sort, from, to), HttpStatus.OK);
+		} catch (UserNotFoundException ex) {
+			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping(value="/{id}/working-hour", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
-	public ResponseEntity<AllHoursDTO> getAllHours(@PathVariable int id, @RequestParam int page, @RequestParam int size, 
-													@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
-		return new ResponseEntity<AllHoursDTO>(service.getAllHours(id, page, size, from, to), HttpStatus.OK);
-		
+	public ResponseEntity<?> getAllHours(@PathVariable int id, @RequestParam  int page, @RequestParam int size, @RequestParam(required = false) String sort, 
+			@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
+		try {
+			return new ResponseEntity<AllHoursDTO>(workingHoursService.getAllHours(id, page, size), HttpStatus.OK);
+		} catch (UserNotFoundException ex) {
+			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@GetMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
