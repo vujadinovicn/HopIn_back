@@ -76,6 +76,8 @@ public class DriverController {
 		}
 		catch (UserNotFoundException e){
 			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
+		} catch (NullPointerException e) {
+			return new ResponseEntity<String>("Vehicle does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
 
