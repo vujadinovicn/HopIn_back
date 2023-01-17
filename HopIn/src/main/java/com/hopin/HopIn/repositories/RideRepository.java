@@ -18,7 +18,7 @@ public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndS
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"start_time\" between :from and :to order by \"start_time\"", nativeQuery=true)
 	public List<Ride> getAllDriverRidesBetweenDates(int id, LocalDateTime from, LocalDateTime to);
 	
-	@Query(value = "select * from \"rides\" where \"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id ) order by \"start_time\"", nativeQuery=true)
+	@Query(value = "select * from \"rides\" where \"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id order by \"start_time\")", nativeQuery=true)
 	public List<Ride> getAllPassengerRides(int id, Pageable pageable);
 	
 	public List<Ride> findAllByDriverId(int id, Pageable pageable);

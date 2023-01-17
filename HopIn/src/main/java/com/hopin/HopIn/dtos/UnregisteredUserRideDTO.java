@@ -4,20 +4,26 @@ import java.util.List;
 
 import com.hopin.HopIn.enums.VehicleTypeName;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public class UnregisteredUserRideDTO {
+	@Valid
+	@NotNull
 	List<LocationDTO> locations;
+	
+	@Valid
+	@NotNull(message = "is required")
 	VehicleTypeName vehicleType;
 	
 	@NotNull(message = "is required")
-	boolean babyTransport;
+	Boolean babyTransport;
 	
 	@NotNull(message = "is required")
-	boolean petTransport;
+	Boolean petTransport;
 	
-	public UnregisteredUserRideDTO(List<LocationDTO> locations, VehicleTypeName vehicleType, boolean babyTransport,
-			boolean petTransport) {
+	public UnregisteredUserRideDTO(List<LocationDTO> locations, VehicleTypeName vehicleType, Boolean babyTransport,
+			Boolean petTransport) {
 		super();
 		this.locations = locations;
 		this.vehicleType = vehicleType;
@@ -41,19 +47,19 @@ public class UnregisteredUserRideDTO {
 		this.vehicleType = vehicleType;
 	}
 
-	public boolean isBabyTransport() {
+	public Boolean isBabyTransport() {
 		return babyTransport;
 	}
 
-	public void setBabyTransport(boolean babyTransport) {
+	public void setBabyTransport(Boolean babyTransport) {
 		this.babyTransport = babyTransport;
 	}
 
-	public boolean isPetTransport() {
+	public Boolean isPetTransport() {
 		return petTransport;
 	}
 
-	public void setPetTransport(boolean petTransport) {
+	public void setPetTransport(Boolean petTransport) {
 		this.petTransport = petTransport;
 	}
 		

@@ -25,11 +25,11 @@ public class PassengerRideDTO {
 	private RejectionNotice rejection;
 	private List<LocationDTO> locations;
 	private double distance;
-	
-	
+
 	public PassengerRideDTO(int id, List<LocationDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
 			double totalCost, UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
-			VehicleTypeName vehicleType, boolean babyTransport, boolean petTransport, RejectionNotice rejection, double distance) {
+			VehicleTypeName vehicleType, boolean babyTransport, boolean petTransport, RejectionNotice rejection,
+			double distance) {
 		super();
 		this.id = id;
 		this.locations = locations;
@@ -45,7 +45,7 @@ public class PassengerRideDTO {
 		this.rejection = rejection;
 		this.distance = distance;
 	}
-	
+
 	public PassengerRideDTO(Ride ride) {
 		this.id = ride.getId();
 		this.driver = new UserInRideDTO(ride.getDriver());
@@ -63,77 +63,101 @@ public class PassengerRideDTO {
 				new LocationNoIdDTO(ride.getDestinationLocation())));
 		this.totalCost = ride.getTotalCost();
 		this.rejection = ride.getRejectionNotice();
+		this.distance = ride.getDistance();
 	}
-	
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public List<LocationDTO> getLocations() {
 		return locations;
 	}
+
 	public void setLocations(List<LocationDTO> locations) {
 		this.locations = locations;
 	}
+
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
+
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
+
 	public LocalDateTime getEndTime() {
 		return endTime;
 	}
+
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
 	}
+
 	public double getTotalCost() {
 		return totalCost;
 	}
+
 	public void setTotalCost(double totalCost) {
 		this.totalCost = totalCost;
 	}
+
 	public UserInRideDTO getDriver() {
 		return driver;
 	}
+
 	public void setDriver(UserInRideDTO driver) {
 		this.driver = driver;
 	}
+
 	public List<UserInRideDTO> getPassengers() {
 		return passengers;
 	}
+
 	public void setPassengers(List<UserInRideDTO> passengers) {
 		this.passengers = passengers;
 	}
+
 	public int getEstimatedTimeInMinutes() {
 		return estimatedTimeInMinutes;
 	}
+
 	public void setEstimatedTimeInMinutes(int estimatedTimeInMinutes) {
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
 	}
+
 	public VehicleTypeName getVehicleType() {
 		return vehicleType;
 	}
+
 	public void setVehicleType(VehicleTypeName vehicleType) {
 		this.vehicleType = vehicleType;
 	}
+
 	public boolean isBabyTransport() {
 		return babyTransport;
 	}
+
 	public void setBabyTransport(boolean babyTransport) {
 		this.babyTransport = babyTransport;
 	}
+
 	public boolean isPetTransport() {
 		return petTransport;
 	}
+
 	public void setPetTransport(boolean petTransport) {
 		this.petTransport = petTransport;
 	}
+
 	public RejectionNotice getRejection() {
 		return rejection;
 	}
+
 	public void setRejection(RejectionNotice rejection) {
 		this.rejection = rejection;
 	}
@@ -145,6 +169,5 @@ public class PassengerRideDTO {
 	public void setDistance(double distance) {
 		this.distance = distance;
 	}
-	
-	
+
 }
