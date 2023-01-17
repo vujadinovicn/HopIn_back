@@ -554,6 +554,14 @@ public class RideServiceImpl implements IRideService {
 		}
 		return null;
 	}
+	
+	@Override
+	public RideReturnedDTO getPendingRideForDriver(int id) {
+		Ride pendingRide = this.allRides.getPendingRideForDriver(id);
+		if (pendingRide == null)
+			throw new NoActiveDriverRideException();
+		return new RideReturnedDTO(pendingRide);
+	}
 
 	@Override
 	public RideReturnedDTO getActiveRideForDriver(int id) {

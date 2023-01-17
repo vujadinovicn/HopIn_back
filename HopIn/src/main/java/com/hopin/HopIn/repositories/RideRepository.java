@@ -25,6 +25,9 @@ public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndS
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 6", nativeQuery=true)
 	public Ride getActiveRideForDriver(int id);
 	
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 0", nativeQuery=true)
+	public Ride getPendingRideForDriver(int id);
+	
 	@Query(value = "select * from \"rides\" where \"status\" = 6 and "
 			+ "\"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id)", nativeQuery=true)
 	public Ride getActiveRideForPassenger(int id);

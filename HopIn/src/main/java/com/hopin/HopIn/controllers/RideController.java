@@ -128,7 +128,7 @@ public class RideController {
 	public ResponseEntity<?> getActiveRideForDriver(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
-			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForDriver(driverId), HttpStatus.OK);
+			return new ResponseEntity<RideReturnedDTO>(service.getPendingRideForDriver(driverId), HttpStatus.OK);
 		} catch (NoActiveDriverRideException e) {
 			return new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
 		}
@@ -138,11 +138,11 @@ public class RideController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getActiveRideForPassenger(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int passengerId) {
-		try {
-			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForPassenger(passengerId), HttpStatus.OK);
-		} catch (NoActivePassengerRideException e) {
+		RideReturnedDTO ride = service.getPendingRideForPassenger(passengerId);
+		if (ride != null)
+			return new ResponseEntity<RideReturnedDTO>(service.getPendingRideForPassenger(passengerId), HttpStatus.OK);
+		else
 			return new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
-		}
 	}
 
 	@PutMapping(value = "/{id}/withdraw")
@@ -231,7 +231,7 @@ public class RideController {
 	@PutMapping(value = "/{id}/cancel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> rejectRide(
-			@PathVariable(required = false) @Min(value = 0, message = "Field id must be greater than 0.") int id,
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
 			@Valid @RequestBody(required=false) ReasonDTO dto) {
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);

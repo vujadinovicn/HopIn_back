@@ -64,4 +64,6 @@ public interface IRideService {
 
 	public RideReturnedDTO getPendingRideForPassenger(int id);
 
+	RideReturnedDTO getPendingRideForDriver(int id);
+
 }
