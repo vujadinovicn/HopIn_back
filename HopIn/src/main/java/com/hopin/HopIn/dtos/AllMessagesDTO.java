@@ -7,18 +7,19 @@ import java.util.List;
 import com.hopin.HopIn.entities.Message;
 
 public class AllMessagesDTO {
-	
+
 	private int totalCount;
 	private List<MessageReturnedDTO> results;
-	
-	public AllMessagesDTO() {}
+
+	public AllMessagesDTO() {
+	}
 
 	public AllMessagesDTO(List<Message> allMessages) {
 		super();
 		this.totalCount = allMessages.size();
-		
+
 		this.results = new ArrayList<MessageReturnedDTO>();
-		for(Message message : allMessages) {
+		for (Message message : allMessages) {
 			this.results.add(new MessageReturnedDTO(message));
 		}
 
@@ -38,6 +39,11 @@ public class AllMessagesDTO {
 
 	public void setResults(List<MessageReturnedDTO> results) {
 		this.results = results;
+	}
+
+	@Override
+	public String toString() {
+		return "AllMessagesDTO [totalCount=" + totalCount + ", results=" + results + "]";
 	}
 
 }

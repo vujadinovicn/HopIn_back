@@ -1,8 +1,14 @@
 package com.hopin.HopIn.dtos;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+
 public class CredentialsDTO {
-	
+	@NotEmpty(message="is required")
+	@Email
 	String email;
+	
+	@NotEmpty(message="is required")
 	String password;
 	
 	public CredentialsDTO(String email, String password) {

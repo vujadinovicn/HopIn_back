@@ -25,6 +25,16 @@ public class AllUserRidesReturnedDTO {
 //		}
 //	}
 
+	public AllUserRidesReturnedDTO(List<Ride> rides) {
+		super();
+		this.totalCount = rides.size();
+		
+		this.results = new HashSet<UserRidesReturnedDTO>();
+		for(Ride ride : rides) {
+			this.results.add(new UserRidesReturnedDTO(ride));
+		}
+	}
+
 	public int getTotalCount() {
 		return totalCount;
 	}

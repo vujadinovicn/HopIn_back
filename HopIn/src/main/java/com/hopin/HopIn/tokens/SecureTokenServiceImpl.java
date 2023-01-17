@@ -24,7 +24,7 @@ public class SecureTokenServiceImpl implements ISecureTokenService {
 		SecureToken token = new SecureToken();
 		token.setToken(RandomString.make(64));
 		token.setUser(user);
-		token.setExpirationDate(Date.from(Instant.now().plus(2, ChronoUnit.HOURS)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+		token.setExpirationDate(Date.from(Instant.now().plus(1, ChronoUnit.MINUTES)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
 		token.setType(type);
 		
 		this.allTokens.save(token);
@@ -40,8 +40,13 @@ public class SecureTokenServiceImpl implements ISecureTokenService {
 
 	@Override
 	public boolean isValid(SecureToken token) {
+		System.out.println(token.getToken());
+		if (token == null)
+			return false;
+		
 		User user = token.getUser();
-		if (token == null || user == null || user.isActivated()) {
+		System.out.println(user.getId());
+		if (user == null || (token.getType() == SecureTokenType.REGISTRATION && user.isActivated())) {
 			return false;
 		}
 		
