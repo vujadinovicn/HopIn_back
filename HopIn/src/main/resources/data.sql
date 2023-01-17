@@ -45,6 +45,9 @@ insert into "passengers"("id") values (5);
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'laza@gmail.com', true, false, 'Laza', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Kostic', '+3819720132 ', 0);
 insert into "passengers"("id") values (6);
 
+insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'kika@gmail.com', false, false, 'Mika', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Peric', '+3819720132 ', 0);
+insert into "passengers"("id") values (7);
+
 insert into "driver_account_update_requests"("reason", "status", "admin_id", "driver_id", "type", "time") values (null, 1, null, 2, 0, '2022-12-26T11:11:11');
 insert into "driver_account_update_password_requests"("new_password", "old_password", "id") values('lofi1123', 'larako2', 1);
 insert into "driver_account_update_requests"("reason", "status", "admin_id", "driver_id", "type", "time") values ('Too many password changes this month.', 2, 3, 2, 0, '2022-12-26T11:11:11');
@@ -57,6 +60,9 @@ insert into "driver_account_update_document_requests"("document_id", "document_i
 
 insert into "driver_account_update_requests"("reason", "status", "type", "admin_id", "driver_id") values ('blablatruc', 1, 2, 3, 2);
 insert into "driver_account_update_info_requests"("address", "email", "name", "profile_picture", "surname", "telephone_number", "id") values('Beograd', 'mark@gmail.com', 'Neca', 'a', 'Vijic', '+3816492031', 5);
+
+insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2023-12-23T11:11:11', 0, 7, 'hdeuwir49834574hnfdj43829449305');
+insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2022-12-22T11:11:11', 0, 5, 'hdeuwir49834574hnfdj43829449304');
 
 insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2023-12-23T11:11:11', 1, 1, 'hdeuwir49834574hnfdj43829449302');
 insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2022-12-22T11:11:11', 1, 5, 'hdeuwir49834574hnfdj43829449301');

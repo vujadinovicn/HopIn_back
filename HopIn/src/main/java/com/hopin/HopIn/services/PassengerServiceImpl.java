@@ -221,11 +221,15 @@ public class PassengerServiceImpl implements IPassengerService {
 	@Override
 	public Boolean verifyRegistration(String verificationCode) {
 		SecureToken token = this.tokenService.findByToken(verificationCode);
+		
+		if (token == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Activation with entered id does not exist!");
+		}
 
 		if (!this.tokenService.isValid(token) || token.isExpired() || token.getType() != SecureTokenType.REGISTRATION) {
 			return false;
 		}
-		
+
 		this.userService.activateUser(token.getUser());
 		return true;
 	}
