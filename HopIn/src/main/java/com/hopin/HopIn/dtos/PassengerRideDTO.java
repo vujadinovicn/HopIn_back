@@ -24,12 +24,12 @@ public class PassengerRideDTO {
 	private boolean petTransport;
 	private RejectionNotice rejection;
 	private List<LocationDTO> locations;
-
+	private double distance;
 	
 	
 	public PassengerRideDTO(int id, List<LocationDTO> locations, LocalDateTime startTime, LocalDateTime endTime,
 			double totalCost, UserInRideDTO driver, List<UserInRideDTO> passengers, int estimatedTimeInMinutes,
-			VehicleTypeName vehicleType, boolean babyTransport, boolean petTransport, RejectionNotice rejection) {
+			VehicleTypeName vehicleType, boolean babyTransport, boolean petTransport, RejectionNotice rejection, double distance) {
 		super();
 		this.id = id;
 		this.locations = locations;
@@ -43,6 +43,7 @@ public class PassengerRideDTO {
 		this.babyTransport = babyTransport;
 		this.petTransport = petTransport;
 		this.rejection = rejection;
+		this.distance = distance;
 	}
 	
 	public PassengerRideDTO(Ride ride) {
@@ -62,6 +63,7 @@ public class PassengerRideDTO {
 				new LocationNoIdDTO(ride.getDepartureLocation())));
 		this.totalCost = ride.getTotalCost();
 		this.rejection = ride.getRejectionNotice();
+		this.distance = ride.getDistance();
 	}
 	
 	public int getId() {
@@ -136,6 +138,16 @@ public class PassengerRideDTO {
 	public void setRejection(RejectionNotice rejection) {
 		this.rejection = rejection;
 	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+	
+	
 	
 	
 }
