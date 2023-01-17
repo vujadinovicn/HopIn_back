@@ -35,6 +35,7 @@ import com.hopin.HopIn.exceptions.NoActiveDriverRideException;
 import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
 import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
+import com.hopin.HopIn.exceptions.NoRideAfterFiveHoursException;
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
 import com.hopin.HopIn.exceptions.PassengerHasAlreadyPendingRide;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
@@ -100,6 +101,10 @@ public class RideController {
 		} catch (PassengerHasAlreadyPendingRide e) {
 			ExceptionDTO ex = new ExceptionDTO("Cannot create a ride while you have one already pending!");
 			System.out.println("Cannot create a ride while you have one already pending!");
+			res = new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+		} catch (NoRideAfterFiveHoursException e) {
+			ExceptionDTO ex = new ExceptionDTO("Cannot create a ride 5 hours from now!");
+			System.out.println("Cannot create a ride 5 hours from now!");
 			res = new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
 		}
 		this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offer-response/" + dto.getPassengers().get(0).getId(), "noDriver");
