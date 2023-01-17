@@ -21,8 +21,6 @@ public class AllMessagesDTO {
 		for(Message message : allMessages) {
 			this.results.add(new MessageReturnedDTO(message));
 		}
-		
-	    Collections.sort(results);
 
 	}
 
