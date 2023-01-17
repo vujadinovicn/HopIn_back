@@ -107,7 +107,10 @@ public class DriverServiceImpl implements IDriverService {
 		if (found.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		return new DriverReturnedDTO(found.get(), found.get().getVehicle());
+		if (found.get().getVehicle() == null)
+			return new DriverReturnedDTO(found.get());
+		else
+			return new DriverReturnedDTO(found.get(), found.get().getVehicle());
 	}
 	
 	@Override 
