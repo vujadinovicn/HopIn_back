@@ -1,15 +1,15 @@
 package com.hopin.HopIn.dtos;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.hopin.HopIn.entities.Message;
 
 public class AllMessagesDTO {
 	
 	private int totalCount;
-	private Set<MessageReturnedDTO> results;
+	private List<MessageReturnedDTO> results;
 	
 	public AllMessagesDTO() {}
 
@@ -17,10 +17,11 @@ public class AllMessagesDTO {
 		super();
 		this.totalCount = allMessages.size();
 		
-		this.results = new HashSet<MessageReturnedDTO>();
+		this.results = new ArrayList<MessageReturnedDTO>();
 		for(Message message : allMessages) {
 			this.results.add(new MessageReturnedDTO(message));
 		}
+
 	}
 
 	public int getTotalCount() {
@@ -31,11 +32,11 @@ public class AllMessagesDTO {
 		this.totalCount = totalCount;
 	}
 
-	public Set<MessageReturnedDTO> getResults() {
+	public List<MessageReturnedDTO> getResults() {
 		return results;
 	}
 
-	public void setResults(Set<MessageReturnedDTO> results) {
+	public void setResults(List<MessageReturnedDTO> results) {
 		this.results = results;
 	}
 

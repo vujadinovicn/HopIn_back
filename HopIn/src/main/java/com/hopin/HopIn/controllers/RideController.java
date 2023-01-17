@@ -63,6 +63,7 @@ public class RideController {
 		System.out.println(dto.getVehicleType());
 		ResponseEntity<ExceptionDTO> res;
 		try {
+
 			RideReturnedDTO ride = service.add(dto);
 			ride.setScheduledTime(null);
 			ObjectMapper mapper = new ObjectMapper();
@@ -235,7 +236,7 @@ public class RideController {
 
 	@PostMapping(value = "/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> addFavoriteRide(@RequestBody FavoriteRideDTO dto) {
+	public ResponseEntity<?> addFavoriteRide(@Valid @RequestBody FavoriteRideDTO dto) {
 		try {
 			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
 		} catch (FavoriteRideException ex) {
@@ -252,7 +253,7 @@ public class RideController {
 
 	@DeleteMapping(value = "favorites/{id}")
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> deleteFavoriteRide(@PathVariable int id) {
+	public ResponseEntity<?> deleteFavoriteRide(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			this.service.deleteFavoriteRide(id);
 			return new ResponseEntity<String>("Successful deletion of favorite location!", HttpStatus.NO_CONTENT);

@@ -7,22 +7,26 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+
 import jakarta.validation.constraints.Pattern;
 
+
+
 public class LocationNoIdDTO {
-	
+	@NotNull
 	@NotEmpty(message="is required")
 	@Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$", message="format is not valid")
 	private String address;
 	
+
 	@NotNull(message="is required")
 	@Max(value=90, message="value is max 90")
 	@Min(value=-90, message="value is min -90")
 	private Double latitude;
 	
 	@NotNull(message="is required")
-	@Max(value=180, message="value is max 90")
-	@Min(value=-180, message="value is min -90")
+	@Max(value=180, message="value is max 180")
+	@Min(value=-180, message="value is min -180")
 	private Double longitude;
 	
 	public LocationNoIdDTO() {}

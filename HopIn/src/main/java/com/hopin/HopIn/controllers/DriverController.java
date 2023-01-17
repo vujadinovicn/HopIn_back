@@ -44,8 +44,12 @@ import com.hopin.HopIn.exceptions.BadIdFormatException;
 import com.hopin.HopIn.exceptions.DriverAlreadyActiveException;
 import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.exceptions.VehicleNotAssignedException;
+
+import com.hopin.HopIn.exceptions.NoVehicleException;
+
 import com.hopin.HopIn.exceptions.WorkingHoursException;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -171,8 +175,8 @@ public class DriverController {
 	}
 	
 	@PostMapping(value = "/{id}/working-hour", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	
-	public ResponseEntity<?> addWorkingHours(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId, @RequestBody WorkingHoursStartDTO dto) {
+	@PreAuthorize("hasRole('DRIVER')")
+	public ResponseEntity<?> addWorkingHours(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId, @Valid @RequestBody WorkingHoursStartDTO dto) {
 		try {
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.addWorkingHours(driverId, dto), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
@@ -181,14 +185,14 @@ public class DriverController {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because you exceeded the 8 hours limit in last 24 hours!"), HttpStatus.BAD_REQUEST);
 		} catch (DriverAlreadyActiveException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Shifth already ongoing!"), HttpStatus.BAD_REQUEST);
-		} catch (NullPointerException ex) {
+		} catch (NoVehicleException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
 		}	 
 	}
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('DRIVER')")
-	public ResponseEntity<?> updateWorkingHours(@PathVariable("working-hour-id") int hoursId, @RequestBody WorkingHoursEndDTO dto) {
+	public ResponseEntity<?> updateWorkingHours(@PathVariable("working-hour-id") @Min(value = 0, message = "Field id must be greater than 0.") int hoursId, @Valid @RequestBody WorkingHoursEndDTO dto) {
 		try {
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.updateWorkingHours(hoursId, dto), HttpStatus.OK);
 		} catch (BadIdFormatException ex) {
@@ -197,7 +201,7 @@ public class DriverController {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Bad Date format, or future date is sent!"), HttpStatus.BAD_REQUEST);
 		} catch (NoActiveDriverException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("No shift is ongoing!"), HttpStatus.BAD_REQUEST);
-		} catch (NullPointerException ex) {
+		} catch (NoVehicleException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot end shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
 		}	
 	}

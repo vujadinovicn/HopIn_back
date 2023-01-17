@@ -6,7 +6,7 @@ import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.enums.MessageType;
 
 public class MessageReturnedDTO {
-	
+
 	int id;
 	LocalDateTime timeOfSending;
 	int senderId;
@@ -14,7 +14,7 @@ public class MessageReturnedDTO {
 	String message;
 	MessageType type;
 	int rideId;
-	
+
 	public MessageReturnedDTO(int id, int senderId, int receiverId, LocalDateTime timeOfSending, String message,
 			MessageType type, int rideId) {
 		super();
@@ -26,7 +26,7 @@ public class MessageReturnedDTO {
 		this.type = type;
 		this.rideId = rideId;
 	}
-	
+
 	public MessageReturnedDTO(Message message) {
 		super();
 		this.id = message.getId();
@@ -93,4 +93,5 @@ public class MessageReturnedDTO {
 	public void setRideId(int rideId) {
 		this.rideId = rideId;
 	}
+
 }

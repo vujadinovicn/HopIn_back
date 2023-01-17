@@ -111,7 +111,7 @@ public class DriverServiceImpl implements IDriverService {
 	public Driver getDriver(int id) {
 		Optional<Driver> found = allDrivers.findById(id);
 		if (found.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
 		}
 		return found.get();
 	}
