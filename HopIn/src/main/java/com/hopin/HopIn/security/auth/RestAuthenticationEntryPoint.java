@@ -74,7 +74,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         setResponseError(response, HttpServletResponse.SC_NOT_FOUND, String.format("Not found: %s", notFoundException.getMessage()));
     }
     
-    
     private void setResponseError(HttpServletResponse response, int errorCode, String errorMessage) throws IOException{
         response.setStatus(errorCode);
         response.getWriter().write(errorMessage);

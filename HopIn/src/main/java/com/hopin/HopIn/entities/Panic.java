@@ -2,12 +2,16 @@ package com.hopin.HopIn.entities;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "panics")
@@ -15,7 +19,10 @@ public class Panic {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@NotNull
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
 	private LocalDateTime time;
+	@NotEmpty(message = "is required")
 	private String reason;
 
 	@ManyToOne
@@ -23,6 +30,10 @@ public class Panic {
 
 	@ManyToOne
 	private Ride ride;
+	
+	public Panic() {
+		
+	}
 
 	public Panic(int id, LocalDateTime time, String reason, User user, Ride ride) {
 		super();

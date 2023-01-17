@@ -24,6 +24,7 @@ import com.hopin.HopIn.dtos.ReviewDTO;
 import com.hopin.HopIn.dtos.ReviewReturnedDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.enums.ReviewType;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.services.interfaces.IReviewService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -72,6 +73,8 @@ public class ReviewController {
 			return new ResponseEntity<AllReviewsReturnedDTO>(reviewService.getDriverReviews(id), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		} catch (UserNotFoundException ex) {
+			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
 	

@@ -27,7 +27,7 @@ public class Vehicle {
 	@Pattern(regexp = "^([a-zA-Z0-9- ]*)$")
 	private String model;
 	
-	@Pattern(regexp = "^([A-Z]{2}-[0-9]{3}-[A-Z]{2})$")
+//	@Pattern(regexp = "^([A-Z]{2}-[0-9]{3}-[A-Z]{2})$")
 	private String licenseNumber;
 	
 	@NumberFormat

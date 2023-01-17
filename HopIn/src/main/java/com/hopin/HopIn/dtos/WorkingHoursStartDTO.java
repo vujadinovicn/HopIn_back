@@ -2,11 +2,16 @@ package com.hopin.HopIn.dtos;
 
 import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.validation.constraints.NotNull;
 
 public class WorkingHoursStartDTO {
 	
-	@NotEmpty(message="is required")
+	@NotNull
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
 	private LocalDateTime start;
 
 	public WorkingHoursStartDTO() {

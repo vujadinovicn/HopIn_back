@@ -25,11 +25,9 @@ import com.hopin.HopIn.dtos.PassengerRideDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
-import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
-import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -74,7 +72,7 @@ public class PassengerController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('PASSENGER')")
+	@PreAuthorize("hasRole('PASSENGER')" + " || " +"hasRole('ADMIN')")
 	public ResponseEntity<?> getPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			return new ResponseEntity<UserReturnedDTO>(passengerService.getById(id), HttpStatus.OK);
