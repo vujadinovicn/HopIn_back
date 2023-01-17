@@ -34,6 +34,7 @@ import com.hopin.HopIn.validations.ExceptionDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.websocket.server.PathParam;
 
 @Validated
 @CrossOrigin(origins = "http://localhost:4200")
@@ -63,13 +64,6 @@ public class PassengerController {
 		return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/activate/{activationId}")
-	public ResponseEntity<Void> activatePassenger(@PathVariable int activationId) {
-		if (passengerService.Activate(activationId)) {
-			return new ResponseEntity<Void>(HttpStatus.OK);
-		}
-		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')" + " || " +"hasRole('ADMIN')")
@@ -160,13 +154,18 @@ public class PassengerController {
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 	
-	@GetMapping(value = "verify")
-	public ResponseEntity<Void> verifyRegistration(@RequestParam("code") String verificationCode) {
-		Boolean verified = this.passengerService.verifyRegistration(verificationCode);
-		if (verified) {
-			return new ResponseEntity<Void>(HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+	@GetMapping(value = "activate/{activationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> verifyRegistration(@PathVariable("activationId") String verificationCode) {
+		System.out.println(verificationCode);
+		try {
+			Boolean verified = this.passengerService.verifyRegistration(verificationCode);
+			if (verified) {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Successful account activation!"), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Activation expired. Register again!"), HttpStatus.BAD_REQUEST);
+			}
+		} catch (ResponseStatusException e) {
+			return new ResponseEntity<String>(e.getReason(), HttpStatus.NOT_FOUND);
 		}
 	}
 	
