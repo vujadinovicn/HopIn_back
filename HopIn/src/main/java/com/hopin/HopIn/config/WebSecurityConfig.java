@@ -84,7 +84,7 @@ public class WebSecurityConfig {
 			.cors().and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
 		
-		http.csrf().disable();
+		http.csrf().disable(); 
 
 //		SA NEMANJINE GRANE
 //			.and()

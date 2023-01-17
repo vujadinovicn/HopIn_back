@@ -21,7 +21,7 @@ public class WorkingHoursStartDTO {
 		super();
 		this.start = start;
 	}
-
+  
 	public LocalDateTime getStart() {
 		return start;
 	}
