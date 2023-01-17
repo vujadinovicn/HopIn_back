@@ -91,7 +91,7 @@ public class WebSecurityConfig {
 //    		.authorizeRequests()
 //			.requestMatchers("/api/user/login").permitAll()
 //			.and()
-//			.cors().and()
+//			.cors().and() 
 //			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
 //
 //    	http.csrf().disable();
@@ -107,6 +107,6 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
     	// Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
     	return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/api/user/login").requestMatchers(HttpMethod.POST, "/api/passenger")
-    			.requestMatchers(HttpMethod.GET, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.PUT, "/api/user/{id}/resetPassword");	 
+    			.requestMatchers(HttpMethod.GET, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.PUT, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.POST, "/api/unregisteredUser");	 
     }
 }

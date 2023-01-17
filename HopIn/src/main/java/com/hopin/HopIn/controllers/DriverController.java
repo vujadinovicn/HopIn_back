@@ -124,7 +124,7 @@ public class DriverController {
 	public ResponseEntity<?> addDocument(@PathVariable int id, @Valid @RequestBody DocumentDTO newDocument) {
 		DocumentReturnedDTO doc = service.addDocument(id, newDocument);
 		if (doc != null) { return new ResponseEntity<DocumentReturnedDTO>(service.addDocument(id, newDocument), HttpStatus.OK); }
-		return new ResponseEntity<String>("Driver does not exist", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 	}
 	
 	@DeleteMapping(value = "/document/{document-id}")
@@ -134,7 +134,7 @@ public class DriverController {
 			service.deleteDocument(documentId);
 			return new ResponseEntity<Document>(HttpStatus.NO_CONTENT);			
 		} catch (ResponseStatusException ex) {
-			return new ResponseEntity<String>("Document does not exist", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Document does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -205,14 +205,14 @@ public class DriverController {
 	@PostMapping(value = "/{id}/working-hour", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> addWorkingHours(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId, @Valid @RequestBody WorkingHoursStartDTO dto) {
-		try { 
+		try {     
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.addWorkingHours(driverId, dto), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
 		} catch (WorkingHoursException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because you exceeded the 8 hours limit in last 24 hours!"), HttpStatus.BAD_REQUEST);
 		} catch (DriverAlreadyActiveException ex) {
-			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Shifth already ongoing!"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Shift already ongoing!"), HttpStatus.BAD_REQUEST);
 		} catch (NoVehicleException ex) { 
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
 		} 
