@@ -1,17 +1,44 @@
 package com.hopin.HopIn.dtos;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.enums.VehicleTypeName;
 
-public class VehicleDTO {
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
+public class VehicleDTO {
+	
+	@NotNull
 	private VehicleTypeName vehicleType;
+	
+	@NotNull
+	@NotEmpty(message="is required")
+	@Length(max=100)
 	private String model;
+	
+	@NotNull
+	@NotEmpty(message="is required")
+	@Length(max=20)
 	private String licenseNumber;
+	
+	@NotNull
+	@Valid
 	private LocationNoIdDTO currentLocation;
-	private int passengerSeats;
-	private boolean babyTransport;
-	private boolean petTransport;
+	
+	@NotNull
+	@Min(value=1)
+	@Max(value=20)
+	private Integer passengerSeats;
+	
+	@NotNull
+	private Boolean babyTransport;
+	@NotNull
+	private Boolean petTransport;
 
 	public VehicleDTO(VehicleTypeName vehicleType, String model, String licenseNumber, LocationNoIdDTO currentLocation,
 			int passengerSeats, boolean babyTransport, boolean petTransport) {

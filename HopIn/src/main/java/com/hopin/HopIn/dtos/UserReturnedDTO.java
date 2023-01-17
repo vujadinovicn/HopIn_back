@@ -37,7 +37,7 @@ public class UserReturnedDTO {
 		this.address = user.getAddress();
 		this.telephoneNumber = user.getTelephoneNumber();
 		this.profilePicture = user.getProfilePicture();
-		this.password = null;
+		this.password = user.getPassword();
 	}
 
 	public UserReturnedDTO(User user, Vehicle vehicle) {

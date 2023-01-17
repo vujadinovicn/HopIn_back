@@ -123,7 +123,6 @@ public class User {
 		this.name = dto.getName();
 		this.surname = dto.getSurname();
 		this.email = dto.getEmail();
-		this.password = dto.getPassword();
 		this.address = dto.getAddress();
 		this.telephoneNumber = dto.getTelephoneNumber();
 		this.setProfilePicture(dto.getProfilePicture());
