@@ -45,7 +45,7 @@ public interface IDriverService {
 
 	public WorkingHoursDTO getWorkingHours(int hoursId);
 
-	public AllUsersDTO getAllPaginated(Pageable pageable);
+	AllUsersDTO getAllPaginated(int page, int size);
 
 	public WorkingHoursDTO addWorkingHours(int driverId, WorkingHoursDTO hours);
 
@@ -72,6 +72,7 @@ public interface IDriverService {
 	public boolean isDriverVehicleAppropriateForRide(int id, RideDTO rideDTO);
 	
 	public List<Driver> getDriversWithAppropriateVehicleForRide(List<Driver> drivers, RideDTO rideDTO);
+
 
 
 

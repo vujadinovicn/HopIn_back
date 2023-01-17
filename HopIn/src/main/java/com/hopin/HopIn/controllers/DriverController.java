@@ -89,14 +89,17 @@ public class DriverController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AllUsersDTO> getAllPaginated(Pageable pageable) {
-		return new ResponseEntity<AllUsersDTO>(service.getAllPaginated(pageable), HttpStatus.OK);
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<AllUsersDTO> getAllPaginated(@RequestParam  int page, @RequestParam int size, @RequestParam(required = false) String sort, 
+			@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
+		return new ResponseEntity<AllUsersDTO>(service.getAllPaginated(page, size), HttpStatus.OK);
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> insert(@Valid @RequestBody UserDTO dto) {
 		try {
+			System.out.println("tu");
 			return new ResponseEntity<UserReturnedDTO>(service.insert(dto), HttpStatus.OK);
 		} catch (EmailAlreadyInUseException e) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User with that email already exists!"), HttpStatus.BAD_REQUEST);

@@ -6,19 +6,19 @@ import jakarta.validation.constraints.Pattern;
 
 public class UserDTO {
 	@NotEmpty(message="is required")
-	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$", message="format is not valid")
+//	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$", message="format is not valid")
 	private String name;
 	
 	@NotEmpty(message="is required")
-	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$", message="format is not valid")
+//	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$", message="format is not valid")
 	private String surname;
 	
 	@NotEmpty(message="is required")
 	@Email(message="format is not valid")
 	private String email;
 	
-	@NotEmpty(message="is required")
-	@Pattern(regexp="^([0-9a-zA-Z]{3,}$)", message="format is not valid")
+//	@NotEmpty(message="is required")
+//	@Pattern(regexp="^([0-9a-zA-Z]{3,}$)", message="format is not valid")
 	private String password;
 	
 	@NotEmpty(message="is required")

@@ -1,5 +1,7 @@
 package com.hopin.HopIn.services;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,13 +12,13 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllHoursDTO;
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
@@ -35,6 +37,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
+import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.entities.WorkingHours;
 import com.hopin.HopIn.enums.DocumentOperationType;
@@ -84,18 +87,15 @@ public class DriverServiceImpl implements IDriverService {
 		
 		this.allDrivers.save(driver);
 		this.allDrivers.flush();
-		
+		System.out.println("aaaak");
 		return new UserReturnedDTO(driver);
 	}
 	
 	@Override
-	public AllUsersDTO getAllPaginated(Pageable pageable) {
-		if (allDriversMap.size() == 0) {
-			Driver driver = new Driver(0, "Pera", "Peric", "pera.peric@email.com", "123", "Bulevar Oslobodjenja 74", "+381123123", "U3dhZ2dlciByb2Nrcw==".getBytes());
-			allDriversMap.put(driver.getId(), driver);
-		}
-		
-		return new AllUsersDTO(this.allDriversMap.values());
+	public AllUsersDTO getAllPaginated(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		List<Driver> drivers = this.allDrivers.getAll(pageable);
+		return new AllUsersDTO(drivers);
 	}
 
 	@Override
