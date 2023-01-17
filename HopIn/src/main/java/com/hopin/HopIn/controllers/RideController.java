@@ -31,6 +31,7 @@ import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
+import com.hopin.HopIn.exceptions.NoActiveDriverRideException;
 import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
 import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
@@ -61,7 +62,7 @@ public class RideController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> add(@RequestBody RideDTO dto) {
+	public ResponseEntity<?> add(@Valid @RequestBody(required=false) RideDTO dto) {
 		System.out.println(dto.getVehicleType());
 		ResponseEntity<ExceptionDTO> res;
 		try {
@@ -111,7 +112,7 @@ public class RideController {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.getRide(id), HttpStatus.OK);
 		} catch (RideNotFoundException e) {
-			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Ride does not exist", HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -121,23 +122,24 @@ public class RideController {
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForDriver(driverId), HttpStatus.OK);
-		} catch (NoActivePassengerRideException e) {
-			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
+		} catch (NoActiveDriverRideException e) {
+			return new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('PASSENGER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getActiveRideForPassenger(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int passengerId) {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.getActiveRideForPassenger(passengerId), HttpStatus.OK);
 		} catch (NoActivePassengerRideException e) {
-			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@PutMapping(value = "/{id}/withdraw")
+	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> cancelRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
@@ -147,7 +149,7 @@ public class RideController {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
 				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
 			} else {
-				return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 			}
 		}
 	}
@@ -167,6 +169,7 @@ public class RideController {
 	}
 
 	@PutMapping(value = "/{id}/accept", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> acceptRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		System.out.println("ACCEPT REQ: " + id);
@@ -184,6 +187,7 @@ public class RideController {
 	}
 
 	@PutMapping(value = "/{id}/start", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> startRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
@@ -194,13 +198,14 @@ public class RideController {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
 				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
 			} else {
-				return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 			}
 		}
 
 	}
 
 	@PutMapping(value = "/{id}/end", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> endRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
@@ -211,7 +216,7 @@ public class RideController {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
 				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
 			} else {
-				return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 			}
 		}
 	}
@@ -230,7 +235,7 @@ public class RideController {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
 				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
 			} else {
-				return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+				return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 			}
 		}
 	}
@@ -240,9 +245,10 @@ public class RideController {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/favorites", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> addFavoriteRide(@Valid @RequestBody FavoriteRideDTO dto) {
+	public ResponseEntity<?> addFavoriteRide(@Valid @RequestBody(required = false) FavoriteRideDTO dto) {
+		System.out.println("neca");
 		try {
 			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
 		} catch (FavoriteRideException ex) {
@@ -250,7 +256,7 @@ public class RideController {
 					HttpStatus.BAD_REQUEST);
 		}
 	}
-
+ 
 	@GetMapping(value = "/favorites", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> getFavoriteRides() {

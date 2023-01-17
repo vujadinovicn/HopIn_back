@@ -161,12 +161,22 @@ public class RideServiceImpl implements IRideService {
 			throw new FavoriteRideException();
 		}
 		Set<Passenger> passengers = new HashSet<Passenger>();
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		passengers.add(allPassengers.findPassengerByEmail(authentication.getName()).orElse(null));
+
+		System.out.println(passengers.size());
+		System.out.println(dto.getPassengers().size());
 		for (UserInRideDTO currUser : dto.getPassengers()) {
 			passengers.add(this.passengerService.getPassenger(currUser.getId()));
 		}
+		System.out.println(passengers.size());
 		FavoriteRide favoriteRide = new FavoriteRide(dto, passengers, this.vehicleTypeService.getByName(dto.getVehicleType()));
 		this.allFavoriteRides.save(favoriteRide);
+		this.allFavoriteRides.flush();
 		this.passengerService.addFavoriteRide(user.getId(), favoriteRide);
+		this.allPassengers.save(allPassengers.findPassengerByEmail(authentication.getName()).orElse(null));
+		this.allPassengers.flush();
 		
 		return new FavoriteRideReturnedDTO(favoriteRide);
 	}
@@ -175,9 +185,11 @@ public class RideServiceImpl implements IRideService {
 	public List<FavoriteRideReturnedDTO> getFavoriteRides() {
 		List<FavoriteRide> favoriteRides = this.passengerService.getFavoriteRides(userService.getCurrentUser().getId());
 		List<FavoriteRideReturnedDTO> retRides = new ArrayList<FavoriteRideReturnedDTO>();
+		System.out.println("rides");
 		for (FavoriteRide ride : favoriteRides) {
 			retRides.add(new FavoriteRideReturnedDTO(ride));
 		}
+		System.out.println(retRides.size());
 		return retRides;
 	}
 	
