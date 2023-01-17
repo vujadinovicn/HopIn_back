@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.PassengerRideDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
@@ -71,6 +72,7 @@ public class PassengerController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> getPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			return new ResponseEntity<UserReturnedDTO>(passengerService.getById(id), HttpStatus.OK);
@@ -89,26 +91,37 @@ public class PassengerController {
 		return new ResponseEntity<UserReturnedDTO>(HttpStatus.NOT_FOUND);
 	}
 
+	@CrossOrigin(origins = "http://localhost:4200")
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> update(@Valid @RequestBody UserDTO dto, @PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
+		System.out.println("USAO");
 		try {
 			UserReturnedDTO passenger = passengerService.update(id, dto);
 			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
-			return new ResponseEntity<String>("Passenger does not exist", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
 		} catch (EmailAlreadyInUseException e) {
-			return new ResponseEntity<String>("Email already in use", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Email already in use!", HttpStatus.BAD_REQUEST);
 		}
 	}
 
+	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasAnyRole('ADMIN', 'PASSENGER')")
-	public ResponseEntity<AllPassengerRidesDTO> getAllRides(@PathVariable int id, @RequestParam int page,
-			@RequestParam int size, @RequestParam String sort, @RequestParam String from, @RequestParam String to) {
-		System.out.println("SVE VOZNJE");
-		return new ResponseEntity<AllPassengerRidesDTO>(
-				this.rideService.getAllPassengerRides(id, page, size, sort, from, to), HttpStatus.OK);
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> getAllRides(@PathVariable int id, @RequestParam int page,
+			@RequestParam int size, @RequestParam(required = false) String sort, @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
+		try {
+			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRides(id, page, size, sort, from, to);
+			for (PassengerRideDTO ride: rides.getResults()) {
+				System.out.println(ride);
+			}
+			return new ResponseEntity<AllPassengerRidesDTO>(
+					rides , HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
+		}
+		
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")

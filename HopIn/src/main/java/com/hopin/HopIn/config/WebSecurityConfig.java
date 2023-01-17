@@ -69,16 +69,17 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         
-        http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
+        http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
 
     	http.authorizeRequests()
 			.requestMatchers("/api/unregisteredUser/").hasRole("ANONYMOUS")
 			.and()
 			.authorizeRequests()
 //    		.requestMatchers("/api/**").permitAll()
+			.and().authorizeRequests()
 			.requestMatchers("/h2-console/**").permitAll()	
+			.and().authorizeRequests()
 			.requestMatchers("/api/user/login").permitAll()
-			.requestMatchers("/api/passenger/{id}").permitAll()
 			.anyRequest().authenticated().and()
 			.cors().and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);

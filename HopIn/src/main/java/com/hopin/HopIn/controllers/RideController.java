@@ -110,7 +110,9 @@ public class RideController {
 	public ResponseEntity<?> getRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
-			return new ResponseEntity<RideReturnedDTO>(service.getRide(id), HttpStatus.OK);
+			RideReturnedDTO ride = service.getRide(id);
+			System.out.println(ride);
+			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (RideNotFoundException e) {
 			return new ResponseEntity<String>("Ride does not exist", HttpStatus.NOT_FOUND);
 		}
@@ -175,7 +177,7 @@ public class RideController {
 		System.out.println("ACCEPT REQ: " + id);
 		try {
 			RideReturnedDTO ride = service.acceptRide(id);
-			this.simpMessagingTemplate.convertAndSend("/topic/ride-offer-response/" + ride.getPassengers().get(0).getId(), "true");
+//			this.simpMessagingTemplate.convertAndSend("/topic/ride-offer-response/" + ride.getPassengers().get(0).getId(), "true");
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {

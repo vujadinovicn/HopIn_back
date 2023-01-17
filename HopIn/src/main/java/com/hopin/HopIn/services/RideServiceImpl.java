@@ -73,7 +73,7 @@ import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
 import com.hopin.HopIn.exceptions.PassengerHasAlreadyPendingRide;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
-
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
@@ -334,6 +334,9 @@ public class RideServiceImpl implements IRideService {
 		if (this.getPendingRideForPassenger(dto.getPassengers().get(0).getId()) != null) {
 			throw new PassengerHasAlreadyPendingRide();
 		}
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Passenger pass = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
+		dto.getPassengers().add(new UserInRideDTO(pass));
 		
 		dto.getPassengers().forEach((UserInRideDTO passenger) -> {
 			try 
@@ -369,6 +372,9 @@ public class RideServiceImpl implements IRideService {
 		Ride wantedRide = this.createWantedRide(dto, driverForRide);
 		this.allRides.save(wantedRide);
 		this.allRides.flush();
+		
+		System.out.println(wantedRide);
+		
 		return new RideReturnedDTO(wantedRide);
 	}
 	
@@ -448,7 +454,10 @@ public class RideServiceImpl implements IRideService {
 		ride.setDriver(driver);
 		
 		ride.setReviews(null);
-		ride.setVehicleType(this.vehicleTypeService.getByName(rideDTO.getVehicleType()));
+		VehicleType vehicleType = this.allVehicleTypes
+				.getByName(rideDTO.getVehicleType());
+		System.out.println(vehicleType);
+		ride.setVehicleType(vehicleType);
 		ride.setDepartureLocation(new Location(rideDTO.getDepartureLocation()));
 		ride.setDestinationLocation(new Location(rideDTO.getDestinationLocation()));
 		ride.setRejectionNotice(null);
@@ -651,6 +660,13 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to) {
 		Pageable pageable = PageRequest.of(page, size);
+		
+		Optional<Passenger> passenger = this.allPassengers.findById(id);
+		if (passenger.isEmpty()) {
+			throw new UserNotFoundException();
+		}
+		
+		
 		List<Ride> rides = this.allRides.getAllPassengerRides(id, pageable);
 		return new AllPassengerRidesDTO(rides);
 	}

@@ -30,11 +30,11 @@ public class User {
 	private int id;
 
 	@NotEmpty
-	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
+//	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
 	private String name;
 
 	@NotEmpty
-	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
+//	@Pattern(regexp = "^([a-zA-Zčćđžš ]*)$")
 	private String surname;
 
 	@NotEmpty
