@@ -27,17 +27,12 @@ public class RideDTO {
 	@NotNull(message="is required")
 	private Boolean petTransport;
 	
-	@NotNull(message="is required")
 	private Double distance;
 	
-	@NotNull(message="is required")
 	private Double duration;
 	
-	@NotNull(message="is required")
 	private Double price;
 	
-	@Valid
-	@NotNull(message="is required")
 	private LocalDateTime scheduledTime;
 
 	public RideDTO() {

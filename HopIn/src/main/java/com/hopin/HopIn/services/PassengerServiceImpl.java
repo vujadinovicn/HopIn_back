@@ -76,7 +76,7 @@ public class PassengerServiceImpl implements IPassengerService {
 		Optional<Passenger> found = allPassengers.findById(id);
 		if (found.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
-		}
+		} 
 		return new UserReturnedDTO(found.get());
 	}
 	

@@ -160,7 +160,7 @@ public class RideController {
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> panicRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@Valid @RequestBody ReasonDTO dto) {
+			@Valid @RequestBody(required = false) ReasonDTO dto) {
 		System.out.println("panic");
 		PanicRideDTO ride = service.panicRide(id, dto);
 		if (ride == null) {
@@ -224,14 +224,15 @@ public class RideController {
 	}
 
 	@PutMapping(value = "/{id}/cancel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> rejectRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@Valid @RequestBody ReasonDTO dto) {
+			@Valid @RequestBody(required=false) ReasonDTO dto) {
 		System.out.println("DECLINE REQ: " + id);
 		System.out.println("DECLINE RES: " + dto.getReason());
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
-			this.simpMessagingTemplate.convertAndSend("/topic/ride-offer-response/" + ride.getPassengers().get(0).getId(), "false");
+//			this.simpMessagingTemplate.convertAndSend("/topic/ride-offer-response/" + ride.getPassengers().get(0).getId(), "false");
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {

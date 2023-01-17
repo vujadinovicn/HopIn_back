@@ -336,7 +336,7 @@ public class RideServiceImpl implements IRideService {
 		}
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Passenger pass = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
-		dto.getPassengers().add(new UserInRideDTO(pass));
+//		dto.getPassengers().add(new UserInRideDTO(pass));
 		
 		dto.getPassengers().forEach((UserInRideDTO passenger) -> {
 			try 
@@ -649,7 +649,7 @@ public class RideServiceImpl implements IRideService {
 		Ride savedRide = this.changeRideStatus(ride, RideStatus.REJECTED);
 
 		return new RideReturnedDTO(savedRide);
-	}
+	} 
 
 	@Override
 	public AllPanicRidesDTO getAllPanicRides() {

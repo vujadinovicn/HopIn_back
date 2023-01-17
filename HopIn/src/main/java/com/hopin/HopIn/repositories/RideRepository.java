@@ -22,10 +22,10 @@ public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndS
 	public List<Ride> getAllPassengerRides(int id, Pageable pageable);
 	
 	public List<Ride> findAllByDriverId(int id, Pageable pageable);
-	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 3", nativeQuery=true)
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 6", nativeQuery=true)
 	public Ride getActiveRideForDriver(int id);
 	
-	@Query(value = "select * from \"rides\" where \"status\" = 3 and "
+	@Query(value = "select * from \"rides\" where \"status\" = 6 and "
 			+ "\"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id)", nativeQuery=true)
 	public Ride getActiveRideForPassenger(int id);
 	
