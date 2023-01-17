@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public class LocationNoIdDTO {
+	@NotNull
 	@NotEmpty(message="is required")
 	private String address;
 	

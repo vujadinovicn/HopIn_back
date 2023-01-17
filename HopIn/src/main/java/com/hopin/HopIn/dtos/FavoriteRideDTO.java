@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 
 import com.hopin.HopIn.enums.VehicleTypeName;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,9 +17,11 @@ public class FavoriteRideDTO {
 	@Length(max=100)
 	private String favoriteName;
 	
+	@Valid
 	@NotNull(message="is required")
 	private List<RouteLocsDTO> locations;
 	
+	@Valid
 	@NotNull(message="is required")
 	private List<UserInRideDTO> passengers = new ArrayList<UserInRideDTO>();
 	

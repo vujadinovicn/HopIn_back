@@ -1,10 +1,15 @@
 package com.hopin.HopIn.dtos;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public class RouteLocsDTO {
+	
+	@Valid
 	@NotNull
 	LocationNoIdDTO departure;
+	
+	@Valid
 	@NotNull
 	LocationNoIdDTO destination;
 
