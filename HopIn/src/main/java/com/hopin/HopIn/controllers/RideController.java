@@ -271,7 +271,7 @@ public class RideController {
 		return new ResponseEntity<List<FavoriteRideReturnedDTO>>(this.service.getFavoriteRides(), HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "favorites/{id}")
+	@DeleteMapping(value = "/favorites/{id}")
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> deleteFavoriteRide(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
@@ -283,7 +283,7 @@ public class RideController {
 	}
 	
 	@CrossOrigin(origins = "http://localhost:4200")
-	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/date/range", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@RequestParam String from, @RequestParam String to) {
 		return new ResponseEntity<List<RideForReportDTO>>(
