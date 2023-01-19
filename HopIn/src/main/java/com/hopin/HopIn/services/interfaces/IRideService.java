@@ -64,6 +64,8 @@ public interface IRideService {
 
 	public RideReturnedDTO getPendingRideForPassenger(int id);
 
-	RideReturnedDTO getPendingRideForDriver(int id);
+	public RideReturnedDTO getPendingRideForDriver(int id);
+
+	public List<RideForReportDTO> getAllRidesBetweenDates(String from, String to);
 
 }

@@ -156,6 +156,17 @@ public class RideServiceImpl implements IRideService {
 	}
 	
 	@Override
+	public List<RideForReportDTO> getAllRidesBetweenDates(String from, String to) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		List<Ride> rides = allRides.getAllRidesBetweenDates(LocalDate.parse(from, formatter).atStartOfDay(), LocalDate.parse(to, formatter).atStartOfDay());
+		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
+		for (Ride ride : rides) {
+			res.add(new RideForReportDTO(ride));
+		}
+		return res;
+	}
+	
+	@Override
 	public FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto) {
 		User user = userService.getCurrentUser();
 		if (passengerService.getFavoriteRides(user.getId()).size() >= 10) {
