@@ -26,6 +26,8 @@ public class SecureToken {
 
 	private SecureTokenType type;
 
+	private boolean used;
+
 	@ManyToOne
 	private User user;
 
@@ -39,6 +41,17 @@ public class SecureToken {
 		this.token = token;
 		this.expirationDate = expirationDate;
 		this.type = type;
+		this.user = user;
+	}
+
+	public SecureToken(int id, @NotEmpty String token, LocalDateTime expirationDate, SecureTokenType type, boolean used,
+			User user) {
+		super();
+		this.id = id;
+		this.token = token;
+		this.expirationDate = expirationDate;
+		this.type = type;
+		this.used = used;
 		this.user = user;
 	}
 
@@ -84,6 +97,14 @@ public class SecureToken {
 
 	public boolean isExpired() {
 		return this.expirationDate.isBefore(LocalDateTime.now());
+	}
+
+	public boolean isUsed() {
+		return used;
+	}
+
+	public void setUsed(boolean used) {
+		this.used = used;
 	}
 
 }
