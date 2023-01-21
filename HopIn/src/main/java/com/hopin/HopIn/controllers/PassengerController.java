@@ -103,10 +103,27 @@ public class PassengerController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> getAllRides(@PathVariable int id, @RequestParam int page,
+	public ResponseEntity<?> getAllRidesPaginated(@PathVariable int id, @RequestParam int page,
 			@RequestParam int size, @RequestParam(required = false) String sort, @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRides(id, page, size, sort, from, to);
+			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRidesPaginated(id, page, size, sort, from, to);
+			for (PassengerRideDTO ride: rides.getResults()) {
+				System.out.println(ride);
+			}
+			return new ResponseEntity<AllPassengerRidesDTO>(
+					rides , HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
+		}
+		
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "{id}/all/rides", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('PASSENGER')")
+	public ResponseEntity<?> getAllRides(@PathVariable int id) {
+		try {
+			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRides(id);
 			for (PassengerRideDTO ride: rides.getResults()) {
 				System.out.println(ride);
 			}

@@ -221,7 +221,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public AllPassengerRidesDTO getRides(int userId, int page, int size, String sort, String from, String to) {
+	public AllPassengerRidesDTO getRidesPaginated(int userId, int page, int size, String sort, String from, String to) {
 		Pageable pageable = PageRequest.of(page, size);
 		
 		Optional<User> user = this.allUsers.findById(userId);
@@ -233,7 +233,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		List<Ride> rides = this.allRides.getAllUserRides(userId, pageable);
 		return new AllPassengerRidesDTO(rides);
 	}
-
+	
 	@Override
 	public Boolean userAlreadyExists(String email) {
 		return (!this.allUsers.getUserByEmail(email).isEmpty());
