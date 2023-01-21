@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,6 +28,7 @@ import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
@@ -269,7 +271,7 @@ public class RideController {
 		return new ResponseEntity<List<FavoriteRideReturnedDTO>>(this.service.getFavoriteRides(), HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "favorites/{id}")
+	@DeleteMapping(value = "/favorites/{id}")
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> deleteFavoriteRide(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
@@ -278,6 +280,14 @@ public class RideController {
 		} catch (FavoriteRideException ex) {
 			return new ResponseEntity<String>("Favorite location does not exist!", HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "/date/range", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@RequestParam String from, @RequestParam String to) {
+		return new ResponseEntity<List<RideForReportDTO>>(
+				this.service.getAllRidesBetweenDates(from, to), HttpStatus.OK);
 	}
 
 }
