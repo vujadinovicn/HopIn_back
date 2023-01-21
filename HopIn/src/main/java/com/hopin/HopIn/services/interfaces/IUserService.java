@@ -23,26 +23,26 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 public interface IUserService {
-	
+
 	public User getById(int userId);
-	
+
 	public AllUsersDTO getAll(int page, int size);
-	
+
 	public TokenDTO login(CredentialsDTO credentials);
 
 	public void block(int userId);
-	
+
 	public void unblock(int userId);
-	
+
 	public NoteReturnedDTO addNote(int userId, NoteDTO note);
-	
+
 	public AllNotesDTO getNotes(int userId, int page, int size);
-	
+
 	public MessageReturnedDTO sendMessage(int userId, MessageDTO sentMessage);
-	
+
 	public AllMessagesDTO getMessages(int userId);
-	
-	public AllPassengerRidesDTO getRides(int userId, int page, int size, String sort, String from, String to);
+
+	public AllPassengerRidesDTO getRidesPaginated(int userId, int page, int size, String sort, String from, String to);
 
 	public UserReturnedDTO getUser(int id);
 
@@ -62,7 +62,7 @@ public interface IUserService {
 
 	public void resetPassword(int id, ResetPasswordDTO dto);
 
-	public void changePassword(int id,ChangePasswordDTO dto);
+	public void changePassword(int id, ChangePasswordDTO dto);
 
 	public void sendResetPasswordMail(String email);
 

@@ -216,15 +216,16 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getRides(@PathVariable int id, @RequestParam int page,
+	public ResponseEntity<?> getRidesPaginated(@PathVariable int id, @RequestParam int page,
 			@RequestParam int size, @RequestParam(required = false) String sort, @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-		return new ResponseEntity<AllPassengerRidesDTO>(userService.getRides(id, page, size, sort, from, to),
+		return new ResponseEntity<AllPassengerRidesDTO>(userService.getRidesPaginated(id, page, size, sort, from, to),
 				HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
+
 	
 //	@PreAuthorize("hasRole('ANONYMOUS')")
 	@GetMapping(value = "{id}/resetPassword")
