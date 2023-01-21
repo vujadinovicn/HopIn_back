@@ -231,6 +231,8 @@ public class PassengerServiceImpl implements IPassengerService {
 		}
 
 		this.userService.activateUser(token.getUser());
+		this.tokenService.markAsUsed(token);
+		
 		return true;
 	}
 

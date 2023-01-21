@@ -64,4 +64,6 @@ public interface IUserService {
 
 	public void changePassword(int id,ChangePasswordDTO dto);
 
+	public void sendResetPasswordMail(String email);
+
 }

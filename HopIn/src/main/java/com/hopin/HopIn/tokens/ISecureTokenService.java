@@ -10,5 +10,7 @@ public interface ISecureTokenService {
 	public SecureToken createToken(User user, SecureTokenType type);
 
 	public boolean isValid(SecureToken token);
+
+	public void markAsUsed(SecureToken token);
 	
 }

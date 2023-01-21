@@ -229,7 +229,6 @@ public class UserController {
 //	@PreAuthorize("hasRole('ANONYMOUS')")
 	@GetMapping(value = "{id}/resetPassword")
 	public ResponseEntity<?> resetPassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
-		System.out.println("TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
 		try {
 			this.userService.sendResetPasswordMail(id);
 			return new ResponseEntity<String>("Email with reset code has been sent!", HttpStatus.NO_CONTENT);
@@ -239,10 +238,24 @@ public class UserController {
 		
 	}
 	
+	@GetMapping(value = "{email}/resetPasswordEmail")
+	public ResponseEntity<?> resetPassword(@PathVariable String email) {
+		System.out.println("tu");
+		try {
+			
+			this.userService.sendResetPasswordMail(email);
+			System.out.println("ev");
+			return new ResponseEntity<String>("Email with reset code has been sent!", HttpStatus.NO_CONTENT);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		}
+		
+	}
+
+	
 //	@PreAuthorize("hasRole('ANONYMOUS')")
 	@PutMapping(value = "{id}/resetPassword", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> resetPassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody ResetPasswordDTO dto) {
-		System.out.println("TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
 		try {
 			this.userService.resetPassword(id, dto);
 			return new ResponseEntity<String>("Password successfully changed!", HttpStatus.NO_CONTENT);

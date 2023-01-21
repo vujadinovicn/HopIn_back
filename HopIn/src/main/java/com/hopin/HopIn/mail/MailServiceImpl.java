@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.entities.Passenger;
+import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.tokens.SecureToken;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
@@ -67,6 +68,33 @@ public class MailServiceImpl implements IMailService {
 	    } catch (IOException ex) {
 	      
 	    }	   
+	}
+
+	@Override
+	public void sendForgotPasswordMail(User user, String token) {
+		Email from = new Email("hopinapp22@gmail.com", "HopIn");
+	    Email to = new Email(user.getEmail());
+	    
+	    Personalization personalization = new Personalization();
+	    personalization.addTo(to);
+	    personalization.addDynamicTemplateData("name", user.getName());
+	    personalization.addDynamicTemplateData("verificationLink", "http://localhost:4200/reset-password?code=" + token);
+	    
+	    Mail mail = new Mail();
+	    mail.setFrom(from);
+	    mail.addPersonalization(personalization);
+		mail.setTemplateId("d-95c0434996914baab9e7d1ec281f9e2f");
+	    
+	    Request request = new Request();
+	    try {
+	      request.setMethod(Method.POST);
+	      request.setEndpoint("mail/send");
+	      request.setBody(mail.build());
+	      Response response = this.sendGrid.api(request);     
+	    } catch (IOException ex) {
+	      
+	    }	 
+		
 	}
 
 }
