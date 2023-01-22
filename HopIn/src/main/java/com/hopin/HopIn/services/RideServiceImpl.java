@@ -742,13 +742,21 @@ public class RideServiceImpl implements IRideService {
 	}
 	
 	@Override
-	public AllPassengerRidesDTO getAllDriverRides(int id, int page, int size, String sort, String from,
+	public AllPassengerRidesDTO getAllDriverRidesPaginated(int id, int page, int size, String sort, String from,
 			String to) {
 		driverService.getById(id);
 		Pageable pageable = PageRequest.of(page, size);
 		List<Ride> rides = this.allRides.findAllByDriverId(id, pageable);
 		return new AllPassengerRidesDTO(rides);
 	}
+	
+	@Override
+	public AllPassengerRidesDTO getAllDriverRides(int id) {
+		driverService.getById(id);
+		List<Ride> rides = this.allRides.findAllByDriverId(id);
+		return new AllPassengerRidesDTO(rides);
+	}
+	
 
 	@Override
 	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto) {
