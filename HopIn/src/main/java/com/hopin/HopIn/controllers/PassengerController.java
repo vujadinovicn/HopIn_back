@@ -120,7 +120,7 @@ public class PassengerController {
 	
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "{id}/all/rides", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('PASSENGER')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')")
 	public ResponseEntity<?> getAllRides(@PathVariable int id) {
 		try {
 			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRides(id);
