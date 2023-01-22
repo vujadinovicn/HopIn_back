@@ -158,14 +158,23 @@ public class PassengerController {
 	public ResponseEntity<Void> removeFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
 		if (passengerService.removeFavouriteRoute(passengerId, routeId)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
-		}
+		} 
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping(value = "{passengerId}/return/route")
+	public ResponseEntity<Void> returnFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
+		if (passengerService.returnFavouriteRoute(passengerId, routeId)) {
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "{passengerId}/add/route")
-	public ResponseEntity<Void> addFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
-		if (passengerService.addFavouriteRoute(passengerId, routeId)) {
+	public ResponseEntity<Void> addFavouriteRoute(@PathVariable int passengerId, @RequestBody RouteDTO route) {
+		if (passengerService.addFavouriteRoute(passengerId, route)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
