@@ -57,6 +57,7 @@ public class PassengerController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> insertPassenger(@Valid @RequestBody UserDTO dto) {
+		System.out.println(dto);
 		UserReturnedDTO passenger = passengerService.insert(dto);
 		if (passenger == null) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User with that email already exists!"), HttpStatus.BAD_REQUEST);
@@ -127,7 +128,7 @@ public class PassengerController {
 			for (PassengerRideDTO ride: rides.getResults()) {
 				System.out.println(ride);
 			}
-			return new ResponseEntity<AllPassengerRidesDTO>(
+			return new ResponseEntity<AllPassengerRidesDTO>( 
 					rides , HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
