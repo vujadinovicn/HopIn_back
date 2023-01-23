@@ -69,7 +69,6 @@ public class DriverController {
 	private IWorkingHoursService workingHoursService;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getById(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			return new ResponseEntity<DriverReturnedDTO>(service.getById(id), HttpStatus.OK);
