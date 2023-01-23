@@ -35,9 +35,7 @@ public class UnregisteredUserServiceImpl implements IUnregisteredUserService{
 	}
 	
 	private double calculatePrice(double distance, String vehicleTypeName) {
-		VehicleType vehicleType = this.allVehicleTypes
-				.getByName(VehicleTypeName.valueOf(VehicleTypeName.class, vehicleTypeName));
-		return vehicleType.getPricePerKm() * distance;
+		return 60 * distance;
 	}
 
 }

@@ -2,7 +2,7 @@ insert into "users"("address", "email", "is_activated", "is_blocked", "name", "p
 insert into "passengers"("id") values (1);
 
 insert into "locations"("address", "latitude", "longitude") values ('Novi Sad', 45.26, 19.83);
-insert into "locations"("address", "latitude", "longitude") values ('Beograd', 44.78, 20.45);
+insert into "locations"("address", "latitude", "longitude") values ('Beograd', 45.251957, 19.837196);
 
 
 insert into "vehicle_types" ("name", "price_per_km") values (0, 60);

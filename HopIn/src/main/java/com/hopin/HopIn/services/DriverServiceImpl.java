@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.hopin.HopIn.dtos.ActiveVehicleDTO;
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
@@ -423,5 +424,14 @@ public class DriverServiceImpl implements IDriverService {
 				driversWithAppropriateVehicle.add(driver);
 		}
 		return driversWithAppropriateVehicle;
+	}
+
+	@Override
+	public List<ActiveVehicleDTO> getAllVehicles() {
+		List<Driver> activeDrivers = allDrivers.findByIsActive(true);
+		List<ActiveVehicleDTO> activeVehicles = new ArrayList<ActiveVehicleDTO>();
+		for (Driver driver: activeDrivers) 
+			activeVehicles.add(new ActiveVehicleDTO(driver.getVehicle().getId(), driver.getVehicleLocation()));
+		return activeVehicles;
 	}
 }

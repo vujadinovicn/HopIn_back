@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.hopin.HopIn.dtos.ActiveVehicleDTO;
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
@@ -137,9 +138,18 @@ public class DriverController {
 			return new ResponseEntity<String>("Document does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping(value="/active-vehicles", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getAllVehicles(){
+		try {
+			return new ResponseEntity<List<ActiveVehicleDTO>>(service.getAllVehicles(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("Error happened", HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getVehicle(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
 			return new ResponseEntity<VehicleReturnedDTO>(service.getVehicle(driverId), HttpStatus.OK);

@@ -24,7 +24,7 @@ public class VehicleServiceImpl implements IVehicleService {
 	private VehicleRepository allVehicles;
 
 	@Override
-	public void updateLocation(int vehicleId, LocationNoIdDTO newLocation) {
+	public LocationNoIdDTO updateLocation(int vehicleId, LocationNoIdDTO newLocation) {
 		Optional<Vehicle> vehicle = allVehicles.findById(vehicleId);
 		if (vehicle.isEmpty())
 			throw new VehicleNotFoundException();
@@ -37,6 +37,8 @@ public class VehicleServiceImpl implements IVehicleService {
 		
 		this.allVehicles.save(vehicle.get());
 		this.allVehicles.flush();
+		
+		return new LocationNoIdDTO(vehicleLocation);
 	}
 	
 	@Override

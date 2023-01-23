@@ -70,7 +70,7 @@ public class UserController {
 
 	private HashMap<String, String> refreshTokens = new HashMap<String, String>();
 
-	@PreAuthorize("hasRole('ADMIN')")
+	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
 		System.out.println("USAO SAMMMM");

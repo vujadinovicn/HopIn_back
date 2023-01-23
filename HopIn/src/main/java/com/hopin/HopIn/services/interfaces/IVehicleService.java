@@ -5,7 +5,7 @@ import com.hopin.HopIn.entities.Vehicle;
 
 public interface IVehicleService {
 
-	void updateLocation(int vehicleId, LocationNoIdDTO newLocation);
+	LocationNoIdDTO updateLocation(int vehicleId, LocationNoIdDTO newLocation);
 	
 	public Vehicle findByDriverId(int driverId);
 

@@ -79,11 +79,11 @@ public class WebSecurityConfig {
 			.and().authorizeRequests()
 			.requestMatchers("/h2-console/**").permitAll()	
 			.and().authorizeRequests()
-			.requestMatchers("/api/user/login").permitAll()
-			.anyRequest().authenticated().and()
-			.cors().and()
-			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
-		
+			.requestMatchers("/api/user/login").permitAll();
+//			.anyRequest().authenticated().and()
+//			.cors().and()
+//			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
+//		
 		http.csrf().disable(); 
 
 //		SA NEMANJINE GRANE
