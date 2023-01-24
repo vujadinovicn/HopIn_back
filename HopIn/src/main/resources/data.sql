@@ -21,13 +21,16 @@ insert into "drivers_documents" values (2,1);
 insert into "drivers_documents" values (2,2);     
 
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (false, 5, null, 5, false, false, '2022-12-23T11:11:11', 4, 5, 5, 2, null, 1, 1, 2);
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 5, null, 5, false, false, '2022-12-21T11:11:11', 4, 5, 5, 2, null, 1, 1, 2);
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 5, null, 5, false, false, '2022-12-21T11:11:11', 4, 5, 5, 2, null, 1, 1, 2);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 6, null, 5, false, false, '2022-12-21T11:15:11', 4, 6, 7, 2, null, 1, 1, 2);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 7, null, 5, false, false, '2022-12-21T11:11:11', 4, 7, 6, 2, null, 1, 1, 2);
 
+insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Good looking driver', 3, 0, 1, 1);
 
 insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1);
 insert into "rides_passengers"("ride_id", "passengers_id") values (2, 1);
 insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1);
+
+insert into "rides_reviews"("ride_id", "reviews_id") values (1, 1);
 
 
 --insert into "routes"("distance", "departure_id", "destination_id") values (95, 1, 2);
