@@ -41,7 +41,7 @@ import jakarta.validation.constraints.Min;
 public class ReviewController {
 	
 	@Autowired
-	private IReviewService reviewService;
+	private IReviewService reviewService;      
 	
 	@PostMapping(value="{rideId}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> addVehicleReview(@PathVariable @Min(value = 0, message = "Field rideId must be greater than 0.") int rideId, @Valid @RequestBody ReviewDTO review) {
