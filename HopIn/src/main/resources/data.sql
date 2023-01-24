@@ -72,4 +72,4 @@ insert into "secure_token"("expiration_date", "type", "user_id", "token") values
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Milosa', 'vozac@gmail.com', true, false, 'Vozac', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Vozacevic', '+381603454212', 1);
 insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-061-GC', 'FIAT 500', 4, true, 3, 1);
 
-insert into "drivers"("id", "vehicle_id", "is_active") values (8, 2, false);
+insert into "drivers"("id", "vehicle_id", "is_active") values (8, 2, false); 

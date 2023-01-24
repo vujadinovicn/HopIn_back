@@ -205,7 +205,7 @@ public class DriverServiceImpl implements IDriverService {
 			throw new VehicleNotAssignedException();
 		}
 		VehicleReturnedDTO vehicleDTO = new VehicleReturnedDTO(driver.get().getVehicle());
-		return vehicleDTO;
+		return vehicleDTO; 
 	}
 
 	@Override
@@ -215,7 +215,7 @@ public class DriverServiceImpl implements IDriverService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver does not exist!");
 		}
 		
-		Vehicle vehicle = new Vehicle();
+		Vehicle vehicle = new Vehicle(); 
 		dtoToVehicle(dto, driverId, vehicle);
 		driver.get().setVehicle(vehicle);
 		allVehicles.save(vehicle);
@@ -433,5 +433,10 @@ public class DriverServiceImpl implements IDriverService {
 		for (Driver driver: activeDrivers) 
 			activeVehicles.add(new ActiveVehicleDTO(driver.getVehicle().getId(), driver.getVehicleLocation()));
 		return activeVehicles;
+	}
+
+	@Override
+	public Driver getByEmail(String email) {
+		return (Driver) this.userService.getByEmail(email);
 	}
 }

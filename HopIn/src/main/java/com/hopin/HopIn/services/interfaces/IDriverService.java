@@ -23,6 +23,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
+import com.hopin.HopIn.entities.User;
 
 public interface IDriverService {
 
@@ -77,6 +78,8 @@ public interface IDriverService {
 	public AllHoursDTO getAllHours(int id, int page, int size);
 
 	public List<ActiveVehicleDTO> getAllVehicles();
+	
+	public Driver getByEmail(String email);
 
 
 

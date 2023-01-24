@@ -8,6 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -165,7 +168,7 @@ public class DriverController {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Vehicle is not assigned!"), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+	      
 	@PostMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> insertVehicle(@PathVariable("id") int driverId, @Valid @RequestBody VehicleDTO vehicle) {
@@ -242,13 +245,17 @@ public class DriverController {
 	}    
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('DRIVER')")
+//	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> updateWorkingHours(@PathVariable("working-hour-id") @Min(value = 0, message = "Field id must be greater than 0.") int hoursId, @Valid @RequestBody WorkingHoursEndDTO dto) {
 		try { 
 			ObjectMapper mapper = new ObjectMapper();
-			mapper.findAndRegisterModules();
-			// Java object to JSON string 
-			String jsonString = mapper.writeValueAsString(2);
+			mapper.findAndRegisterModules(); 
+			
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			System.out.println(authentication.getName());
+			//int driverId = this.service.getByEmail(authentication.getName()).getId();
+			String jsonString = mapper.writeValueAsString(8);
+			
 			this.simpMessagingTemplate.convertAndSend("/topic/vehicle/deactivation", jsonString);
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.updateWorkingHours(hoursId, dto), HttpStatus.OK);
 		} catch (BadIdFormatException ex) {
