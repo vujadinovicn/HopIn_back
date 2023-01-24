@@ -24,7 +24,7 @@ public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndS
 	public List<Ride> findAllByDriverId(int id, Pageable pageable);
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 6", nativeQuery=true)
 	public Ride getActiveRideForDriver(int id);
-	
+	   
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and \"status\" = 0", nativeQuery=true)
 	public Ride getPendingRideForDriver(int id);
 	

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopin.HopIn.dtos.ActiveVehicleDTO;
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
@@ -68,6 +71,9 @@ public class DriverController {
 	
 	@Autowired
 	private IWorkingHoursService workingHoursService;
+	
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
@@ -213,9 +219,14 @@ public class DriverController {
 	}
 	
 	@PostMapping(value = "/{id}/working-hour", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('DRIVER')")
+//	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> addWorkingHours(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId, @Valid @RequestBody WorkingHoursStartDTO dto) {
 		try {     
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.findAndRegisterModules(); 
+			// Java object to JSON string 
+			String jsonString = mapper.writeValueAsString(driverId);
+			this.simpMessagingTemplate.convertAndSend("/topic/vehicle/activation", jsonString);
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.addWorkingHours(driverId, dto), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
@@ -225,13 +236,20 @@ public class DriverController {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Shift already ongoing!"), HttpStatus.BAD_REQUEST);
 		} catch (NoVehicleException ex) { 
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
-		} 
-	}  
+		} catch (JsonProcessingException e) {
+			return new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
+		}
+	}    
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> updateWorkingHours(@PathVariable("working-hour-id") @Min(value = 0, message = "Field id must be greater than 0.") int hoursId, @Valid @RequestBody WorkingHoursEndDTO dto) {
 		try { 
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.findAndRegisterModules();
+			// Java object to JSON string 
+			String jsonString = mapper.writeValueAsString(2);
+			this.simpMessagingTemplate.convertAndSend("/topic/vehicle/deactivation", jsonString);
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.updateWorkingHours(hoursId, dto), HttpStatus.OK);
 		} catch (BadIdFormatException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Working hour does not exist!"), HttpStatus.BAD_REQUEST);
@@ -241,7 +259,9 @@ public class DriverController {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("No shift is ongoing!"), HttpStatus.BAD_REQUEST);
 		} catch (NoVehicleException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot end shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
-		}	
+		}  catch (JsonProcessingException e) {
+			return new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@CrossOrigin(origins = "http://localhost:4200")
