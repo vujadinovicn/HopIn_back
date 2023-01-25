@@ -579,7 +579,7 @@ public class RideServiceImpl implements IRideService {
 					availableDrivers.add(driver);	
 			} catch (NoActiveDriverRideException e) {
 				availableDrivers.add(driver);	
-				e.printStackTrace();
+				e.printStackTrace();      
 			}
 		}
 		
@@ -739,6 +739,14 @@ public class RideServiceImpl implements IRideService {
 	public RideReturnedDTO changeRideStatus(int id, RideStatus status) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public RideReturnedDTO getAcceptedOrStartedRideForDriver(int id) {
+		Ride activeRide = this.allRides.getActiveRideForPassenger(id);
+		if (activeRide == null)
+			throw new NoActiveDriverRideException();
+		return new RideReturnedDTO(activeRide);
 	}
 
 }

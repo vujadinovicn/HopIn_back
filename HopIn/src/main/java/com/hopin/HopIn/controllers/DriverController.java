@@ -154,7 +154,7 @@ public class DriverController {
 			return new ResponseEntity<List<ActiveVehicleDTO>>(service.getAllVehicles(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("Error happened", HttpStatus.BAD_REQUEST);
-		} 
+		}   
 	}
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)

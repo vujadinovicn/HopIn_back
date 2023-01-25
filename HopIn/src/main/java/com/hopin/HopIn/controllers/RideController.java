@@ -122,10 +122,20 @@ public class RideController {
 			return new ResponseEntity<String>("Ride does not exist", HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping(value = "/driver/{driverId}/accepted-started", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ANONYMOUS')")
+	public ResponseEntity<?> getAcceptedOrStartedRideForDriver(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
+		try {
+			return new ResponseEntity<RideReturnedDTO>(service.getAcceptedOrStartedRideForDriver(driverId), HttpStatus.OK);
+		} catch (NoActiveDriverRideException e) {
+			return new ResponseEntity<String>("Started or accepted ride does not exist", HttpStatus.NOT_FOUND); 
+		}
+	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
-	public ResponseEntity<?> getActiveRideForDriver(
+//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	public ResponseEntity<?> getActiveRideForDriver( 
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.getPendingRideForDriver(driverId), HttpStatus.OK);

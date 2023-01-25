@@ -5,7 +5,7 @@ insert into "locations"("address", "latitude", "longitude") values ('Novi Sad', 
 insert into "locations"("address", "latitude", "longitude") values ('Beograd', 45.251957, 19.837196);
 insert into "locations"("address", "latitude", "longitude") values ('Jirecekova', 45.240397, 19.847994);
 
-
+  
 insert into "vehicle_types" ("name", "price_per_km") values (0, 60);
 insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
 insert into "vehicle_types" ("name", "price_per_km") values (2, 100);
@@ -17,9 +17,9 @@ insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, true);
 
 insert into "documents"("name", "document_image", "driver_id") values ('Drivers license 1', 'sss', 2);
 insert into "documents"("name", "document_image", "driver_id") values ('Registration license 1', 'sss', 2);
-
+  
 insert into "drivers_documents" values (2,1);
-insert into "drivers_documents" values (2,2);   
+insert into "drivers_documents" values (2,2);     
 
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (false, 5, null, 5, false, false, '2022-12-23T11:11:11', 4, 5, 5, 2, null, 1, 1, 2);
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 5, null, 5, false, false, '2022-12-21T11:11:11', 4, 5, 5, 2, null, 1, 1, 2);

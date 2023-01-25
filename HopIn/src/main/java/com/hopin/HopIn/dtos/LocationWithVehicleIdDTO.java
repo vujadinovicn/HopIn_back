@@ -18,25 +18,25 @@ public class LocationWithVehicleIdDTO {
 		this.vehicleId = id;
 		this.address = vehicleLocation.getAddress();
 		this.latitude = vehicleLocation.getLatitude();
-		this.longitude = vehicleLocation.getLongitude();
+		this.longitude = vehicleLocation.getLongitude();   
 	}
 
 	public int getVehicleId() {
-		return vehicleId;
+		return vehicleId;    
 	}
-
+   
 	public void setVehicleId(int vehicleId) {
 		this.vehicleId = vehicleId;
 	}
 
-	public String getAddress() {
+	public String getAddress() { 
 		return address;
 	}
 
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
+ 
 	public Double getLatitude() {
 		return latitude;
 	}
