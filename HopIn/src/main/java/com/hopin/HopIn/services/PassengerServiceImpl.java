@@ -150,9 +150,9 @@ public class PassengerServiceImpl implements IPassengerService {
 		if (passenger.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		if (this.userService.userAlreadyExists(dto.getEmail())) {
-			throw new EmailAlreadyInUseException();
-		}
+//		if (this.userService.userAlreadyExists(dto.getEmail())) {
+//			throw new EmailAlreadyInUseException();
+//		}
 //		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
 //			if (!this.checkPasswordMatch(passenger.getPassword(), dto.getPassword())) {
 //				return null;

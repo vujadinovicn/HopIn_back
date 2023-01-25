@@ -135,12 +135,16 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDateTime start = LocalDate.parse(from, formatter).atStartOfDay();
+		LocalDateTime end = LocalDate.parse(to, formatter).atStartOfDay().plusDays(1);
+		System.out.println(start + " " + end);
 		List<Ride> rides = allRides.getAllPassengerRidesBetweenDates(id,
-				LocalDate.parse(from, formatter).atStartOfDay(), LocalDate.parse(to, formatter).atStartOfDay());
+				start, end);
 		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
 		for (Ride ride : rides) {
 			res.add(new RideForReportDTO(ride));
 		}
+		System.out.println(res);
 		return res;
 	}
 
