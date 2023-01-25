@@ -57,6 +57,7 @@ public class PassengerController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> insertPassenger(@Valid @RequestBody UserDTO dto) {
+		System.out.println(dto);
 		UserReturnedDTO passenger = passengerService.insert(dto);
 		if (passenger == null) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User with that email already exists!"), HttpStatus.BAD_REQUEST);
@@ -66,7 +67,7 @@ public class PassengerController {
 
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('PASSENGER')" + " || " +"hasRole('ADMIN')")
+	@PreAuthorize("hasRole('PASSENGER')" + " || " +"hasRole('ADMIN')" + " || " +"hasRole('DRIVER')")
 	public ResponseEntity<?> getPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			return new ResponseEntity<UserReturnedDTO>(passengerService.getById(id), HttpStatus.OK);
@@ -102,14 +103,31 @@ public class PassengerController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> getAllRides(@PathVariable int id, @RequestParam int page,
+	public ResponseEntity<?> getAllRidesPaginated(@PathVariable int id, @RequestParam int page,
 			@RequestParam int size, @RequestParam(required = false) String sort, @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRides(id, page, size, sort, from, to);
+			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRidesPaginated(id, page, size, sort, from, to);
 			for (PassengerRideDTO ride: rides.getResults()) {
 				System.out.println(ride);
 			}
 			return new ResponseEntity<AllPassengerRidesDTO>(
+					rides , HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
+		}
+		
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "{id}/all/rides", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')")
+	public ResponseEntity<?> getAllRides(@PathVariable int id) {
+		try {
+			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRides(id);
+			for (PassengerRideDTO ride: rides.getResults()) {
+				System.out.println(ride);
+			}
+			return new ResponseEntity<AllPassengerRidesDTO>( 
 					rides , HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
@@ -142,14 +160,23 @@ public class PassengerController {
 	public ResponseEntity<Void> removeFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
 		if (passengerService.removeFavouriteRoute(passengerId, routeId)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
-		}
+		} 
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping(value = "{passengerId}/return/route")
+	public ResponseEntity<Void> returnFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
+		if (passengerService.returnFavouriteRoute(passengerId, routeId)) {
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "{passengerId}/add/route")
-	public ResponseEntity<Void> addFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
-		if (passengerService.addFavouriteRoute(passengerId, routeId)) {
+	public ResponseEntity<Void> addFavouriteRoute(@PathVariable int passengerId, @RequestBody RouteDTO route) {
+		if (passengerService.addFavouriteRoute(passengerId, route)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);

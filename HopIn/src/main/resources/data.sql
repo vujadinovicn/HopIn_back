@@ -27,12 +27,13 @@ insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in
 
 insert into "routes"("departure_id", "destination_id", "distance") values (2, 1, 120);
 
+insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Good looking driver', 3, 0, 1, 1);
 
 insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1);
 insert into "rides_passengers"("ride_id", "passengers_id") values (2, 1);
 insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1);
 
-
+insert into "rides_reviews"("ride_id", "reviews_id") values (1, 1);
 
 insert into "routes"("distance", "departure_id", "destination_id") values (95, 1, 2);
 insert into "passengers_favourite_routes"("passenger_id", "favourite_routes_id") values (1,1);

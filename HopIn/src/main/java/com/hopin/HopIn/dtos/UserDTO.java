@@ -101,4 +101,13 @@ public class UserDTO {
 		this.profilePicture = profilePicture;
 	}
 
+	@Override
+	public String toString() {
+		return "UserDTO [name=" + name + ", surname=" + surname + ", email=" + email + ", password=" + password
+				+ ", address=" + address + ", telephoneNumber=" + telephoneNumber + ", profilePicture=" + profilePicture
+				+ "]";
+	}
+	
+	
+
 }

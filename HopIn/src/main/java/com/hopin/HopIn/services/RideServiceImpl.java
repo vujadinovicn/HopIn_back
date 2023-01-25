@@ -721,7 +721,7 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	@Override
-	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to) {
+	public AllPassengerRidesDTO getAllPassengerRidesPaginated(int id, int page, int size, String sort, String from, String to) {
 		Pageable pageable = PageRequest.of(page, size);
 		
 		Optional<Passenger> passenger = this.allPassengers.findById(id);
@@ -730,18 +730,37 @@ public class RideServiceImpl implements IRideService {
 		}
 		
 		
-		List<Ride> rides = this.allRides.getAllPassengerRides(id, pageable);
+		List<Ride> rides = this.allRides.getAllPassengerRidesPaginated(id, pageable);
 		return new AllPassengerRidesDTO(rides);
 	}
 	
 	@Override
-	public AllPassengerRidesDTO getAllDriverRides(int id, int page, int size, String sort, String from,
+	public AllPassengerRidesDTO getAllPassengerRides(int id) {
+		Optional<Passenger> passenger = this.allPassengers.findById(id);
+		if (passenger.isEmpty()) {
+			throw new UserNotFoundException();
+		}
+		
+		List<Ride> rides = this.allRides.getAllPassengerRides(id);
+		return new AllPassengerRidesDTO(rides);
+	}
+	
+	@Override
+	public AllPassengerRidesDTO getAllDriverRidesPaginated(int id, int page, int size, String sort, String from,
 			String to) {
 		driverService.getById(id);
 		Pageable pageable = PageRequest.of(page, size);
 		List<Ride> rides = this.allRides.findAllByDriverId(id, pageable);
 		return new AllPassengerRidesDTO(rides);
 	}
+	
+	@Override
+	public AllPassengerRidesDTO getAllDriverRides(int id) {
+		driverService.getById(id);
+		List<Ride> rides = this.allRides.findAllByDriverId(id);
+		return new AllPassengerRidesDTO(rides);
+	}
+	
 
 	@Override
 	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto) {

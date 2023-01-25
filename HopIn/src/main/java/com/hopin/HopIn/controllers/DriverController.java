@@ -69,7 +69,6 @@ public class DriverController {
 	private IWorkingHoursService workingHoursService;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getById(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			return new ResponseEntity<DriverReturnedDTO>(service.getById(id), HttpStatus.OK);
@@ -172,13 +171,23 @@ public class DriverController {
 	
 	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
-	public ResponseEntity<?> getAllRides(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam(required = false) String sort, 
+	public ResponseEntity<?> getAllRidesPaginated(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam(required = false) String sort, 
 			@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-			return new ResponseEntity<AllPassengerRidesDTO>(rideService.getAllDriverRides(driverId, page, size, sort, from, to), HttpStatus.OK);
+			return new ResponseEntity<AllPassengerRidesDTO>(rideService.getAllDriverRidesPaginated(driverId, page, size, sort, from, to), HttpStatus.OK);
 		} catch (UserNotFoundException ex) {
 			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping(value="/{id}/all/rides", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	public ResponseEntity<?> getAllRides(@PathVariable("id") int driverId) {
+		try {
+			return new ResponseEntity<AllPassengerRidesDTO>(rideService.getAllDriverRides(driverId), HttpStatus.OK);
+		} catch (UserNotFoundException ex) {
+			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
+		} 
 	}
 	
 	@GetMapping(value="/{id}/working-hour", produces = MediaType.APPLICATION_JSON_VALUE)

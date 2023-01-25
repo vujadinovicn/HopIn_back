@@ -26,7 +26,7 @@ public interface IPassengerService {
 	
 	public boolean removeFavouriteRoute(int passengerId, int routeId);
 
-	public boolean addFavouriteRoute(int passwordId, int routeId);
+	public boolean returnFavouriteRoute(int passwordId, int routeId);
 
 	UserReturnedDTO getById(int id);
 
@@ -39,4 +39,6 @@ public interface IPassengerService {
 	public List<FavoriteRide> getFavoriteRides(int id);
 
 	boolean addFavoriteRide(int passengerId, FavoriteRide ride);
+
+	boolean addFavouriteRoute(int passengerId, RouteDTO dto);
 }
