@@ -313,6 +313,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		}
 		
 		if (!encoder.matches(dto.getOldPassword(), user.getPassword())) {
+			System.out.println(encoder.encode(dto.getOldPassword()));
+			System.out.println(user.getPassword());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		

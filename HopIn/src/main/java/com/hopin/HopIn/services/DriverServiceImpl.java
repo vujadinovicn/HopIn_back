@@ -287,8 +287,8 @@ public class DriverServiceImpl implements IDriverService {
 		vehicle.setPassengerSeats(dto.getPassengerSeats());
 		vehicle.setBabyTransport(dto.isBabyTransport());
 		vehicle.setPetTransport(dto.isPetTransport());
-		if (dto.getVehicleType().equals(VehicleTypeName.STANDARD)) {
-			vehicle.getVehicleType().setName(VehicleTypeName.STANDARD);
+		if (dto.getVehicleType().equals(VehicleTypeName.CAR)) {
+			vehicle.getVehicleType().setName(VehicleTypeName.CAR);
 		} else if (dto.getVehicleType().equals(VehicleTypeName.VAN)) {
 			vehicle.getVehicleType().setName(VehicleTypeName.VAN);
 		} else {
