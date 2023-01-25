@@ -431,7 +431,7 @@ public class DriverServiceImpl implements IDriverService {
 		List<Driver> activeDrivers = allDrivers.findByIsActive(true);
 		List<ActiveVehicleDTO> activeVehicles = new ArrayList<ActiveVehicleDTO>();
 		for (Driver driver: activeDrivers) 
-			activeVehicles.add(new ActiveVehicleDTO(driver.getVehicle().getId(), driver.getVehicleLocation()));
+			activeVehicles.add(new ActiveVehicleDTO(driver.getVehicle().getId(), driver.getId(), driver.getVehicleLocation()));
 		return activeVehicles;
 	}
 

@@ -61,7 +61,7 @@ insert into "driver_account_update_document_requests"("document_id", "document_i
 
 insert into "driver_account_update_requests"("reason", "status", "type", "admin_id", "driver_id") values ('blablatruc', 1, 2, 3, 2);
 insert into "driver_account_update_info_requests"("address", "email", "name", "profile_picture", "surname", "telephone_number", "id") values('Beograd', 'mark@gmail.com', 'Neca', 'a', 'Vijic', '+3816492031', 5);
-
+  
 insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2023-12-23T11:11:11', 0, 7, 'hdeuwir49834574hnfdj43829449305');
 insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2022-12-22T11:11:11', 0, 5, 'hdeuwir49834574hnfdj43829449304');
 
@@ -72,4 +72,4 @@ insert into "secure_token"("expiration_date", "type", "user_id", "token") values
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Milosa', 'vozac@gmail.com', true, false, 'Vozac', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Vozacevic', '+381603454212', 1);
 insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-061-GC', 'FIAT 500', 4, true, 3, 1);
 
-insert into "drivers"("id", "vehicle_id", "is_active") values (8, 2, false); 
+insert into "drivers"("id", "vehicle_id", "is_active") values (8, 2, false);     

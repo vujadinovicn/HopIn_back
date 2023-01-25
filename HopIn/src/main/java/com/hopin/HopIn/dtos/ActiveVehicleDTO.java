@@ -2,7 +2,8 @@ package com.hopin.HopIn.dtos;
 
 public class ActiveVehicleDTO {
 
-	private int id;
+	private int vehicleId;
+	private int driverId;
 	private LocationNoIdDTO currentLocation;
 	
 	
@@ -10,20 +11,29 @@ public class ActiveVehicleDTO {
 		
 	}
 	
-	public ActiveVehicleDTO(int id, LocationNoIdDTO currentLocation) {
+	public ActiveVehicleDTO(int vehicleId, int driverId, LocationNoIdDTO currentLocation) {
 		super();
-		this.id = id;
+		this.vehicleId = vehicleId;
+		this.driverId = driverId;
 		this.currentLocation = currentLocation;
 	}
+	
+	public int getVehicleId() {
+		return vehicleId;
+	}
 
-	public int getId() {
-		return id;
+	public void setVehicleId(int vehicleId) {
+		this.vehicleId = vehicleId;
 	}
-	
-	public void setId(int id) {
-		this.id = id;
+
+	public int getDriverId() {
+		return driverId;
 	}
-	
+
+	public void setDriverId(int driverId) {
+		this.driverId = driverId;
+	}
+
 	public LocationNoIdDTO getCurrentLocation() {
 		return currentLocation;
 	}

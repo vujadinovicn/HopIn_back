@@ -146,7 +146,7 @@ public class DriverController {
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>("Document does not exist!", HttpStatus.NOT_FOUND);
 		}
-	}
+	} 
 	
 	@GetMapping(value="/active-vehicles", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getAllVehicles(){
@@ -154,7 +154,7 @@ public class DriverController {
 			return new ResponseEntity<List<ActiveVehicleDTO>>(service.getAllVehicles(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<String>("Error happened", HttpStatus.BAD_REQUEST);
-		}
+		} 
 	}
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
