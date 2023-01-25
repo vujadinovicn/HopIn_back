@@ -20,9 +20,12 @@ insert into "documents"("name", "document_image", "driver_id") values ('Registra
 insert into "drivers_documents" values (2,1);
 insert into "drivers_documents" values (2,2);     
 
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (false, 5, null, 5, false, false, '2022-12-23T11:11:11', 4, 5, 5, 2, null, 1, 1, 2);
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 6, null, 5, false, false, '2022-12-21T11:15:11', 4, 6, 7, 2, null, 1, 1, 2);
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 7, null, 5, false, false, '2022-12-21T11:11:11', 4, 7, 6, 2, null, 1, 1, 2);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (false, 95, null, 5, false, false, '2023-01-23T11:11:11', 4, 250, 3, 2, null, 1, 1, 2);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 100, null, 5, false, false, '2023-01-23T11:11:11', 4, 780, 43, 2, null, 1, 1, 2);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, null, 5, false, false, '2023-01-21T11:11:11', 4, 360, 24, 2, null, 1, 1, 2);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, null, 5, false, false, '2023-01-25T11:11:11', 4, 290, 4, 2, null, 1, 1, 2);
+
+insert into "routes"("departure_id", "destination_id", "distance") values (2, 1, 120);
 
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Good looking driver', 3, 0, 1, 1);
 
@@ -32,9 +35,8 @@ insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1);
 
 insert into "rides_reviews"("ride_id", "reviews_id") values (1, 1);
 
-
---insert into "routes"("distance", "departure_id", "destination_id") values (95, 1, 2);
---insert into "passengers_favourite_routes"("passenger_id", "favourite_routes_id") values (1,1);
+insert into "routes"("distance", "departure_id", "destination_id") values (95, 1, 2);
+insert into "passengers_favourite_routes"("passenger_id", "favourite_routes_id") values (1,1);
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'admin@gmail.com', true, false, 'Mika', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Mikic', '+3819720132 ', 2);
 insert into "admins" ("id") values (3);
@@ -69,3 +71,12 @@ insert into "secure_token"("expiration_date", "type", "user_id", "token", "used"
 
 insert into "secure_token"("expiration_date", "type", "user_id", "token", "used") values('2023-12-23T11:11:11', 1, 1, 'hdeuwir49834574hnfdj43829449302', false);
 insert into "secure_token"("expiration_date", "type", "user_id", "token", "used") values('2022-12-22T11:11:11', 1, 5, 'hdeuwir49834574hnfdj43829449301', false);
+
+insert into "passengers_favourite_routes"("favourite_routes_id", "passenger_id") values (1, 5);
+insert into "passengers_favourite_routes"("favourite_routes_id", "passenger_id") values (2, 5);
+
+insert into "rides_passengers"("ride_id", "passengers_id") values (1, 5);
+insert into "rides_passengers"("ride_id", "passengers_id") values (2, 5);
+insert into "rides_passengers"("ride_id", "passengers_id") values (3, 5);
+insert into "rides_passengers"("ride_id", "passengers_id") values (4, 5);
+

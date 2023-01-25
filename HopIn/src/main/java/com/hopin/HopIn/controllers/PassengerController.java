@@ -90,7 +90,6 @@ public class PassengerController {
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> update(@Valid @RequestBody UserDTO dto, @PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
-		System.out.println("USAO");
 		try {
 			UserReturnedDTO passenger = passengerService.update(id, dto);
 			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
@@ -139,6 +138,7 @@ public class PassengerController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "/{id}/favouriteRoutes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RouteDTO>> getFavouriteRides(@PathVariable int id) {
+		System.out.println("FAVORUTIES");
 		List<RouteDTO> favouriteRoutes = passengerService.getFavouriteRoutes(id);
 		if (favouriteRoutes != null && favouriteRoutes.size() != 0) {
 			return new ResponseEntity<List<RouteDTO>>(favouriteRoutes, HttpStatus.OK);
@@ -147,6 +147,7 @@ public class PassengerController {
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
+//	@PreAuthorize("hasRole('PASSENGER')")
 	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id,
 			@RequestParam String from, @RequestParam String to) {
@@ -183,7 +184,6 @@ public class PassengerController {
 	
 	@GetMapping(value = "activate/{activationId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> verifyRegistration(@PathVariable("activationId") String verificationCode) {
-		System.out.println(verificationCode);
 		try {
 			Boolean verified = this.passengerService.verifyRegistration(verificationCode);
 			if (verified) {
