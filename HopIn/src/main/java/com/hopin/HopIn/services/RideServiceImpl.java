@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.PageRequest;
@@ -137,14 +136,12 @@ public class RideServiceImpl implements IRideService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDateTime start = LocalDate.parse(from, formatter).atStartOfDay();
 		LocalDateTime end = LocalDate.parse(to, formatter).atStartOfDay().plusDays(1);
-		System.out.println(start + " " + end);
 		List<Ride> rides = allRides.getAllPassengerRidesBetweenDates(id,
 				start, end);
 		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
 		for (Ride ride : rides) {
 			res.add(new RideForReportDTO(ride));
 		}
-		System.out.println(res);
 		return res;
 	}
 

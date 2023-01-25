@@ -72,4 +72,5 @@ public interface IRideService {
 
 	public AllPassengerRidesDTO getAllDriverRides(int id);
 
+
 }

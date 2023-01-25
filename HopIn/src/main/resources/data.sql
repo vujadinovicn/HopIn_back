@@ -3,7 +3,7 @@ insert into "passengers"("id") values (1);
 
 insert into "locations"("address", "latitude", "longitude") values ('Novi Sad', 45.26, 19.83);
 insert into "locations"("address", "latitude", "longitude") values ('Beograd', 44.78, 20.45);
-
+insert into "locations"("address", "latitude", "longitude") values ('Kragujevac',  44.02, 20.92);
 
 insert into "vehicle_types" ("name", "price_per_km") values (0, 60);
 insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
@@ -21,9 +21,9 @@ insert into "drivers_documents" values (2,1);
 insert into "drivers_documents" values (2,2);     
 
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (false, 95, null, 5, false, false, '2023-01-23T11:11:11', 4, 250, 3, 2, null, 1, 1, 2);
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 100, null, 5, false, false, '2023-01-23T11:11:11', 4, 780, 43, 2, null, 1, 1, 2);
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, null, 5, false, false, '2023-01-21T11:11:11', 4, 360, 24, 2, null, 1, 1, 2);
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, null, 5, false, false, '2023-01-25T11:11:11', 4, 290, 4, 2, null, 1, 1, 2);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 100, null, 5, false, false, '2023-01-23T11:11:11', 4, 780, 43, 2, null, 1, 2, 1);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, null, 5, false, false, '2023-01-21T11:11:11', 4, 360, 24, 2, null, 1, 1, 3);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, null, 5, false, false, '2023-01-25T11:11:11', 4, 290, 4, 2, null, 1, 3, 2);
 
 insert into "routes"("departure_id", "destination_id", "distance") values (2, 1, 120);
 
