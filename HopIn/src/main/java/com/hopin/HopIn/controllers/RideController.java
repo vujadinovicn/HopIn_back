@@ -124,7 +124,6 @@ public class RideController {
 	}
 	
 	@GetMapping(value = "/driver/{driverId}/accepted-started", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ANONYMOUS')")
 	public ResponseEntity<?> getAcceptedOrStartedRideForDriver(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.getAcceptedOrStartedRideForDriver(driverId), HttpStatus.OK);

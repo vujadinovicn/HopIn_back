@@ -21,7 +21,7 @@ public class RideReturnedDTO {
 	private UserInRideDTO driver;
 	private List<UserInRideDTO> passengers;
 	private int estimatedTimeInMinutes;
-	private VehicleTypeName vehicleType;
+	private VehicleTypeName vehicleType; 
 	private boolean petTransport;
 	private boolean babyTransport;
 	private RejectionNotice rejection;
