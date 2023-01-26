@@ -35,7 +35,7 @@ public class VehicleController {
 	private SimpMessagingTemplate simpMessagingTemplate;
 	
 	@PutMapping(value="/{id}/location", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) 
-//	@PreAuthorize("hasRole('DRIVER')")  
+	@PreAuthorize("hasRole('DRIVER')")  
 	public ResponseEntity<?> updateLocation(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int vehicleId, @Valid @RequestBody LocationNoIdDTO newLocation) {
 		try {
 			System.out.println("uslo mi u guzu");
