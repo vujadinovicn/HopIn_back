@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -112,6 +114,8 @@ public class ReviewServiceImpl implements IReviewService{
 		allRides.save(ride);
 		allRides.flush();
 		
+		System.out.println("SVI			" + this.allReviews.findAll());
+		
 		return new ReviewReturnedDTO(savedReview);
 	
 	}
@@ -119,15 +123,11 @@ public class ReviewServiceImpl implements IReviewService{
 	private Review dtoToReview(ReviewDTO reviewDTO) {
 		Review review = new Review();
 		review.setComment(reviewDTO.getComment());
-		review.setPassenger(null);
 		review.setRating(reviewDTO.getRating());
-		review.setType(ReviewType.VEHICLE);
 		
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
-//		review.setPassenger(passenger);
-		
-		review.setPassenger(allPassengers.findById(1).orElse(null));
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
+		review.setPassenger(passenger);
 		
 		return review;
 	}
@@ -152,6 +152,7 @@ public class ReviewServiceImpl implements IReviewService{
 		ReviewReturnedDTO vehicleReview = null;
 		ArrayList<CompleteRideReviewDTO> ret = new ArrayList<CompleteRideReviewDTO>();
 		
+		System.out.println(ride.getReviews());
 		for (Passenger passenger : ride.getPassengers()) {
 			for (Review review : ride.getReviews()) {
 				if (passenger == review.getPassenger() && review.getType() == ReviewType.DRIVER) {
