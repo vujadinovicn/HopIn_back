@@ -5,17 +5,19 @@ public class ActiveVehicleDTO {
 	private int vehicleId;
 	private int driverId;
 	private LocationNoIdDTO currentLocation;
+	private String status;
 	
 	
 	public ActiveVehicleDTO() {
 		
 	}
 	
-	public ActiveVehicleDTO(int vehicleId, int driverId, LocationNoIdDTO currentLocation) {
+	public ActiveVehicleDTO(int vehicleId, int driverId, LocationNoIdDTO currentLocation, String status) {
 		super();
 		this.vehicleId = vehicleId;
 		this.driverId = driverId;
 		this.currentLocation = currentLocation;
+		this.status = status;
 	}
 	
 	public int getVehicleId() {
@@ -41,6 +43,12 @@ public class ActiveVehicleDTO {
 	public void setCurrentLocation(LocationNoIdDTO currentLocation) {
 		this.currentLocation = currentLocation;
 	}
-	
-	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

@@ -159,6 +159,7 @@ public class DriverController {
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
 //	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+//	@PreAuthorize("hasRole('ANONYMOUS')")
 	public ResponseEntity<?> getVehicle(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
 			return new ResponseEntity<VehicleReturnedDTO>(service.getVehicle(driverId), HttpStatus.OK);
@@ -187,7 +188,7 @@ public class DriverController {
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 		}
-	}
+	}  
 	
 	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")

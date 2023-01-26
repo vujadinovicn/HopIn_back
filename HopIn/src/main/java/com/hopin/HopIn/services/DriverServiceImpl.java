@@ -46,6 +46,7 @@ import com.hopin.HopIn.exceptions.VehicleNotAssignedException;
 import com.hopin.HopIn.repositories.DocumentRepository;
 import com.hopin.HopIn.repositories.DriverRepository;
 import com.hopin.HopIn.repositories.LocationRepository;
+import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IUserService;
@@ -67,6 +68,9 @@ public class DriverServiceImpl implements IDriverService {
 	
 	@Autowired
 	private LocationRepository allLocations;
+	
+	@Autowired
+	private RideRepository allRides;
 	
 	@Autowired
 	private IUserService userService;
@@ -430,10 +434,16 @@ public class DriverServiceImpl implements IDriverService {
 	public List<ActiveVehicleDTO> getAllVehicles() {
 		List<Driver> activeDrivers = allDrivers.findByIsActive(true);
 		List<ActiveVehicleDTO> activeVehicles = new ArrayList<ActiveVehicleDTO>();
-		for (Driver driver: activeDrivers) 
-			activeVehicles.add(new ActiveVehicleDTO(driver.getVehicle().getId(), driver.getId(), driver.getVehicleLocation()));
+		for (Driver driver: activeDrivers) {
+			String status = "normal";
+			if (this.allRides.getPendingRideForDriver(driver.getId()) != null)
+				status = "pending";
+			else if (this.allRides.getAcceptedOrStartedRideForDriver(driver.getId()) != null)
+				status = "active";
+			activeVehicles.add(new ActiveVehicleDTO(driver.getVehicle().getId(), driver.getId(), driver.getVehicleLocation(), status));	
+		}
 		return activeVehicles;
-	}
+	} 
 
 	@Override
 	public Driver getByEmail(String email) {
