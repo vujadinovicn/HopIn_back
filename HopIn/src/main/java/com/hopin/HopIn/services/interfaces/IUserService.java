@@ -36,7 +36,7 @@ public interface IUserService {
 
 	public NoteReturnedDTO addNote(int userId, NoteDTO note);
 
-	public AllNotesDTO getNotes(int userId, int page, int size);
+	public AllNotesDTO getNotes(int userId);
 
 	public MessageReturnedDTO sendMessage(int userId, MessageDTO sentMessage);
 

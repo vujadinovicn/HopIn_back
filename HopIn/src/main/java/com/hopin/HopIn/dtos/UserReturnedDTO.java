@@ -42,7 +42,7 @@ public class UserReturnedDTO {
 		this.password = user.getPassword();
 		this.isBlocked = user.isBlocked();
 	}
-
+ 
 	public UserReturnedDTO(User user, Vehicle vehicle) {
 		super();
 		this.id = user.getId();

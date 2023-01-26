@@ -176,13 +176,12 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public AllNotesDTO getNotes(int userId, int page, int size) {
+	public AllNotesDTO getNotes(int userId) {
 		User user = this.allUsers.findById(userId).orElse(null);
 		if (user == null){
 			throw new UserNotFoundException();
 		}
-		Pageable pageable = PageRequest.of(page, size);
-		List<Note> notes = this.allNotes.findAllByUserId(userId, pageable);
+		List<Note> notes = this.allNotes.findAllByUserId(userId);
 		return new AllNotesDTO(notes);
 	}
 
