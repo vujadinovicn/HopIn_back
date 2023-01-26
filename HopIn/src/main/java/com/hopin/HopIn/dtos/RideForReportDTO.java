@@ -10,15 +10,17 @@ public class RideForReportDTO {
 	private double distance;
 	private int estimatedTimeInMinutes;
 	private double totalCost;
+	private boolean rejected;
 
 	public RideForReportDTO(LocalDateTime startTime, LocalDateTime endTime, double distance, int estimatedTimeInMinutes,
-			double totalCost) {
+			double totalCost, boolean rejected) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.distance = distance;
 		this.estimatedTimeInMinutes = estimatedTimeInMinutes;
 		this.totalCost = totalCost;
+		this.setRejected(rejected);
 	}
 	
 	public RideForReportDTO(Ride ride) {
@@ -27,6 +29,10 @@ public class RideForReportDTO {
 		this.distance = ride.getDistance();
 		this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
 		this.totalCost = ride.getTotalCost();
+		if (ride.getRejectionNotice() == null)
+			this.rejected = false;
+		else
+			this.rejected = true;
 	}
 
 	public LocalDateTime getStartTime() {
@@ -67,6 +73,14 @@ public class RideForReportDTO {
 
 	public void setTotalCost(double totalCost) {
 		this.totalCost = totalCost;
+	}
+
+	public boolean isRejected() {
+		return rejected;
+	}
+
+	public void setRejected(boolean rejected) {
+		this.rejected = rejected;
 	}
 
 }

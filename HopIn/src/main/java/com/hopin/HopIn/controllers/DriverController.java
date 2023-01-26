@@ -99,7 +99,7 @@ public class DriverController {
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> update(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId, @Valid @RequestBody UserDTO newData) {
 		try {
 			return new ResponseEntity<UserReturnedDTO>(service.update(driverId, newData), HttpStatus.OK);
