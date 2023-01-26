@@ -75,6 +75,8 @@ public class WebSecurityConfig {
 			.requestMatchers("/h2-console/**").permitAll()	
 			.and().authorizeRequests()
 			.requestMatchers("/api/user/login").permitAll()
+			.and().authorizeRequests()
+			.requestMatchers("/api/passenger").permitAll()
 			.anyRequest().authenticated().and()
 			.cors().and()
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils,  userDetailsService()), BasicAuthenticationFilter.class);
@@ -101,8 +103,9 @@ public class WebSecurityConfig {
     @Bean           
     public WebSecurityCustomizer webSecurityCustomizer() {     
     	// Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
-    	return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/api/user/login").requestMatchers(HttpMethod.POST, "/api/passenger").requestMatchers(HttpMethod.GET, "/api/passenger/activate/{activationId}")
-    			.requestMatchers(HttpMethod.GET, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.PUT, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.POST, "/api/unregisteredUser").requestMatchers(HttpMethod.GET, "/api/driver/active-vehicles").requestMatchers("/api/socket/**")
+    	return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/api/user/login").requestMatchers(HttpMethod.GET, "/api/user/{id}").requestMatchers(HttpMethod.POST, "/api/passenger").requestMatchers(HttpMethod.GET, "/api/passenger/activate/{activationId}").requestMatchers(HttpMethod.GET, "/api/passenger/activate/resend")
+    			.requestMatchers(HttpMethod.GET, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.GET, "/api/user/{email}/resetPasswordEmail").requestMatchers(HttpMethod.PUT, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.POST, "/api/unregisteredUser").requestMatchers(HttpMethod.GET, "/api/driver/active-vehicles").requestMatchers("/api/socket/**")
     			.requestMatchers(HttpMethod.POST, "/api/unregisteredUser").requestMatchers(HttpMethod.GET, "/api/driver/{id}/vehicle");	
+
     }
 }

@@ -70,7 +70,7 @@ public class UserController {
 
 	private HashMap<String, String> refreshTokens = new HashMap<String, String>();
 
-	
+//	@PreAuthorize("hasRole('ADMIN')"
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
 		System.out.println("USAO SAMMMM");
@@ -190,7 +190,6 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
 	@PostMapping(value="{id}/message", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> sendMessage(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody MessageDTO message){
-		System.out.println("EVOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 		try {
 			MessageReturnedDTO mess = userService.sendMessage(id, message);
 			System.out.println(mess);
@@ -214,22 +213,22 @@ public class UserController {
 		}
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getRides(@PathVariable int id, @RequestParam int page,
+	public ResponseEntity<?> getRidesPaginated(@PathVariable int id, @RequestParam int page,
 			@RequestParam int size, @RequestParam(required = false) String sort, @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-		return new ResponseEntity<AllPassengerRidesDTO>(userService.getRides(id, page, size, sort, from, to),
+		return new ResponseEntity<AllPassengerRidesDTO>(userService.getRidesPaginated(id, page, size, sort, from, to),
 				HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
+
 	
 //	@PreAuthorize("hasRole('ANONYMOUS')")
 	@GetMapping(value = "{id}/resetPassword")
 	public ResponseEntity<?> resetPassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
-		System.out.println("TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
 		try {
 			this.userService.sendResetPasswordMail(id);
 			return new ResponseEntity<String>("Email with reset code has been sent!", HttpStatus.NO_CONTENT);
@@ -239,10 +238,24 @@ public class UserController {
 		
 	}
 	
+	@GetMapping(value = "{email}/resetPasswordEmail")
+	public ResponseEntity<?> resetPassword(@PathVariable String email) {
+		System.out.println("tu");
+		try {
+			
+			this.userService.sendResetPasswordMail(email);
+			System.out.println("ev");
+			return new ResponseEntity<String>("Email with reset code has been sent!", HttpStatus.NO_CONTENT);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		}
+		
+	}
+
+	
 //	@PreAuthorize("hasRole('ANONYMOUS')")
 	@PutMapping(value = "{id}/resetPassword", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> resetPassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody ResetPasswordDTO dto) {
-		System.out.println("TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
 		try {
 			this.userService.resetPassword(id, dto);
 			return new ResponseEntity<String>("Password successfully changed!", HttpStatus.NO_CONTENT);

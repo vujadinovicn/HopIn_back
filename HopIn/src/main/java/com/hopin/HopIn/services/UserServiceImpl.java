@@ -47,7 +47,7 @@ import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.enums.MessageType;
 import com.hopin.HopIn.enums.SecureTokenType;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
-
+import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
 import com.hopin.HopIn.repositories.RideRepository;
@@ -75,6 +75,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	private BCryptPasswordEncoder encoder;
 	@Autowired
 	private ISecureTokenService tokenService;
+	@Autowired
+	private IMailService mailService;
 	
 	
 	Map<Integer, User> allUsersMap = new HashMap<Integer, User>();
@@ -219,7 +221,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public AllPassengerRidesDTO getRides(int userId, int page, int size, String sort, String from, String to) {
+	public AllPassengerRidesDTO getRidesPaginated(int userId, int page, int size, String sort, String from, String to) {
 		Pageable pageable = PageRequest.of(page, size);
 		
 		Optional<User> user = this.allUsers.findById(userId);
@@ -231,7 +233,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		List<Ride> rides = this.allRides.getAllUserRides(userId, pageable);
 		return new AllPassengerRidesDTO(rides);
 	}
-
+	
 	@Override
 	public Boolean userAlreadyExists(String email) {
 		return (!this.allUsers.getUserByEmail(email).isEmpty());
@@ -264,28 +266,42 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		}
 		
 		SecureToken token = tokenService.createToken(user, SecureTokenType.FORGOT_PASSWORD);
-		System.out.println(token.getToken());
 		
-//		TODO: ispraviti template da pise da je za sifru
-//		this.mailService.sendVerificationMail(passenger, token.getToken());
+//		this.mailService.sendResetPasswordMail(user, token.getToken());
 	}
-
+	
 	@Override
-	public void resetPassword(int id, ResetPasswordDTO dto) {
-		User user = this.allUsers.findById(id).orElse(null);
+	public void sendResetPasswordMail(String email) {
+		User user = this.allUsers.findByEmail(email).orElse(null);
 		if (user == null){
 			throw new UserNotFoundException();
 		}
 		
-		SecureToken token = this.tokenService.findByToken(dto.getCode());
+		SecureToken token = tokenService.createToken(user, SecureTokenType.FORGOT_PASSWORD);
 
-		if (!this.tokenService.isValid(token) || token.isExpired() || token.getType() != SecureTokenType.FORGOT_PASSWORD) {
+		this.mailService.sendForgotPasswordMail(user, token.getToken());
+	}
+
+	@Override
+	public void resetPassword(int id, ResetPasswordDTO dto) {
+//		User user = this.allUsers.findById(id).orElse(null);
+//		Commented out because it was added only to fit swagger spec and tests
+//		if (user == null){
+//			throw new UserNotFoundException();
+//		}
+		
+		SecureToken token = this.tokenService.findByToken(dto.getCode());
+		if (token == null || !this.tokenService.isValid(token) || token.isExpired() || token.getType() != SecureTokenType.FORGOT_PASSWORD) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Code is expired or not correct!");
 		}
+		
+		User user = token.getUser();
 		
 		user.setPassword(encoder.encode(dto.getNewPassword()));
 		allUsers.save(user);
 		allUsers.flush();
+
+		tokenService.markAsUsed(token);
 	
 	}
 
@@ -297,6 +313,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		}
 		
 		if (!encoder.matches(dto.getOldPassword(), user.getPassword())) {
+			System.out.println(encoder.encode(dto.getOldPassword()));
+			System.out.println(user.getPassword());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		

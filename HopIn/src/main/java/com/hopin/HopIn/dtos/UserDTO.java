@@ -29,7 +29,8 @@ public class UserDTO {
 	@Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*", message="format is not valid")
 	private String telephoneNumber;
 	
-	@NotEmpty(message="is required")
+//	because we do not pass profile pic when registrating passengers
+//	@NotEmpty(message="is required")
 	private String profilePicture;
 
 	public UserDTO(String name, String surname, String email, String password, String address, String telephoneNumber,
@@ -99,5 +100,14 @@ public class UserDTO {
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
+
+	@Override
+	public String toString() {
+		return "UserDTO [name=" + name + ", surname=" + surname + ", email=" + email + ", password=" + password
+				+ ", address=" + address + ", telephoneNumber=" + telephoneNumber + ", profilePicture=" + profilePicture
+				+ "]";
+	}
+	
+	
 
 }

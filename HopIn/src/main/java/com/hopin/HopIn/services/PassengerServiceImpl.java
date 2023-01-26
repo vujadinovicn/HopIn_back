@@ -150,9 +150,9 @@ public class PassengerServiceImpl implements IPassengerService {
 		if (passenger.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		if (this.userService.userAlreadyExists(dto.getEmail())) {
-			throw new EmailAlreadyInUseException();
-		}
+//		if (this.userService.userAlreadyExists(dto.getEmail())) {
+//			throw new EmailAlreadyInUseException();
+//		}
 //		if (dto.getNewPassword() != "" && dto.getNewPassword() != null) {
 //			if (!this.checkPasswordMatch(passenger.getPassword(), dto.getPassword())) {
 //				return null;
@@ -194,13 +194,33 @@ public class PassengerServiceImpl implements IPassengerService {
 
 	}
 
-	public boolean addFavouriteRoute(int passwordId, int routeId) {
+	public boolean returnFavouriteRoute(int passwordId, int routeId) {
 		Passenger passenger = this.allPassengers.findById(passwordId).get();
 		Optional<Route> route = this.allRoutes.findById(routeId);
-		if (passenger == null || route == null) {
+		if (passenger == null || route.isEmpty()) {
 			return false;
 		}
 		passenger.getFavouriteRoutes().add(route.get());
+		this.allPassengers.save(passenger);
+		this.allPassengers.flush();
+		return true;
+	}
+	
+	@Override
+	public boolean addFavouriteRoute(int passengerId, RouteDTO dto) {
+		Passenger passenger = this.allPassengers.findById(passengerId).get();
+		if (passenger == null) {
+			return false;
+		}
+		Route route = new Route(dto);
+		for (Route r: this.allRoutes.findAll()) {
+			if (route.getDeparture().getLongitude() == r.getDeparture().getLongitude() && route.getDeparture().getLatitude() == r.getDeparture().getLatitude() &&
+					route.getDestination().getLongitude() == r.getDestination().getLongitude() && route.getDestination().getLatitude() == r.getDestination().getLatitude()) {
+				route = r;
+			}
+		}
+		this.allRoutes.save(route);
+		passenger.getFavouriteRoutes().add(route);
 		this.allPassengers.save(passenger);
 		this.allPassengers.flush();
 		return true;
@@ -231,6 +251,8 @@ public class PassengerServiceImpl implements IPassengerService {
 		}
 
 		this.userService.activateUser(token.getUser());
+		this.tokenService.markAsUsed(token);
+		
 		return true;
 	}
 

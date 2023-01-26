@@ -41,7 +41,7 @@ public interface IRideService {
 
 	public AllPanicRidesDTO getAllPanicRides();
 
-	public AllPassengerRidesDTO getAllPassengerRides(int id, int page, int size, String sort, String from, String to);
+	public AllPassengerRidesDTO getAllPassengerRidesPaginated(int id, int page, int size, String sort, String from, String to);
 
 	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to);
 
@@ -61,12 +61,18 @@ public interface IRideService {
 
 	public RideReturnedDTO finishRide(int id);
 
-	public AllPassengerRidesDTO getAllDriverRides(int driverId, int page, int size, String sort, String from,
+	public AllPassengerRidesDTO getAllDriverRidesPaginated(int driverId, int page, int size, String sort, String from,
 			String to);
 
 	public RideReturnedDTO getPendingRideForPassenger(int id);
 
-	RideReturnedDTO getPendingRideForDriver(int id);
+	public RideReturnedDTO getPendingRideForDriver(int id);
+
+	public List<RideForReportDTO> getAllRidesBetweenDates(String from, String to);
+
+	public AllPassengerRidesDTO getAllPassengerRides(int id);
+
+	public AllPassengerRidesDTO getAllDriverRides(int id);
 
 	public RideReturnedDTO getAcceptedOrStartedRideForDriver(int driverId);
 

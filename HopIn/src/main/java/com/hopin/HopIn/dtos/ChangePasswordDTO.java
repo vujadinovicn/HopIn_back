@@ -9,7 +9,7 @@ public class ChangePasswordDTO {
 	private String newPassword;
 
 	@NotEmpty(message = "is required")
-	@Pattern(regexp="^(?=.*\\d)(?=.*[A-Z])(?!.*[^a-zA-Z0-9@#$^+=])(.{8,15})$", message="invalid format")
+//	@Pattern(regexp="^(?=.*\\d)(?=.*[A-Z])(?!.*[^a-zA-Z0-9@#$^+=])(.{8,15})$", message="invalid format")
 	private String oldPassword;
 
 	public ChangePasswordDTO(@NotEmpty(message = "is required") String newPassword,

@@ -1,5 +1,7 @@
 package com.hopin.HopIn.entities;
 
+import com.hopin.HopIn.dtos.RouteDTO;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,6 +40,12 @@ public class Route {
 		this.distance = 0;
 		this.departure = departure;
 		this.destination = destination;
+	}
+	
+	public Route(RouteDTO dto) {
+		this.distance = dto.getDistance();
+		this.departure = new Location(dto.getDeparture());
+		this.destination = new Location(dto.getDestination());
 	}
 	
 	public int getId() {

@@ -17,6 +17,7 @@ import com.hopin.HopIn.dtos.ReviewReturnedDTO;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Review;
 import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.ReviewType;
 import com.hopin.HopIn.repositories.PassengerRepository;
 import com.hopin.HopIn.repositories.ReviewRepository;
@@ -24,6 +25,7 @@ import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IReviewService;
+import com.hopin.HopIn.services.interfaces.IUserService;
 
 @Service
 public class ReviewServiceImpl implements IReviewService{
@@ -42,6 +44,9 @@ public class ReviewServiceImpl implements IReviewService{
 	
 	@Autowired
 	private IDriverService driverService;
+	
+	@Autowired
+	private IUserService userService;
 	
 	Map<Integer, ArrayList<Review>> allVehicleReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allDriverReviews = new HashMap<Integer, ArrayList<Review>>();
@@ -82,9 +87,20 @@ public class ReviewServiceImpl implements IReviewService{
 	@Override
 	public ReviewReturnedDTO addReview(int rideId, ReviewDTO reviewDTO, ReviewType type) {
 		Ride ride = this.getRideIfExists(rideId);
+		User user = this.userService.getCurrentUser();
 		
 		if (ride.getDriver() == null || ride.getDriver().getVehicle() == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist!");
+		
+		
+		
+		for (Review r : ride.getReviews()) {
+			if (r.getPassenger().getId() == user.getId() && r.getType() == type) {
+				ride.getReviews().remove(r);
+				allRides.save(ride);
+				break;
+			}
+		}
 		
 		Review review = this.dtoToReview(reviewDTO);
 		review.setType(type);

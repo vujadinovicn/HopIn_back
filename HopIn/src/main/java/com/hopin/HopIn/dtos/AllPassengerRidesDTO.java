@@ -1,20 +1,19 @@
 package com.hopin.HopIn.dtos;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.hopin.HopIn.entities.Ride;
 
 public class AllPassengerRidesDTO {
 	private int totalCount;
-	private Set<PassengerRideDTO> results;
+	private List<PassengerRideDTO> results;
 	
 	public AllPassengerRidesDTO() {
-		this.results = new HashSet<PassengerRideDTO>();
+		this.results = new ArrayList<PassengerRideDTO>();
 	}
 
-	public AllPassengerRidesDTO(int totalCount, Set<PassengerRideDTO> result) {
+	public AllPassengerRidesDTO(int totalCount, List<PassengerRideDTO> result) {
 		super();
 		this.totalCount = totalCount;
 		this.results = result;
@@ -23,7 +22,7 @@ public class AllPassengerRidesDTO {
 	public AllPassengerRidesDTO(List<Ride> rides) {
 		super();
 		this.totalCount = rides.size();
-		this.results = new HashSet<PassengerRideDTO>();
+		this.results = new ArrayList<PassengerRideDTO>();
 		for (Ride ride : rides)
 			this.results.add(new PassengerRideDTO(ride));
 	}
@@ -39,10 +38,10 @@ public class AllPassengerRidesDTO {
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 	}
-	public Set<PassengerRideDTO> getResults() {
+	public List<PassengerRideDTO> getResults() {
 		return results;
 	}
-	public void setResult(Set<PassengerRideDTO> result) {
+	public void setResult(List<PassengerRideDTO> result) {
 		this.results = result;
 	}
 	
