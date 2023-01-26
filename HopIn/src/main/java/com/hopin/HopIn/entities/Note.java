@@ -30,6 +30,9 @@ public class Note {
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	private User user;
 	
+	@ManyToOne(cascade = CascadeType.REFRESH)
+	private User admin;
+	
 	public Note() {}
 	
 	public Note(LocalDateTime date, String message) {
@@ -69,4 +72,14 @@ public class Note {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public User getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(User admin) {
+		this.admin = admin;
+	}
+	
+	
 }
