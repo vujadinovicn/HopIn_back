@@ -2,9 +2,10 @@ insert into "users"("address", "email", "is_activated", "is_blocked", "name", "p
 insert into "passengers"("id") values (1);
 
 insert into "locations"("address", "latitude", "longitude") values ('Novi Sad', 45.26, 19.83);
-insert into "locations"("address", "latitude", "longitude") values ('Beograd', 44.78, 20.45);
+insert into "locations"("address", "latitude", "longitude") values ('Beograd', 45.251957, 19.837196);
+insert into "locations"("address", "latitude", "longitude") values ('Jirecekova', 45.240397, 19.847994);
 
-
+  
 insert into "vehicle_types" ("name", "price_per_km") values (0, 60);
 insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
 insert into "vehicle_types" ("name", "price_per_km") values (2, 100);
@@ -16,7 +17,7 @@ insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, false);
 
 insert into "documents"("name", "document_image", "driver_id") values ('Drivers license 1', 'sss', 2);
 insert into "documents"("name", "document_image", "driver_id") values ('Registration license 1', 'sss', 2);
-
+  
 insert into "drivers_documents" values (2,1);
 insert into "drivers_documents" values (2,2);     
 
@@ -65,6 +66,20 @@ insert into "driver_account_update_document_requests"("document_id", "document_i
 
 insert into "driver_account_update_requests"("reason", "status", "type", "admin_id", "driver_id") values ('blablatruc', 1, 2, 3, 2);
 insert into "driver_account_update_info_requests"("address", "email", "name", "profile_picture", "surname", "telephone_number", "id") values('Beograd', 'mark@gmail.com', 'Neca', 'a', 'Vijic', '+3816492031', 5);
+<<<<<<< HEAD
+  
+insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2023-12-23T11:11:11', 0, 7, 'hdeuwir49834574hnfdj43829449305');
+insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2022-12-22T11:11:11', 0, 5, 'hdeuwir49834574hnfdj43829449304');
+
+insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2023-12-23T11:11:11', 1, 1, 'hdeuwir49834574hnfdj43829449302'); 
+insert into "secure_token"("expiration_date", "type", "user_id", "token") values('2022-12-22T11:11:11', 1, 5, 'hdeuwir49834574hnfdj43829449301');
+
+
+insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Milosa', 'vozac@gmail.com', true, false, 'Vozac', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Vozacevic', '+381603454212', 1);
+insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-061-GC', 'FIAT 500', 4, true, 3, 1);
+
+insert into "drivers"("id", "vehicle_id", "is_active") values (8, 2, true);        
+=======
 
 insert into "secure_token"("expiration_date", "type", "user_id", "token", "used") values('2023-12-23T11:11:11', 0, 7, 'hdeuwir49834574hnfdj43829449305', false);
 insert into "secure_token"("expiration_date", "type", "user_id", "token", "used") values('2022-12-22T11:11:11', 0, 5, 'hdeuwir49834574hnfdj43829449304', false);
@@ -80,3 +95,4 @@ insert into "rides_passengers"("ride_id", "passengers_id") values (2, 5);
 insert into "rides_passengers"("ride_id", "passengers_id") values (3, 5);
 insert into "rides_passengers"("ride_id", "passengers_id") values (4, 5);
 
+>>>>>>> 81be15f719519dcaf436377d9811b0de2cf6bd78

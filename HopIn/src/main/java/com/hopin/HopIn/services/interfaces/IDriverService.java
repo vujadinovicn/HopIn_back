@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 
+import com.hopin.HopIn.dtos.ActiveVehicleDTO;
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
@@ -22,6 +23,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateDocumentRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
+import com.hopin.HopIn.entities.User;
 
 public interface IDriverService {
 
@@ -74,6 +76,10 @@ public interface IDriverService {
 	void deleteDocument(int id);
 
 	public AllHoursDTO getAllHours(int id, int page, int size);
+
+	public List<ActiveVehicleDTO> getAllVehicles();
+	
+	public Driver getByEmail(String email);
 
 
 
