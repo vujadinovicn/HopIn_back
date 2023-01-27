@@ -41,4 +41,6 @@ public interface IPassengerService {
 	boolean addFavoriteRide(int passengerId, FavoriteRide ride);
 
 	boolean addFavouriteRoute(int passengerId, RouteDTO dto);
+
+	public Boolean isFavouriteRoute(int rideId);
 }

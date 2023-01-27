@@ -138,7 +138,6 @@ public class PassengerController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "/{id}/favouriteRoutes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RouteDTO>> getFavouriteRides(@PathVariable int id) {
-		System.out.println("FAVORUTIES");
 		List<RouteDTO> favouriteRoutes = passengerService.getFavouriteRoutes(id);
 		if (favouriteRoutes != null && favouriteRoutes.size() != 0) {
 			return new ResponseEntity<List<RouteDTO>>(favouriteRoutes, HttpStatus.OK);
@@ -147,15 +146,27 @@ public class PassengerController {
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
-//	@PreAuthorize("hasRole('PASSENGER')")
+	@PreAuthorize("hasRole('PASSENGER')")
 	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id,
 			@RequestParam String from, @RequestParam String to) {
 		return new ResponseEntity<List<RideForReportDTO>>(
 				this.rideService.getAllPassengerRidesBetweenDates(id, from, to), HttpStatus.OK);
 	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "{rideId}/is-favourite/route")
+	public ResponseEntity<?> isFavouriteRoute(@PathVariable int rideId) {
+		try {
+			return new ResponseEntity<Boolean>(this.passengerService.isFavouriteRoute(rideId), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("User or ride not found.", HttpStatus.NOT_FOUND);
+		}
+		
+	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
+	@PreAuthorize("hasRole('PASSENGER')")
 	@PostMapping(value = "{passengerId}/remove/route")
 	public ResponseEntity<Void> removeFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
 		if (passengerService.removeFavouriteRoute(passengerId, routeId)) {
@@ -165,6 +176,7 @@ public class PassengerController {
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
+	@PreAuthorize("hasRole('PASSENGER')")
 	@PostMapping(value = "{passengerId}/return/route")
 	public ResponseEntity<Void> returnFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
 		if (passengerService.returnFavouriteRoute(passengerId, routeId)) {
@@ -174,6 +186,7 @@ public class PassengerController {
 	}
 	
 	@CrossOrigin(origins = "http://localhost:4200")
+	@PreAuthorize("hasRole('PASSENGER')")
 	@PostMapping(value = "{passengerId}/add/route")
 	public ResponseEntity<Void> addFavouriteRoute(@PathVariable int passengerId, @RequestBody RouteDTO route) {
 		if (passengerService.addFavouriteRoute(passengerId, route)) {

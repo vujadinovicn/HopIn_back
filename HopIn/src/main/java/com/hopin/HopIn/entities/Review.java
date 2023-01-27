@@ -87,4 +87,12 @@ public class Review {
 		this.ride = ride;
 	}
 
+	@Override
+	public String toString() {
+		return "Review [id=" + id + ", rating=" + rating + ", comment=" + comment + ", type=" + type + ", passenger="
+				+ passenger.getId() + ", ride=" + ride.getId() + "]";
+	}
+	
+	
+
 }

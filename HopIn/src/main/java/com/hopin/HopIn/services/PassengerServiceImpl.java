@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,12 +22,14 @@ import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.FavoriteRide;
 import com.hopin.HopIn.entities.Passenger;
+import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.SecureTokenType;
 
 import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
+import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 
 import com.hopin.HopIn.exceptions.BadIdFormatException;
@@ -33,8 +37,10 @@ import com.hopin.HopIn.exceptions.BadIdFormatException;
 import com.hopin.HopIn.mail.IMailService;
 import com.hopin.HopIn.repositories.LocationRepository;
 import com.hopin.HopIn.repositories.PassengerRepository;
+import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.RouteRepository;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
+import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.tokens.ISecureTokenService;
 import com.hopin.HopIn.tokens.SecureToken;
@@ -53,6 +59,9 @@ public class PassengerServiceImpl implements IPassengerService {
 	
 	@Autowired
 	private ISecureTokenService tokenService;
+	
+	@Autowired
+	private RideRepository allRides;
 
 	@Autowired
 	RouteRepository allRoutes;
@@ -270,6 +279,36 @@ public class PassengerServiceImpl implements IPassengerService {
 
 		return true;
 		
+	}
+
+	@Override
+	public Boolean isFavouriteRoute(int rideId) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
+		
+		if (passenger == null) {
+			throw new UserNotFoundException();
+		}
+		
+		Ride ride = this.allRides.findById(rideId).orElse(null);
+		
+		if (ride == null) {
+			throw new RideNotFoundException();
+		}
+		
+		List<RouteDTO> favRoutes = this.getFavouriteRoutes(passenger.getId());
+		
+		for (RouteDTO fav: favRoutes) {
+			if (fav.getDeparture().getLatitude() == ride.getDepartureLocation().getLatitude() &&
+					fav.getDeparture().getLongitude() == ride.getDepartureLocation().getLongitude() &&
+					fav.getDestination().getLatitude() == ride.getDestinationLocation().getLatitude() &&
+					fav.getDestination().getLongitude() == ride.getDestinationLocation().getLongitude()) {
+				System.out.println(rideId + " true");
+				return true;
+			}
+		}
+		System.out.println(rideId + " false");
+		return false;
 	}
 
 	
