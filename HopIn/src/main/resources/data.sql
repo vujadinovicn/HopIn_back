@@ -31,10 +31,10 @@ insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") v
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Clean and new.', 4, 0, 1, 1);
 
 
-
 insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1);
 insert into "rides_passengers"("ride_id", "passengers_id") values (2, 1);
 insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1);
+insert into "rides_passengers"("ride_id", "passengers_id") values (4, 1);
 
 insert into "rides_reviews"("ride_id", "reviews_id") values (1, 1);
 insert into "rides_reviews"("ride_id", "reviews_id") values (1, 2);
@@ -85,13 +85,23 @@ insert into "rides_passengers"("ride_id", "passengers_id") values (2, 5);
 insert into "rides_passengers"("ride_id", "passengers_id") values (3, 5);
 insert into "rides_passengers"("ride_id", "passengers_id") values (4, 5);
 
+insert into "rides_passengers"("ride_id", "passengers_id") values (1, 6);
+
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Pleasant.', 3, 1, 5, 1);
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Tidy and spacious.', 4, 0, 5, 1);
+insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Great guy.', 5, 1, 6, 1);
+insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Clean and new.', 4, 0, 6, 1);
 
 --insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Would ride again.', 5, 1, 5, 3);
 --insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Nice.', 4, 0, 5, 3);
 
+insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Would ride again.', 5, 1, 1, 4);
+insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Nice.', 4, 0, 1, 4);
+
+
 insert into "rides_reviews"("ride_id", "reviews_id") values (1, 3);
 insert into "rides_reviews"("ride_id", "reviews_id") values (1, 4);
---insert into "rides_reviews"("ride_id", "reviews_id") values (3, 5);
---insert into "rides_reviews"("ride_id", "reviews_id") values (3, 6);
+insert into "rides_reviews"("ride_id", "reviews_id") values (1, 5);
+insert into "rides_reviews"("ride_id", "reviews_id") values (1, 6);
+insert into "rides_reviews"("ride_id", "reviews_id") values (4, 7);
+insert into "rides_reviews"("ride_id", "reviews_id") values (4, 8);

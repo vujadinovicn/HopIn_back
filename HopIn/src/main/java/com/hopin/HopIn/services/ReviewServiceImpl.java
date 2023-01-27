@@ -114,8 +114,6 @@ public class ReviewServiceImpl implements IReviewService{
 		allRides.save(ride);
 		allRides.flush();
 		
-		System.out.println("SVI			" + this.allReviews.findAll());
-		
 		return new ReviewReturnedDTO(savedReview);
 	
 	}
@@ -135,8 +133,9 @@ public class ReviewServiceImpl implements IReviewService{
 	@Override
 	public ArrayList<CompleteRideReviewDTO> getRideReviews(int rideId) {
 		Ride ride = getRideIfExists(rideId);
-		System.out.println(ride.getReviews().size());
-		return this.extractReviewFromRide(ride);
+		ArrayList<CompleteRideReviewDTO> res = this.extractReviewFromRide(ride);
+		System.out.println(res);
+		return res;
 	}
 
 	public ArrayList<Review> getByDriver(int driverId){
