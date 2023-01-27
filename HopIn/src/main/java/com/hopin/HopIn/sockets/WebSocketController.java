@@ -7,7 +7,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import com.hopin.HopIn.dtos.RideInviteDTO;
+import com.hopin.HopIn.dtos.PanicDTO;
+import com.hopin.HopIn.dtos.PanicRideDTO;
+import com.hopin.HopIn.services.interfaces.IPanicService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @Controller
@@ -15,6 +17,9 @@ public class WebSocketController {
 	
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
+	
+	@Autowired
+	private IPanicService panicService;
 	
 	@MessageMapping("/send/invite/{to}")
 	public String sendInvite(@DestinationVariable String to, String invite) {
@@ -45,4 +50,12 @@ public class WebSocketController {
 
         return message;
     }
+	
+	@MessageMapping("/send/panic")
+	public PanicDTO panic(PanicDTO panic) {
+		this.panicService.add(panic);
+        this.simpMessagingTemplate.convertAndSend("/topic/panic", panic);
+        return panic;
+	}
+	
 }
