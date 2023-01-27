@@ -77,12 +77,13 @@ public class RideController {
 			// Java object to JSON string 
 			String jsonString = mapper.writeValueAsString(ride);
 			System.out.println("/topic/driver/ride-offers/" + ride.getDriver().getId());
+			this.simpMessagingTemplate.convertAndSend("/topic/ride-pending", ride.getDriver().getId());
 			this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offers/" + ride.getDriver().getId(),
 					jsonString);
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (NoActiveDriverException e) {
 			ExceptionDTO ex = new ExceptionDTO("There are no any active drivers!");
-			System.out.println("There are no any active drivers!");
+			System.out.println("There are no any active drivers!"); 
 			res = new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
 		} catch (NoDriverWithAppropriateVehicleForRideException e) {
 			ExceptionDTO ex = new ExceptionDTO("There are no drivers with requested vehicle!");
@@ -114,6 +115,7 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
@@ -124,10 +126,20 @@ public class RideController {
 			return new ResponseEntity<String>("Ride does not exist", HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping(value = "/driver/{driverId}/accepted-started", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('DRIVER')")
+	public ResponseEntity<?> getAcceptedOrStartedRideForDriver(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
+		try {
+			return new ResponseEntity<RideReturnedDTO>(service.getAcceptedOrStartedRideForDriver(driverId), HttpStatus.OK);
+		} catch (NoActiveDriverRideException e) {
+			return new ResponseEntity<String>("Started or accepted ride does not exist", HttpStatus.NOT_FOUND); 
+		}
+	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
-	public ResponseEntity<?> getActiveRideForDriver(
+//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	public ResponseEntity<?> getActiveRideForDriver( 
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
 			return new ResponseEntity<RideReturnedDTO>(service.getPendingRideForDriver(driverId), HttpStatus.OK);
@@ -184,6 +196,7 @@ public class RideController {
 		System.out.println("ACCEPT REQ: " + id);
 		try {
 			RideReturnedDTO ride = service.acceptRide(id);
+			this.simpMessagingTemplate.convertAndSend("/topic/ride-accept", ride.getDriver().getId());
 //			this.simpMessagingTemplate.convertAndSend("/topic/ride-offer-response/" + ride.getPassengers().get(0).getId(), "true");
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
@@ -208,7 +221,7 @@ public class RideController {
 				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
 			} else {
 				return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
-			}
+			}  
 		}
 
 	}
@@ -219,6 +232,7 @@ public class RideController {
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			RideReturnedDTO ride = service.finishRide(id);
+			this.simpMessagingTemplate.convertAndSend("/topic/ride-finish", ride.getDriver().getId());
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-start-finish/" + ride.getDriver().getId(), "finish");
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
@@ -237,6 +251,7 @@ public class RideController {
 			@Valid @RequestBody(required=false) ReasonDTO dto) {
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
+			this.simpMessagingTemplate.convertAndSend("/topic/ride-cancel", ride.getDriver().getId());
 //			this.simpMessagingTemplate.convertAndSend("/topic/ride-offer-response/" + ride.getPassengers().get(0).getId(), "false");
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {

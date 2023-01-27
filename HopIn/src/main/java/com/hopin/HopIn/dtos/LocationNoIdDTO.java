@@ -15,7 +15,7 @@ import jakarta.validation.constraints.Pattern;
 public class LocationNoIdDTO {
 	@NotNull
 	@NotEmpty(message="is required")
-	@Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$", message="format is not valid")
+	//@Pattern(regexp = "^([a-zA-Z0-9 \\s,'-]*)$", message="format is not valid")
 	private String address;
 	
 
