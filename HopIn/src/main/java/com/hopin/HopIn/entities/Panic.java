@@ -50,6 +50,13 @@ public class Panic {
 		this.user = user;
 		this.ride = ride;
 	}
+	
+	public Panic(User user, Ride ride, String reason) {
+		this.user = user;
+		this.ride = ride;
+		this.reason = reason;
+		this.time = LocalDateTime.now();
+	}
 
 	public User getUser() {
 		return user;
