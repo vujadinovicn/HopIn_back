@@ -428,7 +428,11 @@ public class RideServiceImpl implements IRideService {
 		this.allRides.save(wantedRide);
 		this.allRides.flush();
 		
-		return new RideReturnedDTO(wantedRide);
+		RideReturnedDTO res =  new RideReturnedDTO(wantedRide);
+		res.setDistanceFormatted(dto.getDistanceFormatted());
+		res.setDurationFormatted(dto.getDurationFormatted());
+		
+		return res;
 	}
 	
 	private Driver getBestDriver(RideDTO rideDTO, List<Driver> drivers, int newRideDuration, boolean availability) {
