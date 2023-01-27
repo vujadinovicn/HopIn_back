@@ -19,6 +19,8 @@ import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.enums.RideStatus;
 
+import jakarta.validation.constraints.Min;
+
 public interface IRideService {
 
 	public RideReturnedDTO add(RideDTO dto);
@@ -72,5 +74,6 @@ public interface IRideService {
 
 	public AllPassengerRidesDTO getAllDriverRides(int id);
 
+	public RideReturnedDTO getAcceptedOrStartedRideForDriver(int driverId);
 
 }

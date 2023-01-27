@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.LocationNoIdDTO;
+import com.hopin.HopIn.dtos.LocationWithVehicleIdDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.entities.Vehicle;
@@ -24,7 +25,7 @@ public class VehicleServiceImpl implements IVehicleService {
 	private VehicleRepository allVehicles;
 
 	@Override
-	public void updateLocation(int vehicleId, LocationNoIdDTO newLocation) {
+	public LocationWithVehicleIdDTO updateLocation(int vehicleId, LocationNoIdDTO newLocation) {
 		Optional<Vehicle> vehicle = allVehicles.findById(vehicleId);
 		if (vehicle.isEmpty())
 			throw new VehicleNotFoundException();
@@ -37,6 +38,8 @@ public class VehicleServiceImpl implements IVehicleService {
 		
 		this.allVehicles.save(vehicle.get());
 		this.allVehicles.flush();
+		
+		return new LocationWithVehicleIdDTO(vehicleId, vehicleLocation);
 	}
 	
 	@Override

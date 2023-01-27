@@ -493,7 +493,12 @@ public class RideServiceImpl implements IRideService {
 		
 		ride.setStartTime(null);
 		ride.setEndTime(null);
-		ride.setScheduledTime(rideDTO.getScheduledTime());
+		if (rideDTO.getScheduledTime() == null) {
+			int timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), driver.getVehicleLocation());
+			ride.setScheduledTime(LocalDateTime.now().plusMinutes(timeForNewRideDepartureArrival));
+		}
+		else
+			ride.setScheduledTime(rideDTO.getScheduledTime());
 		
 		ride.setPetTransport(rideDTO.isPetTransport());
 		ride.setBabyTransport(rideDTO.isBabyTransport());
@@ -507,9 +512,8 @@ public class RideServiceImpl implements IRideService {
 		ride.setDriver(driver);
 		
 		ride.setReviews(null);
-		VehicleType vehicleType = this.allVehicleTypes
-				.getByName(rideDTO.getVehicleType());
-		System.out.println(vehicleType);
+		VehicleType vehicleType = this.allVehicleTypes.getByName(rideDTO.getVehicleType());
+		
 		ride.setVehicleType(vehicleType);
 		ride.setDepartureLocation(new Location(rideDTO.getDepartureLocation()));
 		ride.setDestinationLocation(new Location(rideDTO.getDestinationLocation()));
@@ -592,7 +596,7 @@ public class RideServiceImpl implements IRideService {
 					availableDrivers.add(driver);	
 			} catch (NoActiveDriverRideException e) {
 				availableDrivers.add(driver);	
-				e.printStackTrace();
+				e.printStackTrace();      
 			}
 		}
 		
@@ -771,6 +775,14 @@ public class RideServiceImpl implements IRideService {
 	public RideReturnedDTO changeRideStatus(int id, RideStatus status) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public RideReturnedDTO getAcceptedOrStartedRideForDriver(int id) {
+		Ride ride = this.allRides.getAcceptedOrStartedRideForDriver(id);
+		if (ride == null)
+			throw new NoActiveDriverRideException();
+		return new RideReturnedDTO(ride);
 	}
 
 }

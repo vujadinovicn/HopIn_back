@@ -72,11 +72,6 @@ public class WebSecurityConfig {
         http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
 
     	http.authorizeRequests()
-			.requestMatchers("/api/unregisteredUser/").hasRole("ANONYMOUS")
-			.and()
-			.authorizeRequests()
-//    		.requestMatchers("/api/**").permitAll()
-			.and().authorizeRequests()
 			.requestMatchers("/h2-console/**").permitAll()	
 			.and().authorizeRequests()
 			.requestMatchers("/api/user/login").permitAll()
@@ -100,15 +95,16 @@ public class WebSecurityConfig {
 
 		http.headers().frameOptions().disable();
         http.authenticationProvider(authenticationProvider());
-       
+            
         return http.build();
     }
- 
+           
     // metoda u kojoj se definisu putanje za igorisanje autentifikacije
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
+    @Bean           
+    public WebSecurityCustomizer webSecurityCustomizer() {     
     	// Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
     	return (web) -> web.ignoring().requestMatchers(HttpMethod.POST, "/api/user/login").requestMatchers(HttpMethod.GET, "/api/user/{id}").requestMatchers(HttpMethod.POST, "/api/passenger").requestMatchers(HttpMethod.GET, "/api/passenger/activate/{activationId}").requestMatchers(HttpMethod.GET, "/api/passenger/activate/resend")
-    			.requestMatchers(HttpMethod.GET, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.GET, "/api/user/{email}/resetPasswordEmail").requestMatchers(HttpMethod.PUT, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.POST, "/api/unregisteredUser").requestMatchers(HttpMethod.GET, "/h2-console/**");	
+    			.requestMatchers(HttpMethod.GET, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.GET, "/api/user/{email}/resetPasswordEmail").requestMatchers(HttpMethod.PUT, "/api/user/{id}/resetPassword").requestMatchers(HttpMethod.POST, "/api/unregisteredUser").requestMatchers(HttpMethod.GET, "/api/driver/active-vehicles").requestMatchers("/api/socket/**")
+    			.requestMatchers(HttpMethod.POST, "/api/unregisteredUser").requestMatchers(HttpMethod.GET, "/api/driver/{id}/vehicle");	
     }
 }
