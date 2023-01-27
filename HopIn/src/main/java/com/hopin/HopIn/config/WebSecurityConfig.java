@@ -81,6 +81,8 @@ public class WebSecurityConfig {
 			.and().authorizeRequests()
 			.requestMatchers("/api/user/login").permitAll()
 			.and().authorizeRequests()
+			.requestMatchers("/api/user/refresh").permitAll()
+			.and().authorizeRequests()
 			.requestMatchers("/api/passenger").permitAll()
 			.anyRequest().authenticated().and()
 			.cors().and()

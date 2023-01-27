@@ -50,9 +50,17 @@ public class NoteReturnedDTO {
 		this.message = message;
 	}
 
+	public UserReturnedDTO getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(UserReturnedDTO admin) {
+		this.admin = admin;
+	}
+
 	@Override
 	public String toString() {
-		return "NoteReturnedDTO [id=" + id + ", date=" + date + ", message=" + message + "]";
+		return "NoteReturnedDTO [id=" + id + ", date=" + date + ", message=" + message + ", admin=" + admin + "]";
 	}
 
 }
