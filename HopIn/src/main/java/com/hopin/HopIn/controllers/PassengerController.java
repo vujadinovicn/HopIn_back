@@ -49,7 +49,7 @@ public class PassengerController {
 	private IRideService rideService;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('PASSENGER')")
+	@PreAuthorize("hasRole('PASSENGER')" + " || " +"hasRole('ADMIN')")
 	public ResponseEntity<AllUsersDTO> getPassengers() {
 		AllUsersDTO passengers = this.passengerService.getAll();
 		return new ResponseEntity<AllUsersDTO>(passengers, HttpStatus.OK);

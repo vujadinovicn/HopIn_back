@@ -77,9 +77,12 @@ public interface IDriverService {
 
 	public AllHoursDTO getAllHours(int id, int page, int size);
 
+	AllUsersDTO getAll();
+
 	public List<ActiveVehicleDTO> getAllVehicles();
 	
 	public Driver getByEmail(String email);
+
 
 
 

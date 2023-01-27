@@ -12,11 +12,12 @@ public class UserReturnedDTO {
 	private String email;
 	private String address;
 	private String password;
+	private boolean isBlocked;
 	
 	public UserReturnedDTO() {}
 
 	public UserReturnedDTO(int id, String name, String surname, String profilePicture, String telephoneNumber,
-			String email, String address, String password) {
+			String email, String address, String password, boolean isBlocked) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -26,6 +27,7 @@ public class UserReturnedDTO {
 		this.email = email;
 		this.address = address;
 		this.password = password;
+		this.setBlocked(isBlocked);
 	}
 
 	public UserReturnedDTO(User user) {
@@ -38,8 +40,9 @@ public class UserReturnedDTO {
 		this.telephoneNumber = user.getTelephoneNumber();
 		this.profilePicture = user.getProfilePicture();
 		this.password = user.getPassword();
+		this.isBlocked = user.isBlocked();
 	}
-
+ 
 	public UserReturnedDTO(User user, Vehicle vehicle) {
 		super();
 		this.id = user.getId();
@@ -114,5 +117,13 @@ public class UserReturnedDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public boolean isBlocked() {
+		return isBlocked;
+	}
+
+	public void setBlocked(boolean isBlocked) {
+		this.isBlocked = isBlocked;
 	}
 }

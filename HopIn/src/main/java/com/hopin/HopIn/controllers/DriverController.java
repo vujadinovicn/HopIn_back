@@ -96,6 +96,12 @@ public class DriverController {
 			@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		return new ResponseEntity<AllUsersDTO>(service.getAllPaginated(page, size), HttpStatus.OK);
 	}
+	
+	@GetMapping(value="/all", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<AllUsersDTO> getAll() {
+		return new ResponseEntity<AllUsersDTO>(service.getAll(), HttpStatus.OK);
+	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")

@@ -163,12 +163,14 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	@Override
 	public NoteReturnedDTO addNote(int userId, NoteDTO noteDTO) {
 		User user = this.allUsers.findById(userId).orElse(null);
+		User admin = getCurrentUser();
 		if (user == null){
 			throw new UserNotFoundException();
 		}
 		
 		Note note = new Note(LocalDateTime.now(), noteDTO.getMessage());
 		note.setUser(user);
+		note.setAdmin(admin);
 		this.allNotes.save(note);
 		this.allNotes.flush();
 		
@@ -176,13 +178,12 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	}
 
 	@Override
-	public AllNotesDTO getNotes(int userId, int page, int size) {
+	public AllNotesDTO getNotes(int userId) {
 		User user = this.allUsers.findById(userId).orElse(null);
 		if (user == null){
 			throw new UserNotFoundException();
 		}
-		Pageable pageable = PageRequest.of(page, size);
-		List<Note> notes = this.allNotes.findAllByUserId(userId, pageable);
+		List<Note> notes = this.allNotes.findAllByUserId(userId);
 		return new AllNotesDTO(notes);
 	}
 

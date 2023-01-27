@@ -175,11 +175,9 @@ public class UserController {
 	@GetMapping(value = "{id}/note", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getNotes(
-			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@RequestParam @Min(value = 0, message = "Field page must be greater than 0.") int page,
-			@RequestParam @Min(value = 1, message = "Field size must be greater than 1.") int size) {
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
-			AllNotesDTO all = userService.getNotes(id, page, size);
+			AllNotesDTO all = userService.getNotes(id);
 			System.out.println(all);
 			return new ResponseEntity<AllNotesDTO>(all, HttpStatus.OK);
 		} catch (UserNotFoundException e) {

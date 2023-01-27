@@ -105,6 +105,12 @@ public class DriverServiceImpl implements IDriverService {
 		}
 		return new AllUsersDTO(res); 
 	}
+	
+	@Override
+	public AllUsersDTO getAll() {
+		List<Driver> drivers = this.allDrivers.findAll();
+		return new AllUsersDTO(drivers);
+	}
 
 	@Override
 	public DriverReturnedDTO getById(int id) {

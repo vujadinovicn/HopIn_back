@@ -9,6 +9,7 @@ public class NoteReturnedDTO {
 	int id;
 	LocalDateTime date;
 	String message;
+	UserReturnedDTO admin;
 
 	public NoteReturnedDTO(int id, LocalDateTime date, String message) {
 		super();
@@ -22,6 +23,7 @@ public class NoteReturnedDTO {
 		this.id = note.getId();
 		this.date = note.getDate();
 		this.message = note.getMessage();
+		this.admin = new UserReturnedDTO(note.getAdmin());
 	}
 
 	public int getId() {
@@ -48,9 +50,17 @@ public class NoteReturnedDTO {
 		this.message = message;
 	}
 
+	public UserReturnedDTO getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(UserReturnedDTO admin) {
+		this.admin = admin;
+	}
+
 	@Override
 	public String toString() {
-		return "NoteReturnedDTO [id=" + id + ", date=" + date + ", message=" + message + "]";
+		return "NoteReturnedDTO [id=" + id + ", date=" + date + ", message=" + message + ", admin=" + admin + "]";
 	}
 
 }
