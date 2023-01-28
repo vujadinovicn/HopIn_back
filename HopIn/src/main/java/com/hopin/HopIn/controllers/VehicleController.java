@@ -38,7 +38,6 @@ public class VehicleController {
 	@PreAuthorize("hasRole('DRIVER')")  
 	public ResponseEntity<?> updateLocation(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int vehicleId, @Valid @RequestBody LocationNoIdDTO newLocation) {
 		try {
-			System.out.println("uslo mi u guzu");
 			ObjectMapper mapper = new ObjectMapper();       
 			mapper.findAndRegisterModules();
 			// Java object to JSON string 

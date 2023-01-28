@@ -788,5 +788,9 @@ public class RideServiceImpl implements IRideService {
 			throw new NoActiveDriverRideException();
 		return new RideReturnedDTO(ride);
 	}
-
+	
+	@Override
+	public List<Ride> getAllAcceptedRides(){
+		return this.allRides.getAllAcceptedRides();
+	}
 }
