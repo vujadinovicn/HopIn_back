@@ -253,11 +253,11 @@ public class DriverController {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because you exceeded the 8 hours limit in last 24 hours!"), HttpStatus.BAD_REQUEST);
 		} catch (DriverAlreadyActiveException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Shift already ongoing!"), HttpStatus.BAD_REQUEST);
-		} catch (NoVehicleException ex) { 
+		} catch (NoVehicleException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
 		} catch (JsonProcessingException e) {
-			return new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
-		}
+			return new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST); 
+		}  
 	}    
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

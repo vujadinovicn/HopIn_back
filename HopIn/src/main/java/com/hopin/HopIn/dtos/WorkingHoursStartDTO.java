@@ -11,10 +11,11 @@ import jakarta.validation.constraints.NotNull;
 public class WorkingHoursStartDTO {
 	
 	@NotNull
-//	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss") 
+//	 @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 	private LocalDateTime start;
 
-	public WorkingHoursStartDTO() {
+	public WorkingHoursStartDTO() { 
 	}
 
 	public WorkingHoursStartDTO(LocalDateTime start) {

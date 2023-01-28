@@ -1,6 +1,7 @@
 package com.hopin.HopIn.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hopin.HopIn.dtos.PanicDTO;
 import com.hopin.HopIn.entities.Panic;
@@ -11,6 +12,7 @@ import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.services.interfaces.IPanicService;
 import com.hopin.HopIn.services.interfaces.IUserService;
 
+@Service
 public class PanicServiceImpl implements IPanicService {
 	
 	@Autowired

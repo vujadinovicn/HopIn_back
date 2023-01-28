@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.hopin.HopIn.dtos.PanicDTO;
-import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.services.interfaces.IPanicService;
 
 @CrossOrigin(origins = "http://localhost:4200")
