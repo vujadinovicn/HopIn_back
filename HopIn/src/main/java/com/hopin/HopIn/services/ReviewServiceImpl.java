@@ -2,6 +2,7 @@ package com.hopin.HopIn.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +29,8 @@ import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IReviewService;
 import com.hopin.HopIn.services.interfaces.IUserService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ReviewServiceImpl implements IReviewService{
@@ -91,11 +94,12 @@ public class ReviewServiceImpl implements IReviewService{
 		Ride ride = this.getRideIfExists(rideId);
 		User user = this.userService.getCurrentUser();
 		
+		
 		if (ride.getDriver() == null || ride.getDriver().getVehicle() == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist!");
 		
 		
-		
+		   
 		for (Review r : ride.getReviews()) {
 			if (r.getPassenger().getId() == user.getId() && r.getType() == type) {
 				ride.getReviews().remove(r);
@@ -107,6 +111,7 @@ public class ReviewServiceImpl implements IReviewService{
 		Review review = this.dtoToReview(reviewDTO);
 		review.setType(type);
 		review.setRide(ride);
+		System.out.println(review);
 		Review savedReview = allReviews.save(review);
 		allReviews.flush();
 		
@@ -124,7 +129,7 @@ public class ReviewServiceImpl implements IReviewService{
 		review.setRating(reviewDTO.getRating());
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
+		Passenger passenger = allPassengers.findPassengerByEmail("mika@gmail.com").orElse(null);
 		review.setPassenger(passenger);
 		
 		return review;
@@ -170,4 +175,11 @@ public class ReviewServiceImpl implements IReviewService{
 		
 		return ret;
 	}
-}
+
+	@Transactional
+	@Override
+	public void addCompleteReview(int rideId, List<ReviewDTO> reviews) {
+		this.addReview(rideId, reviews.get(0), ReviewType.DRIVER);
+		this.addReview(rideId, reviews.get(1), ReviewType.VEHICLE);
+	}
+} 
