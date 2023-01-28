@@ -177,11 +177,11 @@ public class RideController {
 	}
 
 	@PutMapping(value = "/{id}/panic", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('PASSENGER')")
+	@PreAuthorize("hasRole('PASSENGER')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> panicRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
 			@Valid @RequestBody(required = false) ReasonDTO dto) {
-//		System.out.println("panic");
+		System.out.println("PANIC " + id + " " + dto.getReason());
 		PanicRideDTO ride = service.panicRide(id, dto);
 		if (ride == null) {
 			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
@@ -251,7 +251,7 @@ public class RideController {
 	public ResponseEntity<?> rejectRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
 			@Valid @RequestBody(required=false) ReasonDTO dto) {
-		System.out.println("REJECT " + dto.getReason());
+//		System.out.println("REJECT " + dto.getReason());
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-cancel", ride.getDriver().getId());

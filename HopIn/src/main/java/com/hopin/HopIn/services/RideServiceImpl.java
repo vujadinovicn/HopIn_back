@@ -76,6 +76,7 @@ import com.hopin.HopIn.exceptions.PassengerHasAlreadyPendingRide;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.repositories.RideRepository;
+import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
@@ -98,6 +99,9 @@ public class RideServiceImpl implements IRideService {
 
 	@Autowired
 	private RideRepository allRides;
+	
+	@Autowired
+	private UserRepository allUsers;
 
 	@Autowired
 	private FavoriteRideRepository allFavoriteRides;
@@ -651,9 +655,9 @@ public class RideServiceImpl implements IRideService {
 		}
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
+		User user = allUsers.findByEmail(authentication.getName()).orElse(null);
 
-		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), passenger, ride);
+		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), user, ride);
 		this.allPanics.save(panic);
 		this.allPanics.flush();
 
