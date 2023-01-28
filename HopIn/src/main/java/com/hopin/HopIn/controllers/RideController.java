@@ -251,7 +251,7 @@ public class RideController {
 	public ResponseEntity<?> rejectRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
 			@Valid @RequestBody(required=false) ReasonDTO dto) {
-//		System.out.println("REJECT " + dto.getReason());
+		System.out.println("REJECT " + dto.getReason());
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-cancel", ride.getDriver().getId());
