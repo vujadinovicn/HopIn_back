@@ -57,10 +57,6 @@ public class VehicleController {
 	
 	@PutMapping(value="/{rideId}/timer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) 
     public ResponseEntity<?> updateCurrentRideArrivalTimer(@PathVariable("rideId") @Min(value = 0, message = "Field id must be greater than 0.") int rideId, @Valid @RequestBody TimerDTO dto) {
-        System.out.println(rideId);
-        System.out.println(dto);
-        System.out.println(Double.toString(dto.timer));
-        System.out.println("/topic/arrival-time/" + rideId);
         this.simpMessagingTemplate.convertAndSend("/topic/arrival-time/" + rideId, dto);
         return null;
     }

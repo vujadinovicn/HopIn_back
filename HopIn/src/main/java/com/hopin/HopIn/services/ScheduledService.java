@@ -29,7 +29,8 @@ public class ScheduledService implements IScheduledService{
 			Driver driver = ride.getDriver(); 
 			Location location = driver.getVehicle().getCurrentLocation();
 			if (areDoublesSame(location.getLatitude(), ride.getDepartureLocation().getLatitude()) && areDoublesSame(location.getLongitude(), ride.getDepartureLocation().getLongitude())) {
-				this.simpMessagingTemplate.convertAndSend("/topic/vehicle/arrived-at-departure-message", String.valueOf(ride.getId()));
+				System.out.println("/topic/ride-start-finish/" + driver.getId());
+				this.simpMessagingTemplate.convertAndSend("/topic/vehicle-arrival/" + ride.getId(), "arrived");
 			} 
 		}
 	}
