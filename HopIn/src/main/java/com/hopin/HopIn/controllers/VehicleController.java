@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopin.HopIn.dtos.LocationNoIdDTO;
+import com.hopin.HopIn.dtos.TimerDTO;
 import com.hopin.HopIn.exceptions.VehicleNotFoundException;
 import com.hopin.HopIn.services.interfaces.IVehicleService;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -53,5 +54,15 @@ public class VehicleController {
 			return new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
 		} 
 	}
+	
+	@PutMapping(value="/{rideId}/timer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) 
+    public ResponseEntity<?> updateCurrentRideArrivalTimer(@PathVariable("rideId") @Min(value = 0, message = "Field id must be greater than 0.") int rideId, @Valid @RequestBody TimerDTO dto) {
+        System.out.println(rideId);
+        System.out.println(dto);
+        System.out.println(Double.toString(dto.timer));
+        System.out.println("/topic/arrival-time/" + rideId);
+        this.simpMessagingTemplate.convertAndSend("/topic/arrival-time/" + rideId, dto);
+        return null;
+    }
 
 }
