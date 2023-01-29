@@ -196,7 +196,7 @@ public class RideController {
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> acceptRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
-		System.out.println("ACCEPT REQ: " + id);
+//		System.out.println("ACCEPT REQ: " + id);
 		try {
 			RideReturnedDTO ride = service.acceptRide(id);
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-accept", ride.getDriver().getId());
