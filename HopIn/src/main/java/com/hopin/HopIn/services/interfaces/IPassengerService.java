@@ -9,6 +9,7 @@ import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.entities.FavoriteRide;
 import com.hopin.HopIn.entities.Passenger;
+import com.hopin.HopIn.entities.Route;
 
 public interface IPassengerService {
 	
@@ -40,7 +41,7 @@ public interface IPassengerService {
 
 	boolean addFavoriteRide(int passengerId, FavoriteRide ride);
 
-	boolean addFavouriteRoute(int passengerId, RouteDTO dto);
+	Route addFavouriteRoute(int passengerId, RouteDTO dto);
 
 	public Boolean isFavouriteRoute(int rideId);
 }
