@@ -76,6 +76,7 @@ import com.hopin.HopIn.exceptions.PassengerHasAlreadyPendingRide;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.repositories.RideRepository;
+import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
@@ -98,6 +99,9 @@ public class RideServiceImpl implements IRideService {
 
 	@Autowired
 	private RideRepository allRides;
+	
+	@Autowired
+	private UserRepository allUsers;
 
 	@Autowired
 	private FavoriteRideRepository allFavoriteRides;
@@ -428,7 +432,11 @@ public class RideServiceImpl implements IRideService {
 		this.allRides.save(wantedRide);
 		this.allRides.flush();
 		
-		return new RideReturnedDTO(wantedRide);
+		RideReturnedDTO res =  new RideReturnedDTO(wantedRide);
+		res.setDistanceFormatted(dto.getDistanceFormatted());
+		res.setDurationFormatted(dto.getDurationFormatted());
+		
+		return res;
 	}
 	
 	private Driver getBestDriver(RideDTO rideDTO, List<Driver> drivers, int newRideDuration, boolean availability) {
@@ -647,13 +655,13 @@ public class RideServiceImpl implements IRideService {
 		}
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
+		User user = allUsers.findByEmail(authentication.getName()).orElse(null);
 
-		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), passenger, ride);
-		this.allPanics.save(panic);
+		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), user, ride);
+		Panic savedPanic = this.allPanics.save(panic);
 		this.allPanics.flush();
 
-		return new PanicRideDTO(panic);
+		return new PanicRideDTO(savedPanic);
 	}
 
 	@Override
@@ -784,5 +792,9 @@ public class RideServiceImpl implements IRideService {
 			throw new NoActiveDriverRideException();
 		return new RideReturnedDTO(ride);
 	}
-
+	
+	@Override
+	public List<Ride> getAllAcceptedRides(){
+		return this.allRides.getAllAcceptedRides();
+	}
 }

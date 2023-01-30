@@ -26,6 +26,7 @@ import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
@@ -34,7 +35,6 @@ import com.hopin.HopIn.validations.ExceptionDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.websocket.server.PathParam;
 
 @Validated
 @CrossOrigin(origins = "http://localhost:4200")
@@ -188,9 +188,10 @@ public class PassengerController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PreAuthorize("hasRole('PASSENGER')")
 	@PostMapping(value = "{passengerId}/add/route")
-	public ResponseEntity<Void> addFavouriteRoute(@PathVariable int passengerId, @RequestBody RouteDTO route) {
-		if (passengerService.addFavouriteRoute(passengerId, route)) {
-			return new ResponseEntity<Void>(HttpStatus.OK);
+	public ResponseEntity<?> addFavouriteRoute(@PathVariable int passengerId, @RequestBody RouteDTO route) {
+		Route newRoute = passengerService.addFavouriteRoute(passengerId, route);
+		if (newRoute != null) {
+			return new ResponseEntity<Route>(newRoute, HttpStatus.OK);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}

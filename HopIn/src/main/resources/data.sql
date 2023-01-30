@@ -12,7 +12,7 @@ insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
 insert into "vehicle_types" ("name", "price_per_km") values (2, 100);
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Veljka', 'driver@gmail.com', true, false, 'Mark', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Jacobs', '+381603454212', 1);
-insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-030-HR', 'AUDI A6', 4, true, 2, 1);
+insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-030-HR', 'AUDI A6', 4, true, 4, 1);
 
 insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, false);
 
@@ -89,19 +89,19 @@ insert into "rides_passengers"("ride_id", "passengers_id") values (3, 5);
 insert into "rides_passengers"("ride_id", "passengers_id") values (4, 5);
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Milosa', 'vozac@gmail.com', true, false, 'Vozac', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Vozacevic', '+381603454212', 1);
-insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-061-GC', 'FIAT 500', 4, true, 4, 1);
+insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-061-GC', 'FIAT 500', 4, true, 2, 1);
 
-insert into "drivers"("id", "vehicle_id", "is_active") values (8, 2, true);  
+insert into "drivers"("id", "vehicle_id", "is_active") values (8, 2, false);  
 
 insert into "rides_passengers"("ride_id", "passengers_id") values (1, 6);
 
-insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Pleasant.', 3, 1, 5, 1);
-insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Tidy and spacious.', 4, 0, 5, 1);
+--insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Pleasant.', 3, 1, 5, 1);
+--insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Tidy and spacious.', 4, 0, 5, 1);
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Great guy.', 5, 1, 6, 1);
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Clean and new.', 4, 0, 6, 1);
 
---insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Would ride again.', 5, 1, 5, 3);
---insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Nice.', 4, 0, 5, 3);
+insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Would ride again.', 5, 1, 5, 3);
+insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Nice.', 4, 0, 5, 3);
 
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Would ride again.', 5, 1, 1, 4);
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Nice.', 4, 0, 1, 4);

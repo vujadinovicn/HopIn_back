@@ -1,6 +1,7 @@
 package com.hopin.HopIn.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopin.HopIn.dtos.AllReviewsReturnedDTO;
 import com.hopin.HopIn.dtos.AllRideReviewsDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
@@ -42,6 +45,26 @@ public class ReviewController {
 	
 	@Autowired
 	private IReviewService reviewService;      
+	
+
+	@PostMapping(value="{rideId}/complete-review", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> addReview(@PathVariable @Min(value = 0, message = "Field rideId must be greater than 0.") int rideId, @Valid @RequestBody List<ReviewDTO> reviews) {
+		try {
+			reviewService.addCompleteReview(rideId, reviews);
+			ObjectMapper mapper = new ObjectMapper();       
+			mapper.findAndRegisterModules();
+			// Java object to JSON string 
+			String jsonString = mapper.writeValueAsString("Reviews successfully added!");
+			return new ResponseEntity<String>(jsonString, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			ex.printStackTrace();
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		} 
+	} 
+	
 	
 	@PostMapping(value="{rideId}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> addVehicleReview(@PathVariable @Min(value = 0, message = "Field rideId must be greater than 0.") int rideId, @Valid @RequestBody ReviewDTO review) {

@@ -71,7 +71,7 @@ public class Review {
 		this.passenger = passenger;
 	}
 
-	public ReviewType getType() {
+	public ReviewType getType() { 
 		return type;
 	}
 

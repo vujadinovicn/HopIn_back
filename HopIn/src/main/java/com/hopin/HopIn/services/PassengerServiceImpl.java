@@ -216,10 +216,10 @@ public class PassengerServiceImpl implements IPassengerService {
 	}
 	
 	@Override
-	public boolean addFavouriteRoute(int passengerId, RouteDTO dto) {
+	public Route addFavouriteRoute(int passengerId, RouteDTO dto) {
 		Passenger passenger = this.allPassengers.findById(passengerId).get();
 		if (passenger == null) {
-			return false;
+			return null;
 		}
 		Route route = new Route(dto);
 		for (Route r: this.allRoutes.findAll()) {
@@ -232,7 +232,7 @@ public class PassengerServiceImpl implements IPassengerService {
 		passenger.getFavouriteRoutes().add(route);
 		this.allPassengers.save(passenger);
 		this.allPassengers.flush();
-		return true;
+		return route;
 	}
 	
 	@Override

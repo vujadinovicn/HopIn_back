@@ -28,6 +28,8 @@ public class RideReturnedDTO {
 	private List<LocationDTO> locations;
 	private RideStatus status;
 	private LocalDateTime scheduledTime;
+	private String distanceFormatted;
+	private String durationFormatted;
 
 	
 	public RideReturnedDTO(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost,
@@ -66,6 +68,8 @@ public class RideReturnedDTO {
 		this.vehicleType = ride.getVehicleType();
 		this.locations = ride.getLocations();
 		this.distance = ride.getDistance();
+		this.distanceFormatted = ride.getDistanceFormatted();
+		this.durationFormatted = ride.getDurationFormatted();
 		
 		this.rejection = null;
 	}
@@ -233,6 +237,27 @@ public class RideReturnedDTO {
 
 	public void setScheduledTime(LocalDateTime scheduledTime) {
 		this.scheduledTime = scheduledTime;
+	}
+
+	
+
+	public String getDistanceFormatted() {
+		return distanceFormatted;
+	}
+
+
+	public void setDistanceFormatted(String distanceFormatted) {
+		this.distanceFormatted = distanceFormatted;
+	}
+
+
+	public String getDurationFormatted() {
+		return durationFormatted;
+	}
+
+
+	public void setDurationFormatted(String durationFormatted) {
+		this.durationFormatted = durationFormatted;
 	}
 
 
