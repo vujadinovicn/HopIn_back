@@ -149,6 +149,7 @@ public class RideController {
 		} catch (NoActiveDriverRideException e) {
 			return new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
 		}
+		
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
