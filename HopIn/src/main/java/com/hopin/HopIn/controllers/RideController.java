@@ -259,9 +259,11 @@ public class RideController {
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-cancel", ride.getDriver().getId());
+			this.simpMessagingTemplate.convertAndSend("/topic/ride-cancel/" + ride.getDriver().getId(), true);
 			this.simpMessagingTemplate.convertAndSend(
 					"/topic/ride-offer-response/" + ride.getPassengers().get(0).getId(),
 					new RideOfferResponseDTO(false, null));
+			
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {

@@ -38,8 +38,8 @@ public class ScheduledService implements IScheduledService{
 	}
 	
 	private boolean areDoublesSame(Double d1, Double d2) {
-		double epsilon = 0.0002d;
-		return Math.abs(d1 - d2) < epsilon;
+		double epsilon = 0.0003d;
+		return Math.abs(d1 - d2) <= epsilon;
 	}
 	
 }
