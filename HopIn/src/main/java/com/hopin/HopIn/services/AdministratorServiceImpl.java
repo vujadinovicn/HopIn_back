@@ -253,7 +253,9 @@ public class AdministratorServiceImpl implements IAdministratorService{
 	@Override
 	public void insertInfoRequest(int driverId, InfoRequestDTO dto) {
 		Driver driver = this.driverService.getDriver(driverId);
+		System.out.println("DTO: " + dto.getProfilePicture());
 		DriverAccountUpdateInfoRequest request = new DriverAccountUpdateInfoRequest(dto, driver);
+		System.out.println("RET: " + request.getProfilePicture());
 		this.allDriverAccountUpdateInfoRequests.save(request);
 		this.allDriverAccountUpdateInfoRequests.flush();
 	}

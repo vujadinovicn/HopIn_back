@@ -64,7 +64,7 @@ public class DriverAccountUpdateInfoRequest extends DriverAccountUpdateRequest {
 		this.email = dto.getEmail();
 		this.address = dto.getAddress();
 		this.telephoneNumber = dto.getTelephoneNumber();
-		this.profilePicture = dto.getProfilePicture().getBytes();
+		this.setProfilePicture(dto.getProfilePicture());
 	}
 
 	public String getName() {
