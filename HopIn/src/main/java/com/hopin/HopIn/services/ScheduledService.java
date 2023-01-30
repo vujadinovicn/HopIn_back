@@ -25,11 +25,13 @@ public class ScheduledService implements IScheduledService{
 	@Override
 	public void checkIfVehicleArrivedAtDeparture() {
 		ArrayList<Ride> allAcceptedRides = (ArrayList<Ride>) this.rideService.getAllAcceptedRides();
+		
 		for (Ride ride: allAcceptedRides) {
 			Driver driver = ride.getDriver(); 
 			Location location = driver.getVehicle().getCurrentLocation();
+			
 			if (areDoublesSame(location.getLatitude(), ride.getDepartureLocation().getLatitude()) && areDoublesSame(location.getLongitude(), ride.getDepartureLocation().getLongitude())) {
-				System.out.println("/topic/ride-start-finish/" + driver.getId());
+				System.out.println("ARRIVED!");
 				this.simpMessagingTemplate.convertAndSend("/topic/vehicle-arrival/" + ride.getId(), "arrived");
 			} 
 		}
