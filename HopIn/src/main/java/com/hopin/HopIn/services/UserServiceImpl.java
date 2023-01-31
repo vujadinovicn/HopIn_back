@@ -195,12 +195,13 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		}
 		
 		rideService.getRide(dto.getRideId());
-		int senderId = getCurrentUser().getId();
+		User sender = getCurrentUser();
+		User receiver = getById(receiverId);
 		
-		Message message = new Message(senderId, receiverId, dto);
-		Inbox inbox = allInboxes.findAllInboxesByIds(senderId, receiverId);
+		Message message = new Message(sender.getId(), receiverId, dto);
+		Inbox inbox = allInboxes.findAllInboxesByIds(sender.getId(), receiverId);
 		if (inbox == null) {
-			inbox = new Inbox(senderId, receiverId);
+			inbox = new Inbox(sender, receiver);
 		}
 		inbox.getMessages().add(message);
 		allMessages.save(message);

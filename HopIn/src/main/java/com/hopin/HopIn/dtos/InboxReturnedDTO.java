@@ -9,11 +9,11 @@ import com.hopin.HopIn.entities.Message;
 public class InboxReturnedDTO {
 
 	private int id;
-	private int firstUser;
-	private int secondUser;
+	private UserReturnedDTO firstUser;
+	private UserReturnedDTO secondUser;
 	List<MessageReturnedDTO> messages = new ArrayList<MessageReturnedDTO>();
 
-	public InboxReturnedDTO(int id, int firstUser, int secondUser, List<MessageReturnedDTO> messages) {
+	public InboxReturnedDTO(int id, UserReturnedDTO firstUser, UserReturnedDTO secondUser, List<MessageReturnedDTO> messages) {
 		super();
 		this.id = id;
 		this.firstUser = firstUser;
@@ -23,8 +23,8 @@ public class InboxReturnedDTO {
 	
 	public InboxReturnedDTO(Inbox inbox) {
 		this.id = inbox.getId();
-		this.firstUser = inbox.getFirstUser();
-		this.secondUser = inbox.getSecondUser();
+		this.firstUser = new UserReturnedDTO(inbox.getFirstUser());
+		this.secondUser = new UserReturnedDTO(inbox.getSecondUser());
 		
 		for(Message message : inbox.getMessages()) {
 			this.messages.add(new MessageReturnedDTO(message));
@@ -39,19 +39,19 @@ public class InboxReturnedDTO {
 		this.id = id;
 	}
 
-	public int getFirstUser() {
+	public UserReturnedDTO getFirstUser() {
 		return firstUser;
 	}
 
-	public void setFirstUser(int firstUser) {
+	public void setFirstUser(UserReturnedDTO firstUser) {
 		this.firstUser = firstUser;
 	}
 
-	public int getSecondUser() {
+	public UserReturnedDTO getSecondUser() {
 		return secondUser;
 	}
 
-	public void setSecondUser(int secondUser) {
+	public void setSecondUser(UserReturnedDTO secondUser) {
 		this.secondUser = secondUser;
 	}
 

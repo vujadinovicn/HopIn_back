@@ -10,10 +10,10 @@ import com.hopin.HopIn.entities.Message;
 
 public interface InboxRepository extends JpaRepository<Inbox, Integer> {
 	
-	@Query("select i from Inbox i where i.firstUser = ?1 and i.secondUser = ?2")
+	@Query("select i from Inbox i where i.firstUser.id = ?1 and i.secondUser.id = ?2")
 	public Inbox findAllInboxesByIds(int firstId, int secondId);
 	
-	@Query("select i from Inbox i where i.firstUser = ?1 or i.secondUser = ?1")
+	@Query("select i from Inbox i where i.firstUser.id = ?1 or i.secondUser.id = ?1")
 	public List<Inbox> findAllInboxesByUserId(int id);
 	
 	

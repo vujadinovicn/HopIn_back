@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -17,8 +18,12 @@ public class Inbox {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private int firstUser;
-	private int secondUser;
+	
+	@ManyToOne(cascade = { CascadeType.ALL })
+	private User firstUser;
+	
+	@ManyToOne(cascade = { CascadeType.ALL })
+	private User secondUser;
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	private Set<Message> messages = new HashSet<Message>();
@@ -26,7 +31,7 @@ public class Inbox {
 	public Inbox() {
 	}
 
-	public Inbox(int id, int firstUser, int secondUser, Set<Message> messages) {
+	public Inbox(int id, User firstUser, User secondUser, Set<Message> messages) {
 		super();
 		this.id = id;
 		this.firstUser = firstUser;
@@ -34,7 +39,7 @@ public class Inbox {
 		this.messages = messages;
 	}
 	
-	public Inbox(int firstUser, int secondUser) {
+	public Inbox(User firstUser, User secondUser) {
 		this.firstUser = firstUser;
 		this.secondUser = secondUser;
 		this.messages = new HashSet<Message>();
@@ -48,19 +53,19 @@ public class Inbox {
 		this.id = id;
 	}
 
-	public int getFirstUser() {
+	public User getFirstUser() {
 		return firstUser;
 	}
 
-	public void setFirstUser(int firstUser) {
+	public void setFirstUser(User firstUser) {
 		this.firstUser = firstUser;
 	}
 
-	public int getSecondUser() {
+	public User getSecondUser() {
 		return secondUser;
 	}
 
-	public void setSecondUser(int secondUser) {
+	public void setSecondUser(User secondUser) {
 		this.secondUser = secondUser;
 	}
 
