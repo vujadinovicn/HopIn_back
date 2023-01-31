@@ -55,7 +55,8 @@ public class ScheduledService implements IScheduledService{
 			int secondNotication = Integer.parseInt(env.getProperty("secondnotification")) / 60000;
 			int thirdNotication = Integer.parseInt(env.getProperty("thirdnotification")) / 60000;
 			if ((differenceInMinutes == firstNotication)  || (differenceInMinutes == secondNotication) || (differenceInMinutes == thirdNotication)) {
-				this.simpMessagingTemplate.convertAndSend("/topic/scheduled-ride", new RideReturnedDTO(ride));
+				System.out.println("PODSETNIK");
+				this.simpMessagingTemplate.convertAndSend("/topic/scheduled-ride/" + ride.getId(), new RideReturnedDTO(ride));
 			}
 		}
 	}

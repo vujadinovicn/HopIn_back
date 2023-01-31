@@ -81,4 +81,6 @@ public interface IRideService {
 
 	public RideReturnedDTO startRideToDeparture(int id);
 
+	public List<RideReturnedDTO> getScheduledRidesForUser(int userId);
+
 }

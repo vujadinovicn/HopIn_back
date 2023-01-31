@@ -70,18 +70,23 @@ public class RideController {
 	public ResponseEntity<?> add(@Valid @RequestBody(required = false) RideDTO dto) {
 		System.out.println(dto.getVehicleType());
 		ResponseEntity<ExceptionDTO> res;
+		
 		try {
-
+			dto.setScheduledTime(dto.getScheduledTime().plusHours(1));
 			RideReturnedDTO ride = service.add(dto);
-			ride.setScheduledTime(null);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.findAndRegisterModules();
 			// Java object to JSON string
 			String jsonString = mapper.writeValueAsString(ride);
+			String ret = "";
+			if (ride.getScheduledTime() != null)
+				ret = jsonString.substring(0, jsonString.length()-1)  + ",\"scheduledTimeFormatted\": \"" + ride.getScheduledTime().toString() +  "\"}"; 
+			else
+				ret = jsonString;
 			System.out.println("/topic/driver/ride-offers/" + ride.getDriver().getId());
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-pending", ride.getDriver().getId());
 			this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offers/" + ride.getDriver().getId(),
-					jsonString);
+					ret);
 			return new ResponseEntity<RideReturnedDTO>(ride, HttpStatus.OK);
 		} catch (NoActiveDriverException e) {
 			ExceptionDTO ex = new ExceptionDTO("There are no any active drivers!");
@@ -150,6 +155,15 @@ public class RideController {
 		} catch (NoActiveDriverRideException e) {
 			return new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping(value = "/scheduled-rides/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('DRIVER')" + " || " + "hasRole('PASSENGER')")
+	public ResponseEntity<?> getScheduledRidesForUser(
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int userId) {
+		List<RideReturnedDTO> rides = service.getScheduledRidesForUser(userId);
+		System.out.println(rides);
+		return new ResponseEntity<List<RideReturnedDTO>>(rides, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -201,6 +201,14 @@ public class RideDTO {
 		this.distanceFormatted = distanceFormatted;
 	}
 
+	@Override
+	public String toString() {
+		return "RideDTO [locations=" + locations  + ", vehicleType=" + vehicleType
+				+ ", babyTransport=" + babyTransport + ", petTransport=" + petTransport + ", distance=" + distance
+				+ ", duration=" + duration + ", price=" + price + ", scheduledTime=" + scheduledTime
+				+ ", durationFormatted=" + durationFormatted + ", distanceFormatted=" + distanceFormatted + "]";
+	}
+
 	
 	
 }
