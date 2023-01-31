@@ -16,12 +16,12 @@ public class AllMessagesDTO {
 
 	public AllMessagesDTO(List<Message> allMessages) {
 		super();
-		this.totalCount = allMessages.size();
-
-		this.results = new ArrayList<MessageReturnedDTO>();
-		for (Message message : allMessages) {
-			this.results.add(new MessageReturnedDTO(message));
-		}
+//		this.totalCount = allMessages.size();
+//
+//		this.results = new ArrayList<MessageReturnedDTO>();
+//		for (Message message : allMessages) {
+//			this.results.add(new MessageReturnedDTO(message));
+//		}
 
 	}
 
