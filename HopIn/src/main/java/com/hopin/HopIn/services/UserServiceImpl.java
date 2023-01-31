@@ -211,17 +211,18 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		System.out.println(message);
 		allMessages.flush();
 		allInboxes.flush();
-		return createDetailedMessage(message);
+		return createDetailedMessage(message, inbox.getId());
 	}
 	
-	private MessageReturnedDTO createDetailedMessage(Message sentMessage) {
+	private MessageReturnedDTO createDetailedMessage(Message sentMessage, int inboxId) {
 		return new MessageReturnedDTO(sentMessage.getId(),
 				sentMessage.getSenderId(),
 				sentMessage.getReceiverId(),
 				sentMessage.getTimeOfSending(),
 				sentMessage.getMessage(),
 				sentMessage.getType(),
-				sentMessage.getRideId());
+				sentMessage.getRideId(),
+				inboxId);
 	}
 
 	@Override

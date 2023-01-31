@@ -34,7 +34,7 @@ public class InboxReturnedDTO {
 		this.firstUser = new UserReturnedDTO(inbox.getFirstUser());
 		this.secondUser = new UserReturnedDTO(inbox.getSecondUser());
 		for(Message message : inbox.getMessages()) {
-			this.messages.add(new MessageReturnedDTO(message));
+			this.messages.add(new MessageReturnedDTO(message, inbox.getId()));
 		}
 		
 		Collections.sort(this.messages, new Comparator<MessageReturnedDTO>() {
