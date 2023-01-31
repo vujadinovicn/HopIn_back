@@ -71,4 +71,6 @@ public interface IUserService {
 
 	public List<InboxReturnedDTO> getInboxes(int id);
 
+	public InboxReturnedDTO getInboxById(int id);
+
 }

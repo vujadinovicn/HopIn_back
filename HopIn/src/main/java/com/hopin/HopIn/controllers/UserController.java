@@ -208,12 +208,22 @@ public class UserController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
-	@GetMapping(value = "{id}/inbox", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "{id}/inbox/all", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getInboxes(@PathVariable int id) {
 		try {
 			List<InboxReturnedDTO> all = userService.getInboxes(id);
 			System.out.println(all);
 			return new ResponseEntity<List<InboxReturnedDTO>>(all, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
+	@GetMapping(value = "{id}/inbox", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getInboxById(@PathVariable int id) {
+		try {
+			return new ResponseEntity<InboxReturnedDTO>(userService.getInboxById(id), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
 		}

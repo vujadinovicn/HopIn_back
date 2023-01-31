@@ -238,6 +238,15 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		}
 		return ret;
 	}
+	
+	@Override
+	public InboxReturnedDTO getInboxById(int id) {
+		Optional<Inbox> found = this.allInboxes.findById(id);
+		if (found.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Inbox does not exist!");
+		}
+		return new InboxReturnedDTO(found.get());
+	}
 
 	@Override
 	public AllPassengerRidesDTO getRidesPaginated(int userId, int page, int size, String sort, String from, String to) {
