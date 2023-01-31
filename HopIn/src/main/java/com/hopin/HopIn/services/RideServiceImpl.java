@@ -493,7 +493,6 @@ public class RideServiceImpl implements IRideService {
 		}
 		return foundDriver;
 	}
-	
 
 	
 	private Ride createWantedRide(RideDTO rideDTO, Driver driver){
@@ -501,12 +500,13 @@ public class RideServiceImpl implements IRideService {
 		
 		ride.setStartTime(null);
 		ride.setEndTime(null);
-		if (rideDTO.getScheduledTime() == null) {
-			int timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), driver.getVehicleLocation());
-			ride.setScheduledTime(LocalDateTime.now().plusMinutes(timeForNewRideDepartureArrival));
-		}
-		else
-			ride.setScheduledTime(rideDTO.getScheduledTime());
+//		if (rideDTO.getScheduledTime() == null) {
+//			int timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(rideDTO.getDepartureLocation(), driver.getVehicleLocation());
+//			ride.setScheduledTime(LocalDateTime.now().plusMinutes(timeForNewRideDepartureArrival));
+//		}
+//		else
+//			ride.setScheduledTime(rideDTO.getScheduledTime());
+		ride.setScheduledTime(rideDTO.getScheduledTime());
 		
 		ride.setPetTransport(rideDTO.isPetTransport());
 		ride.setBabyTransport(rideDTO.isBabyTransport());

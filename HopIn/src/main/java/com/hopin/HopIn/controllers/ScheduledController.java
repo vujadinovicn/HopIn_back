@@ -16,8 +16,14 @@ public class ScheduledController {
 	private IScheduledService scheduledService; 
 
 	@Transactional
-	@Scheduled(initialDelayString = "${initialdelay}", fixedRateString = "${fixedrate}")
+	@Scheduled(initialDelayString = "${initialdelay}", fixedRateString = "${fixedratearrival}")
 	public void checkIfVehicleArrivedAtDeparture() {
 		scheduledService.checkIfVehicleArrivedAtDeparture();
 	} 
+	
+	@Transactional
+	@Scheduled(initialDelayString = "${initialdelay}", fixedRateString = "${fixedratescheduledride}")
+	public void notifyAboutScheduledRide() {
+		scheduledService.notifyAboutScheduledRide();
+	}
 } 

@@ -1,11 +1,17 @@
 package com.hopin.HopIn.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.entities.Ride;
@@ -15,6 +21,8 @@ import com.hopin.HopIn.services.interfaces.IScheduledService;
 @Service
 public class ScheduledService implements IScheduledService{
 	
+	@Autowired
+	private Environment env;
 
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
@@ -34,6 +42,23 @@ public class ScheduledService implements IScheduledService{
 				System.out.println("ARRIVED!");
 				this.simpMessagingTemplate.convertAndSend("/topic/vehicle-arrival/" + ride.getId(), "arrived");
 			} 
+		}
+	}
+
+	@Override
+	public void notifyAboutScheduledRide() {
+		//get all scheduled rides <=> get all accepted + ride scheduled time is not null
+		ArrayList<Ride> allAcceptedRides = (ArrayList<Ride>) this.rideService.getAllAcceptedRides().stream().filter(x -> x.getScheduledTime() != null).collect(Collectors.toCollection(ArrayList::new));
+		for (Ride ride: allAcceptedRides) {
+			long differenceInMinutes = Math.abs(ChronoUnit.MINUTES.between(ride.getScheduledTime(), LocalDateTime.now()));
+
+			int firstNotication = Integer.parseInt(env.getProperty("firstnotification")) / 60000;
+			int secondNotication = Integer.parseInt(env.getProperty("secondnotification")) / 60000;
+			int thirdNotication = Integer.parseInt(env.getProperty("thirdnotification")) / 60000;
+			if ((differenceInMinutes == firstNotication)  || (differenceInMinutes == secondNotication) || (differenceInMinutes == thirdNotication)) {
+				this.simpMessagingTemplate.convertAndSend("/topic/scheduled-ride", new RideReturnedDTO(ride));
+			}
+			
 		}
 	}
 	

@@ -228,6 +228,7 @@ public class UserController {
 	@GetMapping(value = "{id}/resetPassword")
 	public ResponseEntity<?> resetPassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
+			System.out.println("siso si mi kurac");
 			this.userService.sendResetPasswordMail(id);
 			return new ResponseEntity<String>("Email with reset code has been sent!", HttpStatus.NO_CONTENT);
 		} catch (UserNotFoundException e) {
