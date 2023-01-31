@@ -1,6 +1,7 @@
 package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.ChangePasswordDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
+import com.hopin.HopIn.dtos.InboxReturnedDTO;
 import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
@@ -224,6 +226,16 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		getById(userId);
 		List<Message> messages = allMessages.findAllMessagesById(userId);
 		return new AllMessagesDTO(messages);
+	}
+	
+	@Override
+	public List<InboxReturnedDTO> getInboxes(int id) {
+		List<Inbox> inboxes = this.allInboxes.findAllInboxesByUserId(id);
+		List<InboxReturnedDTO> ret = new ArrayList<InboxReturnedDTO>();
+		for (Inbox inbox : inboxes) {
+			ret.add(new InboxReturnedDTO(inbox));
+		}
+		return ret;
 	}
 
 	@Override
