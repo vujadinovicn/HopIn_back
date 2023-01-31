@@ -72,7 +72,8 @@ public class RideController {
 		ResponseEntity<ExceptionDTO> res;
 		
 		try {
-			dto.setScheduledTime(dto.getScheduledTime().plusHours(1));
+			if (dto.getScheduledTime() != null)
+				dto.setScheduledTime(dto.getScheduledTime().plusHours(1));
 			RideReturnedDTO ride = service.add(dto);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.findAndRegisterModules();
@@ -333,13 +334,16 @@ public class RideController {
 				HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/driver-took-off/{rideId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/driver-took-off/{rideId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> startRideToDeparture(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int rideId) {
+		System.out.println("TU");
 		try {
 			RideReturnedDTO rideDto = service.startRideToDeparture(rideId);
 			this.simpMessagingTemplate.convertAndSend("/topic/scheduled-ride/driver-took-off/" + rideId, rideDto);
-			return new ResponseEntity<RideReturnedDTO>(rideDto, HttpStatus.NO_CONTENT);
+			System.out.println("VRACENO: " + rideDto);
+			return new ResponseEntity<RideReturnedDTO>(rideDto, HttpStatus.OK);
+			
 		}
 		catch (ResponseStatusException ex) {
 			if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {

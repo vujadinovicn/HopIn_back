@@ -811,9 +811,9 @@ public class RideServiceImpl implements IRideService {
 	public RideReturnedDTO startRideToDeparture(int id) {
 		Ride ride = this.getRideIfExists(id);
 		ride.setScheduledTime(null);
-		this.allRides.save(ride);
+		Ride savedRide = this.allRides.save(ride);
 		this.allRides.flush();
-		return new RideReturnedDTO(ride);
+		return new RideReturnedDTO(savedRide);
 	}
 
 	@Override
