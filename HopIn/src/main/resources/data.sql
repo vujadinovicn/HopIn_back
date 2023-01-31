@@ -7,9 +7,9 @@ insert into "locations"("address", "latitude", "longitude") values ('Kragujevac'
 insert into "locations"("address", "latitude", "longitude") values ('Jirecekova', 45.240397, 19.847994);
 
   
-insert into "vehicle_types" ("name", "price_per_km") values (0, 60);
+insert into "vehicle_types" ("name", "price_per_km") values (0, 60);  
 insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
-insert into "vehicle_types" ("name", "price_per_km") values (2, 100);
+insert into "vehicle_types" ("name", "price_per_km") values (2, 100); 
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Veljka', 'driver@gmail.com', true, false, 'Mark', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Jacobs', '+381603454212', 1);
 insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-030-HR', 'AUDI A6', 4, true, 4, 1);
@@ -18,14 +18,14 @@ insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, false);
 
 insert into "documents"("name", "document_image", "driver_id") values ('Drivers license 1', 'sss', 2);
 insert into "documents"("name", "document_image", "driver_id") values ('Registration license 1', 'sss', 2);
-  
+   
 insert into "drivers_documents" values (2,1);
 insert into "drivers_documents" values (2,2);     
-
+  
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (false, 95, '2023-01-23T12:21:11', 5, false, false, '2023-01-23T12:10:11', 4, 250, 3, 2, null, 1, 1, 2);
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 100, '2023-01-23T13:50:11', 5, false, false, '2023-01-23T13:11:11', 4, 780, 43, 2, null, 1, 2, 1);
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, '2023-01-21T9:15:11', 5, false, false, '2023-01-21T08:42:11', 4, 360, 24, 2, null, 1, 1, 3);
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "scheduled_time", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, null, 5, false, false, '2023-01-31T05:17:45' ,null, 1, 290, 4, 2, null, 1, 3, 2);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, '2023-01-31T05:10:45', 5, false, false ,'2023-01-31T05:17:45', 4, 290, 4, 2, null, 1, 3, 2);
 
 insert into "routes"("departure_id", "destination_id", "distance") values (2, 1, 120);
 
