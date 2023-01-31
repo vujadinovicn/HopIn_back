@@ -18,14 +18,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.AllMessagesDTO;
 import com.hopin.HopIn.dtos.AllNotesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
-import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.ChangePasswordDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
@@ -36,24 +34,21 @@ import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.ResetPasswordDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.Inbox;
 import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.entities.Note;
-import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
-
-import com.hopin.HopIn.exceptions.BlockedUserException;
-
-import com.hopin.HopIn.enums.MessageType;
 import com.hopin.HopIn.enums.SecureTokenType;
+import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.mail.IMailService;
+import com.hopin.HopIn.repositories.InboxRepository;
 import com.hopin.HopIn.repositories.MessageRepository;
 import com.hopin.HopIn.repositories.NoteRepository;
 import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.services.interfaces.IRideService;
-import com.hopin.HopIn.services.interfaces.ITokenService;
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.tokens.ISecureTokenService;
 import com.hopin.HopIn.tokens.SecureToken;
@@ -67,6 +62,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	private MessageRepository allMessages;
 	@Autowired
 	private NoteRepository allNotes;
+	@Autowired
+	private InboxRepository allInboxes;
 	@Autowired
 	private IRideService rideService;
 	@Autowired
@@ -196,11 +193,19 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		}
 		
 		rideService.getRide(dto.getRideId());
+		int senderId = getCurrentUser().getId();
 		
-		Message message = new Message(getCurrentUser().getId(), receiverId, dto);
+		Message message = new Message(senderId, receiverId, dto);
+		Inbox inbox = allInboxes.findAllInboxesByIds(senderId, receiverId);
+		if (inbox == null) {
+			inbox = new Inbox(senderId, receiverId);
+		}
+		inbox.getMessages().add(message);
 		allMessages.save(message);
+		allInboxes.save(inbox);
 		System.out.println(message);
 		allMessages.flush();
+		allInboxes.flush();
 		return createDetailedMessage(message);
 	}
 	

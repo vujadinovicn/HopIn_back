@@ -33,6 +33,12 @@ public class Inbox {
 		this.secondUser = secondUser;
 		this.messages = messages;
 	}
+	
+	public Inbox(int firstUser, int secondUser) {
+		this.firstUser = firstUser;
+		this.secondUser = secondUser;
+		this.messages = new HashSet<Message>();
+	}
 
 	public int getId() {
 		return id;
