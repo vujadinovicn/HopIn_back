@@ -201,9 +201,17 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		User receiver = getById(receiverId);
 		
 		Message message = new Message(sender.getId(), receiverId, dto);
-		Inbox inbox = allInboxes.findAllInboxesByIds(sender.getId(), receiverId);
-		if (inbox == null) {
-			inbox = new Inbox(sender, receiver);
+		List<Inbox> inboxes = allInboxes.findAllInboxesByIds(sender.getId(), receiverId);
+		Inbox inbox = new Inbox(sender, receiver);
+		if (inboxes.size() == 1) {
+			inbox = inboxes.get(0);
+		} else if (inboxes.size() > 1) {
+			for (Inbox i : inboxes) {
+				if (i.getMessages().get(0).getType() == message.getType()) {
+					inbox = i;
+					break;
+				}
+			}
 		}
 		inbox.getMessages().add(message);
 		allMessages.save(message);
