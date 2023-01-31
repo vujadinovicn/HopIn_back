@@ -79,4 +79,6 @@ public interface IRideService {
 
 	List<Ride> getAllAcceptedRides();
 
+	public RideReturnedDTO startRideToDeparture(int id);
+
 }

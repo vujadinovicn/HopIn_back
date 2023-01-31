@@ -47,7 +47,6 @@ public class ScheduledService implements IScheduledService{
 
 	@Override
 	public void notifyAboutScheduledRide() {
-		//get all scheduled rides <=> get all accepted + ride scheduled time is not null
 		ArrayList<Ride> allAcceptedRides = (ArrayList<Ride>) this.rideService.getAllAcceptedRides().stream().filter(x -> x.getScheduledTime() != null).collect(Collectors.toCollection(ArrayList::new));
 		for (Ride ride: allAcceptedRides) {
 			long differenceInMinutes = Math.abs(ChronoUnit.MINUTES.between(ride.getScheduledTime(), LocalDateTime.now()));
@@ -58,7 +57,6 @@ public class ScheduledService implements IScheduledService{
 			if ((differenceInMinutes == firstNotication)  || (differenceInMinutes == secondNotication) || (differenceInMinutes == thirdNotication)) {
 				this.simpMessagingTemplate.convertAndSend("/topic/scheduled-ride", new RideReturnedDTO(ride));
 			}
-			
 		}
 	}
 	

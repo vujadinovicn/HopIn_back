@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -317,5 +318,23 @@ public class RideController {
 		return new ResponseEntity<List<RideForReportDTO>>(this.service.getAllRidesBetweenDates(from, to),
 				HttpStatus.OK);
 	}
+	
+	@PostMapping(value = "/driver-took-off/{rideId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('DRIVER')")
+	public ResponseEntity<?> startRideToDeparture(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int rideId) {
+		try {
+			RideReturnedDTO rideDto = service.startRideToDeparture(rideId);
+			this.simpMessagingTemplate.convertAndSend("/topic/scheduled-ride/driver-took-off/" + rideId, rideDto);
+			return new ResponseEntity<RideReturnedDTO>(rideDto, HttpStatus.NO_CONTENT);
+		}
+		catch (ResponseStatusException ex) {
+			if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+				return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
+			} else {
+				return new ResponseEntity<String>("Something bad happened", HttpStatus.BAD_REQUEST);
+			}
+		}
+	}
+	
 
 }
