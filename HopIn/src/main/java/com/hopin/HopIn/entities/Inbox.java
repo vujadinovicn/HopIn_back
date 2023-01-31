@@ -1,7 +1,7 @@
 package com.hopin.HopIn.entities;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,12 +26,12 @@ public class Inbox {
 	private User secondUser;
 
 	@OneToMany(cascade = { CascadeType.ALL })
-	private Set<Message> messages = new HashSet<Message>();
+	private List<Message> messages = new ArrayList<Message>();
 
 	public Inbox() {
 	}
 
-	public Inbox(int id, User firstUser, User secondUser, Set<Message> messages) {
+	public Inbox(int id, User firstUser, User secondUser, List<Message> messages) {
 		super();
 		this.id = id;
 		this.firstUser = firstUser;
@@ -42,7 +42,7 @@ public class Inbox {
 	public Inbox(User firstUser, User secondUser) {
 		this.firstUser = firstUser;
 		this.secondUser = secondUser;
-		this.messages = new HashSet<Message>();
+		this.messages = new ArrayList<Message>();
 	}
 
 	public int getId() {
@@ -69,11 +69,11 @@ public class Inbox {
 		this.secondUser = secondUser;
 	}
 
-	public Set<Message> getMessages() {
+	public List<Message> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(Set<Message> messages) {
+	public void setMessages(List<Message> messages) {
 		this.messages = messages;
 	}
 

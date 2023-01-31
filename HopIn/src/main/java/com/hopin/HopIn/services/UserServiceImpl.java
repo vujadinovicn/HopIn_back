@@ -2,6 +2,8 @@ package com.hopin.HopIn.services;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -236,6 +238,12 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		for (Inbox inbox : inboxes) {
 			ret.add(new InboxReturnedDTO(inbox));
 		}
+		Collections.sort(ret, new Comparator<InboxReturnedDTO>() {
+
+	        public int compare(InboxReturnedDTO i1, InboxReturnedDTO i2) {
+	            return i2.getLastMessage().compareTo(i1.getLastMessage());
+	        }
+	    });
 		return ret;
 	}
 	
