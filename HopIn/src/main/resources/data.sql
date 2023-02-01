@@ -114,5 +114,5 @@ insert into "rides_reviews"("ride_id", "reviews_id") values (1, 6);
 insert into "rides_reviews"("ride_id", "reviews_id") values (4, 7);
 insert into "rides_reviews"("ride_id", "reviews_id") values (4, 8);
 
-insert into "inboxes" ("first_user_id", "second_user_id", "type") values (5, 3, 1);
+insert into "inboxes" ("first_user_id", "second_user_id", "type", "ride_id") values (5, 3, 1, 1);
 

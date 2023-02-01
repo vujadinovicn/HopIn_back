@@ -218,11 +218,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 			message = new Message(sender.getId(), receiverId, dto);
 			inboxes = allInboxes.findAllInboxesByIds(sender.getId(), receiverId);
 			inbox = new Inbox(sender, receiver, dto.getType(), dto.getRideId());
-			if (inboxes.size() == 1 && inboxes.get(0).getMessages().get(0).getType() == message.getType()) {
+			if (inboxes.size() == 1 && inboxes.get(0).getType() == message.getType()) {
 				inbox = inboxes.get(0);
 			} else if (inboxes.size() > 1) {
 				for (Inbox i : inboxes) {
-					if (i.getMessages().get(0).getType() == message.getType()) {
+					if (i.getType() == message.getType() && i.getRideId() == dto.getRideId()) {
 						inbox = i;
 						break;
 					}
@@ -269,6 +269,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		inboxes = this.allInboxes.findAllInboxesByUserId(id);
 		List<InboxReturnedDTO> ret = new ArrayList<InboxReturnedDTO>();
 		for (Inbox inbox : inboxes) {
+			if (inbox.getType() == MessageType.RIDE && inbox.getMessages().size() == 0) {
+				allInboxes.delete(inbox);
+				allInboxes.flush();
+				continue;
+			}
 			ret.add(new InboxReturnedDTO(inbox));
 		}
 		
