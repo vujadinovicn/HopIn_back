@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.hopin.HopIn.entities.Inbox;
 import com.hopin.HopIn.entities.Message;
+import com.hopin.HopIn.enums.MessageType;
 
 public class InboxReturnedDTO {
 
@@ -15,10 +16,9 @@ public class InboxReturnedDTO {
 	private UserReturnedDTO firstUser;
 	private UserReturnedDTO secondUser;
 	private LocalDateTime lastMessage;
+	private MessageType type;
 	List<MessageReturnedDTO> messages = new ArrayList<MessageReturnedDTO>();
 
-	
-	
 	public InboxReturnedDTO(int id, UserReturnedDTO firstUser, UserReturnedDTO secondUser, LocalDateTime lastMessage,
 			List<MessageReturnedDTO> messages) {
 		super();
@@ -29,22 +29,35 @@ public class InboxReturnedDTO {
 		this.messages = messages;
 	}
 
+	public InboxReturnedDTO(int id, UserReturnedDTO firstUser, UserReturnedDTO secondUser, LocalDateTime lastMessage,
+			MessageType type, List<MessageReturnedDTO> messages) {
+		super();
+		this.id = id;
+		this.firstUser = firstUser;
+		this.secondUser = secondUser;
+		this.lastMessage = lastMessage;
+		this.type = type;
+		this.messages = messages;
+	}
+
 	public InboxReturnedDTO(Inbox inbox) {
 		this.id = inbox.getId();
 		this.firstUser = new UserReturnedDTO(inbox.getFirstUser());
 		this.secondUser = new UserReturnedDTO(inbox.getSecondUser());
-		for(Message message : inbox.getMessages()) {
+		for (Message message : inbox.getMessages()) {
 			this.messages.add(new MessageReturnedDTO(message, inbox.getId()));
 		}
-		
+
 		Collections.sort(this.messages, new Comparator<MessageReturnedDTO>() {
 
-	        public int compare(MessageReturnedDTO i1, MessageReturnedDTO i2) {
-	            return i2.getTimeOfSending().compareTo(i1.getTimeOfSending());
-	        }
-	    });
-		this.lastMessage = this.messages.get(this.messages.size()-1).getTimeOfSending();
-		
+			public int compare(MessageReturnedDTO i1, MessageReturnedDTO i2) {
+				return i2.getTimeOfSending().compareTo(i1.getTimeOfSending());
+			}
+		});
+		if (this.messages.size() > 0)
+			this.lastMessage = this.messages.get(this.messages.size() - 1).getTimeOfSending();
+		this.lastMessage = null;
+		this.type = inbox.getType();
 	}
 
 	public int getId() {
@@ -85,6 +98,14 @@ public class InboxReturnedDTO {
 
 	public void setLastMessage(LocalDateTime lastMessage) {
 		this.lastMessage = lastMessage;
+	}
+
+	public MessageType getType() {
+		return type;
+	}
+
+	public void setType(MessageType type) {
+		this.type = type;
 	}
 
 }

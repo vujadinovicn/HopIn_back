@@ -43,6 +43,8 @@ import com.hopin.HopIn.entities.Message;
 import com.hopin.HopIn.entities.Note;
 import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.User;
+import com.hopin.HopIn.enums.MessageType;
+import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.SecureTokenType;
 import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
@@ -190,6 +192,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
 	@Override
 	public MessageReturnedDTO sendMessage(int receiverId, MessageDTO dto) {
+		System.out.println("tu");
 		try {
 			getById(receiverId);
 		} catch (ResponseStatusException ex) {
@@ -198,22 +201,38 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		
 		rideService.getRide(dto.getRideId());
 		User sender = getCurrentUser();
-		User receiver = getById(receiverId);
 		
-		Message message = new Message(sender.getId(), receiverId, dto);
-		List<Inbox> inboxes = allInboxes.findAllInboxesByIds(sender.getId(), receiverId);
-		Inbox inbox = new Inbox(sender, receiver);
-		if (inboxes.size() == 1 && inboxes.get(0).getMessages().get(0).getType() == message.getType()) {
-			inbox = inboxes.get(0);
-		} else if (inboxes.size() > 1) {
-			for (Inbox i : inboxes) {
-				if (i.getMessages().get(0).getType() == message.getType()) {
-					inbox = i;
-					break;
+		Message message;
+		Inbox inbox;
+		System.out.println("tu");
+		if (dto.getType() == MessageType.SUPPORT) {
+			int id = sender.getRole() == Role.ADMIN? receiverId: sender.getId();
+			inbox = allInboxes.getSupportInbox(id);
+			System.out.println(inbox);
+			message = new Message(sender.getId(), receiverId, dto);
+			inbox.getMessages().add(message);
+		} else {
+			User receiver = getById(receiverId);
+			List<Inbox> inboxes = allInboxes.findAllInboxesByIds(sender.getId(), receiverId);
+			
+			message = new Message(sender.getId(), receiverId, dto);
+			inboxes = allInboxes.findAllInboxesByIds(sender.getId(), receiverId);
+			inbox = new Inbox(sender, receiver, dto.getType());
+			if (inboxes.size() == 1 && inboxes.get(0).getMessages().get(0).getType() == message.getType()) {
+				inbox = inboxes.get(0);
+			} else if (inboxes.size() > 1) {
+				for (Inbox i : inboxes) {
+					if (i.getMessages().get(0).getType() == message.getType()) {
+						inbox = i;
+						break;
+					}
 				}
 			}
+			inbox.getMessages().add(message);
 		}
-		inbox.getMessages().add(message);
+		
+		
+		
 		allMessages.save(message);
 		allInboxes.save(inbox);
 		System.out.println(message);
@@ -242,20 +261,66 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 	
 	@Override
 	public List<InboxReturnedDTO> getInboxes(int id) {
-		List<Inbox> inboxes = this.allInboxes.findAllInboxesByUserId(id);
+		System.out.println("TU " + id);
+		User user = getById(id);
+		
+		List<Inbox> inboxes;
+		
+		inboxes = this.allInboxes.findAllInboxesByUserId(id);
 		List<InboxReturnedDTO> ret = new ArrayList<InboxReturnedDTO>();
 		for (Inbox inbox : inboxes) {
 			ret.add(new InboxReturnedDTO(inbox));
 		}
-		Collections.sort(ret, new Comparator<InboxReturnedDTO>() {
-
-	        public int compare(InboxReturnedDTO i1, InboxReturnedDTO i2) {
-	            return i2.getLastMessage().compareTo(i1.getLastMessage());
-	        }
-	    });
+		
+		System.out.println(ret);
+		
+		if (user.getRole() == Role.ADMIN) {
+			return ret;
+		}
+		
+		if (ret.size() > 1)
+			Collections.sort(ret, new Comparator<InboxReturnedDTO>() {
+	
+		        public int compare(InboxReturnedDTO i1, InboxReturnedDTO i2) {
+		        	if (i1.getType() == MessageType.SUPPORT)
+		        		return -1;
+		        	else 
+		        		if (i2.getType() == MessageType.SUPPORT)
+		        			return 1;
+		            return i2.getLastMessage().compareTo(i1.getLastMessage());
+		        }
+		    });
+		
+		if (user.getRole() != Role.ADMIN)
+			addSupportInbox(ret);
+		else {
+			addAllSupportInboxes(ret);
+		}
+		System.out.println(ret);
+		
 		return ret;
 	}
 	
+	private void addAllSupportInboxes(List<InboxReturnedDTO> ret) {
+		List<Inbox> inboxes = allInboxes.findAllInboxesByType(MessageType.SUPPORT);
+		for (Inbox i: inboxes) {
+			ret.add(0, new InboxReturnedDTO(i));
+		}
+	}
+
+	private void addSupportInbox(List<InboxReturnedDTO> inboxes) {
+		for (InboxReturnedDTO inbox: inboxes) {
+			if (inbox.getType() == MessageType.SUPPORT) {
+				return;
+			}
+		}
+		User user = getCurrentUser();
+		User admin = allUsers.getAnyAdmin().get(0);
+		Inbox supportInbox = new Inbox(user, admin, MessageType.SUPPORT);
+		Inbox savedInbox = allInboxes.save(supportInbox);
+		inboxes.add(0, new InboxReturnedDTO(savedInbox));
+	}
+
 	@Override
 	public InboxReturnedDTO getInboxById(int id) {
 		Optional<Inbox> found = this.allInboxes.findById(id);
