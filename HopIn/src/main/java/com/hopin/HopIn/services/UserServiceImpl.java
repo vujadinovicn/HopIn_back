@@ -202,12 +202,12 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		
 		Message message = new Message(sender.getId(), receiverId, dto);
 		List<Inbox> inboxes = allInboxes.findAllInboxesByIds(sender.getId(), receiverId);
-		Inbox inbox = new Inbox(sender, receiver, message.getType());
-		if (inboxes.size() == 1 && inboxes.get(0).getType() == message.getType()) {
+		Inbox inbox = new Inbox(sender, receiver);
+		if (inboxes.size() == 1 && inboxes.get(0).getMessages().get(0).getType() == message.getType()) {
 			inbox = inboxes.get(0);
 		} else if (inboxes.size() > 1) {
 			for (Inbox i : inboxes) {
-				if (i.getType() == message.getType()) {
+				if (i.getMessages().get(0).getType() == message.getType()) {
 					inbox = i;
 					break;
 				}

@@ -3,8 +3,6 @@ package com.hopin.HopIn.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hopin.HopIn.enums.MessageType;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,8 +18,6 @@ public class Inbox {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	private MessageType type;
 	
 	@ManyToOne(cascade = { CascadeType.ALL })
 	private User firstUser;
@@ -43,10 +39,9 @@ public class Inbox {
 		this.messages = messages;
 	}
 	
-	public Inbox(User firstUser, User secondUser, MessageType type) {
+	public Inbox(User firstUser, User secondUser) {
 		this.firstUser = firstUser;
 		this.secondUser = secondUser;
-		this.type = type;
 		this.messages = new ArrayList<Message>();
 	}
 
@@ -80,14 +75,6 @@ public class Inbox {
 
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
-	}
-
-	public MessageType getType() {
-		return type;
-	}
-
-	public void setType(MessageType type) {
-		this.type = type;
 	}
 
 }
