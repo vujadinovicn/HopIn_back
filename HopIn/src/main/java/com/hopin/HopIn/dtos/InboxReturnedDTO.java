@@ -56,7 +56,8 @@ public class InboxReturnedDTO {
 		});
 		if (this.messages.size() > 0)
 			this.lastMessage = this.messages.get(this.messages.size() - 1).getTimeOfSending();
-		this.lastMessage = null;
+		else
+			this.lastMessage = null;
 		this.type = inbox.getType();
 	}
 
@@ -107,5 +108,13 @@ public class InboxReturnedDTO {
 	public void setType(MessageType type) {
 		this.type = type;
 	}
+
+	@Override
+	public String toString() {
+		return "\nInboxReturnedDTO [id=" + id + ", firstUser=" + firstUser + ", secondUser=" + secondUser
+				+ ", lastMessage=" + lastMessage + ", type=" + type + ", messages=" + messages + "]";
+	}
+	
+	
 
 }
