@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.hopin.HopIn.entities.Inbox;
 import com.hopin.HopIn.entities.Message;
+import com.hopin.HopIn.enums.MessageType;
 
 public class InboxReturnedDTO {
 
@@ -15,6 +16,7 @@ public class InboxReturnedDTO {
 	private UserReturnedDTO firstUser;
 	private UserReturnedDTO secondUser;
 	private LocalDateTime lastMessage;
+	private MessageType type;
 	List<MessageReturnedDTO> messages = new ArrayList<MessageReturnedDTO>();
 
 	
@@ -31,6 +33,7 @@ public class InboxReturnedDTO {
 
 	public InboxReturnedDTO(Inbox inbox) {
 		this.id = inbox.getId();
+		this.type = inbox.getType();
 		this.firstUser = new UserReturnedDTO(inbox.getFirstUser());
 		this.secondUser = new UserReturnedDTO(inbox.getSecondUser());
 		for(Message message : inbox.getMessages()) {
@@ -85,6 +88,14 @@ public class InboxReturnedDTO {
 
 	public void setLastMessage(LocalDateTime lastMessage) {
 		this.lastMessage = lastMessage;
+	}
+
+	public MessageType getType() {
+		return type;
+	}
+
+	public void setType(MessageType type) {
+		this.type = type;
 	}
 
 }
