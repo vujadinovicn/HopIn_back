@@ -41,11 +41,11 @@ public class InboxReturnedDTO {
 		this.messages = messages;
 	}
 
-	public InboxReturnedDTO(Inbox inbox, int rideId) {
+	public InboxReturnedDTO(Inbox inbox) {
 		this.id = inbox.getId();
 		this.firstUser = new UserReturnedDTO(inbox.getFirstUser());
 		this.secondUser = new UserReturnedDTO(inbox.getSecondUser());
-		this.rideId = rideId;
+		this.rideId = inbox.getRideId();
 		for (Message message : inbox.getMessages()) {
 			this.messages.add(new MessageReturnedDTO(message, inbox.getId()));
 		}

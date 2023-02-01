@@ -228,6 +228,16 @@ public class UserController {
 			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
+	@GetMapping(value = "{id}/inbox/ride/{rideId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getInboxByRideId(@PathVariable int id, @PathVariable int rideId) {
+		try {
+			return new ResponseEntity<InboxReturnedDTO>(userService.getInboxByRideId(id, rideId), HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		}
+	}
 
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)

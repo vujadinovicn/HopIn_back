@@ -217,7 +217,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 			
 			message = new Message(sender.getId(), receiverId, dto);
 			inboxes = allInboxes.findAllInboxesByIds(sender.getId(), receiverId);
-			inbox = new Inbox(sender, receiver, dto.getType());
+			inbox = new Inbox(sender, receiver, dto.getType(), dto.getRideId());
 			if (inboxes.size() == 1 && inboxes.get(0).getMessages().get(0).getType() == message.getType()) {
 				inbox = inboxes.get(0);
 			} else if (inboxes.size() > 1) {
@@ -317,7 +317,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 		}
 		User user = getCurrentUser();
 		User admin = allUsers.getAnyAdmin().get(0);
-		Inbox supportInbox = new Inbox(user, admin, MessageType.SUPPORT);
+		Inbox supportInbox = new Inbox(user, admin, MessageType.SUPPORT, 1);
 		Inbox savedInbox = allInboxes.save(supportInbox);
 		inboxes.add(0, new InboxReturnedDTO(savedInbox));
 	}
@@ -329,6 +329,23 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Inbox does not exist!");
 		}
 		return new InboxReturnedDTO(found.get());
+	}
+	
+	@Override
+	public InboxReturnedDTO getInboxByRideId(int firstUserId, int rideId) {
+		int secondUserId = getCurrentUser().getId();
+		List<Inbox> inboxes = allInboxes.findAllInboxesByIds(firstUserId, secondUserId);
+		
+		for (Inbox inbox : inboxes) {
+			if (inbox.getType() == MessageType.RIDE && inbox.getRideId() == rideId) {
+				return new InboxReturnedDTO(inbox);
+			}
+		}
+		
+		Inbox newInbox = new Inbox(getCurrentUser(), getById(firstUserId), MessageType.RIDE, rideId);
+		allInboxes.save(newInbox);
+		allInboxes.flush();
+		return new InboxReturnedDTO(newInbox);
 	}
 
 	@Override
