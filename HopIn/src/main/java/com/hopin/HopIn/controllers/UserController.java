@@ -1,10 +1,10 @@
 package com.hopin.HopIn.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,10 +29,10 @@ import org.springframework.web.server.ResponseStatusException;
 import com.hopin.HopIn.dtos.AllMessagesDTO;
 import com.hopin.HopIn.dtos.AllNotesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
-import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.ChangePasswordDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
+import com.hopin.HopIn.dtos.InboxReturnedDTO;
 import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
@@ -40,13 +40,9 @@ import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.ResetPasswordDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
-
-import com.hopin.HopIn.services.WorkingHoursServiceImpl;
-
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -206,6 +202,28 @@ public class UserController {
 			AllMessagesDTO all = userService.getMessages(id);
 			System.out.println(all);
 			return new ResponseEntity<AllMessagesDTO>(all, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
+	@GetMapping(value = "{id}/inbox/all", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getInboxes(@PathVariable int id) {
+		try {
+			List<InboxReturnedDTO> all = userService.getInboxes(id);
+			System.out.println(all);
+			return new ResponseEntity<List<InboxReturnedDTO>>(all, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
+	@GetMapping(value = "{id}/inbox", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getInboxById(@PathVariable int id) {
+		try {
+			return new ResponseEntity<InboxReturnedDTO>(userService.getInboxById(id), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
 		}

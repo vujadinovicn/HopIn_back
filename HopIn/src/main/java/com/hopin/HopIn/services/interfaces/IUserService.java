@@ -1,5 +1,7 @@
 package com.hopin.HopIn.services.interfaces;
 
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -10,6 +12,7 @@ import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.ChangePasswordDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
+import com.hopin.HopIn.dtos.InboxReturnedDTO;
 import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
@@ -65,5 +68,9 @@ public interface IUserService {
 	public void changePassword(int id, ChangePasswordDTO dto);
 
 	public void sendResetPasswordMail(String email);
+
+	public List<InboxReturnedDTO> getInboxes(int id);
+
+	public InboxReturnedDTO getInboxById(int id);
 
 }
