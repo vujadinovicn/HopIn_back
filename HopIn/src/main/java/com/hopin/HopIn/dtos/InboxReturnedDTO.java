@@ -17,6 +17,7 @@ public class InboxReturnedDTO {
 	private UserReturnedDTO secondUser;
 	private LocalDateTime lastMessage;
 	private MessageType type;
+	private int rideId;
 	List<MessageReturnedDTO> messages = new ArrayList<MessageReturnedDTO>();
 
 	public InboxReturnedDTO(int id, UserReturnedDTO firstUser, UserReturnedDTO secondUser, LocalDateTime lastMessage,
@@ -40,10 +41,11 @@ public class InboxReturnedDTO {
 		this.messages = messages;
 	}
 
-	public InboxReturnedDTO(Inbox inbox) {
+	public InboxReturnedDTO(Inbox inbox, int rideId) {
 		this.id = inbox.getId();
 		this.firstUser = new UserReturnedDTO(inbox.getFirstUser());
 		this.secondUser = new UserReturnedDTO(inbox.getSecondUser());
+		this.rideId = rideId;
 		for (Message message : inbox.getMessages()) {
 			this.messages.add(new MessageReturnedDTO(message, inbox.getId()));
 		}
@@ -113,6 +115,14 @@ public class InboxReturnedDTO {
 	public String toString() {
 		return "\nInboxReturnedDTO [id=" + id + ", firstUser=" + firstUser + ", secondUser=" + secondUser
 				+ ", lastMessage=" + lastMessage + ", type=" + type + ", messages=" + messages + "]";
+	}
+
+	public int getRideId() {
+		return rideId;
+	}
+
+	public void setRideId(int rideId) {
+		this.rideId = rideId;
 	}
 	
 	
