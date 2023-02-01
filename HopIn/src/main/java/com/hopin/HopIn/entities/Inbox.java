@@ -25,10 +25,10 @@ public class Inbox {
 	
 	private int rideId;
 	
-	@ManyToOne(cascade = { CascadeType.ALL })
+	@ManyToOne(cascade = { CascadeType.REFRESH })
 	private User firstUser;
 	
-	@ManyToOne(cascade = { CascadeType.ALL })
+	@ManyToOne(cascade = { CascadeType.REFRESH })
 	private User secondUser;
 
 	@OneToMany(cascade = { CascadeType.ALL })
