@@ -74,10 +74,9 @@ public class RideController {
 		try {
 //			if (dto.getScheduledTime() != null)
 //				dto.setScheduledTime(dto.getScheduledTime().plusHours(1));
-			
 			RideReturnedDTO ride = service.add(dto);
-			
-			ride.setScheduledTimeFormatted(ride.getScheduledTime().toString());
+			if (ride.getScheduledTime() != null)
+				ride.setScheduledTimeFormatted(ride.getScheduledTime().toString());
 			System.out.println("/topic/driver/ride-offers/" + ride.getDriver().getId());
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-pending", ride.getDriver().getId());
 			this.simpMessagingTemplate.convertAndSend("/topic/driver/ride-offers/" + ride.getDriver().getId(), ride);
@@ -94,6 +93,7 @@ public class RideController {
 			ExceptionDTO ex = new ExceptionDTO("Passenger already in drive!");
 			System.out.println("Passenger already in drive!");
 			res = new ResponseEntity<ExceptionDTO>(ex, HttpStatus.BAD_REQUEST);
+			
 		} catch (NoAvailableDriversException e) {
 			ExceptionDTO ex = new ExceptionDTO("No available drivers!");
 			System.out.println("No available drivers!");
