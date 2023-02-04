@@ -4,4 +4,6 @@ public interface IScheduledService {
 
 	void checkIfVehicleArrivedAtDeparture();
 
+	void notifyAboutScheduledRide();
+
 }

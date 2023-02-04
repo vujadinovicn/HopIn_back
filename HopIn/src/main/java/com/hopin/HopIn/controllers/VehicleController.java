@@ -52,7 +52,8 @@ public class VehicleController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
-		} 
+		}  
+		
 	}
 	
 	@PutMapping(value="/{rideId}/timer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) 

@@ -238,7 +238,7 @@ public class DriverController {
 	}
 	
 	@PostMapping(value = "/{id}/working-hour", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//	@PreAuthorize("hasRole('DRIVER')")
+	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> addWorkingHours(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId, @Valid @RequestBody WorkingHoursStartDTO dto) {
 		try {     
 			ObjectMapper mapper = new ObjectMapper();
@@ -258,7 +258,7 @@ public class DriverController {
 		} catch (JsonProcessingException e) {
 			return new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
 		}
-	}    
+	}     
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 //	@PreAuthorize("hasRole('DRIVER')")

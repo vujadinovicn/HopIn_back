@@ -439,20 +439,21 @@ public class DriverServiceImpl implements IDriverService {
 	@Override
 	public List<ActiveVehicleDTO> getAllVehicles() {
 		List<Driver> activeDrivers = allDrivers.findByIsActive(true);
+		System.out.println(activeDrivers.size());
 		List<ActiveVehicleDTO> activeVehicles = new ArrayList<ActiveVehicleDTO>();
 		for (Driver driver: activeDrivers) {
 			String status = "normal";
 			if (this.allRides.getPendingRideForDriver(driver.getId()) != null)
 				status = "pending";
-			else if (this.allRides.getAcceptedOrStartedRideForDriver(driver.getId()) != null)
-				status = "active";
+			else if (this.allRides.getActiveRideForDriver(driver.getId()) != null)
+				status = "active"; 
 			activeVehicles.add(new ActiveVehicleDTO(driver.getVehicle().getId(), driver.getId(), driver.getVehicleLocation(), status));	
 		}
-		return activeVehicles;
+		return activeVehicles;  
 	} 
 
 	@Override
 	public Driver getByEmail(String email) {
 		return (Driver) this.userService.getByEmail(email);
 	}
-}
+} 

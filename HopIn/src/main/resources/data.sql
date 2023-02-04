@@ -6,26 +6,25 @@ insert into "locations"("address", "latitude", "longitude") values ('Beograd', 4
 insert into "locations"("address", "latitude", "longitude") values ('Kragujevac',  44.02, 20.92);
 insert into "locations"("address", "latitude", "longitude") values ('Jirecekova', 45.240397, 19.847994);
 
-  
-insert into "vehicle_types" ("name", "price_per_km") values (0, 60);
+insert into "vehicle_types" ("name", "price_per_km") values (0, 60);  
 insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
-insert into "vehicle_types" ("name", "price_per_km") values (2, 100);
+insert into "vehicle_types" ("name", "price_per_km") values (2, 100); 
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Veljka', 'driver@gmail.com', true, false, 'Mark', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Jacobs', '+381603454212', 1);
 insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-030-HR', 'AUDI A6', 4, true, 4, 1);
 
-insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, false);
+insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, false);    
 
 insert into "documents"("name", "document_image", "driver_id") values ('Drivers license 1', 'sss', 2);
 insert into "documents"("name", "document_image", "driver_id") values ('Registration license 1', 'sss', 2);
-  
+   
 insert into "drivers_documents" values (2,1);
 insert into "drivers_documents" values (2,2);     
-
+  
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (false, 95, '2023-01-23T12:21:11', 5, false, false, '2023-01-23T12:10:11', 4, 250, 3, 2, null, 1, 1, 2);
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 100, '2023-01-23T13:50:11', 5, false, false, '2023-01-23T13:11:11', 4, 780, 43, 2, null, 1, 2, 1);
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, '2023-01-21T9:15:11', 5, false, false, '2023-01-21T08:42:11', 4, 360, 24, 2, null, 1, 1, 3);
-insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, '2023-01-25T18:30:11', 5, false, false, '2023-01-25T18:05:11', 4, 290, 4, 2, null, 1, 3, 2);
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 56, '2023-01-31T05:10:45', 5, false, false ,'2023-01-31T05:17:45', 4, 290, 4, 2, null, 1, 3, 2);
 
 insert into "routes"("departure_id", "destination_id", "distance") values (2, 1, 120);
 
@@ -43,7 +42,7 @@ insert into "rides_reviews"("ride_id", "reviews_id") values (1, 2);
 
 
 insert into "routes"("distance", "departure_id", "destination_id") values (95, 1, 2);
-insert into "passengers_favourite_routes"("passenger_id", "favourite_routes_id") values (1,1);
+insert into "passengers_favourite_routes"("passenger_id", "favourite_routes_id") values (1,1); 
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'admin@gmail.com', true, false, 'Mika', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Mikic', '+3819720132 ', 2);
 insert into "admins" ("id") values (3);
@@ -59,7 +58,7 @@ insert into "passengers"("id") values (6);
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'kika@gmail.com', false, false, 'Mika', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null, 'Peric', '+3819720132 ', 0);
 insert into "passengers"("id") values (7);
-
+  
 insert into "driver_account_update_requests"("reason", "status", "admin_id", "driver_id", "type", "time") values (null, 1, null, 2, 0, '2022-12-26T11:11:11');
 insert into "driver_account_update_password_requests"("new_password", "old_password", "id") values('lofi1123', 'larako2', 1);
 insert into "driver_account_update_requests"("reason", "status", "admin_id", "driver_id", "type", "time") values ('Too many password changes this month.', 2, 3, 2, 0, '2022-12-26T11:11:11');
@@ -93,26 +92,26 @@ insert into "vehicles"("baby_transport", "driver_id", "license_number", "model",
 
 insert into "drivers"("id", "vehicle_id", "is_active") values (8, 2, false);  
 
-insert into "rides_passengers"("ride_id", "passengers_id") values (1, 6);
+insert into "rides_passengers"("ride_id", "passengers_id") values (1, 6); 
 
 --insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Pleasant.', 3, 1, 5, 1);
---insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Tidy and spacious.', 4, 0, 5, 1);
+--insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Tidy and spacious.', 4, 0, 5, 1); 
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Great guy.', 5, 1, 6, 1);
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Clean and new.', 4, 0, 6, 1);
-
+ 
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Would ride again.', 5, 1, 5, 3);
 insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Nice.', 4, 0, 5, 3);
 
-insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Would ride again.', 5, 1, 1, 4);
-insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Nice.', 4, 0, 1, 4);
+--insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Would ride again.', 5, 1, 1, 4);
+--insert into "reviews" ("comment", "rating", "type", "passenger_id", "ride_id") values ('Nice.', 4, 0, 1, 4);
 
-
-insert into "rides_reviews"("ride_id", "reviews_id") values (1, 3);
+  
+insert into "rides_reviews"("ride_id", "reviews_id") values (1, 3); 
 insert into "rides_reviews"("ride_id", "reviews_id") values (1, 4);
-insert into "rides_reviews"("ride_id", "reviews_id") values (1, 5);
-insert into "rides_reviews"("ride_id", "reviews_id") values (1, 6);
-insert into "rides_reviews"("ride_id", "reviews_id") values (4, 7);
-insert into "rides_reviews"("ride_id", "reviews_id") values (4, 8);
+insert into "rides_reviews"("ride_id", "reviews_id") values (3, 5);
+insert into "rides_reviews"("ride_id", "reviews_id") values (3, 6);   
+--insert into "rides_reviews"("ride_id", "reviews_id") values (4, 7);
+--insert into "rides_reviews"("ride_id", "reviews_id") values (4, 8);
 
 insert into "inboxes" ("first_user_id", "second_user_id", "type", "ride_id") values (5, 3, 1, 1);
 

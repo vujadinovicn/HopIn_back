@@ -30,6 +30,7 @@ public class RideReturnedDTO {
 	private LocalDateTime scheduledTime;
 	private String distanceFormatted;
 	private String durationFormatted;
+	private String scheduledTimeFormatted;
 
 	
 	public RideReturnedDTO(int id, LocalDateTime startTime, LocalDateTime endTime, double totalCost,
@@ -118,6 +119,17 @@ public class RideReturnedDTO {
 	}
 	
 	
+	
+
+	public String getScheduledTimeFormatted() {
+		return scheduledTimeFormatted;
+	}
+
+
+	public void setScheduledTimeFormatted(String scheduledTimeFormatted) {
+		this.scheduledTimeFormatted = scheduledTimeFormatted;
+	}
+
 
 	public double getDistance() {
 		return distance;

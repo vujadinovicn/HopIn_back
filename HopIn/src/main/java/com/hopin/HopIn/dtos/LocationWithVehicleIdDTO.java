@@ -12,7 +12,7 @@ public class LocationWithVehicleIdDTO {
 	public LocationWithVehicleIdDTO() {
 		 
 	}
-	
+	 
 	public LocationWithVehicleIdDTO(int id, Location vehicleLocation) {
 		super();
 		this.vehicleId = id;

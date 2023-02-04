@@ -70,6 +70,7 @@ public class RideEstimationService implements IRideEstimationService{
 			} else if (query == "distance") {
 				JSONObject distance = elements.getJSONObject(0).getJSONObject("distance");
 				queryResponse = distance.getString("text");
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -79,6 +80,7 @@ public class RideEstimationService implements IRideEstimationService{
 		return queryResponse;
 	}
 
+	
 	private String setDistanceMatrixUrl(String firstLocationLat, String firstLocationLng, String secondLocationLat, String secondLocationLng) {
 		String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" +
 				firstLocationLat + "," + firstLocationLng +
