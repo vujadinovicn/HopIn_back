@@ -73,4 +73,6 @@ public interface IUserService {
 
 	public InboxReturnedDTO getInboxById(int id);
 
+	public InboxReturnedDTO getInboxByRideId(int firstUserId, int rideId);
+
 }

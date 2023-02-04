@@ -23,10 +23,12 @@ public class Inbox {
 	
 	private MessageType type;
 	
-	@ManyToOne(cascade = { CascadeType.ALL })
+	private int rideId;
+	
+	@ManyToOne(cascade = { CascadeType.REFRESH })
 	private User firstUser;
 	
-	@ManyToOne(cascade = { CascadeType.ALL })
+	@ManyToOne(cascade = { CascadeType.REFRESH })
 	private User secondUser;
 
 	@OneToMany(cascade = { CascadeType.ALL })
@@ -54,10 +56,11 @@ public class Inbox {
 		this.messages = messages;
 	}
 
-	public Inbox(User firstUser, User secondUser, MessageType type) {
+	public Inbox(User firstUser, User secondUser, MessageType type, int rideId) {
 		this.firstUser = firstUser;
 		this.secondUser = secondUser;
 		this.type = type;
+		this.rideId = rideId;
 		this.messages = new ArrayList<Message>();
 	}
 
@@ -99,6 +102,14 @@ public class Inbox {
 
 	public void setType(MessageType type) {
 		this.type = type;
+	}
+
+	public int getRideId() {
+		return rideId;
+	}
+
+	public void setRideId(int rideId) {
+		this.rideId = rideId;
 	}
 
 }
