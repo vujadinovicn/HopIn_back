@@ -6,7 +6,6 @@ insert into "locations"("address", "latitude", "longitude") values ('Beograd', 4
 insert into "locations"("address", "latitude", "longitude") values ('Kragujevac',  44.02, 20.92);
 insert into "locations"("address", "latitude", "longitude") values ('Jirecekova', 45.240397, 19.847994);
 
-  
 insert into "vehicle_types" ("name", "price_per_km") values (0, 60);  
 insert into "vehicle_types" ("name", "price_per_km") values (1, 80);
 insert into "vehicle_types" ("name", "price_per_km") values (2, 100); 
@@ -14,7 +13,7 @@ insert into "vehicle_types" ("name", "price_per_km") values (2, 100);
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Veljka', 'driver@gmail.com', true, false, 'Mark', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Jacobs', '+381603454212', 1);
 insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-030-HR', 'AUDI A6', 4, true, 4, 1);
 
-insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, true);    
+insert into "drivers"("id", "vehicle_id", "is_active") values (2, 1, false);    
 
 insert into "documents"("name", "document_image", "driver_id") values ('Drivers license 1', 'sss', 2);
 insert into "documents"("name", "document_image", "driver_id") values ('Registration license 1', 'sss', 2);

@@ -30,5 +30,5 @@ public class RideOfferResponseDTO {
 	public String toString() {
 		return "RideOfferResponseDTO [response=" + response + ", ride=" + ride + "]";
 	}
-
+	
 }
