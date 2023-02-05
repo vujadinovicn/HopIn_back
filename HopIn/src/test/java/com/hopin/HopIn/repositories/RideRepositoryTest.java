@@ -40,7 +40,18 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		assertTrue(ret.size() == 1);
 		assertTrue(ret.get(0).getId() == 2);
 	}
+	
+	@Test
+	public void shouldGetZeroRidesForWrongRange() {
+		LocalDateTime end = LocalDate.of(2022, 2, 7).atStartOfDay();
+		LocalDateTime start = LocalDate.of(2022, 1, 6).atStartOfDay();
+		
+		List<Ride> ret = this.rideRepository.getAllRidesBetweenDates(start, end);
+		assertTrue(ret.size() == 0);
+	}
 
+	
+//	TODO: add bad query case
 	@Test
 	public void shouldGetAllScheduledRidesForTodayForPassenger() {
 		LocalDateTime date = LocalDate.of(2023, 2, 5).atStartOfDay();
@@ -51,6 +62,8 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		assertTrue(ret.size() == 1);
 		assertTrue(ret.get(0).getId() == 1);
 	}
+	
+
 	
 	@Test
 	public void shouldGetAllPassenegerRidesBetweenDates() {
@@ -70,7 +83,16 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		}
 		
 		assertTrue(passenger.getId() == id);
+	}
+	
+	@Test
+	public void shouldGetZeroPassengerRidesForWrongRange() {
+		LocalDateTime end = LocalDate.of(2022, 2, 7).atStartOfDay();
+		LocalDateTime start = LocalDate.of(2022, 1, 6).atStartOfDay();
+		int id = 1;
 		
+		List<Ride> ret = this.rideRepository.getAllPassengerRidesBetweenDates(id, start, end);
+		assertTrue(ret.size() == 0);
 	}
 	
 	
@@ -89,6 +111,16 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		assertTrue(driver.getId() == id);
 	}
 	
+	@Test
+	public void shouldGetZeroDriverRidesForWrongRange() {
+		LocalDateTime end = LocalDate.of(2022, 2, 7).atStartOfDay();
+		LocalDateTime start = LocalDate.of(2022, 1, 6).atStartOfDay();
+		int id = 1;
+		
+		List<Ride> ret = this.rideRepository.getAllDriverRidesBetweenDates(id, start, end);
+		assertTrue(ret.size() == 0);
+	}
+	
 	@Test 
 	public void shouldGetAllPassengerRides() {
 		int id = 1;
@@ -104,6 +136,7 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 			assertTrue(id == currentId);
 		}
 	}
+	
 	
 	@Test
 	public void shouldGetAllPassengerRidesPaginated() {
@@ -123,17 +156,14 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 	}
 	
 	@Test
-	public void shouldGetAllUserRidesPaginates() {
+	public void shouldGetAllUserRidesPaginatedForPassengerId() {
 		int passengerId = 1;
-		int driverId = 2;
 		Pageable pageable = PageRequest.of(0, 5);
 
 		
-		List<Ride> passengerRides = this.rideRepository.getAllUserRides(driverId, pageable);
-		List<Ride> driverRides = this.rideRepository.getAllUserRides(passengerId, pageable);
+		List<Ride> passengerRides = this.rideRepository.getAllUserRides(passengerId, pageable);
 		
 		assertEquals(passengerRides.size(), 2);
-		assertEquals(driverRides.size(), 2);
 		
 		for (Ride ride : passengerRides) {
 			int currentId = 0;
@@ -142,12 +172,31 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 			}
 			assertTrue(passengerId == currentId);
 		}
+	}
+	
+	@Test
+	public void shouldGetAllUserRidesPaginatedForDriverId() {
+		int driverId = 2;
+		Pageable pageable = PageRequest.of(0, 5);
+
+		
+		List<Ride> driverRides = this.rideRepository.getAllUserRides(driverId, pageable);
+		
+		assertEquals(driverRides.size(), 2);
 		
 		for(Ride ride : driverRides) {
 			assertTrue(driverId == ride.getDriver().getId());
 		}
 	}
 	
-	
+	@Test
+	public void shouldGetZeroUserRidesForBadPassengerId() {
+		int id = 0;
+		Pageable pageable = PageRequest.of(0, 5);
+
+		List<Ride> ret = this.rideRepository.getAllUserRides(id, pageable);
+		
+		assertTrue(ret.size() == 0);
+	}
 
 }
