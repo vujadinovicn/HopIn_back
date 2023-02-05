@@ -7,9 +7,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 
 import com.hopin.HopIn.entities.Ride;
 
+@Repository
 public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndSortingRepository<Ride, Integer> {
 	
 	@Query(value = "select * from \"rides\" where \"start_time\" between :from and :to order by \"start_time\"", nativeQuery=true)

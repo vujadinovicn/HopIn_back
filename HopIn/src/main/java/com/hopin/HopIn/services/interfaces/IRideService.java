@@ -75,7 +75,7 @@ public interface IRideService {
 
 	public AllPassengerRidesDTO getAllDriverRides(int id);
 
-	List<Ride> getAllAcceptedRides();
+	public List<Ride> getAllAcceptedRides();
 
 	public RideReturnedDTO startRideToDeparture(int id);
 
