@@ -52,17 +52,47 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		assertTrue(ret.size() == 0);
 	}
 
-	
-//	TODO: add bad query case
+
 	@Test
 	public void shouldGetAllScheduledRidesForTodayForPassenger() {
-		LocalDateTime date = LocalDate.of(2023, 2, 5).atStartOfDay();
+		LocalDateTime date = LocalDate.of(2023, 2, 6).atStartOfDay();
 		int userId = 1;
 		
 		List<Ride> ret = this.rideRepository.getAllScheduledRideForTodayForPassenger(userId, date);
 		
 		assertTrue(ret.size() == 1);
 		assertTrue(ret.get(0).getId() == 1);
+	}
+	
+	@Test
+	public void shouldReturnEmptyListForPassengerForWrongDate() {
+		LocalDateTime date = LocalDate.of(2023, 2, 3).atStartOfDay();
+		int userId = 1;
+		
+		List<Ride> ret = this.rideRepository.getAllScheduledRideForTodayForPassenger(userId, date);
+		
+		assertTrue(ret.size() == 0);
+	}
+	
+	@Test
+	public void shouldGetAllScheduledRidesForTodayForDriver() {
+		LocalDateTime date = LocalDate.of(2023, 2, 6).atStartOfDay();
+		int userId = 2;
+		
+		List<Ride> ret = this.rideRepository.getAllScheduledRideForTodayForDriver(userId, date);
+		
+		assertTrue(ret.size() == 1);
+		assertTrue(ret.get(0).getId() == 1);
+	}
+	
+	@Test
+	public void shouldReturnEmptyListForDriverForWrongDate() {
+		LocalDateTime date = LocalDate.of(2023, 2, 3).atStartOfDay();
+		int userId = 2;
+		
+		List<Ride> ret = this.rideRepository.getAllScheduledRideForTodayForDriver(userId, date);
+		
+		assertTrue(ret.size() == 0);
 	}
 	
 	

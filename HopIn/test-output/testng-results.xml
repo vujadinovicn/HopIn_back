@@ -1,21 +1,307 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results ignored="24" total="25" passed="1" failed="0" skipped="0">
+<testng-results ignored="0" total="28" passed="28" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2023-02-05T20:16:29 CET" name="Default suite" finished-at="2023-02-05T20:16:44 CET" duration-ms="14909">
+  <suite started-at="2023-02-05T20:23:11 CET" name="Default suite" finished-at="2023-02-05T20:23:28 CET" duration-ms="16512">
     <groups>
     </groups>
-    <test started-at="2023-02-05T20:16:29 CET" name="Default test" finished-at="2023-02-05T20:16:44 CET" duration-ms="14909">
+    <test started-at="2023-02-05T20:23:11 CET" name="Default test" finished-at="2023-02-05T20:23:28 CET" duration-ms="16512">
       <class name="com.hopin.HopIn.repositories.RideRepositoryTest">
-        <test-method is-config="true" signature="springTestContextBeforeTestClass()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@2b43529a]" started-at="2023-02-05T20:16:29 CET" name="springTestContextBeforeTestClass" finished-at="2023-02-05T20:16:29 CET" duration-ms="30" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestClass()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:11 CET" name="springTestContextBeforeTestClass" finished-at="2023-02-05T20:23:11 CET" duration-ms="33" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestClass -->
-        <test-method is-config="true" signature="springTestContextPrepareTestInstance()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@2b43529a]" started-at="2023-02-05T20:16:29 CET" name="springTestContextPrepareTestInstance" finished-at="2023-02-05T20:16:42 CET" depends-on-methods="org.springframework.test.context.testng.AbstractTestNGSpringContextTests.springTestContextBeforeTestClass" duration-ms="13645" status="PASS">
+        <test-method is-config="true" signature="springTestContextPrepareTestInstance()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:11 CET" name="springTestContextPrepareTestInstance" finished-at="2023-02-05T20:23:25 CET" depends-on-methods="org.springframework.test.context.testng.AbstractTestNGSpringContextTests.springTestContextBeforeTestClass" duration-ms="13981" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextPrepareTestInstance -->
-        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@2b43529a]" started-at="2023-02-05T20:16:42 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:16:43 CET" duration-ms="620" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:25 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:26 CET" duration-ms="617" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetActiveRideForDriverThatHasActiveRideInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetActiveRideForDriverThatHasActiveRideInDb()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="shouldGetActiveRideForDriverThatHasActiveRideInDb" finished-at="2023-02-05T20:23:26 CET" duration-ms="426" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetActiveRideForDriverThatHasActiveRideInDb -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:26 CET" duration-ms="33" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetActiveRideForDriverThatHasActiveRideInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:26 CET" duration-ms="11" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetActiveRideForPassengerThatHasActiveRideInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetActiveRideForPassengerThatHasActiveRideInDb()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="shouldGetActiveRideForPassengerThatHasActiveRideInDb" finished-at="2023-02-05T20:23:26 CET" duration-ms="21" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetActiveRideForPassengerThatHasActiveRideInDb -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:26 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetActiveRideForPassengerThatHasActiveRideInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:26 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllDriverRidesBetweenDates()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetAllDriverRidesBetweenDates()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="shouldGetAllDriverRidesBetweenDates" finished-at="2023-02-05T20:23:26 CET" duration-ms="22" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetAllDriverRidesBetweenDates -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:26 CET" duration-ms="11" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllDriverRidesBetweenDates()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:26 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllPassenegerRidesBetweenDates()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetAllPassenegerRidesBetweenDates()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:26 CET" name="shouldGetAllPassenegerRidesBetweenDates" finished-at="2023-02-05T20:23:27 CET" duration-ms="63" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetAllPassenegerRidesBetweenDates -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="15" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllPassenegerRidesBetweenDates()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllPassengerRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetAllPassengerRides()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetAllPassengerRides" finished-at="2023-02-05T20:23:27 CET" duration-ms="32" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetAllPassengerRides -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="10" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllPassengerRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllPassengerRidesPaginated()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetAllPassengerRidesPaginated()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetAllPassengerRidesPaginated" finished-at="2023-02-05T20:23:27 CET" duration-ms="35" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetAllPassengerRidesPaginated -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="9" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllPassengerRidesPaginated()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllRidesBetweenDates()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetAllRidesBetweenDates()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetAllRidesBetweenDates" finished-at="2023-02-05T20:23:27 CET" duration-ms="15" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetAllRidesBetweenDates -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllRidesBetweenDates()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllScheduledRidesForTodayForDriver()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetAllScheduledRidesForTodayForDriver()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetAllScheduledRidesForTodayForDriver" finished-at="2023-02-05T20:23:27 CET" duration-ms="18" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetAllScheduledRidesForTodayForDriver -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="9" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllScheduledRidesForTodayForDriver()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllScheduledRidesForTodayForPassenger()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetAllScheduledRidesForTodayForPassenger()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetAllScheduledRidesForTodayForPassenger" finished-at="2023-02-05T20:23:27 CET" duration-ms="18" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetAllScheduledRidesForTodayForPassenger -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="13" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllScheduledRidesForTodayForPassenger()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="6" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllUserRidesPaginatedForDriverId()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetAllUserRidesPaginatedForDriverId()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetAllUserRidesPaginatedForDriverId" finished-at="2023-02-05T20:23:27 CET" duration-ms="18" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetAllUserRidesPaginatedForDriverId -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllUserRidesPaginatedForDriverId()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="9" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllUserRidesPaginatedForPassengerId()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetAllUserRidesPaginatedForPassengerId()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetAllUserRidesPaginatedForPassengerId" finished-at="2023-02-05T20:23:27 CET" duration-ms="32" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetAllUserRidesPaginatedForPassengerId -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="9" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllUserRidesPaginatedForPassengerId()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="8" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -26,11 +312,11 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestMethod -->
-        <test-method signature="shouldGetFirstUpcomingRideForDriver()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@2b43529a]" started-at="2023-02-05T20:16:43 CET" name="shouldGetFirstUpcomingRideForDriver" finished-at="2023-02-05T20:16:43 CET" duration-ms="455" status="PASS">
+        <test-method signature="shouldGetFirstUpcomingRideForDriver()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetFirstUpcomingRideForDriver" finished-at="2023-02-05T20:23:27 CET" duration-ms="19" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- shouldGetFirstUpcomingRideForDriver -->
-        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@2b43529a]" started-at="2023-02-05T20:16:43 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:16:44 CET" duration-ms="33" status="PASS">
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="8" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -41,7 +327,423 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestMethod -->
-        <test-method is-config="true" signature="springTestContextAfterTestClass()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@2b43529a]" started-at="2023-02-05T20:16:44 CET" name="springTestContextAfterTestClass" finished-at="2023-02-05T20:16:44 CET" duration-ms="4" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="6" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetNullPassengerPandingRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetNullPassengerPandingRides()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetNullPassengerPandingRides" finished-at="2023-02-05T20:23:27 CET" duration-ms="211" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetNullPassengerPandingRides -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetNullPassengerPandingRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="6" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetPendingRideForDriver()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetPendingRideForDriver()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetPendingRideForDriver" finished-at="2023-02-05T20:23:27 CET" duration-ms="18" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetPendingRideForDriver -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetPendingRideForDriver()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetPendingRideForPassenger()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetPendingRideForPassenger()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetPendingRideForPassenger" finished-at="2023-02-05T20:23:27 CET" duration-ms="66" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetPendingRideForPassenger -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="10" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetPendingRideForPassenger()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetScheduledRidesForDriverThatHasRideWithStatus1AndScheduledTimeInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetScheduledRidesForDriverThatHasRideWithStatus1AndScheduledTimeInDb()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetScheduledRidesForDriverThatHasRideWithStatus1AndScheduledTimeInDb" finished-at="2023-02-05T20:23:27 CET" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetScheduledRidesForDriverThatHasRideWithStatus1AndScheduledTimeInDb -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="11" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetScheduledRidesForDriverThatHasRideWithStatus1AndScheduledTimeInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="6" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetScheduledRidesForPassengerThatHasRideWithStatus1AndScheduledTimeInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetScheduledRidesForPassengerThatHasRideWithStatus1AndScheduledTimeInDb()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetScheduledRidesForPassengerThatHasRideWithStatus1AndScheduledTimeInDb" finished-at="2023-02-05T20:23:27 CET" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetScheduledRidesForPassengerThatHasRideWithStatus1AndScheduledTimeInDb -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="10" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetScheduledRidesForPassengerThatHasRideWithStatus1AndScheduledTimeInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="5" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetZeroDriverRidesForWrongRange()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetZeroDriverRidesForWrongRange()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetZeroDriverRidesForWrongRange" finished-at="2023-02-05T20:23:27 CET" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetZeroDriverRidesForWrongRange -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="9" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetZeroDriverRidesForWrongRange()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="6" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetZeroPassengerRidesForWrongRange()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetZeroPassengerRidesForWrongRange()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetZeroPassengerRidesForWrongRange" finished-at="2023-02-05T20:23:27 CET" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetZeroPassengerRidesForWrongRange -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="9" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetZeroPassengerRidesForWrongRange()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="6" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetZeroRidesForWrongRange()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetZeroRidesForWrongRange()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldGetZeroRidesForWrongRange" finished-at="2023-02-05T20:23:27 CET" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetZeroRidesForWrongRange -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetZeroRidesForWrongRange()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnAllAcceptedRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldReturnAllAcceptedRides()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldReturnAllAcceptedRides" finished-at="2023-02-05T20:23:27 CET" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldReturnAllAcceptedRides -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="10" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnAllAcceptedRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="11" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnEmptyListForDriverForWrongDate()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldReturnEmptyListForDriverForWrongDate()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldReturnEmptyListForDriverForWrongDate" finished-at="2023-02-05T20:23:27 CET" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldReturnEmptyListForDriverForWrongDate -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="6" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnEmptyListForDriverForWrongDate()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:27 CET" duration-ms="5" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnEmptyListForDriverThatHasNoScheduledRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldReturnEmptyListForDriverThatHasNoScheduledRides()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:27 CET" name="shouldReturnEmptyListForDriverThatHasNoScheduledRides" finished-at="2023-02-05T20:23:28 CET" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldReturnEmptyListForDriverThatHasNoScheduledRides -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnEmptyListForDriverThatHasNoScheduledRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="6" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnEmptyListForPassengerForWrongDate()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldReturnEmptyListForPassengerForWrongDate()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="shouldReturnEmptyListForPassengerForWrongDate" finished-at="2023-02-05T20:23:28 CET" duration-ms="12" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldReturnEmptyListForPassengerForWrongDate -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnEmptyListForPassengerForWrongDate()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnEmptyListForPassengerThatHasNoScheduledRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldReturnEmptyListForPassengerThatHasNoScheduledRides()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="shouldReturnEmptyListForPassengerThatHasNoScheduledRides" finished-at="2023-02-05T20:23:28 CET" duration-ms="10" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldReturnEmptyListForPassengerThatHasNoScheduledRides -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnEmptyListForPassengerThatHasNoScheduledRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="5" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnNullForDriverThatHaNosActiveRideSInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldReturnNullForDriverThatHaNosActiveRideSInDb()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="shouldReturnNullForDriverThatHaNosActiveRideSInDb" finished-at="2023-02-05T20:23:28 CET" duration-ms="11" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldReturnNullForDriverThatHaNosActiveRideSInDb -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="9" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnNullForDriverThatHaNosActiveRideSInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="6" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnNullForDriverWithNoPendingRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldReturnNullForDriverWithNoPendingRides()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="shouldReturnNullForDriverWithNoPendingRides" finished-at="2023-02-05T20:23:28 CET" duration-ms="8" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldReturnNullForDriverWithNoPendingRides -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnNullForDriverWithNoPendingRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="7" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnNullForPassengerThatHaNosActiveRidesInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldReturnNullForPassengerThatHaNosActiveRidesInDb()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="shouldReturnNullForPassengerThatHaNosActiveRidesInDb" finished-at="2023-02-05T20:23:28 CET" duration-ms="7" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldReturnNullForPassengerThatHaNosActiveRidesInDb -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-05T20:23:28 CET" duration-ms="8" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.repositories.RideRepositoryTest.shouldReturnNullForPassengerThatHaNosActiveRidesInDb()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextAfterTestClass()[pri:0, instance:com.hopin.HopIn.repositories.RideRepositoryTest@25748410]" started-at="2023-02-05T20:23:28 CET" name="springTestContextAfterTestClass" finished-at="2023-02-05T20:23:28 CET" duration-ms="4" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestClass -->
