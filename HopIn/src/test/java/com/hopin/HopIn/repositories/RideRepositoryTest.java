@@ -37,7 +37,7 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		LocalDateTime end = LocalDate.of(2023, 1, 6).atStartOfDay();
 		
 		List<Ride> ret = this.rideRepository.getAllRidesBetweenDates(start, end);
-
+		
 		assertTrue(ret.size() == 1);
 		assertTrue(ret.get(0).getId() == 1);
 	}
@@ -149,6 +149,107 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		}
 	}
 	
+	@Test
+	public void shouldReturnNullForDriverThatHaNosActiveRideSInDb() {
+		int driverId = 2;
+		
+		Ride ride = this.rideRepository.getActiveRideForDriver(driverId);
+		
+		assertTrue(ride == null);
+	}
 	
+	@Test
+	public void shouldGetActiveRideForDriverThatHasActiveRideInDb() {
+		int driverId = 3;
+		
+		Ride ride = this.rideRepository.getActiveRideForDriver(driverId);
+		
+		assertTrue(ride != null);
+		assertTrue(ride.getId() == 3);
+	}
+	
+	@Test
+	public void shouldGetScheduledRidesForDriverThatHasRideWithStatus1AndScheduledTimeInDb() {
+		int driverId = 2;
+		
+		List<Ride> ret = this.rideRepository.getScheduledRidesForDriver(driverId);
+		
+		assertTrue(ret.size() == 1);
+		assertTrue(ret.get(0).getId() == 1);
+	}
 
+	@Test
+	public void shouldReturnEmptyListForDriverThatHasNoScheduledRides() {
+		int driverId = 4;
+		
+		List<Ride> ret = this.rideRepository.getScheduledRidesForDriver(driverId);
+		
+		assertTrue(ret.size() == 0);
+	}
+	
+	@Test
+	public void shouldGetScheduledRidesForPassengerThatHasRideWithStatus1AndScheduledTimeInDb() {
+		int passengerId = 1;
+		
+		List<Ride> ret = this.rideRepository.getScheduledRidesForPassenger(passengerId);
+		
+		assertTrue(ret.size() == 1);
+		assertTrue(ret.get(0).getId() == 1);
+	}
+	
+	@Test
+	public void shouldReturnEmptyListForPassengerThatHasNoScheduledRides() {
+		int passengerId = 2;
+		
+		List<Ride> ret = this.rideRepository.getScheduledRidesForPassenger(passengerId);
+		
+		assertTrue(ret.size() == 0);
+	}
+	
+	@Test
+	public void shouldReturnAllAcceptedRides() {
+		List<Ride> ret = this.rideRepository.getAllAcceptedRides();
+		
+		assertTrue(ret.size() == 1);
+		assertTrue(ret.get(0).getId() == 1);
+	}
+	
+	@Test
+	public void shouldGetPendingRideForDriver() {
+		int driverId = 3;
+		
+		Ride ret = this.rideRepository.getPendingRideForDriver(driverId);
+		
+		assertTrue(ret != null);
+		assertTrue(ret.getId() == 4);
+	}
+	
+	@Test
+	public void shouldReturnNullForDriverWithNoPendingRides() {
+		int driverId = 1;
+		
+		Ride ret = this.rideRepository.getPendingRideForDriver(driverId);
+		
+		assertTrue(ret == null);
+	}
+	
+	@Test
+	public void shouldGetActiveRideForPassengerThatHasActiveRideInDb() {
+		int passengerId = 2;
+		
+		Ride ride = this.rideRepository.getActiveRideForPassenger(passengerId);
+		
+		assertTrue(ride != null);
+		assertTrue(ride.getId() == 3);
+	}
+	
+	@Test
+	public void shouldReturnNullForPassengerThatHaNosActiveRidesInDb() {
+		int passengerId = 1;
+		
+		Ride ride = this.rideRepository.getActiveRideForPassenger(passengerId);
+		
+		assertTrue(ride == null);
+	}
+	
 }
