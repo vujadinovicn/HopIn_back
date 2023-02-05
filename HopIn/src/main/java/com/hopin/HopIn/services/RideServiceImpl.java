@@ -673,12 +673,6 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	@Override
-	public RideReturnedDTO changeRideStatus(int id, RideStatus status) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<Ride> getAllAcceptedRides() {
 		return this.allRides.getAllAcceptedRides();
 	}

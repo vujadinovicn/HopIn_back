@@ -36,8 +36,6 @@ public interface IRideService {
 
 	public PanicRideDTO panicRide(int id, ReasonDTO reason);
 
-	public RideReturnedDTO changeRideStatus(int id, RideStatus status);
-
 	public RideReturnedDTO rejectRide(int id, ReasonDTO reason);
 
 	public AllPanicRidesDTO getAllPanicRides();

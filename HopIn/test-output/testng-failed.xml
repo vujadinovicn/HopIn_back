@@ -3,16 +3,17 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="com.hopin.HopIn.repositories.RideRepositoryTest">
+      <class name="com.hopin.HopIn.services.RideServiceTest">
         <methods>
+          <include name="shouldStartRideForExistingRideWithStatusAccepted"/>
           <include name="springTestContextBeforeTestClass"/>
+          <include name="setup"/>
           <include name="springTestContextBeforeTestMethod"/>
-          <include name="springTestContextPrepareTestInstance"/>
           <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextPrepareTestInstance"/>
           <include name="springTestContextAfterTestMethod"/>
-          <include name="shouldGetAllScheduledRidesForTodayForPassenger"/>
         </methods>
-      </class> <!-- com.hopin.HopIn.repositories.RideRepositoryTest -->
+      </class> <!-- com.hopin.HopIn.services.RideServiceTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

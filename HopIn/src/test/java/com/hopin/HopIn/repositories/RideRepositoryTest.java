@@ -126,7 +126,6 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		assertTrue(ret.size() == 0);
 	}
 	
-	
 	@Test
 	public void shouldGetAllDriverRidesBetweenDates() {
 		LocalDateTime end = LocalDate.of(2023, 2, 1).atStartOfDay();

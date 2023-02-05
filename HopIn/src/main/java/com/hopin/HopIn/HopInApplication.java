@@ -14,5 +14,4 @@ public class HopInApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(HopInApplication.class, args);
 	}
-
 }
