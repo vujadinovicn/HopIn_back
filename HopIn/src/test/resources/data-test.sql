@@ -27,3 +27,4 @@ insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in
 insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1);
 insert into "rides_passengers"("ride_id", "passengers_id") values (2, 1);
 
+
