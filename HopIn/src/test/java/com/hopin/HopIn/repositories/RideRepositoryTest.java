@@ -9,16 +9,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
 
-import com.hopin.HopIn.HopInApplication;
+import com.hopin.HopIn.entities.Driver;
+import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Ride;
-import com.hopin.HopIn.repositories.RideRepository;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -30,27 +30,16 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 	@Autowired
 	private RideRepository rideRepository;
 	
-	@Test
-	public void shouldGetAllPassengerRides() {
-		int id = 1;
-		
-		List<Ride> ret = this.rideRepository.getAllPassengerRides(id);
-		
-		System.out.println(ret);
-		assertEquals(ret.size(), 2);
-	}
 	
 	@Test
 	public void shouldGetAllRidesBetweenDates() {
-		LocalDateTime start = LocalDateTime.of(2023, 2, 7, 7, 50, 1);
-		LocalDateTime end = LocalDateTime.of(2023, 1, 6, 7, 50, 1);
-		
-		System.out.println(start);
-		System.out.println(end);
+		LocalDateTime start = LocalDate.of(2023, 2, 7).atStartOfDay();
+		LocalDateTime end = LocalDate.of(2023, 1, 6).atStartOfDay();
 		
 		List<Ride> ret = this.rideRepository.getAllRidesBetweenDates(start, end);
 
 		assertTrue(ret.size() == 1);
+		assertTrue(ret.get(0).getId() == 1);
 	}
 
 	@Test
@@ -58,14 +47,108 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		LocalDateTime date = LocalDate.of(2023, 2, 6).atStartOfDay();
 		int userId = 1;
 		
-//		List<Ride> ret = this.rideRepository.getAllScheduledRideForTodayForPassenger(userId, date);
+		List<Ride> ret = this.rideRepository.getAllScheduledRideForTodayForPassenger(userId, date);
 		
-		
-//		System.out.println(ret);
-		System.out.println(this.rideRepository.findAll());
-		
-//		assertTrue(ret.size() == 1);
-//		assertTrue(ret.get(0).getId() == 1);
+		assertTrue(ret.size() == 1);
+		assertTrue(ret.get(0).getId() == 1);
 	}
+	
+	@Test
+	public void shouldGetAllPassenegerRidesBetweenDates() {
+		LocalDateTime start = LocalDate.of(2023, 2, 7).atStartOfDay();
+		LocalDateTime end = LocalDate.of(2023, 1, 6).atStartOfDay();
+		int id = 1;
+		
+		List<Ride> ret = this.rideRepository.getAllPassengerRidesBetweenDates(id, start, end);
+		
+		assertTrue(ret.size() == 1);
+		assertTrue(ret.get(0).getId() == 1);
+		
+		Passenger passenger = new Passenger();
+		for(Passenger p : ret.get(0).getPassengers()) {
+			passenger = p;
+			
+		}
+		
+		assertTrue(passenger.getId() == 1);
+		
+	}
+	
+	
+	@Test
+	public void shouldGetAllDriverRidesBetweenDates() {
+		LocalDateTime start = LocalDate.of(2023, 2, 7).atStartOfDay();
+		LocalDateTime end = LocalDate.of(2023, 1, 6).atStartOfDay();
+		int id = 1;
+		
+		List<Ride> ret = this.rideRepository.getAllDriverRidesBetweenDates(id, start, end);
+		
+		assertTrue(ret.size() == 1);
+		assertTrue(ret.get(0).getId() == 1);
+		
+		Driver driver = ret.get(0).getDriver();
+		assertTrue(driver.getId() == 1);
+	}
+	
+	@Test 
+	public void shouldGetAllPassengerRides() {
+		int id = 1;
+		
+		List<Ride> ret = this.rideRepository.getAllPassengerRides(id);
+		
+		assertTrue(ret.size() > 0);
+		for (Ride ride : ret) {
+			int currentId = 0;
+			for (Passenger passenger : ride.getPassengers()) {
+				if (passenger.getId() == id) { currentId = passenger.getId(); }
+			}
+			assertTrue(id == currentId);
+		}
+	}
+	
+	@Test
+	public void shouldGetAllPassengerRidesPaginated() {
+		int id = 1;
+		Pageable pageable = PageRequest.of(0, 5);
+		
+		List<Ride> ret = this.rideRepository.getAllPassengerRidesPaginated(id, pageable);
+		
+		assertTrue(ret.size() <= 5);
+		for (Ride ride : ret) {
+			int currentId = 0;
+			for (Passenger passenger : ride.getPassengers()) {
+				if (passenger.getId() == id) { currentId = passenger.getId(); }
+			}
+			assertTrue(id == currentId);
+		}
+	}
+	
+	@Test
+	public void shouldGetAllUserRidesPaginates() {
+		int passengerId = 1;
+		int driverId = 2;
+		Pageable pageable = PageRequest.of(0, 5);
+
+		
+		List<Ride> passengerRides = this.rideRepository.getAllUserRides(driverId, pageable);
+		List<Ride> driverRides = this.rideRepository.getAllUserRides(passengerId, pageable);
+		
+		assertEquals(passengerRides.size(), 2);
+		assertEquals(driverRides.size(), 2);
+		
+		for (Ride ride : passengerRides) {
+			int currentId = 0;
+			for (Passenger passenger : ride.getPassengers()) {
+				if (passenger.getId() == passengerId) { currentId = passenger.getId(); }
+			}
+			assertTrue(passengerId == currentId);
+		}
+		
+		for(Ride ride : driverRides) {
+			assertTrue(driverId == ride.getDriver().getId());
+		}
+	}
+	
+	
 
 }
