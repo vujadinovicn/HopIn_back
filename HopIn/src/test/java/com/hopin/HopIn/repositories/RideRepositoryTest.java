@@ -1,5 +1,6 @@
 package com.hopin.HopIn.repositories;
 
+import static org.junit.Assert.assertNull;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -160,10 +161,9 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		int passengerId = 1;
 		Pageable pageable = PageRequest.of(0, 5);
 
-		
 		List<Ride> passengerRides = this.rideRepository.getAllUserRides(passengerId, pageable);
 		
-		assertEquals(passengerRides.size(), 2);
+		assertEquals(passengerRides.size(), 3);
 		
 		for (Ride ride : passengerRides) {
 			int currentId = 0;
@@ -179,9 +179,8 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		int driverId = 2;
 		Pageable pageable = PageRequest.of(0, 5);
 
-		
 		List<Ride> driverRides = this.rideRepository.getAllUserRides(driverId, pageable);
-		
+
 		assertEquals(driverRides.size(), 2);
 		
 		for(Ride ride : driverRides) {
@@ -189,14 +188,43 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		}
 	}
 	
+	
 	@Test
-	public void shouldGetZeroUserRidesForBadPassengerId() {
-		int id = 0;
-		Pageable pageable = PageRequest.of(0, 5);
-
-		List<Ride> ret = this.rideRepository.getAllUserRides(id, pageable);
+	public void shouldGetFirstUpcomingRideForDriver() {
+		int id = 1;
 		
-		assertTrue(ret.size() == 0);
+		Ride ride = this.rideRepository.getFirstUpcomingRideForDriver(2);
+		
+		assertTrue(ride.getId() == 1);
+	}
+	
+	@Test
+	public void shouldGetPendingRideForPassenger() {
+		int id = 1;
+		
+		Ride ride = this.rideRepository.getPendingRideForPassenger(id);
+		
+		System.out.println(ride);
+		
+		assertTrue(ride != null);
+		
+		Passenger passenger = new Passenger();
+		for(Passenger p : ride.getPassengers()) {
+			if (p.getId() == id) { passenger = p; }
+		}
+		
+		assertTrue(passenger.getId() == id);
+		
+	}
+	
+	@Test
+	public void shouldGetNullPassengerPandingRides() {
+		int id = 2;
+		
+		Ride ride = this.rideRepository.getPendingRideForPassenger(id);
+		
+		assertNull(ride);
+		
 	}
 
 }

@@ -9,8 +9,8 @@
           <include name="springTestContextBeforeTestMethod"/>
           <include name="springTestContextPrepareTestInstance"/>
           <include name="springTestContextAfterTestClass"/>
+          <include name="shouldGetAllScheduledRidesForTodayForPassenger"/>
           <include name="springTestContextAfterTestMethod"/>
-          <include name="shouldGetAllRidesBetweenDates"/>
         </methods>
       </class> <!-- com.hopin.HopIn.repositories.RideRepositoryTest -->
     </classes>

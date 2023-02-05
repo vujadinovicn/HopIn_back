@@ -9,10 +9,60 @@
 <table>
 <tr><th>Test</th><th># Passed</th><th># Skipped</th><th># Retried</th><th># Failed</th><th>Time (ms)</th><th>Included Groups</th><th>Excluded Groups</th></tr>
 <tr><th colspan="8">Default suite</th></tr>
-<tr><td><a href="#t0">Default test</a></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">19,197</td><td></td><td></td></tr>
+<tr><td><a href="#t0">Default test</a></td><td class="num">13</td><td class="num">0</td><td class="num">0</td><td class="num attn">1</td><td class="num">17,095</td><td></td><td></td></tr>
 </table>
-<table id='summary'><thead><tr><th>Class</th><th>Method</th><th>Start</th><th>Time (ms)</th></tr></thead><tbody><tr><th colspan="4">Default suite</th></tr></tbody><tbody id="t0"><tr><th colspan="4">Default test &#8212; passed</th></tr><tr class="passedeven"><td rowspan="1">com.hopin.HopIn.repositories.RideRepositoryTest</td><td><a href="#m0">shouldGetAllScheduledRidesForTodayForPassenger</a></td><td rowspan="1">1675616722631</td><td rowspan="1">618</td></tr></tbody>
+<table id='summary'><thead><tr><th>Class</th><th>Method</th><th>Start</th><th>Time (ms)</th></tr></thead><tbody><tr><th colspan="4">Default suite</th></tr></tbody><tbody id="t0"><tr><th colspan="4">Default test &#8212; failed</th></tr><tr class="failedeven"><td rowspan="1">com.hopin.HopIn.repositories.RideRepositoryTest</td><td><a href="#m0">shouldGetAllScheduledRidesForTodayForPassenger</a></td><td rowspan="1">1675624225250</td><td rowspan="1">64</td></tr><tr><th colspan="4">Default test &#8212; passed</th></tr><tr class="passedeven"><td rowspan="13">com.hopin.HopIn.repositories.RideRepositoryTest</td><td><a href="#m1">shouldGetAllDriverRidesBetweenDates</a></td><td rowspan="1">1675624224483</td><td rowspan="1">436</td></tr><tr class="passedeven"><td><a href="#m2">shouldGetAllPassenegerRidesBetweenDates</a></td><td rowspan="1">1675624224982</td><td rowspan="1">78</td></tr><tr class="passedeven"><td><a href="#m3">shouldGetAllPassengerRides</a></td><td rowspan="1">1675624225080</td><td rowspan="1">35</td></tr><tr class="passedeven"><td><a href="#m4">shouldGetAllPassengerRidesPaginated</a></td><td rowspan="1">1675624225139</td><td rowspan="1">30</td></tr><tr class="passedeven"><td><a href="#m5">shouldGetAllRidesBetweenDates</a></td><td rowspan="1">1675624225194</td><td rowspan="1">26</td></tr><tr class="passedeven"><td><a href="#m6">shouldGetAllUserRidesPaginatedForDriverId</a></td><td rowspan="1">1675624225338</td><td rowspan="1">20</td></tr><tr class="passedeven"><td><a href="#m7">shouldGetAllUserRidesPaginatedForPassengerId</a></td><td rowspan="1">1675624225382</td><td rowspan="1">33</td></tr><tr class="passedeven"><td><a href="#m8">shouldGetFirstUpcomingRideForDriver</a></td><td rowspan="1">1675624225448</td><td rowspan="1">16</td></tr><tr class="passedeven"><td><a href="#m9">shouldGetNullPassengerPandingRides</a></td><td rowspan="1">1675624225489</td><td rowspan="1">220</td></tr><tr class="passedeven"><td><a href="#m10">shouldGetPendingRideForPassenger</a></td><td rowspan="1">1675624225727</td><td rowspan="1">72</td></tr><tr class="passedeven"><td><a href="#m11">shouldGetZeroDriverRidesForWrongRange</a></td><td rowspan="1">1675624225822</td><td rowspan="1">13</td></tr><tr class="passedeven"><td><a href="#m12">shouldGetZeroPassengerRidesForWrongRange</a></td><td rowspan="1">1675624225851</td><td rowspan="1">25</td></tr><tr class="passedeven"><td><a href="#m13">shouldGetZeroRidesForWrongRange</a></td><td rowspan="1">1675624225899</td><td rowspan="1">22</td></tr></tbody>
 </table>
-<h2>Default test</h2><h3 id="m0">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetAllScheduledRidesForTodayForPassenger</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h2>Default test</h2><h3 id="m0">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetAllScheduledRidesForTodayForPassenger</h3><table class="result"><tr><th>Exception</th></tr><tr><td><div class="stacktrace">java.lang.AssertionError: expected [true] but found [false]
+	at org.testng.Assert.fail(Assert.java:110)
+	at org.testng.Assert.failNotEquals(Assert.java:1413)
+	at org.testng.Assert.assertTrue(Assert.java:56)
+	at org.testng.Assert.assertTrue(Assert.java:66)
+	at com.hopin.HopIn.repositories.RideRepositoryTest.shouldGetAllScheduledRidesForTodayForPassenger(RideRepositoryTest.java:63)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+	at org.testng.internal.invokers.MethodInvocationHelper$1.runTestMethod(MethodInvocationHelper.java:258)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:154)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeHookable(MethodInvocationHelper.java:272)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:669)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:221)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:962)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:194)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.testng.TestRunner.privateRun(TestRunner.java:806)
+	at org.testng.TestRunner.run(TestRunner.java:601)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:433)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:427)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:387)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:330)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1256)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1176)
+	at org.testng.TestNG.runSuites(TestNG.java:1099)
+	at org.testng.TestNG.run(TestNG.java:1067)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+</div></td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m1">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetAllDriverRidesBetweenDates</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m2">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetAllPassenegerRidesBetweenDates</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m3">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetAllPassengerRides</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m4">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetAllPassengerRidesPaginated</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m5">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetAllRidesBetweenDates</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m6">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetAllUserRidesPaginatedForDriverId</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m7">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetAllUserRidesPaginatedForPassengerId</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m8">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetFirstUpcomingRideForDriver</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m9">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetNullPassengerPandingRides</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m10">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetPendingRideForPassenger</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m11">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetZeroDriverRidesForWrongRange</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m12">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetZeroPassengerRidesForWrongRange</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m13">com.hopin.HopIn.repositories.RideRepositoryTest#shouldGetZeroRidesForWrongRange</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
 </body>
 </html>
