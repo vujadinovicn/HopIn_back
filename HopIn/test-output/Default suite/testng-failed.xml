@@ -5,12 +5,12 @@
     <classes>
       <class name="com.hopin.HopIn.repositories.RideRepositoryTest">
         <methods>
-          <include name="shouldGetPendingRideForDriver"/>
           <include name="springTestContextBeforeTestClass"/>
           <include name="springTestContextBeforeTestMethod"/>
           <include name="springTestContextPrepareTestInstance"/>
           <include name="springTestContextAfterTestClass"/>
           <include name="springTestContextAfterTestMethod"/>
+          <include name="shouldGetAllScheduledRidesForTodayForPassenger"/>
         </methods>
       </class> <!-- com.hopin.HopIn.repositories.RideRepositoryTest -->
     </classes>

@@ -44,4 +44,5 @@ insert into "users"("address", "email", "is_activated", "is_blocked", "name", "p
 insert into "passengers"("id") values (3);
 
 insert into "rides_passengers"("ride_id", "passengers_id") values (3, 3);
+insert into "rides_passengers"("ride_id", "passengers_id") values (4, 1);
 

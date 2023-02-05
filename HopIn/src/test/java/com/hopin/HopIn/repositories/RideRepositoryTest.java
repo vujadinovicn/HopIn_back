@@ -1,5 +1,6 @@
 package com.hopin.HopIn.repositories;
 
+import static org.junit.Assert.assertNull;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -33,18 +34,29 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 	
 	@Test
 	public void shouldGetAllRidesBetweenDates() {
-		LocalDateTime start = LocalDate.of(2023, 2, 7).atStartOfDay();
-		LocalDateTime end = LocalDate.of(2023, 1, 6).atStartOfDay();
+		LocalDateTime end = LocalDate.of(2023, 2, 7).atStartOfDay();
+		LocalDateTime start = LocalDate.of(2023, 1, 6).atStartOfDay();
 		
 		List<Ride> ret = this.rideRepository.getAllRidesBetweenDates(start, end);
-		
+
 		assertTrue(ret.size() == 1);
-		assertTrue(ret.get(0).getId() == 1);
+		assertTrue(ret.get(0).getId() == 2);
+	}
+	
+	@Test
+	public void shouldGetZeroRidesForWrongRange() {
+		LocalDateTime end = LocalDate.of(2022, 2, 7).atStartOfDay();
+		LocalDateTime start = LocalDate.of(2022, 1, 6).atStartOfDay();
+		
+		List<Ride> ret = this.rideRepository.getAllRidesBetweenDates(start, end);
+		assertTrue(ret.size() == 0);
 	}
 
+	
+//	TODO: add bad query case
 	@Test
 	public void shouldGetAllScheduledRidesForTodayForPassenger() {
-		LocalDateTime date = LocalDate.of(2023, 2, 6).atStartOfDay();
+		LocalDateTime date = LocalDate.of(2023, 2, 5).atStartOfDay();
 		int userId = 1;
 		
 		List<Ride> ret = this.rideRepository.getAllScheduledRideForTodayForPassenger(userId, date);
@@ -53,16 +65,17 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		assertTrue(ret.get(0).getId() == 1);
 	}
 	
+	
 	@Test
 	public void shouldGetAllPassenegerRidesBetweenDates() {
-		LocalDateTime start = LocalDate.of(2023, 2, 7).atStartOfDay();
-		LocalDateTime end = LocalDate.of(2023, 1, 6).atStartOfDay();
+		LocalDateTime end = LocalDate.of(2023, 2, 7).atStartOfDay();
+		LocalDateTime start = LocalDate.of(2023, 1, 6).atStartOfDay();
 		int id = 1;
 		
 		List<Ride> ret = this.rideRepository.getAllPassengerRidesBetweenDates(id, start, end);
 		
 		assertTrue(ret.size() == 1);
-		assertTrue(ret.get(0).getId() == 1);
+		assertTrue(ret.get(0).getId() == 2);
 		
 		Passenger passenger = new Passenger();
 		for(Passenger p : ret.get(0).getPassengers()) {
@@ -70,24 +83,43 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 			
 		}
 		
-		assertTrue(passenger.getId() == 1);
+		assertTrue(passenger.getId() == id);
+	}
+	
+	@Test
+	public void shouldGetZeroPassengerRidesForWrongRange() {
+		LocalDateTime end = LocalDate.of(2022, 2, 7).atStartOfDay();
+		LocalDateTime start = LocalDate.of(2022, 1, 6).atStartOfDay();
+		int id = 1;
 		
+		List<Ride> ret = this.rideRepository.getAllPassengerRidesBetweenDates(id, start, end);
+		assertTrue(ret.size() == 0);
 	}
 	
 	
 	@Test
 	public void shouldGetAllDriverRidesBetweenDates() {
-		LocalDateTime start = LocalDate.of(2023, 2, 7).atStartOfDay();
-		LocalDateTime end = LocalDate.of(2023, 1, 6).atStartOfDay();
-		int id = 1;
+		LocalDateTime end = LocalDate.of(2023, 2, 1).atStartOfDay();
+		LocalDateTime start = LocalDate.of(2023, 1, 6).atStartOfDay();
+		int id = 2;
 		
 		List<Ride> ret = this.rideRepository.getAllDriverRidesBetweenDates(id, start, end);
 		
 		assertTrue(ret.size() == 1);
-		assertTrue(ret.get(0).getId() == 1);
+		assertTrue(ret.get(0).getId() == 2);
 		
 		Driver driver = ret.get(0).getDriver();
-		assertTrue(driver.getId() == 1);
+		assertTrue(driver.getId() == id);
+	}
+	
+	@Test
+	public void shouldGetZeroDriverRidesForWrongRange() {
+		LocalDateTime end = LocalDate.of(2022, 2, 7).atStartOfDay();
+		LocalDateTime start = LocalDate.of(2022, 1, 6).atStartOfDay();
+		int id = 1;
+		
+		List<Ride> ret = this.rideRepository.getAllDriverRidesBetweenDates(id, start, end);
+		assertTrue(ret.size() == 0);
 	}
 	
 	@Test 
@@ -105,6 +137,7 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 			assertTrue(id == currentId);
 		}
 	}
+	
 	
 	@Test
 	public void shouldGetAllPassengerRidesPaginated() {
@@ -124,17 +157,13 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 	}
 	
 	@Test
-	public void shouldGetAllUserRidesPaginates() {
+	public void shouldGetAllUserRidesPaginatedForPassengerId() {
 		int passengerId = 1;
-		int driverId = 2;
 		Pageable pageable = PageRequest.of(0, 5);
 
+		List<Ride> passengerRides = this.rideRepository.getAllUserRides(passengerId, pageable);
 		
-		List<Ride> passengerRides = this.rideRepository.getAllUserRides(driverId, pageable);
-		List<Ride> driverRides = this.rideRepository.getAllUserRides(passengerId, pageable);
-		
-		assertEquals(passengerRides.size(), 2);
-		assertEquals(driverRides.size(), 2);
+		assertEquals(passengerRides.size(), 3);
 		
 		for (Ride ride : passengerRides) {
 			int currentId = 0;
@@ -143,6 +172,16 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 			}
 			assertTrue(passengerId == currentId);
 		}
+	}
+	
+	@Test
+	public void shouldGetAllUserRidesPaginatedForDriverId() {
+		int driverId = 2;
+		Pageable pageable = PageRequest.of(0, 5);
+
+		List<Ride> driverRides = this.rideRepository.getAllUserRides(driverId, pageable);
+
+		assertEquals(driverRides.size(), 2);
 		
 		for(Ride ride : driverRides) {
 			assertTrue(driverId == ride.getDriver().getId());
@@ -176,6 +215,44 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 		
 		assertTrue(ret.size() == 1);
 		assertTrue(ret.get(0).getId() == 1);
+	}
+	
+	@Test
+	public void shouldGetFirstUpcomingRideForDriver() {
+		int driverId = 2;
+		
+		Ride ride = this.rideRepository.getFirstUpcomingRideForDriver(driverId);
+		
+		assertTrue(ride.getId() == 1);
+	}
+	
+	@Test
+	public void shouldGetPendingRideForPassenger() {
+		int id = 1;
+		
+		Ride ride = this.rideRepository.getPendingRideForPassenger(id);
+		
+		System.out.println(ride);
+		
+		assertTrue(ride != null);
+		
+		Passenger passenger = new Passenger();
+		for(Passenger p : ride.getPassengers()) {
+			if (p.getId() == id) { passenger = p; }
+		}
+		
+		assertTrue(passenger.getId() == id);
+		
+	}
+	
+	@Test
+	public void shouldGetNullPassengerPandingRides() {
+		int id = 2;
+		
+		Ride ride = this.rideRepository.getPendingRideForPassenger(id);
+		
+		assertNull(ride);
+		
 	}
 
 	@Test
