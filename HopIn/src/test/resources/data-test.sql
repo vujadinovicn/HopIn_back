@@ -41,7 +41,7 @@ insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in
 --insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 100, '2023-01-23T13:50:11', 5, false, false, null, 1, 780, 43, 3, '2023-01-23T13:50:11', 1, 2, 1);
 
 insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'mika@gmail.com', true, false, 'Pera', '$2a$12$t9Nsxg2fYHtDyJdnuZaRNeBPbg6EGxkUy7wpwZxbK5v2BKIIIWgK2', null, 'Peric', '+3819720132 ', 0);
-insert into "passengers"("id") values (2);
+insert into "passengers"("id") values (3);
 
-insert into "rides_passengers"("ride_id", "passengers_id") values (3, 2);
+insert into "rides_passengers"("ride_id", "passengers_id") values (3, 3);
 

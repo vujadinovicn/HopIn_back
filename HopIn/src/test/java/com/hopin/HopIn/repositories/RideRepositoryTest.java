@@ -235,7 +235,7 @@ public class RideRepositoryTest extends AbstractTestNGSpringContextTests {
 	
 	@Test
 	public void shouldGetActiveRideForPassengerThatHasActiveRideInDb() {
-		int passengerId = 2;
+		int passengerId = 3;
 		
 		Ride ride = this.rideRepository.getActiveRideForPassenger(passengerId);
 		
