@@ -22,7 +22,8 @@ insert into "drivers_documents" values (2,1);
 insert into "drivers_documents" values (2,2);     
   
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id", "scheduled_time") values (false, 95, null, 5, false, false, null, 4, 250, 3, 2, null, 1, 1, 2, '2023-02-05T13:11:11');
-
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id")  values (false, 100, '2023-01-23T13:50:11', 5, false, false, '2023-01-23T13:11:11', 4, 780, 43, 2, null, 1, 2, 1);
 
 insert into "rides_passengers"("ride_id", "passengers_id") values (1, 1);
+insert into "rides_passengers"("ride_id", "passengers_id") values (2, 1);
 

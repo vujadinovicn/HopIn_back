@@ -296,8 +296,8 @@ public class RideServiceImpl implements IRideService {
 
 				List<Ride> passengersRides = this.allRides.getAllScheduledRideForTodayForPassenger(currId, end);
 				for (Ride ride : passengersRides) {
-					if (ride.getScheduledTime().plusMinutes(ride.getEstimatedTimeInMinutes())
-							.isAfter(dto.getScheduledTime()) && ride.getScheduledTime().isBefore(dto.getScheduledTime()))
+					if (ride.getScheduledTime().plusMinutes(ride.getEstimatedTimeInMinutes()).isAfter(
+							dto.getScheduledTime()) && ride.getScheduledTime().isBefore(dto.getScheduledTime()))
 						throw new PassengerAlreadyInRideException();
 				}
 			});
@@ -395,7 +395,7 @@ public class RideServiceImpl implements IRideService {
 
 		ride.setStartTime(null);
 		ride.setEndTime(null);
-		
+
 		ride.setScheduledTime(rideDTO.getScheduledTime());
 
 		ride.setPetTransport(rideDTO.isPetTransport());
@@ -558,20 +558,20 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	@Override
-	public RideReturnedDTO startRide(int id) { 
+	public RideReturnedDTO startRide(int id) {
 		Ride ride = this.getRideIfExists(id);
 
 		if (ride.getStatus() != RideStatus.ACCEPTED) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Cannot start a ride that is not in status ACCEPTED!"); 
+					"Cannot start a ride that is not in status ACCEPTED!");
 		}
 
-		ride.setStartTime(LocalDateTime.now()); 
+		ride.setStartTime(LocalDateTime.now());
 		Ride savedRide = this.changeRideStatus(ride, RideStatus.STARTED);
 
-		return new RideReturnedDTO(savedRide); 
-	}  
- 
+		return new RideReturnedDTO(savedRide);
+	}
+
 	@Override
 	public RideReturnedDTO acceptRide(int id) {
 		Ride ride = this.getRideIfExists(id);
@@ -585,11 +585,11 @@ public class RideServiceImpl implements IRideService {
 
 		return new RideReturnedDTO(savedRide);
 	}
- 
+
 	@Override
-	public RideReturnedDTO finishRide(int id) {  
+	public RideReturnedDTO finishRide(int id) {
 		Ride ride = this.getRideIfExists(id);
- 
+
 		if (ride.getStatus() != RideStatus.STARTED) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					"Cannot end a ride that is not in status STARTED!");
@@ -689,21 +689,21 @@ public class RideServiceImpl implements IRideService {
 		ride.setScheduledTime(null);
 		Ride savedRide = this.allRides.save(ride);
 		this.allRides.flush();
-		return new RideReturnedDTO(savedRide); 
+		return new RideReturnedDTO(savedRide);
 	}
 
 	@Override
 	public List<RideReturnedDTO> getScheduledRidesForUser(int userId) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = allUsers.findByEmail(authentication.getName()).orElse(null);
-		
+
 		List<Ride> rides;
 		if (user.getRole() == Role.DRIVER) {
 			rides = this.allRides.getScheduledRidesForDriver(userId);
 		} else {
 			rides = this.allRides.getScheduledRidesForPassenger(userId);
 		}
-		
+
 		List<RideReturnedDTO> res = new ArrayList<RideReturnedDTO>();
 		for (Ride ride : rides) {
 			if (ride.getScheduledTime().isAfter(LocalDateTime.now()))

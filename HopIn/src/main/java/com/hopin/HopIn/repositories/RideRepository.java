@@ -14,6 +14,10 @@ import com.hopin.HopIn.entities.Ride;
 @Repository
 public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndSortingRepository<Ride, Integer> {
 	
+	@Query(value = "select * from \"rides\"", nativeQuery=true)
+	public List<Ride> getAllRides();
+	
+	
 	@Query(value = "select * from \"rides\" where \"start_time\" between :from and :to order by \"start_time\"", nativeQuery=true)
 	public List<Ride> getAllRidesBetweenDates(LocalDateTime from, LocalDateTime to);
 	
