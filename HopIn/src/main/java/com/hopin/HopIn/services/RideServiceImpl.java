@@ -187,9 +187,17 @@ public class RideServiceImpl implements IRideService {
 		}
 		
 		Set<Passenger> passengers = new HashSet<Passenger>();
-
+		
+		Boolean currentUserIsIn = false;
 		for (UserInRideDTO currUser : dto.getPassengers()) {
 			passengers.add(this.passengerService.getPassenger(currUser.getId()));
+			if (user.getId() == currUser.getId()) {
+				currentUserIsIn = true;
+			}
+		}
+		
+		if (!currentUserIsIn) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Logged in user is not in the ride!");
 		}
 
 		FavoriteRide favoriteRide = new FavoriteRide(dto, passengers,
@@ -462,6 +470,11 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public RideReturnedDTO getActiveRideForPassenger(int id) {
+		Passenger passenger = this.allPassengers.findById(id).orElse(null);
+		
+		if (passenger == null)
+			throw new UserNotFoundException();
+		
 		Ride activeRide = this.allRides.getActiveRideForPassenger(id);
 		if (activeRide == null)
 			throw new NoActivePassengerRideException();
@@ -687,6 +700,17 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public RideReturnedDTO startRideToDeparture(int id) {
 		Ride ride = this.getRideIfExists(id);
+		
+		if (ride.getStatus() != RideStatus.ACCEPTED) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot start ride to departure, status must be ACCEPTED!");
+		}
+		
+		if (ride.getScheduledTime() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot start ride to departure, scheduled time must not be null!");
+		}
+		
 		ride.setScheduledTime(null);
 		Ride savedRide = this.allRides.save(ride);
 		this.allRides.flush();
