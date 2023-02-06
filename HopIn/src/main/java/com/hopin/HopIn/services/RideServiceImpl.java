@@ -517,8 +517,11 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	private Ride getRideIfExists(int id) {
-		return this.allRides.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ride does not exist!"));
+		Optional<Ride> ret = this.allRides.findById(id);
+		if (ret.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ride does not exist!");
+		}
+		return ret.get();
 	}
 
 	private Ride changeRideStatus(Ride ride, RideStatus status) {
