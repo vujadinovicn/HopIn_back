@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +30,7 @@ import com.hopin.HopIn.HopInApplication;
 import com.hopin.HopIn.dtos.FavoriteRideDTO;
 import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.LocationNoIdDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RouteLocsDTO;
 import com.hopin.HopIn.dtos.UserDTO;
@@ -271,6 +273,53 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		FavoriteRideReturnedDTO ret = this.rideService.insertFavoriteRide(new FavoriteRideDTO(null, null, null, null, false, false));
 	
 		verify(this.passengerService, never()).getPassenger(currentUser.getId());
+	}
+	
+	@Test
+	public void shouldGetAllRidesBewteenDates() {
+		String from = "2022/12/25";
+		String to = "2023/02/07";
+		
+		List<Ride> rides = new ArrayList<>();
+		rides.add(ride);
+		
+		Mockito.when(this.allRides.getAllRidesBetweenDates(Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class))).thenReturn(rides);
+		
+		List<RideForReportDTO> ret = this.rideService.getAllRidesBetweenDates(from, to);
+	
+		assertEquals(ret.size(), 1);
+		assertEquals(ret.get(0).getStartTime(), ride.getStartTime());
+		verify(this.allRides).getAllRidesBetweenDates(Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class));
+	}
+	
+	@Test
+	public void shouldReturnEmptyListWhenNoRidesInDates() {
+		String from = "2022/12/25";
+		String to = "2023/02/07";
+		
+		List<Ride> rides = new ArrayList<>();
+		
+		Mockito.when(this.allRides.getAllRidesBetweenDates(Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class))).thenReturn(rides);
+		
+		List<RideForReportDTO> ret = this.rideService.getAllRidesBetweenDates(from, to);
+	
+		assertEquals(ret.size(), 0);
+		verify(this.allRides).getAllRidesBetweenDates(Mockito.any(LocalDateTime.class), Mockito.any(LocalDateTime.class));
+	}
+	
+	
+	@Test(expectedExceptions = {ResponseStatusException.class})
+	public void shouldThrowExceptionForGettingRidesBetweenInvalidFomrattedDates() {
+		String from = "2.12.2022.";
+		String to = "3.12.2022.";
+		
+		try {
+			this.rideService.getAllRidesBetweenDates(from, to);
+		} catch (ResponseStatusException ex) {
+			assertEquals(ex.getStatusCode(), HttpStatus.BAD_REQUEST);
+			assertEquals(ex.getReason(), "Wrong date format! Use yyyy/MM/dd.");
+			throw ex;
+		}
 	}
 	
 }

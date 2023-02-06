@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -162,8 +163,15 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public List<RideForReportDTO> getAllRidesBetweenDates(String from, String to) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		List<Ride> rides = allRides.getAllRidesBetweenDates(LocalDate.parse(from, formatter).atStartOfDay(),
-				LocalDate.parse(to, formatter).atStartOfDay());
+		
+		List<Ride> rides = new ArrayList<>();
+		try {
+			rides = allRides.getAllRidesBetweenDates(LocalDate.parse(from, formatter).atStartOfDay(),
+					LocalDate.parse(to, formatter).atStartOfDay());
+		} catch (DateTimeParseException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong date format! Use yyyy/MM/dd.");
+		}
+		
 		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
 		for (Ride ride : rides) {
 			res.add(new RideForReportDTO(ride));
