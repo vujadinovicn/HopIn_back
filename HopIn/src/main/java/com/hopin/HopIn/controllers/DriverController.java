@@ -200,7 +200,7 @@ public class DriverController {
 	public ResponseEntity<?> getAllRidesPaginated(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam(required = false) String sort, 
 			@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-			return new ResponseEntity<AllPassengerRidesDTO>(rideService.getAllDriverRidesPaginated(driverId, page, size, sort, from, to), HttpStatus.OK);
+			return new ResponseEntity<AllPassengerRidesDTO>(service.getAllDriverRidesPaginated(driverId, page, size, sort, from, to), HttpStatus.OK);
 		} catch (UserNotFoundException ex) {
 			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 		}
@@ -210,7 +210,7 @@ public class DriverController {
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getAllRides(@PathVariable("id") int driverId) {
 		try {
-			return new ResponseEntity<AllPassengerRidesDTO>(rideService.getAllDriverRides(driverId), HttpStatus.OK);
+			return new ResponseEntity<AllPassengerRidesDTO>(service.getAllDriverRides(driverId), HttpStatus.OK);
 		} catch (UserNotFoundException ex) {
 			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 		} 
@@ -290,6 +290,6 @@ public class DriverController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id, @RequestParam String from, @RequestParam String to) {
-		return new ResponseEntity<List<RideForReportDTO>>(this.rideService.getAllDriverRidesBetweenDates(id, from, to), HttpStatus.OK);
+		return new ResponseEntity<List<RideForReportDTO>>(this.service.getAllDriverRidesBetweenDates(id, from, to), HttpStatus.OK);
 	}
 }

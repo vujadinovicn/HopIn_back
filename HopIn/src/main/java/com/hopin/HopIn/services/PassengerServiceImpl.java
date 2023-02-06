@@ -1,5 +1,8 @@
 package com.hopin.HopIn.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +11,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
@@ -311,6 +318,42 @@ public class PassengerServiceImpl implements IPassengerService {
 		return false;
 	}
 
+	@Override
+	public AllPassengerRidesDTO getAllPassengerRidesPaginated(int id, int page, int size, String sort, String from,
+			String to) {
+		Pageable pageable = PageRequest.of(page, size);
+
+		Optional<Passenger> passenger = this.allPassengers.findById(id);
+		if (passenger.isEmpty()) {
+			throw new UserNotFoundException();
+		}
+
+		List<Ride> rides = this.allRides.getAllPassengerRidesPaginated(id, pageable);
+		return new AllPassengerRidesDTO(rides);
+	}
 	
+	@Override
+	public AllPassengerRidesDTO getAllPassengerRides(int id) {
+		Optional<Passenger> passenger = this.allPassengers.findById(id);
+		if (passenger.isEmpty()) {
+			throw new UserNotFoundException();
+		}
+
+		List<Ride> rides = this.allRides.getAllPassengerRides(id);
+		return new AllPassengerRidesDTO(rides);
+	}
+
+	@Override
+	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDateTime start = LocalDate.parse(from, formatter).atStartOfDay();
+		LocalDateTime end = LocalDate.parse(to, formatter).atStartOfDay().plusDays(1);
+		List<Ride> rides = allRides.getAllPassengerRidesBetweenDates(id, start, end);
+		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
+		for (Ride ride : rides) {
+			res.add(new RideForReportDTO(ride));
+		}
+		return res;
+	}
 
 }

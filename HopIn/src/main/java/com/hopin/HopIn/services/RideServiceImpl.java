@@ -134,31 +134,7 @@ public class RideServiceImpl implements IRideService {
 	private int currId = 0;
 
 	@Autowired
-	private PassengerRepository allPassengers;
-
-	@Override
-	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		LocalDateTime start = LocalDate.parse(from, formatter).atStartOfDay();
-		LocalDateTime end = LocalDate.parse(to, formatter).atStartOfDay().plusDays(1);
-		List<Ride> rides = allRides.getAllPassengerRidesBetweenDates(id, start, end);
-		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
-		for (Ride ride : rides) {
-			res.add(new RideForReportDTO(ride));
-		}
-		return res;
-	}
-
-	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		List<Ride> rides = allRides.getAllDriverRidesBetweenDates(id, LocalDate.parse(from, formatter).atStartOfDay(),
-				LocalDate.parse(to, formatter).atStartOfDay());
-		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
-		for (Ride ride : rides) {
-			res.add(new RideForReportDTO(ride));
-		}
-		return res;
-	}
+	private PassengerRepository allPassengers;	
 
 	@Override
 	public List<RideForReportDTO> getAllRidesBetweenDates(String from, String to) {
@@ -636,53 +612,6 @@ public class RideServiceImpl implements IRideService {
 		Ride savedRide = this.changeRideStatus(ride, RideStatus.REJECTED);
 
 		return new RideReturnedDTO(savedRide);
-	}
-
-	@Override
-	public AllPanicRidesDTO getAllPanicRides() {
-		List<Panic> panics = allPanics.findAll();
-		return new AllPanicRidesDTO(panics);
-	}
-
-	@Override
-	public AllPassengerRidesDTO getAllPassengerRidesPaginated(int id, int page, int size, String sort, String from,
-			String to) {
-		Pageable pageable = PageRequest.of(page, size);
-
-		Optional<Passenger> passenger = this.allPassengers.findById(id);
-		if (passenger.isEmpty()) {
-			throw new UserNotFoundException();
-		}
-
-		List<Ride> rides = this.allRides.getAllPassengerRidesPaginated(id, pageable);
-		return new AllPassengerRidesDTO(rides);
-	}
-
-	@Override
-	public AllPassengerRidesDTO getAllPassengerRides(int id) {
-		Optional<Passenger> passenger = this.allPassengers.findById(id);
-		if (passenger.isEmpty()) {
-			throw new UserNotFoundException();
-		}
-
-		List<Ride> rides = this.allRides.getAllPassengerRides(id);
-		return new AllPassengerRidesDTO(rides);
-	}
-
-	@Override
-	public AllPassengerRidesDTO getAllDriverRidesPaginated(int id, int page, int size, String sort, String from,
-			String to) {
-		driverService.getById(id);
-		Pageable pageable = PageRequest.of(page, size);
-		List<Ride> rides = this.allRides.findAllByDriverId(id, pageable);
-		return new AllPassengerRidesDTO(rides);
-	}
-
-	@Override
-	public AllPassengerRidesDTO getAllDriverRides(int id) {
-		driverService.getById(id);
-		List<Ride> rides = this.allRides.findAllByDriverId(id);
-		return new AllPassengerRidesDTO(rides);
 	}
 
 	@Override

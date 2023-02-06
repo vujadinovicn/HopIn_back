@@ -2,7 +2,9 @@ package com.hopin.HopIn.services.interfaces;
 
 import java.util.List;
 
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
@@ -44,4 +46,11 @@ public interface IPassengerService {
 	Route addFavouriteRoute(int passengerId, RouteDTO dto);
 
 	public Boolean isFavouriteRoute(int rideId);
+	
+	public AllPassengerRidesDTO getAllPassengerRidesPaginated(int id, int page, int size, String sort, String from, String to);
+
+	public AllPassengerRidesDTO getAllPassengerRides(int id);
+
+	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to);
+	
 }

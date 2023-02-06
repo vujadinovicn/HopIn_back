@@ -106,16 +106,16 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 
 	@MockBean
 	private VehicleTypeRepository allVehicleTypes;
-	
+
 	@MockBean
 	private UserRepository allUsers;
-	
+
 	@MockBean
 	private PanicRepository allPanics;
-	
+
 	@MockBean
 	private Authentication authentication;
-	
+
 	@MockBean
 	private SecurityContext context;
 
@@ -123,7 +123,6 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	private Passenger passenger;
 	private FavoriteRide favoriteRoute;
 	private VehicleType vehicleType;
-
 
 	@BeforeMethod
 	public void setup() {
@@ -238,7 +237,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldStartRideToDepartureForValidRide() {
 		ride.setScheduledTime(LocalDateTime.now());
-		
+
 		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
 		Mockito.when(allRides.save(ride)).thenReturn(ride);
 
@@ -262,11 +261,11 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 			throw e;
 		}
 	}
-	
+
 	@Test(expectedExceptions = ResponseStatusException.class)
 	public void shouldThrowExceptionForStartingToDepartureRideWithWrongStatus() {
 		ride.setStatus(RideStatus.ACTIVE);
-		
+
 		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
 
 		try {
@@ -277,12 +276,12 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 			throw e;
 		}
 	}
-	
+
 	@Test(expectedExceptions = ResponseStatusException.class)
 	public void shouldThrowExceptionForStartingToDepartureRideWithNoScheduledTime() {
 		ride.setStatus(RideStatus.ACCEPTED);
 		ride.setScheduledTime(null);
-		
+
 		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
 
 		try {
@@ -301,7 +300,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 
 		Mockito.when(allRides.getActiveRideForPassenger(passengerId)).thenReturn(ride);
 		Mockito.when(allPassengers.findById(passengerId)).thenReturn(Optional.of(passenger));
-		
+
 		RideReturnedDTO ret = this.rideService.getActiveRideForPassenger(passengerId);
 
 		assertTrue(ret != null);
@@ -311,21 +310,21 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	@Test(expectedExceptions = NoActivePassengerRideException.class)
 	public void shouldThrowExceptionForNoActiveRidesPassenger() {
 		int passengerId = 1;
-		
+
 		Mockito.when(allPassengers.findById(passengerId)).thenReturn(Optional.of(passenger));
 		Mockito.when(allRides.getActiveRideForPassenger(passengerId)).thenReturn(null);
 
 		RideReturnedDTO ret = this.rideService.getActiveRideForPassenger(passengerId);
 	}
-	
+
 	@Test(expectedExceptions = UserNotFoundException.class)
 	public void shouldThrowExceptionForNonExistantPassengerId() {
 		int passengerId = 0;
-		
+
 		Mockito.when(allPassengers.findById(passengerId)).thenReturn(Optional.empty());
 
 		RideReturnedDTO ret = this.rideService.getActiveRideForPassenger(passengerId);
-	
+
 		verifyNoInteractions(this.allRides);
 	}
 
@@ -608,21 +607,21 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		assertEquals(favRides.size(), ret.size());
 		assertEquals(ret.get(0).getId(), favRide.getId());
 	}
-	
+
 	@Test
 	public void shouldGetActiveRideForDriverWhenDriverIsGoingToDeparture() {
 		ride.setStatus(RideStatus.ACTIVE);
 		int driverId = ride.getDriver().getId();
 		Mockito.when(allRides.getActiveRideForDriver(driverId)).thenReturn(ride);
 		RideReturnedDTO ret = rideService.getActiveRideForDriver(driverId);
-		
+
 		assertEquals(ret.getDriver().getId(), driverId);
 		assertEquals(ret.getStatus(), RideStatus.ACTIVE);
 
 		verify(allRides, times(1)).getActiveRideForDriver(driverId);
-		
+
 	}
-	
+
 	@Test
 	public void shouldGetActiveRideForDriverWhenRideStarted() {
 		ride.setStatus(RideStatus.STARTED);
@@ -630,84 +629,82 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		int driverId = ride.getDriver().getId();
 		Mockito.when(allRides.getActiveRideForDriver(driverId)).thenReturn(ride);
 		RideReturnedDTO ret = rideService.getActiveRideForDriver(driverId);
-		
+
 		assertEquals(ret.getDriver().getId(), driverId);
 		assertTrue(ret.getStartTime() != null);
 		assertEquals(ret.getStatus(), RideStatus.STARTED);
 
 		verify(allRides, times(1)).getActiveRideForDriver(driverId);
-		
+
 	}
-	
-	@Test(expectedExceptions = {NoActiveDriverRideException.class})
+
+	@Test(expectedExceptions = { NoActiveDriverRideException.class })
 	public void shouldThrowNoActiveDriverRideExceptionWhenGettingActiveRideForDriver() {
 		int driverId = ride.getDriver().getId();
 		Mockito.when(allRides.getActiveRideForDriver(driverId)).thenReturn(null);
 		RideReturnedDTO ret = rideService.getActiveRideForDriver(driverId);
-		
+
 		assertEquals(ret, null);
 	}
-	
+
 	@Test
 	public void shouldGetPendingRideForPassenger() {
 		ride.setStatus(RideStatus.PENDING);
 		int passengerId = ride.getPassengers().iterator().next().getId();
 		Mockito.when(allRides.getPendingRideForPassenger(passengerId)).thenReturn(ride);
 		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
-		
-		assertTrue(ret.getPassengers().stream()
-				  .filter(passenger -> passenger.getId() == passengerId)
-				  .findAny()
-				  .orElse(null) != null);
+
+		assertTrue(ret.getPassengers().stream().filter(passenger -> passenger.getId() == passengerId).findAny()
+				.orElse(null) != null);
 		assertEquals(ret.getStatus(), RideStatus.PENDING);
 
 		verify(allRides, times(1)).getPendingRideForPassenger(passengerId);
-		
+
 	}
-	
+
 	@Test
 	public void shouldGetNullWhenGettingPendingRideForPassenger() {
 		int passengerId = 0;
 		Mockito.when(allRides.getActiveRideForDriver(passengerId)).thenReturn(null);
 		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
-		
+
 		assertEquals(ret, null);
 	}
-	
+
 	@Test
 	public void shouldGetPendingRideForDriver() {
 		ride.setStatus(RideStatus.PENDING);
 		int driverId = ride.getDriver().getId();
 		Mockito.when(allRides.getPendingRideForDriver(driverId)).thenReturn(ride);
 		RideReturnedDTO ret = rideService.getPendingRideForDriver(driverId);
-		
+
 		assertTrue(ret.getDriver().getId() == driverId);
 		assertEquals(ret.getStatus(), RideStatus.PENDING);
 
 		verify(allRides, times(1)).getPendingRideForDriver(driverId);
-		
+
 	}
-	
-	@Test(expectedExceptions = {NoActiveDriverRideException.class})
+
+	@Test(expectedExceptions = { NoActiveDriverRideException.class })
 	public void shouldThrowNoPendingDriverRideExceptionWhenGettingPendingRideForDriver() {
 		int driverId = ride.getDriver().getId();
 		Mockito.when(allRides.getPendingRideForDriver(driverId)).thenReturn(null);
 		RideReturnedDTO ret = rideService.getPendingRideForDriver(driverId);
-		
+
 		assertEquals(ret, null);
 	}
-	
+
 	@Test
 	public void shouldNotFlushForInvalidReasonWhenPanicRide() {
 		PanicRideDTO ride = this.rideService.panicRide(1, null);
 		verify(allPanics, never()).flush();
 	}
-	
+
 	@Test
 	public void shouldPanicRide() {
 		Passenger passenger = ride.getPassengers().iterator().next();
 		String email = passenger.getEmail();
-		
+
 		Mockito.when(context.getAuthentication()).thenReturn(authentication);
 		Mockito.when(authentication.getName()).thenReturn(email);
 		SecurityContextHolder.setContext(context);
@@ -715,95 +712,86 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
 //		Mockito.when(allPanics.save(panic))
 		PanicRideDTO panicRide = this.rideService.panicRide(ride.getId(), new ReasonDTO("test"));
-		
+
 		assertEquals(panicRide.getRide().getId(), ride.getId());
 		assertEquals(panicRide.getUser().getEmail(), passenger.getEmail());
 		verify(allPanics, times(1)).flush();
 	}
-	
+
 	@Test
 	public void shouldReturnNullForNonExistingRideWhenPanicRide() {
 		Mockito.when(allRides.findById(NON_EXISTANT_RIDE_ID)).thenReturn(Optional.empty());
 		PanicRideDTO ride = this.rideService.panicRide(NON_EXISTANT_RIDE_ID, null);
-		
+
 		assertNull(ride);
 		verify(allRides, never()).flush();
 	}
-	
-	
-	@Test(expectedExceptions = {NullPointerException.class})
-	public void shouldReturnNullExceptionWhenGettingScheduledRidesForUser(){
+
+	@Test(expectedExceptions = { NullPointerException.class })
+	public void shouldReturnNullExceptionWhenGettingScheduledRidesForUser() {
 		String email = "not_existing";
 		int userId = 1;
 		Mockito.when(context.getAuthentication()).thenReturn(authentication);
 		Mockito.when(authentication.getName()).thenReturn(email);
 		SecurityContextHolder.setContext(context);
-		
+
 		this.rideService.getScheduledRidesForUser(userId);
-		
+
 		verify(allRides, never()).getScheduledRidesForDriver(userId);
 	}
-	
+
 	@Test
 	public void shouldGetScheduledRidesForUserWithDriverRole() {
 		String email = ride.getDriver().getEmail();
 		int userId = ride.getDriver().getId();
-		
+
 		ride.setStatus(RideStatus.ACCEPTED);
 		ride.setScheduledTime(LocalDateTime.now().plusDays(1));
 		ArrayList<Ride> scheduledRides = new ArrayList<>();
 		scheduledRides.add(ride);
-		
+
 		Mockito.when(context.getAuthentication()).thenReturn(authentication);
 		Mockito.when(authentication.getName()).thenReturn(email);
 		SecurityContextHolder.setContext(context);
 		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(ride.getDriver()));
 		System.out.println(scheduledRides);
 		Mockito.when(allRides.getScheduledRidesForDriver(userId)).thenReturn(scheduledRides);
-		
+
 		List<RideReturnedDTO> rides = this.rideService.getScheduledRidesForUser(userId);
 		System.out.println(rides);
-		assertTrue(rides.stream()
-				  .filter(r -> r.getDriver().getId() == userId).findAny()
-		  		   .orElse(null) != null);
-		assertTrue(rides.stream()
-				  .filter(r -> r.getScheduledTime().isAfter(LocalDateTime.now()) == true)
-				  .findAny()
-				  .orElse(null)!= null);
+		assertTrue(rides.stream().filter(r -> r.getDriver().getId() == userId).findAny().orElse(null) != null);
+		assertTrue(rides.stream().filter(r -> r.getScheduledTime().isAfter(LocalDateTime.now()) == true).findAny()
+				.orElse(null) != null);
 		verify(allRides, times(1)).getScheduledRidesForDriver(userId);
 	}
-	
+
 	@Test
 	public void shouldGetScheduledRidesForUserWithPassengerRole() {
 		Passenger passenger = ride.getPassengers().iterator().next();
 		String email = passenger.getEmail();
 		int userId = passenger.getId();
-		
+
 		ride.setStatus(RideStatus.ACCEPTED);
 		ride.setScheduledTime(LocalDateTime.now().plusDays(1));
 		ArrayList<Ride> scheduledRides = new ArrayList<>();
 		scheduledRides.add(ride);
-		
+
 		Mockito.when(context.getAuthentication()).thenReturn(authentication);
 		Mockito.when(authentication.getName()).thenReturn(email);
 		SecurityContextHolder.setContext(context);
 		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(passenger));
 		Mockito.when(allRides.getScheduledRidesForPassenger(userId)).thenReturn(scheduledRides);
-		
+
 		List<RideReturnedDTO> rides = this.rideService.getScheduledRidesForUser(userId);
-		assertTrue(rides.stream()
-				  .filter(ride -> ride.getPassengers().get(0).getId() == userId)
-				  .findAny()
-				  .orElse(null) != null);
-		
-		assertTrue(rides.stream()
-				  .filter(r -> r.getScheduledTime().isAfter(LocalDateTime.now()) == true)
-				  .findAny()
-				  .orElse(null)!= null);
+		assertTrue(rides.stream().filter(ride -> ride.getPassengers().get(0).getId() == userId).findAny()
+				.orElse(null) != null);
+
+		assertTrue(rides.stream().filter(r -> r.getScheduledTime().isAfter(LocalDateTime.now()) == true).findAny()
+				.orElse(null) != null);
 		verify(allRides, times(1)).getScheduledRidesForPassenger(userId);
 	}
-	
-	@Test(expectedExceptions = {ResponseStatusException.class})
+
+	@Test(expectedExceptions = { ResponseStatusException.class })
 	public void shouldThrowExceptionForRejectingRideWithNonExistingId() {
 		try {
 			Mockito.when(allRides.findById(NON_EXISTANT_RIDE_ID)).thenReturn(Optional.empty());
@@ -814,11 +802,10 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 			throw ex;
 		}
 	}
-	
 
-	@Test(expectedExceptions = {ResponseStatusException.class})
+	@Test(expectedExceptions = { ResponseStatusException.class })
 	public void shouldThrowExceptionForRejectingRideWithBadStatus() {
-		this.ride.setStatus(RideStatus.REJECTED);		
+		this.ride.setStatus(RideStatus.REJECTED);
 		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
 
 		try {
@@ -829,24 +816,37 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 			throw ex;
 		}
 	}
-	
-	@Test(expectedExceptions = {NullPointerException.class})
+
+	@Test(expectedExceptions = { NullPointerException.class })
 	public void shouldThrowNullExceptionForRejectingRideWithNullReason() {
-		this.ride.setStatus(RideStatus.PENDING);		
+		this.ride.setStatus(RideStatus.PENDING);
 		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
 		this.rideService.rejectRide(ride.getId(), null);
 	}
-	
+
 	@Test
 	public void shouldRejectRide() {
 		ride.setStatus(RideStatus.PENDING);
 		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
 		Mockito.when(allRides.save(ride)).thenReturn(ride);
 		RideReturnedDTO ret = this.rideService.rejectRide(ride.getId(), VALID_REASON);
-		
+
 		assertTrue(ret.getId() == ride.getId());
-		assertTrue(ret.getStatus() == RideStatus.REJECTED);		
+		assertTrue(ret.getStatus() == RideStatus.REJECTED);
 		assertEquals(ret.getRejection().getReason(), VALID_REASON.getReason());
 	}
 
+	@Test
+	public void shouldGetAllAcceptedRides() {
+		ride.setStatus(RideStatus.ACCEPTED);
+		List<Ride> rides = new ArrayList<>();
+		rides.add(ride);
+		
+		Mockito.when(this.allRides.getAllAcceptedRides()).thenReturn(rides);
+		
+		List<Ride> ret = this.rideService.getAllAcceptedRides();
+		
+		assertTrue(ret.size() == 1);
+		verify(this.allRides).getAllAcceptedRides();
+	}
 }

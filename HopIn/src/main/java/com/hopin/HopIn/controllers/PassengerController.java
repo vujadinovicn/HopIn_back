@@ -106,7 +106,7 @@ public class PassengerController {
 	public ResponseEntity<?> getAllRidesPaginated(@PathVariable int id, @RequestParam int page,
 			@RequestParam int size, @RequestParam(required = false) String sort, @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRidesPaginated(id, page, size, sort, from, to);
+			AllPassengerRidesDTO rides = this.passengerService.getAllPassengerRidesPaginated(id, page, size, sort, from, to);
 			for (PassengerRideDTO ride: rides.getResults()) {
 				System.out.println(ride);
 			}
@@ -123,7 +123,7 @@ public class PassengerController {
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')")
 	public ResponseEntity<?> getAllRides(@PathVariable int id) {
 		try {
-			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRides(id);
+			AllPassengerRidesDTO rides = this.passengerService.getAllPassengerRides(id);
 			for (PassengerRideDTO ride: rides.getResults()) {
 				System.out.println(ride);
 			}
@@ -151,7 +151,7 @@ public class PassengerController {
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id,
 			@RequestParam String from, @RequestParam String to) {
 		return new ResponseEntity<List<RideForReportDTO>>(
-				this.rideService.getAllPassengerRidesBetweenDates(id, from, to), HttpStatus.OK);
+				this.passengerService.getAllPassengerRidesBetweenDates(id, from, to), HttpStatus.OK);
 	}
 	
 	@CrossOrigin(origins = "http://localhost:4200")
