@@ -283,7 +283,7 @@ public class RideController {
 	}
 
 	@PostMapping(value = "/price", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody UnregisteredRideSuggestionDTO dto) {
+	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody @Valid UnregisteredRideSuggestionDTO dto) {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
 	}
 
