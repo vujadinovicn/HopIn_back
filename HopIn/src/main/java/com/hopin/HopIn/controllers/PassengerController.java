@@ -123,6 +123,7 @@ public class PassengerController {
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')")
 	public ResponseEntity<?> getAllRides(@PathVariable int id) {
 		try {
+			System.out.println("EVO: " + id);
 			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRides(id);
 			for (PassengerRideDTO ride: rides.getResults()) {
 				System.out.println(ride);
