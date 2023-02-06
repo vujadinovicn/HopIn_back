@@ -43,6 +43,7 @@ import com.hopin.HopIn.exceptions.NoRideAfterFiveHoursException;
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
 import com.hopin.HopIn.exceptions.PassengerHasAlreadyPendingRide;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.ITokenService;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -151,9 +152,12 @@ public class RideController {
 	@PreAuthorize("hasRole('DRIVER')" + " || " + "hasRole('PASSENGER')")
 	public ResponseEntity<?> getScheduledRidesForUser(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int userId) {
-		List<RideReturnedDTO> rides = service.getScheduledRidesForUser(userId);
-		System.out.println(rides);
-		return new ResponseEntity<List<RideReturnedDTO>>(rides, HttpStatus.OK);
+		try {
+			List<RideReturnedDTO> rides = service.getScheduledRidesForUser(userId);
+			return new ResponseEntity<List<RideReturnedDTO>>(rides, HttpStatus.OK);
+		} catch (UserNotFoundException e){
+			return new ResponseEntity<String>("User not found", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -4,9 +4,13 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -43,7 +47,8 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	private final static int DRIVER_ID = 2;
 	private final static String PASSWORD_DRIVER = "123";
 	
-	private final static int DRIVER_WITH_NO_RIDE = 3;
+	private final static int DRIVER_WITH_NO_RIDE = 5;
+	private final static int SCHEDULED_RIDE_ID = 4;
 	
 	private final static String USERNAME_ADMIN = "admin@gmail.com";
 	private final static String PASSWORD_ADMIN = "123";
@@ -286,7 +291,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals(res.getStatusCode(), HttpStatus.NOT_FOUND);
 		assertEquals("Active ride does not exist", res.getBody());
 	}
-	
+	@Test
 	public void shouldGetPendingRideForDriver() {
 		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_ID + "/pending", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), RideReturnedDTO.class);
 		
@@ -296,6 +301,44 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals(PENDING_RIDE_ID, ride.getId());
 		assertEquals(RideStatus.PENDING, ride.getStatus());
 		assertEquals(ride.getDriver().getId(), DRIVER_ID);
+	}
+	
+	@Test
+	public void shouldThrowUnauthorizedExceptionWhenGetScheduledRidesForUser() {
+		ResponseEntity<?> res = restTemplate.exchange("/api/ride/scheduled-rides/" + INVALID_RIDE_ID, HttpMethod.GET, null, RideReturnedDTO.class);
+		assertEquals(res.getStatusCode(), HttpStatus.UNAUTHORIZED);
+	}
+	
+	@Test
+	public void shouldThrowForbiddenExceptionWhenGettingScheduledRidesForUserAsAdmin() {
+		ResponseEntity<?> res = restTemplate.exchange("/api/ride/scheduled-rides/" + INVALID_RIDE_ID, HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.FORBIDDEN);
+	}
+	
+	@Test
+	public void shouldThrowJSONExceptionWhenGettingScheduledRidesForUserWithInvalidUserId() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/scheduled-rides/" + INVALID_RIDE_ID, HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+	}
+	
+	@Test
+	public void shouldThrowUserNotFoundExceptionWhenGettingScheduledRidesForUser() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/scheduled-rides/" + NON_EXISTING_RIDE_ID, HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+		assertEquals("User not found", res.getBody());
+	}
+	
+	@Test
+	public void shouldGetScheduledRidesForUser() {
+		ResponseEntity<ArrayList<RideReturnedDTO>> res = restTemplate.exchange("/api/ride/scheduled-rides/" + DRIVER_ID, HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), new ParameterizedTypeReference<ArrayList<RideReturnedDTO>>() {});
+		
+		List<RideReturnedDTO> rides = res.getBody();
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(rides.stream().allMatch(ride -> ride.getStatus() == RideStatus.ACCEPTED && ride.getScheduledTime() != null));
+		assertTrue(rides.stream().filter(ride -> ride.getDriver().getId() == DRIVER_ID).findAny()
+				.orElse(null) != null);
+		assertTrue(rides.stream().filter(ride -> ride.getId() == SCHEDULED_RIDE_ID).findAny()
+				.orElse(null) != null);
 	}
 	
 	

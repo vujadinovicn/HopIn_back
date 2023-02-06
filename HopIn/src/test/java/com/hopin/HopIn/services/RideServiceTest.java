@@ -727,7 +727,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		verify(allRides, never()).flush();
 	}
 
-	@Test(expectedExceptions = { NullPointerException.class })
+	@Test(expectedExceptions = { UserNotFoundException.class })
 	public void shouldReturnNullExceptionWhenGettingScheduledRidesForUser() {
 		String email = "not_existing";
 		int userId = 1;
