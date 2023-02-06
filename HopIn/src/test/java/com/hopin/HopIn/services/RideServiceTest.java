@@ -384,6 +384,39 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		assertEquals(ret, null);
 	}
 	
+	@Test
+	public void shouldNotFlushForInvalidReasonWhenPanicRide() {
+		PanicRideDTO ride = this.rideService.panicRide(1, null);
+		verify(allPanics, never()).flush();
+	}
+	
+	@Test
+	public void shouldPanicRide() {
+		Passenger passenger = ride.getPassengers().iterator().next();
+		String email = passenger.getEmail();
+		
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getName()).thenReturn(email);
+		SecurityContextHolder.setContext(context);
+		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(passenger));
+		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
+//		Mockito.when(allPanics.save(panic))
+		PanicRideDTO panicRide = this.rideService.panicRide(ride.getId(), new ReasonDTO("test"));
+		
+		assertEquals(panicRide.getRide().getId(), ride.getId());
+		assertEquals(panicRide.getUser().getEmail(), passenger.getEmail());
+		verify(allPanics, times(1)).flush();
+	}
+	
+	@Test
+	public void shouldReturnNullForNonExistingRideWhenPanicRide() {
+		Mockito.when(allRides.findById(NON_EXISTANT_RIDE_ID)).thenReturn(Optional.empty());
+		PanicRideDTO ride = this.rideService.panicRide(NON_EXISTANT_RIDE_ID, null);
+		
+		assertNull(ride);
+		verify(allRides, never()).flush();
+	}
+	
 	
 	
 }
