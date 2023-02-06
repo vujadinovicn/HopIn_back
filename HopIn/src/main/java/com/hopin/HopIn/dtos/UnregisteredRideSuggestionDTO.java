@@ -1,12 +1,16 @@
 package com.hopin.HopIn.dtos;
 
-import com.hopin.HopIn.entities.VehicleType;
-import com.hopin.HopIn.enums.VehicleTypeName;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class UnregisteredRideSuggestionDTO {
-
+	
+	@NotNull
+	@NotEmpty(message = "is required")
 	private String vehicleTypeName;
 	private double distance;
+	
+	public UnregisteredRideSuggestionDTO() {}
 
 	public UnregisteredRideSuggestionDTO(String vehicleTypeName, double distance) {
 		super();

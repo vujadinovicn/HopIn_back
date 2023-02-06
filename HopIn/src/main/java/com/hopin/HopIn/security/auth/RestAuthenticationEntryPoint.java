@@ -67,11 +67,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     protected ResponseEntity<Object> handleRequestParameterMising(MissingServletRequestParameterException e) {
         return new ResponseEntity<>("Request parameter " + e.getParameterName() + " is missing!", HttpStatus.BAD_REQUEST);
     }
-	
-	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	 protected ResponseEntity<Object> handleMethodMismatchException(MethodArgumentTypeMismatchException e) {
-        return new ResponseEntity<>("Path parameter " + e.getParameter() + " has bad type!", HttpStatus.BAD_REQUEST);
-    }
     
     @ExceptionHandler (value = {AccessDeniedException.class})
     public void commence(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
@@ -83,6 +78,11 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, NotFoundException notFoundException) throws IOException {
         // 404
         setResponseError(response, HttpServletResponse.SC_NOT_FOUND, String.format("Not found: %s", notFoundException.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+     protected ResponseEntity<Object> handleMethodMismatchException(MethodArgumentTypeMismatchException e) {
+        return new ResponseEntity<>("Path parameter " + e.getParameter() + " has bad type!", HttpStatus.BAD_REQUEST);
     }
     
     private void setResponseError(HttpServletResponse response, int errorCode, String errorMessage) throws IOException{

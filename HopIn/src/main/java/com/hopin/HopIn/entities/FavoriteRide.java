@@ -25,7 +25,7 @@ public class FavoriteRide {
 
 	private String favoriteName;
 
-	@ManyToMany(cascade = {CascadeType.ALL})
+	@ManyToMany(cascade = {CascadeType.REFRESH})
 	private Set<Route> routes = new HashSet<Route>();
 
 	@ManyToMany(cascade = {})
