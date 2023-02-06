@@ -101,6 +101,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	private VehicleType vehicleType;
 	
 	private static final int NON_EXISTANT_RIDE_ID = 123;
+	private static final ReasonDTO VALID_REASON = new ReasonDTO("valid");
 	private static final double DISTANCE = 1;
 	
 	@BeforeMethod
@@ -492,6 +493,49 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		verify(allRides, times(1)).getScheduledRidesForPassenger(userId);
 	}
 	
+	@Test(expectedExceptions = {ResponseStatusException.class})
+	public void shouldThrowExceptionForRejectingRideWithNonExistingId() {
+		try {
+			Mockito.when(allRides.findById(NON_EXISTANT_RIDE_ID)).thenReturn(Optional.empty());
+			this.rideService.rejectRide(NON_EXISTANT_RIDE_ID, null);
+		} catch (ResponseStatusException ex) {
+			assertEquals(ex.getStatusCode(), HttpStatus.NOT_FOUND);
+			assertEquals(ex.getReason(), "Ride does not exist!");
+			throw ex;
+		}
+	}
 	
+
+	@Test(expectedExceptions = {ResponseStatusException.class})
+	public void shouldThrowExceptionForRejectingRideWithBadStatus() {
+		this.ride.setStatus(RideStatus.REJECTED);		
+		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
+
+		try {
+			this.rideService.rejectRide(ride.getId(), VALID_REASON);
+		} catch (ResponseStatusException ex) {
+			assertEquals(ex.getStatusCode(), HttpStatus.BAD_REQUEST);
+			assertEquals(ex.getReason(), "Cannot cancel a ride that is not in status PENDING or ACCEPTED!");
+			throw ex;
+		}
+	}
 	
+	@Test(expectedExceptions = {NullPointerException.class})
+	public void shouldThrowNullExceptionForRejectingRideWithNullReason() {
+		this.ride.setStatus(RideStatus.PENDING);		
+		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
+		this.rideService.rejectRide(ride.getId(), null);
+	}
+	
+	@Test
+	public void shouldRejectRide() {
+		ride.setStatus(RideStatus.PENDING);
+		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
+		Mockito.when(allRides.save(ride)).thenReturn(ride);
+		RideReturnedDTO ret = this.rideService.rejectRide(ride.getId(), VALID_REASON);
+		
+		assertTrue(ret.getId() == ride.getId());
+		assertTrue(ret.getStatus() == RideStatus.REJECTED);		
+		assertEquals(ret.getRejection().getReason(), VALID_REASON.getReason());
+	}
 }
