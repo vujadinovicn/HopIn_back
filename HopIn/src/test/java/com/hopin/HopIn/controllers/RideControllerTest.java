@@ -133,10 +133,10 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		}
 		return jsonString;
 	}
+	
 	@Test
 	public void shouldThrowUnauthorizedException_ForNoToken_RejectRide() {
-		ResponseEntity<RideReturnedDTO> res = restTemplate.withBasicAuth("driver@gmail.com", "123")
-				  .exchange("/api/ride/" + PENDING_RIDE_ID + "/cancel", HttpMethod.PUT, null, RideReturnedDTO.class);
+		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/cancel", HttpMethod.PUT, null, RideReturnedDTO.class);
 		assertEquals(res.getStatusCode(), HttpStatus.UNAUTHORIZED);
 	}
 	
@@ -147,6 +147,12 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	}
 	
 	@Test
+	public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_RejectRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + "s" + "/cancel", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@Test
 	public void shouldThrowJSONException_ForInvalidRideId_RejectRide() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + INVALID_RIDE_ID + "/cancel", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
 		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
@@ -154,9 +160,14 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	
 	@Test
 	public void shouldThrowJSONException_ForInvalidReason_RejectRide() {
-		ResponseEntity<String> res = restTemplate.withBasicAuth("driver@gmail.com", "123").exchange
-				("/api/ride/" + PENDING_RIDE_ID + "/cancel", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson("reason"), TOKEN_DRIVER), String.class);
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/cancel", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson("reason"), TOKEN_DRIVER), String.class);
 		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+	}
+	
+	@Test
+	public void shouldThrowJSONException_ForNullReason_RejectRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/cancel", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@Test
@@ -207,6 +218,18 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	}
 	
 	@Test
+	public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_PanicRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + "S" + "/panic", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson("reason"), TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@Test
+	public void shouldThrowJSONException_ForNullReason_PanicRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/panic", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@Test
 	public void shouldThrowJSONException_ForInvalidReason_PanicRide() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/panic", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson(""), TOKEN_DRIVER), String.class);
 		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
@@ -250,6 +273,12 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	}
 	
 	@Test
+	public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_GetActiveRideForDriver() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver/" + "S" + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@Test
 	public void shouldThrowNoActiveDriverRideException_ForDriverWithNoRide_GetActiveRideForDriver() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_WITH_NO_RIDE + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
 		assertEquals(res.getStatusCode(), HttpStatus.NOT_FOUND);
@@ -283,6 +312,12 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	public void shouldThrowJSONException_ForInvalidDriverId_GetPendingRideForDriver() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver/" + INVALID_RIDE_ID + "/pending", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
 		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+	}
+	
+	@Test
+	public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_GetPendingRideForDriver() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver/" + "S" + "/pending", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@Test
@@ -322,6 +357,12 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	}
 	
 	@Test
+	public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_GetScheduledRidesForUser() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/scheduled-rides/" + "S", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@Test
 	public void shouldThrowUserNotFoundException_ForNotExistingUser_GetScheduledRidesForUser() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/scheduled-rides/" + NON_EXISTING_RIDE_ID, HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
 		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
@@ -331,6 +372,19 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldGetScheduledRidesForUser() {
 		ResponseEntity<ArrayList<RideReturnedDTO>> res = restTemplate.exchange("/api/ride/scheduled-rides/" + DRIVER_ID, HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), new ParameterizedTypeReference<ArrayList<RideReturnedDTO>>() {});
+		
+		List<RideReturnedDTO> rides = res.getBody();
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(rides.stream().allMatch(ride -> ride.getStatus() == RideStatus.ACCEPTED && ride.getScheduledTime() != null));
+		assertTrue(rides.stream().filter(ride -> ride.getDriver().getId() == DRIVER_ID).findAny()
+				.orElse(null) != null);
+		assertTrue(rides.stream().filter(ride -> ride.getId() == SCHEDULED_RIDE_ID).findAny()
+				.orElse(null) != null);
+	}
+	
+	@Test
+	public void shouldGetScheduledRidesForUserss() {
+		ResponseEntity<ArrayList<RideReturnedDTO>> res = restTemplate.exchange("/api/ride/scheduled-rides/a", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), new ParameterizedTypeReference<ArrayList<RideReturnedDTO>>() {});
 		
 		List<RideReturnedDTO> rides = res.getBody();
 		assertEquals(HttpStatus.OK, res.getStatusCode());

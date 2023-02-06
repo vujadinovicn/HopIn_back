@@ -191,7 +191,7 @@ public class RideController {
 	@PreAuthorize("hasRole('PASSENGER')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> panicRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@Valid @RequestBody(required = false) ReasonDTO dto) {
+			@Valid @RequestBody(required = true) ReasonDTO dto) {
 		PanicRideDTO ride = service.panicRide(id, dto);
 		if (ride == null) {
 			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
@@ -265,8 +265,7 @@ public class RideController {
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> rejectRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@Valid @RequestBody(required = false) ReasonDTO dto) {
-		System.out.println("REJECT " + dto.getReason());
+			@Valid @RequestBody(required = true) ReasonDTO dto) {
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-cancel", ride.getDriver().getId());
