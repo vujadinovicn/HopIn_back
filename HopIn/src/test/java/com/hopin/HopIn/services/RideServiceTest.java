@@ -650,25 +650,35 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldGetPendingRideForPassenger() {
 		ride.setStatus(RideStatus.PENDING);
-		int passengerId = ride.getPassengers().iterator().next().getId();
-		Mockito.when(allRides.getPendingRideForPassenger(passengerId)).thenReturn(ride);
-		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
+		Passenger passenger = ride.getPassengers().iterator().next();
+		Mockito.when(allPassengers.findById(passenger.getId())).thenReturn(Optional.of(passenger));
+		Mockito.when(allRides.getPendingRideForPassenger(passenger.getId())).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passenger.getId());
 
-		assertTrue(ret.getPassengers().stream().filter(passenger -> passenger.getId() == passengerId).findAny()
+		assertTrue(ret.getPassengers().stream().filter(p -> p.getId() == passenger.getId()).findAny()
 				.orElse(null) != null);
 		assertEquals(ret.getStatus(), RideStatus.PENDING);
 
-		verify(allRides, times(1)).getPendingRideForPassenger(passengerId);
+		verify(allRides, times(1)).getPendingRideForPassenger(passenger.getId());
 
 	}
 
 	@Test
 	public void shouldGetNullWhenGettingPendingRideForPassenger() {
 		int passengerId = 0;
-		Mockito.when(allRides.getActiveRideForDriver(passengerId)).thenReturn(null);
+		Mockito.when(allPassengers.findById(passengerId)).thenReturn(Optional.of(passenger));
+		Mockito.when(allRides.getPendingRideForPassenger(passengerId)).thenReturn(null);
 		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
 
 		assertEquals(ret, null);
+	}
+	
+	@Test(expectedExceptions = {UserNotFoundException.class})
+	public void shouldThrowUserNotFoundExceptionForInvalidId() {
+		int passengerId = -1;
+		Mockito.when(allPassengers.findById(passengerId)).thenReturn(Optional.empty());
+		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
+		verify(allRides.getPendingRideForPassenger(passengerId), never());
 	}
 
 	@Test

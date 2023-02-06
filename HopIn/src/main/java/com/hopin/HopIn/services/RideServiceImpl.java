@@ -456,15 +456,20 @@ public class RideServiceImpl implements IRideService {
 			throw new NoActivePassengerRideException();
 		return new RideReturnedDTO(activeRide);
 	}
-
+	
 	@Override
-	public RideReturnedDTO getPendingRideForPassenger(int id) {
-		Ride pendingRide = this.allRides.getPendingRideForPassenger(id);
-		if (pendingRide != null) {
-			return new RideReturnedDTO(pendingRide);
-		}
-		return null;
-	}
+    public RideReturnedDTO getPendingRideForPassenger(int id) {
+        Passenger passenger = this.allPassengers.findById(id).orElse(null);
+
+        if (passenger == null)
+            throw new UserNotFoundException();
+
+        Ride pendingRide = this.allRides.getPendingRideForPassenger(id);
+        if (pendingRide != null) {
+            return new RideReturnedDTO(pendingRide);
+        }
+        return null;
+    }
 
 	@Override
 	public RideReturnedDTO getPendingRideForDriver(int id) {
