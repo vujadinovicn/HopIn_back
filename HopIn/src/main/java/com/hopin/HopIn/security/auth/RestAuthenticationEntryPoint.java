@@ -13,6 +13,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -54,6 +55,12 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         }
 
         return new ResponseEntity<>(sb.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(MissingServletRequestParameterException.class) 
+	protected ResponseEntity<Object> handleRequestParameterMising(MissingServletRequestParameterException e) {
+		// 400
+		return new ResponseEntity<>("Request parameter " + e.getParameterName() + " is missing!", HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(HttpMessageConversionException.class)

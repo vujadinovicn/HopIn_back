@@ -141,9 +141,17 @@ public class RideServiceImpl implements IRideService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		
 		List<Ride> rides = new ArrayList<>();
+		LocalDateTime fromDate;
+		LocalDateTime toDate;
 		try {
-			rides = allRides.getAllRidesBetweenDates(LocalDate.parse(from, formatter).atStartOfDay(),
-					LocalDate.parse(to, formatter).atStartOfDay());
+			fromDate = LocalDate.parse(from, formatter).atStartOfDay();
+			toDate = LocalDate.parse(to, formatter).atStartOfDay();
+			
+			if (toDate.isBefore(fromDate)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End of range date must be after start of range date!");
+			}
+			
+			rides = allRides.getAllRidesBetweenDates(fromDate, toDate);
 		} catch (DateTimeParseException e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong date format! Use yyyy/MM/dd.");
 		}

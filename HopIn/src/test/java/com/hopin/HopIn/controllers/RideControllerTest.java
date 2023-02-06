@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -53,7 +54,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	
 	private static int PASSENGER_ID = 1;
 	private static int PASSENGER_NO_RIDES = 3;
-	private static int PASSENGER_ONLY_CANCELED_RIDE = 5;
+	private static int PASSENGER_ONLY_STARTED_RIDE = 5;
 
 	@Autowired
     private TestRestTemplate restTemplate;
@@ -279,7 +280,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	
 	@Test
 	public void shouldReturnNotFound_ForPassengerWithActiveRides_GetActiveRideForPassenger() {
-		ResponseEntity<String> res = restTemplate.exchange("/api/ride/passenger/" + PASSENGER_ONLY_CANCELED_RIDE + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/passenger/" + PASSENGER_ONLY_STARTED_RIDE + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
 
 		assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
 		assertEquals("Active ride does not exist", res.getBody());
@@ -302,5 +303,120 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals(HttpStatus.OK, res.getStatusCode());
 		assertEquals(ride.getId(), PENDING_RIDE_ID);
 		assertTrue(ride.getStatus() == RideStatus.PENDING);
+	}
+	
+	@Test
+	public void shouldReturnUnathorised_ForNoToken_GetRidesBetweenDates() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/date/range", HttpMethod.GET, null, String.class);
+
+		assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnForbidden_ForWrongRole_GetRidesBetweenDates() {
+		String from = "2022/12/25";
+		String to = "2021/02/07";
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/api/ride/date/range")
+                .queryParam("from", from)
+                .queryParam("to", to);
+		
+		ResponseEntity<String> res = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+
+		assertEquals(HttpStatus.FORBIDDEN, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnBadRequest_ForBadDateFormat_GetRidesBetweenDates() {
+		String from = "2.12.2022.";
+		String to = "3.12.2022.";
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/api/ride/date/range")
+                .queryParam("from", from)
+                .queryParam("to", to);
+		
+		ResponseEntity<String> res = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Wrong date format! Use yyyy/MM/dd.", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturnBadRequest_ForBadDateRange_GetRidesBetweenDates() {
+		String from = "2022/12/25";
+		String to = "2021/02/07";
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/api/ride/date/range")
+                .queryParam("from", from)
+                .queryParam("to", to);
+		
+		ResponseEntity<String> res = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("End of range date must be after start of range date!", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturnBadRequest_ForMissingDateParams_GetRidesBetweenDates() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/date/range", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Request parameter from is missing!", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturnBadRequest_ForMissingDateParams() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/date/range", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Request parameter from is missing!", res.getBody());
+	}
+	
+	//TODO: DODAJ OVO KAD VIDIS OSTALE
+	@Test 
+	public void shouldGetRidesBetweenDates() {
+		String from = "2022/12/25";
+		String to = "2023/02/07";
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/api/ride/date/range")
+                .queryParam("from", from)
+                .queryParam("to", to);
+		
+		ResponseEntity<String> res = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("End of range date must be after start of range date!", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturnUnathorised_ForNoToken_AddFavoriteRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, null, String.class);
+
+		assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnForbidden_ForWrongRole_AddFavoriteRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, makeJwtHeader(TOKEN_DRIVER), String.class);
+
+		assertEquals(HttpStatus.FORBIDDEN, res.getStatusCode());
+	}
+	
+	// TODO: KAKO OVO DA UBACIM U BAZU???
+	@Test 
+	public void shouldReturnBadRequest_ForMoreThan10Favs_AddFavoriteRide() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, makeJwtHeader(TOKEN_PASSENGER),ExceptionDTO.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Number of favorite rides cannot exceed 10!", res.getBody().getMessage());
+	}
+	
+	// TODO: JE L IMA OVO PRAVLJENJE DTO-A NEKO??
+	@Test 
+	public void shouldReturnBadRequest_WhenCurrentPassengerNotInRide_AddFavoriteRide() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, makeJwtHeader(TOKEN_PASSENGER),ExceptionDTO.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Number of favorite rides cannot exceed 10!", res.getBody().getMessage());
 	}
 }

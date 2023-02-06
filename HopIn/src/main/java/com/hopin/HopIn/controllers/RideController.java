@@ -297,12 +297,13 @@ public class RideController {
 	@PostMapping(value = "/favorites", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> addFavoriteRide(@Valid @RequestBody(required = false) FavoriteRideDTO dto) {
-		System.out.println("neca");
 		try {
 			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
 		} catch (FavoriteRideException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Number of favorite rides cannot exceed 10!"),
 					HttpStatus.BAD_REQUEST);
+		} catch (ResponseStatusException e) {
+			return new ResponseEntity<String>(e.getReason(),HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -327,10 +328,14 @@ public class RideController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "/date/range", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@RequestParam String from,
+	public ResponseEntity<?> getAllRidesBetweenDates(@RequestParam String from,
 			@RequestParam String to) {
-		return new ResponseEntity<List<RideForReportDTO>>(this.service.getAllRidesBetweenDates(from, to),
-				HttpStatus.OK);
+		try {
+			return new ResponseEntity<List<RideForReportDTO>>(this.service.getAllRidesBetweenDates(from, to),
+					HttpStatus.OK);
+		} catch (ResponseStatusException e) {
+			return new ResponseEntity<String>(e.getReason(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PostMapping(value = "/driver-took-off/{rideId}", produces = MediaType.APPLICATION_JSON_VALUE)

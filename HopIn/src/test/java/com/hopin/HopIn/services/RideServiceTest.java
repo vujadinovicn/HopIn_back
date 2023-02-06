@@ -455,6 +455,20 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 			throw ex;
 		}
 	}
+	
+	@Test(expectedExceptions = { ResponseStatusException.class })
+	public void shouldThrowExceptionForGettingRidesBetweenInvalidDateRange() {
+		String from = "2022/12/25";
+		String to = "2021/02/07";
+		
+		try {
+			this.rideService.getAllRidesBetweenDates(from, to);
+		} catch (ResponseStatusException ex) {
+			assertEquals(ex.getStatusCode(), HttpStatus.BAD_REQUEST);
+			assertEquals(ex.getReason(), "End of range date must be after start of range date!");
+			throw ex;
+		}
+	}
 
 	@Test
 	public void shouldGetRideForExistingId() {
