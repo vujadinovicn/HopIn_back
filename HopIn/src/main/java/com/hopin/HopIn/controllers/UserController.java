@@ -93,7 +93,7 @@ public class UserController {
 		} catch (BadCredentialsException e) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Wrong username or password!"), HttpStatus.BAD_REQUEST);
 		} catch (Exception ex) {
-			System.out.println(ex.getStackTrace());
+			ex.printStackTrace();
 			return new ResponseEntity<TokenDTO>(HttpStatus.UNAUTHORIZED);
 		}
 		SecurityContextHolder.getContext().setAuthentication(authentication);
