@@ -188,7 +188,6 @@ public class RideController {
 	public ResponseEntity<?> panicRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
 			@Valid @RequestBody(required = false) ReasonDTO dto) {
-		System.out.println("PANIC " + id + " " + dto.getReason());
 		PanicRideDTO ride = service.panicRide(id, dto);
 		if (ride == null) {
 			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);

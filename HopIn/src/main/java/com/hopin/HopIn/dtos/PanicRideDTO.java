@@ -11,6 +11,10 @@ public class PanicRideDTO {
 	private LocalDateTime time;
 	private String reason;
 	
+	public PanicRideDTO() {
+		
+	}
+	
 	public PanicRideDTO(int id, UserInPanicRideDTO user, RideReturnedDTO ride, LocalDateTime time,
 			String reason) {
 		super();

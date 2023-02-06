@@ -3,6 +3,10 @@ package com.hopin.HopIn.validations;
 public class ExceptionDTO {
 	
 	private String message;
+	
+	public ExceptionDTO() {
+		
+	}
 
 	public ExceptionDTO(String message) {
 		super();
