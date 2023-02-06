@@ -146,7 +146,7 @@ public class PassengerController {
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
-	@PreAuthorize("hasRole('PASSENGER')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')")
 	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id,
 			@RequestParam String from, @RequestParam String to) {
