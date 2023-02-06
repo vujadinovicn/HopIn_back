@@ -22,6 +22,7 @@ import com.hopin.HopIn.dtos.CredentialsDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.validations.ExceptionDTO;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -43,6 +44,11 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	private static String TOKEN_ADMIN;
 	
 	private static int ACCEPTED_RIDE_ID = 1;
+	private static int PENDING_RIDE_ID = 2;
+    private static int STARTED_RIDE_ID = 3;
+    
+	private static int NON_EXISTANT_RIDE_ID = 0;
+	private static int INVALID_RIDE_ID = -1;
 
 	@Autowired
     private TestRestTemplate restTemplate;
@@ -80,9 +86,46 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	 * */
 	
 	@Test
+	public void shouldReturnUnathorised_ForNoToken_StartRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + ACCEPTED_RIDE_ID + "/start", HttpMethod.PUT, null, String.class);
+
+		assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnForbidden_ForWrongRole_StartRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + ACCEPTED_RIDE_ID + "/start", HttpMethod.PUT, makeJwtHeader(TOKEN_PASSENGER), String.class);
+
+		assertEquals(HttpStatus.FORBIDDEN, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnNotFound_ForNonExistantRide_StartRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + NON_EXISTANT_RIDE_ID + "/start", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
+
+		assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+		assertEquals("Ride does not exist!", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturBadRequest_ForWrongRideStatus_StartRide() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/" + STARTED_RIDE_ID + "/start", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), ExceptionDTO.class);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Cannot start a ride that is not in status ACCEPTED!", res.getBody().getMessage());
+	}
+	
+	@Test
+	public void shouldReturBadRequest_ForInvalidRideId_StartRide() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/" + INVALID_RIDE_ID + "/start", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), ExceptionDTO.class);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Field id must be greater than 0.", res.getBody().getMessage());
+	}
+	
+	@Test
 	public void shouldStartRide() {
-		ResponseEntity<RideReturnedDTO> res = restTemplate.withBasicAuth("driver@gmail.com", "123")
-														  .exchange("/api/ride/" + ACCEPTED_RIDE_ID + "/start", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), RideReturnedDTO.class);
+		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/" + ACCEPTED_RIDE_ID + "/start", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), RideReturnedDTO.class);
 		
 		RideReturnedDTO ride = res.getBody();
 		
@@ -90,5 +133,55 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals(ride.getStatus(), RideStatus.STARTED);
 		assertEquals(ride.getId(), ACCEPTED_RIDE_ID);
 		assertTrue(ride.getStartTime() != null);
+	}
+	
+	@Test
+	public void shouldReturnUnathorised_ForNoToken_EndRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + STARTED_RIDE_ID + "/end", HttpMethod.PUT, null, String.class);
+
+		assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnForbidden_ForWrongRole_EndRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + STARTED_RIDE_ID + "/end", HttpMethod.PUT, makeJwtHeader(TOKEN_PASSENGER), String.class);
+
+		assertEquals(HttpStatus.FORBIDDEN, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnNotFound_ForNonExistantRide_EndRide() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + NON_EXISTANT_RIDE_ID + "/end", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
+
+		assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+		assertEquals("Ride does not exist!", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturBadRequest_ForWrongRideStatus_EndRide() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/" + ACCEPTED_RIDE_ID + "/end", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), ExceptionDTO.class);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Cannot end a ride that is not in status STARTED!", res.getBody().getMessage());
+	}
+	
+	@Test
+	public void shouldReturBadRequest_ForInvalidRideId_EndRide() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/" + INVALID_RIDE_ID + "/end", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), ExceptionDTO.class);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Field id must be greater than 0.", res.getBody().getMessage());
+	}
+	
+	@Test
+	public void shouldEndRide() {
+		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/" + STARTED_RIDE_ID + "/end", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), RideReturnedDTO.class);
+		
+		RideReturnedDTO ride = res.getBody();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(ride.getStatus(), RideStatus.FINISHED);
+		assertEquals(ride.getId(), STARTED_RIDE_ID);
+		assertTrue(ride.getEndTime() != null);
 	}
 }
