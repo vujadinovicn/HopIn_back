@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results ignored="0" total="8" passed="6" failed="2" skipped="0">
+<testng-results ignored="0" total="14" passed="14" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2023-02-06T02:15:59 CET" name="Default suite" finished-at="2023-02-06T02:16:22 CET" duration-ms="23864">
+  <suite started-at="2023-02-06T03:25:04 CET" name="Default suite" finished-at="2023-02-06T03:25:17 CET" duration-ms="12571">
     <groups>
     </groups>
-    <test started-at="2023-02-06T02:15:59 CET" name="Default test" finished-at="2023-02-06T02:16:22 CET" duration-ms="23864">
+    <test started-at="2023-02-06T03:25:04 CET" name="Default test" finished-at="2023-02-06T03:25:17 CET" duration-ms="12571">
       <class name="com.hopin.HopIn.services.RideServiceTest">
-        <test-method is-config="true" signature="springTestContextBeforeTestClass()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:15:59 CET" name="springTestContextBeforeTestClass" finished-at="2023-02-06T02:15:59 CET" duration-ms="48" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestClass()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:04 CET" name="springTestContextBeforeTestClass" finished-at="2023-02-06T03:25:04 CET" duration-ms="18" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestClass -->
-        <test-method is-config="true" signature="springTestContextPrepareTestInstance()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:15:59 CET" name="springTestContextPrepareTestInstance" finished-at="2023-02-06T02:16:22 CET" depends-on-methods="org.springframework.test.context.testng.AbstractTestNGSpringContextTests.springTestContextBeforeTestClass" duration-ms="23241" status="PASS">
+        <test-method is-config="true" signature="springTestContextPrepareTestInstance()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:04 CET" name="springTestContextPrepareTestInstance" finished-at="2023-02-06T03:25:17 CET" depends-on-methods="org.springframework.test.context.testng.AbstractTestNGSpringContextTests.springTestContextBeforeTestClass" duration-ms="12222" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextPrepareTestInstance -->
-        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="33" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="14" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -26,15 +26,15 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestMethod -->
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="setup" finished-at="2023-02-06T02:16:22 CET" duration-ms="2" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- setup -->
-        <test-method signature="shouldAcceptRide()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="shouldAcceptRide" finished-at="2023-02-06T02:16:22 CET" duration-ms="113" status="PASS">
+        <test-method signature="shouldAcceptRide()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldAcceptRide" finished-at="2023-02-06T03:25:17 CET" duration-ms="64" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- shouldAcceptRide -->
-        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="18" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="8" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -45,7 +45,37 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestMethod -->
-        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="10" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="5" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldCancelRide()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method signature="shouldCancelRide()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldCancelRide" finished-at="2023-02-06T03:25:17 CET" duration-ms="5" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldCancelRide -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="4" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldCancelRide()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -56,15 +86,15 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestMethod -->
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="setup" finished-at="2023-02-06T02:16:22 CET" duration-ms="1" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- setup -->
-        <test-method signature="shouldDeleteFavoriteRideForExistingId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="shouldDeleteFavoriteRideForExistingId" finished-at="2023-02-06T02:16:22 CET" duration-ms="39" status="PASS">
+        <test-method signature="shouldDeleteFavoriteRideForExistingId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldDeleteFavoriteRideForExistingId" finished-at="2023-02-06T03:25:17 CET" duration-ms="18" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- shouldDeleteFavoriteRideForExistingId -->
-        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="11" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="4" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -75,7 +105,37 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestMethod -->
-        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="8" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldGetFavoriteRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetFavoriteRides()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldGetFavoriteRides" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetFavoriteRides -->
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldGetFavoriteRides()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -86,15 +146,15 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestMethod -->
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="setup" finished-at="2023-02-06T02:16:22 CET" duration-ms="1" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- setup -->
-        <test-method signature="shouldGetRideForExistingId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="shouldGetRideForExistingId" finished-at="2023-02-06T02:16:22 CET" duration-ms="4" status="PASS">
+        <test-method signature="shouldGetRideForExistingId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldGetRideForExistingId" finished-at="2023-02-06T03:25:17 CET" duration-ms="2" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- shouldGetRideForExistingId -->
-        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="11" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="4" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -105,7 +165,37 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestMethod -->
-        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="12" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="2" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldGetRideSugestionPrice()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldGetRideSugestionPrice()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldGetRideSugestionPrice" finished-at="2023-02-06T03:25:17 CET" duration-ms="2" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldGetRideSugestionPrice -->
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="5" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldGetRideSugestionPrice()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="2" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -116,15 +206,15 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestMethod -->
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="setup" finished-at="2023-02-06T02:16:22 CET" duration-ms="2" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- setup -->
-        <test-method signature="shouldStartRideForExistingRideWithStatusAccepted()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="shouldStartRideForExistingRideWithStatusAccepted" finished-at="2023-02-06T02:16:22 CET" duration-ms="5" status="PASS">
+        <test-method signature="shouldStartRideForExistingRideWithStatusAccepted()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldStartRideForExistingRideWithStatusAccepted" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- shouldStartRideForExistingRideWithStatusAccepted -->
-        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="12" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -135,7 +225,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestMethod -->
-        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="6" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -146,22 +236,24 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestMethod -->
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="setup" finished-at="2023-02-06T02:16:22 CET" duration-ms="1" status="PASS">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- setup -->
-        <test-method signature="shouldThrowExceptionForAcceptingRideWithBadStatus()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="shouldThrowExceptionForAcceptingRideWithBadStatus" finished-at="2023-02-06T02:16:22 CET" duration-ms="16" status="FAIL">
-          <exception class="org.testng.TestException">
+        <test-method signature="shouldThrowExceptionForAcceptingRideWithBadStatus()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldThrowExceptionForAcceptingRideWithBadStatus" finished-at="2023-02-06T03:25:17 CET" duration-ms="8" status="PASS">
+          <exception class="org.springframework.web.server.ResponseStatusException">
             <message>
-              <![CDATA[
-Method RideServiceTest.shouldThrowExceptionForAcceptingRideWithBadStatus()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe] should have thrown an exception of type class org.springframework.web.server.ResponseStatusException]]>
+              <![CDATA[400 BAD_REQUEST "Cannot accept a ride that is not in status PENDING!"]]>
             </message>
             <full-stacktrace>
-              <![CDATA[org.testng.TestException: 
-Method RideServiceTest.shouldThrowExceptionForAcceptingRideWithBadStatus()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe] should have thrown an exception of type class org.springframework.web.server.ResponseStatusException
-at org.testng.internal.invokers.ExpectedExceptionsHolder.noException(ExpectedExceptionsHolder.java:81)
-at org.testng.internal.invokers.TestInvoker.considerExceptions(TestInvoker.java:866)
-at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:727)
+              <![CDATA[org.springframework.web.server.ResponseStatusException: 400 BAD_REQUEST "Cannot accept a ride that is not in status PENDING!"
+at com.hopin.HopIn.services.RideServiceImpl.acceptRide(RideServiceImpl.java:583)
+at com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForAcceptingRideWithBadStatus(RideServiceTest.java:197)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+at org.testng.internal.invokers.MethodInvocationHelper$1.runTestMethod(MethodInvocationHelper.java:258)
+at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:154)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeHookable(MethodInvocationHelper.java:272)
+at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:669)
 at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:221)
 at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
 at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:962)
@@ -186,11 +278,15 @@ at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
 at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
 ]]>
             </full-stacktrace>
-          </exception> <!-- org.testng.TestException -->
+          </exception> <!-- org.springframework.web.server.ResponseStatusException -->
           <reporter-output>
           </reporter-output>
         </test-method> <!-- shouldThrowExceptionForAcceptingRideWithBadStatus -->
-        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="10" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="4" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -201,7 +297,7 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestMethod -->
-        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="7" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -212,18 +308,25 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestMethod -->
-        <test-method signature="shouldThrowExceptionForAcceptingRideWithNonExistingId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="shouldThrowExceptionForAcceptingRideWithNonExistingId" finished-at="2023-02-06T02:16:22 CET" duration-ms="13" status="FAIL">
-          <exception class="org.testng.TestException">
+        <test-method signature="shouldThrowExceptionForAcceptingRideWithNonExistingId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldThrowExceptionForAcceptingRideWithNonExistingId" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
+          <exception class="org.springframework.web.server.ResponseStatusException">
             <message>
-              <![CDATA[
-Method RideServiceTest.shouldThrowExceptionForAcceptingRideWithNonExistingId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe] should have thrown an exception of type class org.springframework.web.server.ResponseStatusException]]>
+              <![CDATA[404 NOT_FOUND "Ride does not exist!"]]>
             </message>
             <full-stacktrace>
-              <![CDATA[org.testng.TestException: 
-Method RideServiceTest.shouldThrowExceptionForAcceptingRideWithNonExistingId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe] should have thrown an exception of type class org.springframework.web.server.ResponseStatusException
-at org.testng.internal.invokers.ExpectedExceptionsHolder.noException(ExpectedExceptionsHolder.java:81)
-at org.testng.internal.invokers.TestInvoker.considerExceptions(TestInvoker.java:866)
-at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:727)
+              <![CDATA[org.springframework.web.server.ResponseStatusException: 404 NOT_FOUND "Ride does not exist!"
+at com.hopin.HopIn.services.RideServiceImpl.getRideIfExists(RideServiceImpl.java:518)
+at com.hopin.HopIn.services.RideServiceImpl.acceptRide(RideServiceImpl.java:580)
+at com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForAcceptingRideWithNonExistingId(RideServiceTest.java:183)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+at org.testng.internal.invokers.MethodInvocationHelper$1.runTestMethod(MethodInvocationHelper.java:258)
+at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:154)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeHookable(MethodInvocationHelper.java:272)
+at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:669)
 at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:221)
 at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
 at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:962)
@@ -248,15 +351,15 @@ at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
 at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
 ]]>
             </full-stacktrace>
-          </exception> <!-- org.testng.TestException -->
+          </exception> <!-- org.springframework.web.server.ResponseStatusException -->
           <reporter-output>
           </reporter-output>
         </test-method> <!-- shouldThrowExceptionForAcceptingRideWithNonExistingId -->
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="setup" finished-at="2023-02-06T02:16:22 CET" duration-ms="0" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="0" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="9" status="PASS">
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="4" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -267,7 +370,152 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestMethod -->
-        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="6" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForCancelingRideWithBadStatus()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method signature="shouldThrowExceptionForCancelingRideWithBadStatus()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldThrowExceptionForCancelingRideWithBadStatus" finished-at="2023-02-06T03:25:17 CET" duration-ms="1" status="PASS">
+          <exception class="org.springframework.web.server.ResponseStatusException">
+            <message>
+              <![CDATA[400 BAD_REQUEST "Cannot cancel a ride that is not in status PENDING or STARTED!"]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[org.springframework.web.server.ResponseStatusException: 400 BAD_REQUEST "Cannot cancel a ride that is not in status PENDING or STARTED!"
+at com.hopin.HopIn.services.RideServiceImpl.cancelRide(RideServiceImpl.java:536)
+at com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForCancelingRideWithBadStatus(RideServiceTest.java:235)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+at org.testng.internal.invokers.MethodInvocationHelper$1.runTestMethod(MethodInvocationHelper.java:258)
+at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:154)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeHookable(MethodInvocationHelper.java:272)
+at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:669)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:221)
+at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:962)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:194)
+at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+at org.testng.TestRunner.privateRun(TestRunner.java:806)
+at org.testng.TestRunner.run(TestRunner.java:601)
+at org.testng.SuiteRunner.runTest(SuiteRunner.java:433)
+at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:427)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:387)
+at org.testng.SuiteRunner.run(SuiteRunner.java:330)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1256)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1176)
+at org.testng.TestNG.runSuites(TestNG.java:1099)
+at org.testng.TestNG.run(TestNG.java:1067)
+at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+]]>
+            </full-stacktrace>
+          </exception> <!-- org.springframework.web.server.ResponseStatusException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldThrowExceptionForCancelingRideWithBadStatus -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForCancelingRideWithBadStatus()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="2" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForCancelingRideWithNonExistingId()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method signature="shouldThrowExceptionForCancelingRideWithNonExistingId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldThrowExceptionForCancelingRideWithNonExistingId" finished-at="2023-02-06T03:25:17 CET" duration-ms="1" status="PASS">
+          <exception class="org.springframework.web.server.ResponseStatusException">
+            <message>
+              <![CDATA[404 NOT_FOUND "Ride does not exist!"]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[org.springframework.web.server.ResponseStatusException: 404 NOT_FOUND "Ride does not exist!"
+at com.hopin.HopIn.services.RideServiceImpl.getRideIfExists(RideServiceImpl.java:518)
+at com.hopin.HopIn.services.RideServiceImpl.cancelRide(RideServiceImpl.java:533)
+at com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForCancelingRideWithNonExistingId(RideServiceTest.java:221)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+at org.testng.internal.invokers.MethodInvocationHelper$1.runTestMethod(MethodInvocationHelper.java:258)
+at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:154)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeHookable(MethodInvocationHelper.java:272)
+at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:669)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:221)
+at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:962)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:194)
+at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+at org.testng.TestRunner.privateRun(TestRunner.java:806)
+at org.testng.TestRunner.run(TestRunner.java:601)
+at org.testng.SuiteRunner.runTest(SuiteRunner.java:433)
+at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:427)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:387)
+at org.testng.SuiteRunner.run(SuiteRunner.java:330)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1256)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1176)
+at org.testng.TestNG.runSuites(TestNG.java:1099)
+at org.testng.TestNG.run(TestNG.java:1067)
+at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+]]>
+            </full-stacktrace>
+          </exception> <!-- org.springframework.web.server.ResponseStatusException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldThrowExceptionForCancelingRideWithNonExistingId -->
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="0" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="4" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForCancelingRideWithNonExistingId()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="2" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -278,16 +526,16 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestMethod -->
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="setup" finished-at="2023-02-06T02:16:22 CET" duration-ms="1" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="1" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method signature="shouldThrowExceptionForNonExistingFavoriteRideId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="shouldThrowExceptionForNonExistingFavoriteRideId" finished-at="2023-02-06T02:16:22 CET" duration-ms="6" status="PASS">
+        <test-method signature="shouldThrowExceptionForNonExistingFavoriteRideId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldThrowExceptionForNonExistingFavoriteRideId" finished-at="2023-02-06T03:25:17 CET" duration-ms="2" status="PASS">
           <exception class="com.hopin.HopIn.exceptions.FavoriteRideException">
             <full-stacktrace>
               <![CDATA[com.hopin.HopIn.exceptions.FavoriteRideException
 at com.hopin.HopIn.services.RideServiceImpl.deleteFavoriteRide(RideServiceImpl.java:220)
-at com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForNonExistingFavoriteRideId(RideServiceTest.java:151)
+at com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForNonExistingFavoriteRideId(RideServiceTest.java:162)
 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
 at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -325,7 +573,7 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- shouldThrowExceptionForNonExistingFavoriteRideId -->
-        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="10" status="PASS">
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="4" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -336,7 +584,7 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestMethod -->
-        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="5" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -347,16 +595,16 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextBeforeTestMethod -->
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="setup" finished-at="2023-02-06T02:16:22 CET" duration-ms="0" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="1" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method signature="shouldThrowExceptionForNonExistingRideId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="shouldThrowExceptionForNonExistingRideId" finished-at="2023-02-06T02:16:22 CET" duration-ms="2" status="PASS">
+        <test-method signature="shouldThrowExceptionForNonExistingRideId()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldThrowExceptionForNonExistingRideId" finished-at="2023-02-06T03:25:17 CET" duration-ms="2" status="PASS">
           <exception class="com.hopin.HopIn.exceptions.RideNotFoundException">
             <full-stacktrace>
               <![CDATA[com.hopin.HopIn.exceptions.RideNotFoundException
 at com.hopin.HopIn.services.RideServiceImpl.getRide(RideServiceImpl.java:511)
-at com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForNonExistingRideId(RideServiceTest.java:120)
+at com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionForNonExistingRideId(RideServiceTest.java:131)
 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
 at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -394,7 +642,7 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- shouldThrowExceptionForNonExistingRideId -->
-        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T02:16:22 CET" duration-ms="9" status="PASS">
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="5" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -405,7 +653,80 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestMethod -->
-        <test-method is-config="true" signature="springTestContextAfterTestClass()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@7e3f95fe]" started-at="2023-02-06T02:16:22 CET" name="springTestContextAfterTestClass" finished-at="2023-02-06T02:16:22 CET" duration-ms="3" status="PASS">
+        <test-method is-config="true" signature="springTestContextBeforeTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextBeforeTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionWhenTryingToGetPriceButVehicleIsNull()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextBeforeTestMethod -->
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="setup" finished-at="2023-02-06T03:25:17 CET" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method signature="shouldThrowExceptionWhenTryingToGetPriceButVehicleIsNull()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="shouldThrowExceptionWhenTryingToGetPriceButVehicleIsNull" finished-at="2023-02-06T03:25:17 CET" duration-ms="1" status="PASS">
+          <exception class="java.lang.NullPointerException">
+            <message>
+              <![CDATA[Name is null]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.NullPointerException: Name is null
+at java.base/java.lang.Enum.valueOf(Enum.java:271)
+at com.hopin.HopIn.services.RideServiceImpl.getRideSugestionPrice(RideServiceImpl.java:674)
+at com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionWhenTryingToGetPriceButVehicleIsNull(RideServiceTest.java:254)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:139)
+at org.testng.internal.invokers.MethodInvocationHelper$1.runTestMethod(MethodInvocationHelper.java:258)
+at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:154)
+at org.testng.internal.invokers.MethodInvocationHelper.invokeHookable(MethodInvocationHelper.java:272)
+at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:669)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:221)
+at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:50)
+at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:962)
+at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:194)
+at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:148)
+at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:128)
+at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+at org.testng.TestRunner.privateRun(TestRunner.java:806)
+at org.testng.TestRunner.run(TestRunner.java:601)
+at org.testng.SuiteRunner.runTest(SuiteRunner.java:433)
+at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:427)
+at org.testng.SuiteRunner.privateRun(SuiteRunner.java:387)
+at org.testng.SuiteRunner.run(SuiteRunner.java:330)
+at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+at org.testng.TestNG.runSuitesSequentially(TestNG.java:1256)
+at org.testng.TestNG.runSuitesLocally(TestNG.java:1176)
+at org.testng.TestNG.runSuites(TestNG.java:1099)
+at org.testng.TestNG.run(TestNG.java:1067)
+at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
+at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.lang.NullPointerException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldThrowExceptionWhenTryingToGetPriceButVehicleIsNull -->
+        <test-method is-config="true" signature="springTestContextAfterTestMethod(java.lang.reflect.Method)[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestMethod" finished-at="2023-02-06T03:25:17 CET" duration-ms="3" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void com.hopin.HopIn.services.RideServiceTest.shouldThrowExceptionWhenTryingToGetPriceButVehicleIsNull()]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- springTestContextAfterTestMethod -->
+        <test-method is-config="true" signature="springTestContextAfterTestClass()[pri:0, instance:com.hopin.HopIn.services.RideServiceTest@3383649e]" started-at="2023-02-06T03:25:17 CET" name="springTestContextAfterTestClass" finished-at="2023-02-06T03:25:17 CET" duration-ms="2" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- springTestContextAfterTestClass -->

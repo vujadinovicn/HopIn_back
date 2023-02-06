@@ -5,11 +5,10 @@
     <classes>
       <class name="com.hopin.HopIn.services.RideServiceTest">
         <methods>
-          <include name="shouldThrowExceptionForAcceptingRideWithBadStatus"/>
-          <include name="shouldThrowExceptionForAcceptingRideWithNonExistingId"/>
+          <include name="shouldGetFavoriteRides"/>
           <include name="springTestContextBeforeTestClass"/>
-          <include name="springTestContextBeforeTestMethod"/>
           <include name="setup"/>
+          <include name="springTestContextBeforeTestMethod"/>
           <include name="springTestContextPrepareTestInstance"/>
           <include name="springTestContextAfterTestClass"/>
           <include name="springTestContextAfterTestMethod"/>
