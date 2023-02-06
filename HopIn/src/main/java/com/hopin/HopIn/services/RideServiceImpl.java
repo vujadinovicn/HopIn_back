@@ -346,8 +346,15 @@ public class RideServiceImpl implements IRideService {
 						.getEstimatedTime(rideDTO.getDepartureLocation(), driver.getVehicleLocation());
 			else {
 				RideReturnedDTO currentRide = this.getActiveRideForDriver(driver.getId());
-				startOfDrivingToDeparture = currentRide.getStartTime()
-						.plusMinutes(currentRide.getEstimatedTimeInMinutes());
+				
+				if (currentRide.getStartTime() == null) {
+					startOfDrivingToDeparture = LocalDateTime.now();
+					startOfDrivingToDeparture.plusMinutes(currentRide.getEstimatedTimeInMinutes()-1);
+				} else {
+					startOfDrivingToDeparture = currentRide.getStartTime()
+							.plusMinutes(currentRide.getEstimatedTimeInMinutes());
+				}
+				
 				timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(
 						rideDTO.getDepartureLocation(), currentRide.getLocations().get(0).getDestination());
 			}
