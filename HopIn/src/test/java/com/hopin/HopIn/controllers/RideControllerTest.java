@@ -258,6 +258,43 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		
 		assertEquals(HttpStatus.OK, res.getStatusCode());
 		assertEquals(STARTED_RIDE_ID, ride.getId());
+		assertEquals(RideStatus.STARTED, ride.getStatus());
+		assertEquals(ride.getDriver().getId(), DRIVER_ID);
+	}
+	
+	@Test
+	public void shouldThrowUnauthorizedExceptionWhenGettingPendingRideForDriver() {
+		ResponseEntity<?> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_ID + "/pending", HttpMethod.GET, null, RideReturnedDTO.class);
+		assertEquals(res.getStatusCode(), HttpStatus.UNAUTHORIZED);
+	}
+	
+	@Test
+	public void shouldThrowForbiddenExceptionWhenGettingPendingRideForDriverAsPassenger() {
+		ResponseEntity<?> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_ID + "/pending", HttpMethod.GET, makeJwtHeader(TOKEN_PASSENGER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.FORBIDDEN);
+	}
+	
+	@Test
+	public void shouldThrowJSONExceptionWhenGettingPendingRideForDriverWithInvalidDriverId() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver/" + INVALID_RIDE_ID + "/pending", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+	}
+	
+	@Test
+	public void shouldThrowNoActiveDriverRideExceptionWhenGettingPendingRideForDriver() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_WITH_NO_RIDE + "/pending", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.NOT_FOUND);
+		assertEquals("Active ride does not exist", res.getBody());
+	}
+	
+	public void shouldGetPendingRideForDriver() {
+		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_ID + "/pending", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), RideReturnedDTO.class);
+		
+		RideReturnedDTO ride = res.getBody();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(PENDING_RIDE_ID, ride.getId());
+		assertEquals(RideStatus.PENDING, ride.getStatus());
 		assertEquals(ride.getDriver().getId(), DRIVER_ID);
 	}
 	
