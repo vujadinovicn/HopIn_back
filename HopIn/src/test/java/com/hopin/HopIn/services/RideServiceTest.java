@@ -2,9 +2,11 @@ package com.hopin.HopIn.services;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.time.LocalDateTime;
@@ -19,6 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -28,6 +33,8 @@ import org.testng.annotations.Test;
 
 import com.hopin.HopIn.HopInApplication;
 import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
+import com.hopin.HopIn.dtos.PanicRideDTO;
+import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.entities.Driver;
@@ -38,12 +45,15 @@ import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverRideException;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.repositories.FavoriteRideRepository;
+import com.hopin.HopIn.repositories.PanicRepository;
 import com.hopin.HopIn.repositories.RideRepository;
+import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -72,6 +82,18 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	@MockBean
 	private VehicleTypeRepository allVehicleTypes;
 	
+	@MockBean
+	private Authentication authentication;
+	
+	@MockBean
+	private SecurityContext context;
+	
+	@MockBean
+	private UserRepository allUsers;
+	
+	@MockBean
+	private PanicRepository allPanics;
+	
 	
 	private Ride ride;
 	private Passenger passenger;
@@ -85,7 +107,8 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	public void setup() {
 		Driver driver = new Driver(1, "Pera", "Peric", "pera@gmail.com", "123", "Adresa", "4384294", null);
 		passenger = new Passenger(2, "Lara", "Peric", "lara@gmail.com", "123", "Adresa", "4384294", null, null, null);
-		
+		driver.setRole(Role.DRIVER);
+		passenger.setRole(Role.PASSENGER);
 		Location departure = new Location(1, "Jirecekova 1" , 45.32, 24.3);
 		Location destination = new Location(1, "Promenada" , 45.32, 24.3);
 		
@@ -311,5 +334,33 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		
 		assertEquals(ret, null);
 	}
+	
+	@Test
+	public void shouldGetPendingRideForPassenger() {
+		ride.setStatus(RideStatus.PENDING);
+		int passengerId = ride.getPassengers().iterator().next().getId();
+		Mockito.when(allRides.getPendingRideForPassenger(passengerId)).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
+		
+		assertTrue(ret.getPassengers().stream()
+				  .filter(passenger -> passenger.getId() == passengerId)
+				  .findAny()
+				  .orElse(null) != null);
+		assertEquals(ret.getStatus(), RideStatus.PENDING);
+
+		verify(allRides, times(1)).getPendingRideForPassenger(passengerId);
+		
+	}
+	
+	@Test
+	public void shouldGetNullWhenGettingPendingRideForPassenger() {
+		int passengerId = 0;
+		Mockito.when(allRides.getActiveRideForDriver(passengerId)).thenReturn(null);
+		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
+		
+		assertEquals(ret, null);
+	}
+	
+	
 	
 }
