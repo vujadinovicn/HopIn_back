@@ -40,7 +40,10 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	private final static String PASSWORD_PASSENGER = "123";
 	
 	private final static String USERNAME_DRIVER = "driver@gmail.com";
+	private final static int DRIVER_ID = 2;
 	private final static String PASSWORD_DRIVER = "123";
+	
+	private final static int DRIVER_WITH_NO_RIDE = 3;
 	
 	private final static String USERNAME_ADMIN = "admin@gmail.com";
 	private final static String PASSWORD_ADMIN = "123";
@@ -200,7 +203,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	
 	@Test
 	public void shouldThrowJSONExceptionWhenPanickingRideWithInvalidReason() {
-		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/panic", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson("reason"), TOKEN_DRIVER), String.class);
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/panic", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson(""), TOKEN_DRIVER), String.class);
 		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
 	}
 	
@@ -221,6 +224,41 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals(HttpStatus.OK, res.getStatusCode());
 		assertEquals(panic.getRide().getId(), STARTED_RIDE_ID);
 		assertEquals(panic.getReason(), "reason");
+	}
+	
+	@Test
+	public void shouldThrowUnauthorizedExceptionWhenGettingActiveRideForDriver() {
+		ResponseEntity<?> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_ID + "/active", HttpMethod.GET, null, RideReturnedDTO.class);
+		assertEquals(res.getStatusCode(), HttpStatus.UNAUTHORIZED);
+	}
+	
+	@Test
+	public void shouldThrowForbiddenExceptionWhenGettingActiveRideForDriverAsPassenger() {
+		ResponseEntity<?> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_ID + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_PASSENGER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.FORBIDDEN);
+	}
+	
+	@Test
+	public void shouldThrowJSONExceptionWhenGettingActiveRideForDriverWithInvalidDriverId() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver/" + INVALID_RIDE_ID + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+	}
+	
+	@Test
+	public void shouldThrowNoActiveDriverRideExceptionWhenGettingActiveRideForDriver() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_WITH_NO_RIDE + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.NOT_FOUND);
+		assertEquals("Active ride does not exist", res.getBody());
+	}
+	
+	public void shouldGetActiveRideForDriver() {
+		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_ID + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), RideReturnedDTO.class);
+		
+		RideReturnedDTO ride = res.getBody();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(STARTED_RIDE_ID, ride.getId());
+		assertEquals(ride.getDriver().getId(), DRIVER_ID);
 	}
 	
 	

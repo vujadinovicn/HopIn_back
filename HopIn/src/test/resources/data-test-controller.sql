@@ -36,3 +36,14 @@ insert into "rides_passengers"("ride_id", "passengers_id") values (2, 1);
 
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (false, 95, null, 5, false, false, null, 6, 250, 3, 2, null, 1, 1, 2);
 insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1);
+
+insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Hajduk Veljka', 'vozac@gmail.com', true, false, 'Mark', '$2a$12$DdZJHu0xNmWhNo6qeZrB..dFEGPNqdCFmStxusNrElLQso5ZLVUkW', null , 'Jacobs', '+381603454212', 1);
+insert into "vehicles"("baby_transport", "driver_id", "license_number", "model", "passenger_seats", "pet_transport", "current_location_id", "vehicle_type_id") values (true, 2, 'BP-030-HR', 'AUDI A6', 4, true, 4, 1);
+
+insert into "drivers"("id", "vehicle_id", "is_active") values (3, 2, false);    
+
+insert into "documents"("name", "document_image", "driver_id") values ('Drivers license 1', 'sss', 3);
+insert into "documents"("name", "document_image", "driver_id") values ('Registration license 1', 'sss', 3);
+   
+insert into "drivers_documents" values (3,3);
+insert into "drivers_documents" values (3,4); 

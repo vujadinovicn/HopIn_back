@@ -125,7 +125,7 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getActiveRideForDriver(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
@@ -136,7 +136,7 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/driver/{driverId}/pending", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getPendingRideForDriver(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
