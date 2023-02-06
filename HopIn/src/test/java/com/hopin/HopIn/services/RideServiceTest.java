@@ -245,7 +245,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		UnregisteredRideSuggestionDTO dto = new UnregisteredRideSuggestionDTO(vehicleType.getName().toString(), DISTANCE);
 		Mockito.when(allVehicleTypes.getByName(vehicleType.getName())).thenReturn(vehicleType);
 		Double ret = this.rideService.getRideSugestionPrice(dto);
-		assertEquals(ret, vehicleType.getPricePerKm());
+		assertEquals(ret, vehicleType.getPricePerKm()*DISTANCE);
 	}
 	
 	@Test(expectedExceptions = {NullPointerException.class})
