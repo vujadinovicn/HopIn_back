@@ -1,4 +1,3 @@
-
 insert into "locations"("address", "latitude", "longitude") values ('Novi Sad', 45.26, 19.83);
 insert into "locations"("address", "latitude", "longitude") values ('Beograd', 44.78, 20.45);
 insert into "locations"("address", "latitude", "longitude") values ('Kragujevac',  44.02, 20.92);
@@ -37,6 +36,16 @@ insert into "rides_passengers"("ride_id", "passengers_id") values (2, 1);
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id") values (false, 95, null, 5, false, false, null, 6, 250, 3, 2, null, 1, 1, 2);
 insert into "rides_passengers"("ride_id", "passengers_id") values (3, 1);
 
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id", "scheduled_time") values (false, 95, null, 5, false, false, null, 1, 250, 3, 2, null, 1, 1, 2, '2022-12-26T11:11:11');
+insert into "rides_passengers"("ride_id", "passengers_id") values (4, 1);
+
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id", "scheduled_time") values (false, 95, null, 5, false, false, null, 0, 250, 3, 2, null, 1, 1, 2, '2022-12-26T11:11:11');
+insert into "rides_passengers"("ride_id", "passengers_id") values (5, 1);
+
+insert into "users"("address", "email", "is_activated", "is_blocked", "name", "password", "profile_picture", "surname", "telephone_number", "role") values ('Bulevar Oslobodjenja 5', 'tea@gmail.com', true, false, 'Pera', '$2a$12$t9Nsxg2fYHtDyJdnuZaRNeBPbg6EGxkUy7wpwZxbK5v2BKIIIWgK2', null, 'Peric', '+3819720132 ', 0);
+insert into "passengers"("id") values (5);
+
+insert into "rides_passengers"("ride_id", "passengers_id") values (3, 5);
 insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
 insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (1, 1);
 insert into "routes"("departure_id", "destination_id", "distance") values (2, 1, 120);
