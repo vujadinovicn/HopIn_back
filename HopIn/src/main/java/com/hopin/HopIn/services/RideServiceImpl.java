@@ -459,6 +459,11 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public RideReturnedDTO getPendingRideForPassenger(int id) {
+		Passenger passenger = this.allPassengers.findById(id).orElse(null);
+		
+		if (passenger == null)
+			throw new UserNotFoundException();
+		
 		Ride pendingRide = this.allRides.getPendingRideForPassenger(id);
 		if (pendingRide != null) {
 			return new RideReturnedDTO(pendingRide);

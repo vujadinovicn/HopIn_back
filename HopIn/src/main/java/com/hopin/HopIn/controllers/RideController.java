@@ -43,6 +43,7 @@ import com.hopin.HopIn.exceptions.NoRideAfterFiveHoursException;
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
 import com.hopin.HopIn.exceptions.PassengerHasAlreadyPendingRide;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.ITokenService;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -160,7 +161,13 @@ public class RideController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getActiveRideForPassenger(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int passengerId) {
-		RideReturnedDTO ride = service.getPendingRideForPassenger(passengerId);
+		RideReturnedDTO ride;
+		try {
+			ride = service.getPendingRideForPassenger(passengerId);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("Passenger doesn't exist!", HttpStatus.BAD_REQUEST);
+		}
+		
 		if (ride != null)
 			return new ResponseEntity<RideReturnedDTO>(service.getPendingRideForPassenger(passengerId), HttpStatus.OK);
 		else
@@ -341,7 +348,7 @@ public class RideController {
 			if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
 				return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 			} else {
-				return new ResponseEntity<String>("Something bad happened", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
 			}
 		}
 	}

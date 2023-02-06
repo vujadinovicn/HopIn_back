@@ -46,9 +46,14 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	private static int ACCEPTED_RIDE_ID = 1;
 	private static int PENDING_RIDE_ID = 2;
     private static int STARTED_RIDE_ID = 3;
+    private static int SCHEDULED_RIDE_ID = 4;
     
 	private static int NON_EXISTANT_RIDE_ID = 0;
 	private static int INVALID_RIDE_ID = -1;
+	
+	private static int PASSENGER_ID = 1;
+	private static int PASSENGER_NO_RIDES = 3;
+	private static int PASSENGER_ONLY_CANCELED_RIDE = 5;
 
 	@Autowired
     private TestRestTemplate restTemplate;
@@ -183,5 +188,119 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals(ride.getStatus(), RideStatus.FINISHED);
 		assertEquals(ride.getId(), STARTED_RIDE_ID);
 		assertTrue(ride.getEndTime() != null);
+	}
+	
+	@Test
+	public void shouldReturnUnathorised_ForNoToken_StartRideToDeparture() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver-took-off/" + SCHEDULED_RIDE_ID, HttpMethod.POST, null, String.class);
+
+		assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnForbidden_ForWrongRole_StartRideToDeparture() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver-took-off/" + SCHEDULED_RIDE_ID, HttpMethod.POST, makeJwtHeader(TOKEN_ADMIN), String.class);
+
+		assertEquals(HttpStatus.FORBIDDEN, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnNotFound_ForNonExistantRide_StartRideToDeparture() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver-took-off/" + NON_EXISTANT_RIDE_ID, HttpMethod.POST, makeJwtHeader(TOKEN_DRIVER), String.class);
+
+		assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+		assertEquals("Ride does not exist!", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturBadRequest_ForWrongRideStatus_StartRideToDeparture() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/driver-took-off/" + STARTED_RIDE_ID, HttpMethod.POST, makeJwtHeader(TOKEN_DRIVER), ExceptionDTO.class);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Cannot start ride to departure, status must be ACCEPTED!", res.getBody().getMessage());
+	}
+	
+	@Test
+	public void shouldReturBadRequest_ForRideWithNullScheduledTime_StartRideToDeparture() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/driver-took-off/" + ACCEPTED_RIDE_ID, HttpMethod.POST, makeJwtHeader(TOKEN_DRIVER), ExceptionDTO.class);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Cannot start ride to departure, scheduled time must not be null!", res.getBody().getMessage());
+	}
+	
+	@Test
+	public void shouldReturBadRequest_ForInvalidRideId_StartRideToDeparture() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/driver-took-off/" + INVALID_RIDE_ID, HttpMethod.POST, makeJwtHeader(TOKEN_DRIVER), ExceptionDTO.class);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Field id must be greater than 0.", res.getBody().getMessage());
+	}
+	
+	@Test
+	public void shouldStartRideToDeparture() {
+		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/driver-took-off/" + SCHEDULED_RIDE_ID, HttpMethod.POST, makeJwtHeader(TOKEN_DRIVER), RideReturnedDTO.class);
+		
+		RideReturnedDTO ride = res.getBody();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(ride.getId(), SCHEDULED_RIDE_ID);
+		assertTrue(ride.getScheduledTime() == null);
+	}
+	
+	@Test
+	public void shouldReturnUnathorised_ForNoToken_GetActiveRideForPassenger() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/passenger/" + PASSENGER_ID + "/active", HttpMethod.GET, null, String.class);
+
+		assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnForbidden_ForWrongRole_GetActiveRideForPassenger() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/passenger/" + PASSENGER_ID + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+
+		assertEquals(HttpStatus.FORBIDDEN, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldReturnBadRequest_ForNotExistantPassenger_GetActiveRideForPassenger() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/passenger/" + NON_EXISTANT_RIDE_ID + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Passenger doesn't exist!", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturnNotFound_ForPassengerWithNoRides_GetActiveRideForPassenger() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/passenger/" + PASSENGER_NO_RIDES + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+
+		assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+		assertEquals("Active ride does not exist", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturnNotFound_ForPassengerWithActiveRides_GetActiveRideForPassenger() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/passenger/" + PASSENGER_ONLY_CANCELED_RIDE + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+
+		assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+		assertEquals("Active ride does not exist", res.getBody());
+	}
+	
+	@Test
+	public void shouldReturnBadRequest_ForInvalidPassengerId_GetActiveRideForPassenger() {
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/passenger/" + INVALID_RIDE_ID + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), ExceptionDTO.class);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals("Field id must be greater than 0.", res.getBody().getMessage());
+	}
+	
+	@Test
+	public void shouldGetActiveRideForPassenger() {
+		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/passenger/" + PASSENGER_ID + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), RideReturnedDTO.class);
+		
+		RideReturnedDTO ride = res.getBody();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(ride.getId(), PENDING_RIDE_ID);
+		assertTrue(ride.getStatus() == RideStatus.PENDING);
 	}
 }
