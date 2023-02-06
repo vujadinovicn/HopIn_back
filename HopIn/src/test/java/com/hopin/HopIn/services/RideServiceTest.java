@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
+import com.hopin.HopIn.exceptions.NoActiveDriverRideException;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.repositories.FavoriteRideRepository;
 import com.hopin.HopIn.repositories.RideRepository;
@@ -271,11 +273,43 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		assertEquals(ret.get(0).getId(), favRide.getId());
 	}
 	
+	@Test
+	public void shouldGetActiveRideForDriverWhenDriverIsGoingToDeparture() {
+		ride.setStatus(RideStatus.ACTIVE);
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getActiveRideForDriver(driverId)).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getActiveRideForDriver(driverId);
+		
+		assertEquals(ret.getDriver().getId(), driverId);
+		assertEquals(ret.getStatus(), RideStatus.ACTIVE);
+
+		verify(allRides, times(1)).getActiveRideForDriver(driverId);
+		
+	}
 	
+	@Test
+	public void shouldGetActiveRideForDriverWhenRideStarted() {
+		ride.setStatus(RideStatus.STARTED);
+		ride.setStartTime(LocalDateTime.now());
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getActiveRideForDriver(driverId)).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getActiveRideForDriver(driverId);
+		
+		assertEquals(ret.getDriver().getId(), driverId);
+		assertTrue(ret.getStartTime() != null);
+		assertEquals(ret.getStatus(), RideStatus.STARTED);
+
+		verify(allRides, times(1)).getActiveRideForDriver(driverId);
+		
+	}
 	
-	
-	
-	
-	
+	@Test(expectedExceptions = {NoActiveDriverRideException.class})
+	public void shouldThrowNoActiveDriverRideExceptionWhenGettingActiveRideForDriver() {
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getActiveRideForDriver(driverId)).thenReturn(null);
+		RideReturnedDTO ret = rideService.getActiveRideForDriver(driverId);
+		
+		assertEquals(ret, null);
+	}
 	
 }
