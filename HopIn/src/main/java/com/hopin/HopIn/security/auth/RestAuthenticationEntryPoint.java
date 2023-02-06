@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.validation.FieldError;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.hopin.HopIn.validations.ExceptionDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -79,6 +79,11 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, NotFoundException notFoundException) throws IOException {
         // 404
         setResponseError(response, HttpServletResponse.SC_NOT_FOUND, String.format("Not found: %s", notFoundException.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+     protected ResponseEntity<Object> handleMethodMismatchException(MethodArgumentTypeMismatchException e) {
+        return new ResponseEntity<>("Path parameter " + e.getParameter() + " has bad type!", HttpStatus.BAD_REQUEST);
     }
     
     private void setResponseError(HttpServletResponse response, int errorCode, String errorMessage) throws IOException{

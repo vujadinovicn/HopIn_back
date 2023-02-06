@@ -664,25 +664,35 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldGetPendingRideForPassenger() {
 		ride.setStatus(RideStatus.PENDING);
-		int passengerId = ride.getPassengers().iterator().next().getId();
-		Mockito.when(allRides.getPendingRideForPassenger(passengerId)).thenReturn(ride);
-		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
+		Passenger passenger = ride.getPassengers().iterator().next();
+		Mockito.when(allPassengers.findById(passenger.getId())).thenReturn(Optional.of(passenger));
+		Mockito.when(allRides.getPendingRideForPassenger(passenger.getId())).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passenger.getId());
 
-		assertTrue(ret.getPassengers().stream().filter(passenger -> passenger.getId() == passengerId).findAny()
+		assertTrue(ret.getPassengers().stream().filter(p -> p.getId() == passenger.getId()).findAny()
 				.orElse(null) != null);
 		assertEquals(ret.getStatus(), RideStatus.PENDING);
 
-		verify(allRides, times(1)).getPendingRideForPassenger(passengerId);
+		verify(allRides, times(1)).getPendingRideForPassenger(passenger.getId());
 
 	}
 
 	@Test
 	public void shouldGetNullWhenGettingPendingRideForPassenger() {
 		int passengerId = 0;
-		Mockito.when(allRides.getActiveRideForDriver(passengerId)).thenReturn(null);
+		Mockito.when(allPassengers.findById(passengerId)).thenReturn(Optional.of(passenger));
+		Mockito.when(allRides.getPendingRideForPassenger(passengerId)).thenReturn(null);
 		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
 
 		assertEquals(ret, null);
+	}
+	
+	@Test(expectedExceptions = {UserNotFoundException.class})
+	public void shouldThrowUserNotFoundExceptionForInvalidId() {
+		int passengerId = -1;
+		Mockito.when(allPassengers.findById(passengerId)).thenReturn(Optional.empty());
+		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
+		verify(allRides.getPendingRideForPassenger(passengerId), never());
 	}
 
 	@Test
@@ -741,13 +751,13 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		verify(allRides, never()).flush();
 	}
 
-	@Test(expectedExceptions = { NullPointerException.class })
+	@Test(expectedExceptions = { UserNotFoundException.class })
 	public void shouldReturnNullExceptionWhenGettingScheduledRidesForUser() {
-		String email = "not_existing";
-		int userId = 1;
-		Mockito.when(context.getAuthentication()).thenReturn(authentication);
-		Mockito.when(authentication.getName()).thenReturn(email);
-		SecurityContextHolder.setContext(context);
+//		String email = "not_existing";
+		int userId = 0;
+//		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+//		Mockito.when(authentication.getName()).thenReturn(email);
+//		SecurityContextHolder.setContext(context);
 
 		this.rideService.getScheduledRidesForUser(userId);
 
@@ -756,7 +766,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 
 	@Test
 	public void shouldGetScheduledRidesForUserWithDriverRole() {
-		String email = ride.getDriver().getEmail();
+//		String email = ride.getDriver().getEmail();
 		int userId = ride.getDriver().getId();
 
 		ride.setStatus(RideStatus.ACCEPTED);
@@ -764,11 +774,10 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		ArrayList<Ride> scheduledRides = new ArrayList<>();
 		scheduledRides.add(ride);
 
-		Mockito.when(context.getAuthentication()).thenReturn(authentication);
-		Mockito.when(authentication.getName()).thenReturn(email);
-		SecurityContextHolder.setContext(context);
-		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(ride.getDriver()));
-		System.out.println(scheduledRides);
+//		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+//		Mockito.when(authentication.getName()).thenReturn(email);
+//		SecurityContextHolder.setContext(context);
+		Mockito.when(allUsers.findById(userId)).thenReturn(Optional.of(ride.getDriver()));
 		Mockito.when(allRides.getScheduledRidesForDriver(userId)).thenReturn(scheduledRides);
 
 		List<RideReturnedDTO> rides = this.rideService.getScheduledRidesForUser(userId);
@@ -782,7 +791,6 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldGetScheduledRidesForUserWithPassengerRole() {
 		Passenger passenger = ride.getPassengers().iterator().next();
-		String email = passenger.getEmail();
 		int userId = passenger.getId();
 
 		ride.setStatus(RideStatus.ACCEPTED);
@@ -790,10 +798,10 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		ArrayList<Ride> scheduledRides = new ArrayList<>();
 		scheduledRides.add(ride);
 
-		Mockito.when(context.getAuthentication()).thenReturn(authentication);
-		Mockito.when(authentication.getName()).thenReturn(email);
-		SecurityContextHolder.setContext(context);
-		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(passenger));
+//		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+//		Mockito.when(authentication.getName()).thenReturn(email);
+//		SecurityContextHolder.setContext(context);
+		Mockito.when(allUsers.findById(userId)).thenReturn(Optional.of(passenger));
 		Mockito.when(allRides.getScheduledRidesForPassenger(userId)).thenReturn(scheduledRides);
 
 		List<RideReturnedDTO> rides = this.rideService.getScheduledRidesForUser(userId);

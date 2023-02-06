@@ -126,7 +126,7 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getActiveRideForDriver(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
@@ -137,7 +137,7 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/driver/{driverId}/pending", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getPendingRideForDriver(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
@@ -152,9 +152,12 @@ public class RideController {
 	@PreAuthorize("hasRole('DRIVER')" + " || " + "hasRole('PASSENGER')")
 	public ResponseEntity<?> getScheduledRidesForUser(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int userId) {
-		List<RideReturnedDTO> rides = service.getScheduledRidesForUser(userId);
-		System.out.println(rides);
-		return new ResponseEntity<List<RideReturnedDTO>>(rides, HttpStatus.OK);
+		try {
+			List<RideReturnedDTO> rides = service.getScheduledRidesForUser(userId);
+			return new ResponseEntity<List<RideReturnedDTO>>(rides, HttpStatus.OK);
+		} catch (UserNotFoundException e){
+			return new ResponseEntity<String>("User not found", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -194,8 +197,7 @@ public class RideController {
 	@PreAuthorize("hasRole('PASSENGER')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> panicRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@Valid @RequestBody(required = false) ReasonDTO dto) {
-		System.out.println("PANIC " + id + " " + dto.getReason());
+			@Valid @RequestBody(required = true) ReasonDTO dto) {
 		PanicRideDTO ride = service.panicRide(id, dto);
 		if (ride == null) {
 			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
@@ -269,8 +271,7 @@ public class RideController {
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> rejectRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@Valid @RequestBody(required = false) ReasonDTO dto) {
-		System.out.println("REJECT " + dto.getReason());
+			@Valid @RequestBody(required = true) ReasonDTO dto) {
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-cancel", ride.getDriver().getId());
@@ -290,7 +291,7 @@ public class RideController {
 	}
 
 	@PostMapping(value = "/price", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody UnregisteredRideSuggestionDTO dto) {
+	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody @Valid UnregisteredRideSuggestionDTO dto) {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
 	}
 

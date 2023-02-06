@@ -10,6 +10,10 @@ public class UserInPanicRideDTO {
 	private String email;
 	private String address;
 	private String role;
+	
+	public UserInPanicRideDTO() {
+		
+	}
 
 	public UserInPanicRideDTO(String name, String surname, String email, String address, String telephoneNumber,
 			String profilePicture) {

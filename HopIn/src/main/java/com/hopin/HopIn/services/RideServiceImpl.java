@@ -464,7 +464,7 @@ public class RideServiceImpl implements IRideService {
 			throw new NoActivePassengerRideException();
 		return new RideReturnedDTO(activeRide);
 	}
-
+	
 	@Override
 	public RideReturnedDTO getPendingRideForPassenger(int id) {
 		Passenger passenger = this.allPassengers.findById(id).orElse(null);
@@ -661,9 +661,11 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public List<RideReturnedDTO> getScheduledRidesForUser(int userId) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User user = allUsers.findByEmail(authentication.getName()).orElse(null);
-
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> userOptional = allUsers.findById(userId);
+		if (userOptional.isEmpty())
+			throw new UserNotFoundException();
+		User user = userOptional.get();
 		List<Ride> rides;
 		if (user.getRole() == Role.DRIVER) {
 			rides = this.allRides.getScheduledRidesForDriver(userId);
@@ -673,8 +675,7 @@ public class RideServiceImpl implements IRideService {
 
 		List<RideReturnedDTO> res = new ArrayList<RideReturnedDTO>();
 		for (Ride ride : rides) {
-			if (ride.getScheduledTime().isAfter(LocalDateTime.now()))
-				res.add(new RideReturnedDTO(ride));
+			res.add(new RideReturnedDTO(ride));
 		}
 		return res;
 	}
