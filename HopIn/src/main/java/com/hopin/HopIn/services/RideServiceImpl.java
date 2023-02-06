@@ -571,10 +571,10 @@ public class RideServiceImpl implements IRideService {
 		User user = allUsers.findByEmail(authentication.getName()).orElse(null);
 
 		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), user, ride);
-		Panic savedPanic = this.allPanics.save(panic);
+		this.allPanics.save(panic);
 		this.allPanics.flush();
 
-		return new PanicRideDTO(savedPanic);
+		return new PanicRideDTO(panic);
 	}
 
 	@Override

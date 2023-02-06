@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -34,6 +38,8 @@ import com.hopin.HopIn.HopInApplication;
 import com.hopin.HopIn.dtos.FavoriteRideDTO;
 import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.LocationNoIdDTO;
+import com.hopin.HopIn.dtos.PanicRideDTO;
+import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.RouteLocsDTO;
@@ -50,14 +56,18 @@ import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.enums.Role;
 import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
+import com.hopin.HopIn.exceptions.NoActiveDriverRideException;
 import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.repositories.FavoriteRideRepository;
+import com.hopin.HopIn.repositories.PanicRepository;
 import com.hopin.HopIn.repositories.PassengerRepository;
 import com.hopin.HopIn.repositories.RideRepository;
+import com.hopin.HopIn.repositories.UserRepository;
 import com.hopin.HopIn.repositories.VehicleTypeRepository;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
 import com.hopin.HopIn.services.interfaces.IRideService;
@@ -71,6 +81,7 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 
 	private static final int NON_EXISTANT_RIDE_ID = 0;
 	private static final double DISTANCE = 1;
+	private static final ReasonDTO VALID_REASON = new ReasonDTO("valid");
 
 	@Autowired
 	private IRideService rideService;
@@ -95,11 +106,24 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 
 	@MockBean
 	private VehicleTypeRepository allVehicleTypes;
+	
+	@MockBean
+	private UserRepository allUsers;
+	
+	@MockBean
+	private PanicRepository allPanics;
+	
+	@MockBean
+	private Authentication authentication;
+	
+	@MockBean
+	private SecurityContext context;
 
 	private Ride ride;
 	private Passenger passenger;
 	private FavoriteRide favoriteRoute;
 	private VehicleType vehicleType;
+
 
 	@BeforeMethod
 	public void setup() {
@@ -108,6 +132,9 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 
 		Location departure = new Location(1, "Jirecekova 1", 45.32, 24.3);
 		Location destination = new Location(1, "Promenada", 45.32, 24.3);
+
+		driver.setRole(Role.DRIVER);
+		passenger.setRole(Role.PASSENGER);
 
 		Set<Passenger> passengers = new HashSet<>();
 		passengers.add(passenger);
@@ -580,6 +607,246 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		List<FavoriteRideReturnedDTO> ret = this.rideService.getFavoriteRides();
 		assertEquals(favRides.size(), ret.size());
 		assertEquals(ret.get(0).getId(), favRide.getId());
+	}
+	
+	@Test
+	public void shouldGetActiveRideForDriverWhenDriverIsGoingToDeparture() {
+		ride.setStatus(RideStatus.ACTIVE);
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getActiveRideForDriver(driverId)).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getActiveRideForDriver(driverId);
+		
+		assertEquals(ret.getDriver().getId(), driverId);
+		assertEquals(ret.getStatus(), RideStatus.ACTIVE);
+
+		verify(allRides, times(1)).getActiveRideForDriver(driverId);
+		
+	}
+	
+	@Test
+	public void shouldGetActiveRideForDriverWhenRideStarted() {
+		ride.setStatus(RideStatus.STARTED);
+		ride.setStartTime(LocalDateTime.now());
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getActiveRideForDriver(driverId)).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getActiveRideForDriver(driverId);
+		
+		assertEquals(ret.getDriver().getId(), driverId);
+		assertTrue(ret.getStartTime() != null);
+		assertEquals(ret.getStatus(), RideStatus.STARTED);
+
+		verify(allRides, times(1)).getActiveRideForDriver(driverId);
+		
+	}
+	
+	@Test(expectedExceptions = {NoActiveDriverRideException.class})
+	public void shouldThrowNoActiveDriverRideExceptionWhenGettingActiveRideForDriver() {
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getActiveRideForDriver(driverId)).thenReturn(null);
+		RideReturnedDTO ret = rideService.getActiveRideForDriver(driverId);
+		
+		assertEquals(ret, null);
+	}
+	
+	@Test
+	public void shouldGetPendingRideForPassenger() {
+		ride.setStatus(RideStatus.PENDING);
+		int passengerId = ride.getPassengers().iterator().next().getId();
+		Mockito.when(allRides.getPendingRideForPassenger(passengerId)).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
+		
+		assertTrue(ret.getPassengers().stream()
+				  .filter(passenger -> passenger.getId() == passengerId)
+				  .findAny()
+				  .orElse(null) != null);
+		assertEquals(ret.getStatus(), RideStatus.PENDING);
+
+		verify(allRides, times(1)).getPendingRideForPassenger(passengerId);
+		
+	}
+	
+	@Test
+	public void shouldGetNullWhenGettingPendingRideForPassenger() {
+		int passengerId = 0;
+		Mockito.when(allRides.getActiveRideForDriver(passengerId)).thenReturn(null);
+		RideReturnedDTO ret = rideService.getPendingRideForPassenger(passengerId);
+		
+		assertEquals(ret, null);
+	}
+	
+	@Test
+	public void shouldGetPendingRideForDriver() {
+		ride.setStatus(RideStatus.PENDING);
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getPendingRideForDriver(driverId)).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getPendingRideForDriver(driverId);
+		
+		assertTrue(ret.getDriver().getId() == driverId);
+		assertEquals(ret.getStatus(), RideStatus.PENDING);
+
+		verify(allRides, times(1)).getPendingRideForDriver(driverId);
+		
+	}
+	
+	@Test(expectedExceptions = {NoActiveDriverRideException.class})
+	public void shouldThrowNoPendingDriverRideExceptionWhenGettingPendingRideForDriver() {
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getPendingRideForDriver(driverId)).thenReturn(null);
+		RideReturnedDTO ret = rideService.getPendingRideForDriver(driverId);
+		
+		assertEquals(ret, null);
+	}
+	
+	@Test
+	public void shouldNotFlushForInvalidReasonWhenPanicRide() {
+		PanicRideDTO ride = this.rideService.panicRide(1, null);
+		verify(allPanics, never()).flush();
+	}
+	
+	@Test
+	public void shouldPanicRide() {
+		Passenger passenger = ride.getPassengers().iterator().next();
+		String email = passenger.getEmail();
+		
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getName()).thenReturn(email);
+		SecurityContextHolder.setContext(context);
+		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(passenger));
+		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
+//		Mockito.when(allPanics.save(panic))
+		PanicRideDTO panicRide = this.rideService.panicRide(ride.getId(), new ReasonDTO("test"));
+		
+		assertEquals(panicRide.getRide().getId(), ride.getId());
+		assertEquals(panicRide.getUser().getEmail(), passenger.getEmail());
+		verify(allPanics, times(1)).flush();
+	}
+	
+	@Test
+	public void shouldReturnNullForNonExistingRideWhenPanicRide() {
+		Mockito.when(allRides.findById(NON_EXISTANT_RIDE_ID)).thenReturn(Optional.empty());
+		PanicRideDTO ride = this.rideService.panicRide(NON_EXISTANT_RIDE_ID, null);
+		
+		assertNull(ride);
+		verify(allRides, never()).flush();
+	}
+	
+	
+	@Test(expectedExceptions = {NullPointerException.class})
+	public void shouldReturnNullExceptionWhenGettingScheduledRidesForUser(){
+		String email = "not_existing";
+		int userId = 1;
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getName()).thenReturn(email);
+		SecurityContextHolder.setContext(context);
+		
+		this.rideService.getScheduledRidesForUser(userId);
+		
+		verify(allRides, never()).getScheduledRidesForDriver(userId);
+	}
+	
+	@Test
+	public void shouldGetScheduledRidesForUserWithDriverRole() {
+		String email = ride.getDriver().getEmail();
+		int userId = ride.getDriver().getId();
+		
+		ride.setStatus(RideStatus.ACCEPTED);
+		ride.setScheduledTime(LocalDateTime.now().plusDays(1));
+		ArrayList<Ride> scheduledRides = new ArrayList<>();
+		scheduledRides.add(ride);
+		
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getName()).thenReturn(email);
+		SecurityContextHolder.setContext(context);
+		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(ride.getDriver()));
+		System.out.println(scheduledRides);
+		Mockito.when(allRides.getScheduledRidesForDriver(userId)).thenReturn(scheduledRides);
+		
+		List<RideReturnedDTO> rides = this.rideService.getScheduledRidesForUser(userId);
+		System.out.println(rides);
+		assertTrue(rides.stream()
+				  .filter(r -> r.getDriver().getId() == userId).findAny()
+		  		   .orElse(null) != null);
+		assertTrue(rides.stream()
+				  .filter(r -> r.getScheduledTime().isAfter(LocalDateTime.now()) == true)
+				  .findAny()
+				  .orElse(null)!= null);
+		verify(allRides, times(1)).getScheduledRidesForDriver(userId);
+	}
+	
+	@Test
+	public void shouldGetScheduledRidesForUserWithPassengerRole() {
+		Passenger passenger = ride.getPassengers().iterator().next();
+		String email = passenger.getEmail();
+		int userId = passenger.getId();
+		
+		ride.setStatus(RideStatus.ACCEPTED);
+		ride.setScheduledTime(LocalDateTime.now().plusDays(1));
+		ArrayList<Ride> scheduledRides = new ArrayList<>();
+		scheduledRides.add(ride);
+		
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getName()).thenReturn(email);
+		SecurityContextHolder.setContext(context);
+		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(passenger));
+		Mockito.when(allRides.getScheduledRidesForPassenger(userId)).thenReturn(scheduledRides);
+		
+		List<RideReturnedDTO> rides = this.rideService.getScheduledRidesForUser(userId);
+		assertTrue(rides.stream()
+				  .filter(ride -> ride.getPassengers().get(0).getId() == userId)
+				  .findAny()
+				  .orElse(null) != null);
+		
+		assertTrue(rides.stream()
+				  .filter(r -> r.getScheduledTime().isAfter(LocalDateTime.now()) == true)
+				  .findAny()
+				  .orElse(null)!= null);
+		verify(allRides, times(1)).getScheduledRidesForPassenger(userId);
+	}
+	
+	@Test(expectedExceptions = {ResponseStatusException.class})
+	public void shouldThrowExceptionForRejectingRideWithNonExistingId() {
+		try {
+			Mockito.when(allRides.findById(NON_EXISTANT_RIDE_ID)).thenReturn(Optional.empty());
+			this.rideService.rejectRide(NON_EXISTANT_RIDE_ID, null);
+		} catch (ResponseStatusException ex) {
+			assertEquals(ex.getStatusCode(), HttpStatus.NOT_FOUND);
+			assertEquals(ex.getReason(), "Ride does not exist!");
+			throw ex;
+		}
+	}
+	
+
+	@Test(expectedExceptions = {ResponseStatusException.class})
+	public void shouldThrowExceptionForRejectingRideWithBadStatus() {
+		this.ride.setStatus(RideStatus.REJECTED);		
+		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
+
+		try {
+			this.rideService.rejectRide(ride.getId(), VALID_REASON);
+		} catch (ResponseStatusException ex) {
+			assertEquals(ex.getStatusCode(), HttpStatus.BAD_REQUEST);
+			assertEquals(ex.getReason(), "Cannot cancel a ride that is not in status PENDING or ACCEPTED!");
+			throw ex;
+		}
+	}
+	
+	@Test(expectedExceptions = {NullPointerException.class})
+	public void shouldThrowNullExceptionForRejectingRideWithNullReason() {
+		this.ride.setStatus(RideStatus.PENDING);		
+		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
+		this.rideService.rejectRide(ride.getId(), null);
+	}
+	
+	@Test
+	public void shouldRejectRide() {
+		ride.setStatus(RideStatus.PENDING);
+		Mockito.when(allRides.findById(ride.getId())).thenReturn(Optional.of(ride));
+		Mockito.when(allRides.save(ride)).thenReturn(ride);
+		RideReturnedDTO ret = this.rideService.rejectRide(ride.getId(), VALID_REASON);
+		
+		assertTrue(ret.getId() == ride.getId());
+		assertTrue(ret.getStatus() == RideStatus.REJECTED);		
+		assertEquals(ret.getRejection().getReason(), VALID_REASON.getReason());
 	}
 
 }
