@@ -177,23 +177,19 @@ public class RideServiceImpl implements IRideService {
 		if (passengerService.getFavoriteRides(user.getId()).size() >= 10) {
 			throw new FavoriteRideException();
 		}
+		
 		Set<Passenger> passengers = new HashSet<Passenger>();
 
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		passengers.add(allPassengers.findPassengerByEmail(authentication.getName()).orElse(null));
-
-		System.out.println(passengers.size());
-		System.out.println(dto.getPassengers().size());
 		for (UserInRideDTO currUser : dto.getPassengers()) {
 			passengers.add(this.passengerService.getPassenger(currUser.getId()));
 		}
-		System.out.println(passengers.size());
+
 		FavoriteRide favoriteRide = new FavoriteRide(dto, passengers,
 				this.vehicleTypeService.getByName(dto.getVehicleType()));
 		this.allFavoriteRides.save(favoriteRide);
 		this.allFavoriteRides.flush();
 		this.passengerService.addFavoriteRide(user.getId(), favoriteRide);
-		this.allPassengers.save(allPassengers.findPassengerByEmail(authentication.getName()).orElse(null));
+		this.allPassengers.save(allPassengers.findPassengerByEmail(user.getEmail()).orElse(null));
 		this.allPassengers.flush();
 
 		return new FavoriteRideReturnedDTO(favoriteRide);
