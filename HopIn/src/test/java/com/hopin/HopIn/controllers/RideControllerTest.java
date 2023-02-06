@@ -3,17 +3,20 @@ package com.hopin.HopIn.controllers;
 
 import static org.junit.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
+
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -27,6 +30,9 @@ import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.validations.ExceptionDTO;
 
+import jakarta.transaction.Transactional;
+
+@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @TestPropertySource(properties = "classpath:application-test.properties")
@@ -120,7 +126,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
         ResponseEntity<String> res = restTemplate.withBasicAuth("driver@gmail.com", "123")
                   .exchange("/api/ride/" + ACCEPTED_RIDE_ID, HttpMethod.GET, null, String.class);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+        assertEquals(res.getStatusCode(), HttpStatus.UNAUTHORIZED);
     }
 	
 	@Test
@@ -132,7 +138,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldThrowJSONExceptionWhenGettingRideWithInvalidRideId() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + INVALID_RIDE_ID, HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
-		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@Test
@@ -150,7 +156,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 
 		RideReturnedDTO ride = res.getBody();
 		
-		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(res.getStatusCode(), HttpStatus.OK);
 		assertEquals(ride.getId(), ACCEPTED_RIDE_ID);
 	}
 	
@@ -160,7 +166,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	public void shouldReturnUnathorised_ForNoToken_DeleteFavoriteRide() {
         ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites/" + FAVORITE_RIDE_ID, HttpMethod.DELETE, null, String.class);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+        assertEquals(res.getStatusCode(), HttpStatus.UNAUTHORIZED);
     }
 	
 	@Test
@@ -171,17 +177,18 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	
 	@Test
 	public void shouldThrowJSONExceptionWhenDeletingFavoriteRideWithInvalidFavoriteRideId() {
-		ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites" + INVALID_RIDE_ID, HttpMethod.DELETE, makeJwtHeader(TOKEN_PASSENGER), String.class);
-		assertNotEquals(res.getStatusCode(), HttpStatus.NO_CONTENT);
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites/" + INVALID_RIDE_ID, HttpMethod.DELETE, makeJwtHeader(TOKEN_PASSENGER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@Test
 	public void shouldThrowFavoriteRideNotFoundExceptionWhenDeletingFavoriteRideForNonExistingFavoriteRide() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites/" + NON_EXISTANT_RIDE_ID, HttpMethod.DELETE, makeJwtHeader(TOKEN_PASSENGER), String.class);
-		assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+		assertEquals(res.getStatusCode(), HttpStatus.NOT_FOUND);
 		assertEquals(res.getBody(), "Favorite location does not exist!");
 	}
 	
+	@Transactional
 	@Test
 	public void shouldDeleteFavoriteRide() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites/" + FAVORITE_RIDE_ID, HttpMethod.DELETE, makeJwtHeader(TOKEN_PASSENGER), String.class);
@@ -194,7 +201,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	public void shouldReturnUnathorised_ForNoToken_AcceptRide() {
         ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/accept", HttpMethod.PUT, null, String.class);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+        assertEquals(res.getStatusCode(), HttpStatus.UNAUTHORIZED);
     }
 	
 	@Test
@@ -206,20 +213,20 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldThrowJSONExceptionWhenAcceptingRideWithInvalidRideId() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + INVALID_RIDE_ID + "/accept", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
-		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@Test
 	public void shouldThrowBadRequestExceptionWhenAcceptingRideWithInvalidStatus() {
 		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/" + ACCEPTED_RIDE_ID + "/accept", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), ExceptionDTO.class);
-		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 		assertEquals(res.getBody().getMessage(), "Cannot accept a ride that is not in status PENDING!");
 	}
 	
 	@Test
 	public void shouldThrowNotFoundExceptionWhenAcceptingRideWithNonExistingRide() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + NON_EXISTANT_RIDE_ID + "/accept", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
-		assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+		assertEquals(res.getStatusCode(), HttpStatus.NOT_FOUND);
 		assertEquals(res.getBody(), "Ride does not exist!");
 	}
 	
@@ -229,7 +236,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		
 		RideReturnedDTO ride = res.getBody();
 		
-		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(res.getStatusCode(), HttpStatus.OK);
 		assertEquals(ride.getStatus(), RideStatus.ACCEPTED);
 		assertEquals(ride.getId(), PENDING_RIDE_ID);
 	}
@@ -240,7 +247,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	public void shouldReturnUnathorised_ForNoToken_CancelRide() {
         ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + RIDE_TO_CANCEL_ID + "/withdraw", HttpMethod.PUT, null, String.class);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+        assertEquals(res.getStatusCode(), HttpStatus.UNAUTHORIZED);
     }
 	
 	@Test
@@ -252,7 +259,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldThrowJSONExceptionWhenCancelingRideWithInvalidRideId() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + INVALID_RIDE_ID + "/withdraw", HttpMethod.PUT, makeJwtHeader(TOKEN_PASSENGER), String.class);
-		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@Test
@@ -265,7 +272,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldThrowNotFoundExceptionWhenCancelingRideWithNonExistingRide() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + NON_EXISTANT_RIDE_ID + "/withdraw", HttpMethod.PUT, makeJwtHeader(TOKEN_PASSENGER), String.class);
-		assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+		assertEquals(res.getStatusCode(), HttpStatus.NOT_FOUND);
 		assertEquals(res.getBody(), "Ride does not exist!");
 	}
 	
@@ -275,13 +282,14 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		
 		RideReturnedDTO ride = res.getBody();
 		
-		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(res.getStatusCode(), HttpStatus.OK);
 		assertEquals(ride.getStatus(), RideStatus.CANCELED);
 		assertEquals(ride.getId(), RIDE_TO_CANCEL_ID);
 	}
 	
 	
 	/*PRICE*/
+	@Test
 	public void shouldReturnUnathorised_ForNoToken_GetRidePrice() {
         ResponseEntity<Double> res = restTemplate.exchange("/api/ride/price", HttpMethod.POST, null, Double.class);
 
@@ -290,15 +298,15 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	
 	@Test
 	public void shouldThrowJSONExceptionWhenGettingRidePriceWithInvalidDto() {
-		UnregisteredRideSuggestionDTO dto = new UnregisteredRideSuggestionDTO(null, DISTANCE);
+		UnregisteredRideSuggestionDTO dto = new UnregisteredRideSuggestionDTO("", DISTANCE);
 		HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(TOKEN_PASSENGER);
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<UnregisteredRideSuggestionDTO> entity = new HttpEntity<>(dto, headers);
 
-        ResponseEntity<Double> res = restTemplate.exchange("/api/ride/price", HttpMethod.POST, entity, Double.class);
+        ResponseEntity<String> res = restTemplate.exchange("/api/ride/price", HttpMethod.POST, entity, String.class);
 
-        assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@Test
@@ -317,6 +325,27 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
     }
 	
 	
+	/*GET_FAVORITE_RIDES*/
+	@Test
+	public void shouldReturnUnathorised_ForNoToken_GetFavoriteRides() {
+        ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.GET, null, String.class);
+
+        assertEquals(res.getStatusCode(), HttpStatus.UNAUTHORIZED);
+    }
+	
+	@Test
+	public void shouldThrowForbiddenExceptionWhenGettingFavoriteRideAsDriver() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.FORBIDDEN);
+	}
+	
+	@Test
+	public void shouldGetFavoriteRides() {
+		ResponseEntity<ArrayList<RideReturnedDTO>> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.GET, makeJwtHeader(TOKEN_PASSENGER), new ParameterizedTypeReference<ArrayList<RideReturnedDTO>>() {});
+		
+		assertEquals(res.getStatusCode(), HttpStatus.OK);
+		assertTrue(res.getBody().size() <= 1);
+	}
 	
 	
 	
