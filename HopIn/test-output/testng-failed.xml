@@ -5,12 +5,13 @@
     <classes>
       <class name="com.hopin.HopIn.services.RideServiceTest">
         <methods>
-          <include name="shouldStartRideForExistingRideWithStatusAccepted"/>
+          <include name="shouldThrowExceptionForAcceptingRideWithBadStatus"/>
+          <include name="shouldThrowExceptionForAcceptingRideWithNonExistingId"/>
           <include name="springTestContextBeforeTestClass"/>
-          <include name="setup"/>
           <include name="springTestContextBeforeTestMethod"/>
-          <include name="springTestContextAfterTestClass"/>
+          <include name="setup"/>
           <include name="springTestContextPrepareTestInstance"/>
+          <include name="springTestContextAfterTestClass"/>
           <include name="springTestContextAfterTestMethod"/>
         </methods>
       </class> <!-- com.hopin.HopIn.services.RideServiceTest -->
