@@ -418,5 +418,80 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 	}
 	
 	
+	@Test(expectedExceptions = {NullPointerException.class})
+	public void shouldReturnNullExceptionWhenGettingScheduledRidesForUser(){
+		String email = "not_existing";
+		int userId = 1;
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getName()).thenReturn(email);
+		SecurityContextHolder.setContext(context);
+		
+		this.rideService.getScheduledRidesForUser(userId);
+		
+		verify(allRides, never()).getScheduledRidesForDriver(userId);
+	}
+	
+	@Test
+	public void shouldGetScheduledRidesForUserWithDriverRole() {
+		String email = ride.getDriver().getEmail();
+		int userId = ride.getDriver().getId();
+		
+		ride.setStatus(RideStatus.ACCEPTED);
+		ride.setScheduledTime(LocalDateTime.now().plusDays(1));
+		ArrayList<Ride> scheduledRides = new ArrayList<>();
+		scheduledRides.add(ride);
+		
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getName()).thenReturn(email);
+		SecurityContextHolder.setContext(context);
+		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(ride.getDriver()));
+		System.out.println(scheduledRides);
+		Mockito.when(allRides.getScheduledRidesForDriver(userId)).thenReturn(scheduledRides);
+		
+		List<RideReturnedDTO> rides = this.rideService.getScheduledRidesForUser(userId);
+		System.out.println(rides);
+		assertTrue(rides.stream()
+				  .filter(r -> r.getDriver().getId() == userId).findAny()
+		  		   .orElse(null) != null);
+		assertTrue(rides.stream()
+				  .filter(r -> r.getScheduledTime().isAfter(LocalDateTime.now()) == true)
+				  .findAny()
+				  .orElse(null)!= null);
+		verify(allRides, times(1)).getScheduledRidesForDriver(userId);
+	}
+	
+	@Test
+	public void shouldGetScheduledRidesForUserWithPassengerRole() {
+		Passenger passenger = ride.getPassengers().iterator().next();
+		String email = passenger.getEmail();
+		int userId = passenger.getId();
+		
+		ride.setStatus(RideStatus.ACCEPTED);
+		ride.setScheduledTime(LocalDateTime.now().plusDays(1));
+		ArrayList<Ride> scheduledRides = new ArrayList<>();
+		scheduledRides.add(ride);
+		
+		Mockito.when(context.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getName()).thenReturn(email);
+		SecurityContextHolder.setContext(context);
+		Mockito.when(allUsers.findByEmail(email)).thenReturn(Optional.of(passenger));
+		System.out.println(scheduledRides);
+		Mockito.when(allRides.getScheduledRidesForPassenger(userId)).thenReturn(scheduledRides);
+		
+		List<RideReturnedDTO> rides = this.rideService.getScheduledRidesForUser(userId);
+		System.out.println(rides);
+//		assertTrue(rides.stream()
+//				  .filter(ride -> ride.getPassengers().get(0).getId() == userId)
+//				  .findAny()
+//				  .orElse(null) != null);
+		
+		assertTrue(rides.stream()
+				  .filter(r -> r.getScheduledTime().isAfter(LocalDateTime.now()) == true)
+				  .findAny()
+				  .orElse(null)!= null);
+		verify(allRides, times(1)).getScheduledRidesForPassenger(userId);
+	}
+	
+	
 	
 }
