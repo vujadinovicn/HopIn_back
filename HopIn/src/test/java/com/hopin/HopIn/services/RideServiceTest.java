@@ -361,6 +361,29 @@ public class RideServiceTest extends AbstractTestNGSpringContextTests {
 		assertEquals(ret, null);
 	}
 	
+	@Test
+	public void shouldGetPendingRideForDriver() {
+		ride.setStatus(RideStatus.PENDING);
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getPendingRideForDriver(driverId)).thenReturn(ride);
+		RideReturnedDTO ret = rideService.getPendingRideForDriver(driverId);
+		
+		assertTrue(ret.getDriver().getId() == driverId);
+		assertEquals(ret.getStatus(), RideStatus.PENDING);
+
+		verify(allRides, times(1)).getPendingRideForDriver(driverId);
+		
+	}
+	
+	@Test(expectedExceptions = {NoActiveDriverRideException.class})
+	public void shouldThrowNoPendingDriverRideExceptionWhenGettingPendingRideForDriver() {
+		int driverId = ride.getDriver().getId();
+		Mockito.when(allRides.getPendingRideForDriver(driverId)).thenReturn(null);
+		RideReturnedDTO ret = rideService.getPendingRideForDriver(driverId);
+		
+		assertEquals(ret, null);
+	}
+	
 	
 	
 }
