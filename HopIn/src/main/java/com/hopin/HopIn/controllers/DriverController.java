@@ -261,7 +261,7 @@ public class DriverController {
 	}     
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//	@PreAuthorize("hasRole('DRIVER')")
+	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> updateWorkingHours(@PathVariable("working-hour-id") @Min(value = 0, message = "Field id must be greater than 0.") int hoursId, @Valid @RequestBody WorkingHoursEndDTO dto) {
 		try { 
 			ObjectMapper mapper = new ObjectMapper();
@@ -269,8 +269,8 @@ public class DriverController {
 			
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			System.out.println(authentication.getName());
-			//int driverId = this.service.getByEmail(authentication.getName()).getId();
-			String jsonString = mapper.writeValueAsString(8);
+			int driverId = this.service.getByEmail(authentication.getName()).getId();
+			String jsonString = mapper.writeValueAsString(driverId);
 			
 			this.simpMessagingTemplate.convertAndSend("/topic/vehicle/deactivation", jsonString);
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.updateWorkingHours(hoursId, dto), HttpStatus.OK);
