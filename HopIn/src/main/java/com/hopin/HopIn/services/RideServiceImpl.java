@@ -166,6 +166,10 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto) {
 		User user = userService.getCurrentUser();
+		
+		System.out.println(user.getId());
+		System.out.println(passengerService.getFavoriteRides(user.getId()).size());
+		
 		if (passengerService.getFavoriteRides(user.getId()).size() >= 10) {
 			throw new FavoriteRideException();
 		}

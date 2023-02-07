@@ -80,3 +80,24 @@ insert into "drivers_documents" values (7,6);
 insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id", "scheduled_time") values (false, 95, null, 5, false, false, null, 6, 250, 3, 7, null, 1, 1, 2, '2022-12-26T11:11:11');
 insert into "rides_passengers"("ride_id", "passengers_id") values (5, 1);
 
+insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
+insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (2, 1);
+insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
+insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (3, 1);
+insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
+insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (4, 1);
+insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
+insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (5, 1);
+insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
+insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (6, 1);
+insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
+insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (7, 1);
+insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
+insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (8, 1);
+insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
+insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (9, 1);
+insert into "favorite_rides"("vehicle_type_id", "pet_transport", "baby_transport") values (1, true, true);
+insert into "favorite_rides_passengers"("favorite_ride_id", "passengers_id") values (10, 1);
+
+insert into "rides"("baby_transport", "distance", "end_time", "estimated_time_in_minutes", "panic", "pet_transport", "start_time", "status", "total_cost", "total_distance", "driver_id", "rejection_notice_id", "vehicle_type_id", "departure_location_id", "destination_location_id", "scheduled_time") values (false, 95, null, 5, false, false, '2022-12-27T11:11:11', 4, 250, 3, 7, null, 1, 1, 2, null);
+insert into "rides_passengers"("ride_id", "passengers_id") values (6, 1);

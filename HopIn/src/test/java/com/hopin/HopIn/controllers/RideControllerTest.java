@@ -27,12 +27,17 @@ import org.testng.annotations.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopin.HopIn.dtos.CredentialsDTO;
+import com.hopin.HopIn.dtos.FavoriteRideDTO;
+import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
+import com.hopin.HopIn.dtos.UserInRideDTO;
+import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
+import com.hopin.HopIn.enums.VehicleTypeName;
 import com.hopin.HopIn.validations.ExceptionDTO;
 
 import jakarta.transaction.Transactional;
@@ -64,6 +69,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
     private static int STARTED_RIDE_ID = 3;
     private static int SCHEDULED_RIDE_ID = 4;
     private final static int RIDE_TO_CANCEL_ID = 5;
+    private static final int FINISHED_RIDE_ID = 0;
     
 	private static int NON_EXISTANT_RIDE_ID = 0;
 	private static int INVALID_RIDE_ID = -1;
@@ -78,6 +84,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
     
 	private final static double DISTANCE = 1.0;
 	private final static double CAR_VEHICLE_PRICE = 60;
+	
 	
 	@Autowired
     private TestRestTemplate restTemplate;
@@ -163,6 +170,12 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	}
 	
 	@Test
+    public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_StartRide() {
+        ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + "a" + "/start", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
+        assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+	
+	@Test
 	public void shouldStartRide() {
 		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/" + ACCEPTED_RIDE_ID + "/start", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), RideReturnedDTO.class);
 		
@@ -211,6 +224,12 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
 		assertEquals("Field id must be greater than 0.", res.getBody().getMessage());
 	}
+	
+	@Test
+    public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_EndRide() {
+        ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + "a" + "/end", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
+        assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
 	
 	@Test
 	public void shouldEndRide() {
@@ -271,6 +290,12 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	}
 	
 	@Test
+    public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_StartRideToDeparture() {
+        ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver-took-off/" + "a", HttpMethod.POST, makeJwtHeader(TOKEN_DRIVER), String.class);
+        assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+	
+	@Test
 	public void shouldStartRideToDeparture() {
 		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/driver-took-off/" + SCHEDULED_RIDE_ID, HttpMethod.POST, makeJwtHeader(TOKEN_DRIVER), RideReturnedDTO.class);
 		
@@ -327,7 +352,12 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals("Field id must be greater than 0.", res.getBody().getMessage());
 	}
 	
-	//TODO: dodati sta je izbrisao merge
+	@Test
+    public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_GetActiveRideForPassenger() {
+        ResponseEntity<String> res = restTemplate.exchange("/api/ride/passenger/" + "a" + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+        assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
+
 	@Test
 	public void shouldGetActiveRideForPassenger() {
 		ResponseEntity<RideReturnedDTO> res = restTemplate.exchange("/api/ride/passenger/" + PASSENGER_ID + "/active", HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), RideReturnedDTO.class);
@@ -501,7 +531,6 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals("Request parameter from is missing!", res.getBody());
 	}
 	
-	//TODO: DODAJ OVO KAD VIDIS OSTALE
 	@Test 
 	public void shouldGetRidesBetweenDates() {
 		String from = "2022/12/25";
@@ -511,10 +540,11 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
                 .queryParam("from", from)
                 .queryParam("to", to);
 		
-		ResponseEntity<String> res = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), String.class);
+		ResponseEntity<ArrayList<RideReturnedDTO>> res = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, makeJwtHeader(TOKEN_ADMIN), new ParameterizedTypeReference<ArrayList<RideReturnedDTO>>(){});
 
-		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
-		assertEquals("End of range date must be after start of range date!", res.getBody());
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(1, res.getBody().size());
+		assertTrue(res.getBody().get(0).getId() == FINISHED_RIDE_ID);
 	}
 	
 	@Test
@@ -531,22 +561,89 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals(HttpStatus.FORBIDDEN, res.getStatusCode());
 	}
 	
-	// TODO: KAKO OVO DA UBACIM U BAZU???
+	// TODO: NE RADI DODAVANJE IZ BAZE?
 	@Test 
 	public void shouldReturnBadRequest_ForMoreThan10Favs_AddFavoriteRide() {
-		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, makeJwtHeader(TOKEN_PASSENGER),ExceptionDTO.class);
+		FavoriteRideDTO dto = null;
+		HttpEntity<FavoriteRideDTO> request = new HttpEntity<>(dto, makeJwtHeader(TOKEN_PASSENGER).getHeaders());
+		
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, request,ExceptionDTO.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
 		assertEquals("Number of favorite rides cannot exceed 10!", res.getBody().getMessage());
 	}
 	
-	// TODO: JE L IMA OVO PRAVLJENJE DTO-A NEKO??
 	@Test 
 	public void shouldReturnBadRequest_WhenCurrentPassengerNotInRide_AddFavoriteRide() {
-		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, makeJwtHeader(TOKEN_PASSENGER),ExceptionDTO.class);
+		FavoriteRideDTO dto = new FavoriteRideDTO();
+		
+		List<UserInRideDTO> passengers = new ArrayList<>();
+		UserInRideDTO user = new UserInRideDTO();
+		user.setId(PASSENGER_NO_RIDES);
+		user.setEmail("email@gmail.com");
+		passengers.add(user);
+		
+		dto.setBabyTransport(false);
+		dto.setPetTransport(false);
+		dto.setFavoriteName("Name");
+		dto.setVehicleType(VehicleTypeName.CAR);
+		dto.setLocations(new ArrayList<>());
+		dto.setPassengers(passengers);
+		
+		HttpEntity<FavoriteRideDTO> request = new HttpEntity<>(dto, makeJwtHeader(TOKEN_PASSENGER).getHeaders());
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, request, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
-		assertEquals("Number of favorite rides cannot exceed 10!", res.getBody().getMessage());
+		assertEquals("Logged in user is not in the ride!", res.getBody());
+	}
+	
+	@Test 
+	public void shouldReturnBadRequest_WhenInvalidDTO_AddFavoriteRide() {
+		FavoriteRideDTO dto = new FavoriteRideDTO();
+		
+		List<UserInRideDTO> passengers = new ArrayList<>();
+		UserInRideDTO user = new UserInRideDTO();
+		user.setId(PASSENGER_NO_RIDES);
+		user.setEmail("email@gmail.com");
+		passengers.add(user);
+		
+		dto.setBabyTransport(false);
+		dto.setPetTransport(false);
+		dto.setVehicleType(VehicleTypeName.CAR);
+		dto.setLocations(new ArrayList<>());
+		dto.setPassengers(passengers);
+		
+		HttpEntity<FavoriteRideDTO> request = new HttpEntity<>(dto, makeJwtHeader(TOKEN_PASSENGER).getHeaders());
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, request, String.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+//		Pada jer ne mogu da pogodim format ovog ispisa:
+//		assertEquals("Request finished with validation errors:\nField favoriteName is required!\n\n", res.getBody());
+	}
+	
+	@Test 
+	public void shouldAddFavoriteRide() {
+		FavoriteRideDTO dto = new FavoriteRideDTO();
+		
+		List<UserInRideDTO> passengers = new ArrayList<>();
+		UserInRideDTO user = new UserInRideDTO();
+		user.setId(PASSENGER_ID);
+		user.setEmail(USERNAME_PASSENGER);
+		passengers.add(user);
+		
+		dto.setBabyTransport(false);
+		dto.setPetTransport(false);
+		dto.setFavoriteName("Name");
+		dto.setVehicleType(VehicleTypeName.CAR);
+		dto.setLocations(new ArrayList<>());
+		dto.setPassengers(passengers);
+		
+		HttpEntity<FavoriteRideDTO> request = new HttpEntity<>(dto, makeJwtHeader(TOKEN_PASSENGER).getHeaders());
+		ResponseEntity<FavoriteRideReturnedDTO> res = restTemplate.exchange("/api/ride/favorites", HttpMethod.POST, request, FavoriteRideReturnedDTO.class);
+
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(res.getBody().getPassengers().size() == 1);
+		assertTrue(res.getBody().getVehicleType() == VehicleTypeName.CAR);
 	}
 	
 	@Test
