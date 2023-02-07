@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -133,37 +134,28 @@ public class RideServiceImpl implements IRideService {
 	private int currId = 0;
 
 	@Autowired
-	private PassengerRepository allPassengers;
-
-	@Override
-	public List<RideForReportDTO> getAllPassengerRidesBetweenDates(int id, String from, String to) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		LocalDateTime start = LocalDate.parse(from, formatter).atStartOfDay();
-		LocalDateTime end = LocalDate.parse(to, formatter).atStartOfDay().plusDays(1);
-		List<Ride> rides = allRides.getAllPassengerRidesBetweenDates(id, start, end);
-		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
-		for (Ride ride : rides) {
-			res.add(new RideForReportDTO(ride));
-		}
-		return res;
-	}
-
-	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		List<Ride> rides = allRides.getAllDriverRidesBetweenDates(id, LocalDate.parse(from, formatter).atStartOfDay(),
-				LocalDate.parse(to, formatter).atStartOfDay());
-		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
-		for (Ride ride : rides) {
-			res.add(new RideForReportDTO(ride));
-		}
-		return res;
-	}
+	private PassengerRepository allPassengers;	
 
 	@Override
 	public List<RideForReportDTO> getAllRidesBetweenDates(String from, String to) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		List<Ride> rides = allRides.getAllRidesBetweenDates(LocalDate.parse(from, formatter).atStartOfDay(),
-				LocalDate.parse(to, formatter).atStartOfDay());
+		
+		List<Ride> rides = new ArrayList<>();
+		LocalDateTime fromDate;
+		LocalDateTime toDate;
+		try {
+			fromDate = LocalDate.parse(from, formatter).atStartOfDay();
+			toDate = LocalDate.parse(to, formatter).atStartOfDay();
+			
+			if (toDate.isBefore(fromDate)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End of range date must be after start of range date!");
+			}
+			
+			rides = allRides.getAllRidesBetweenDates(fromDate, toDate);
+		} catch (DateTimeParseException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong date format! Use yyyy/MM/dd.");
+		}
+		
 		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
 		for (Ride ride : rides) {
 			res.add(new RideForReportDTO(ride));
@@ -174,26 +166,34 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public FavoriteRideReturnedDTO insertFavoriteRide(FavoriteRideDTO dto) {
 		User user = userService.getCurrentUser();
+		
+		System.out.println(user.getId());
+		System.out.println(passengerService.getFavoriteRides(user.getId()).size());
+		
 		if (passengerService.getFavoriteRides(user.getId()).size() >= 10) {
 			throw new FavoriteRideException();
 		}
+		
 		Set<Passenger> passengers = new HashSet<Passenger>();
-
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		passengers.add(allPassengers.findPassengerByEmail(authentication.getName()).orElse(null));
-
-		System.out.println(passengers.size());
-		System.out.println(dto.getPassengers().size());
+		
+		Boolean currentUserIsIn = false;
 		for (UserInRideDTO currUser : dto.getPassengers()) {
 			passengers.add(this.passengerService.getPassenger(currUser.getId()));
+			if (user.getId() == currUser.getId()) {
+				currentUserIsIn = true;
+			}
 		}
-		System.out.println(passengers.size());
+		
+		if (!currentUserIsIn) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Logged in user is not in the ride!");
+		}
+
 		FavoriteRide favoriteRide = new FavoriteRide(dto, passengers,
 				this.vehicleTypeService.getByName(dto.getVehicleType()));
 		this.allFavoriteRides.save(favoriteRide);
 		this.allFavoriteRides.flush();
 		this.passengerService.addFavoriteRide(user.getId(), favoriteRide);
-		this.allPassengers.save(allPassengers.findPassengerByEmail(authentication.getName()).orElse(null));
+		this.allPassengers.save(allPassengers.findPassengerByEmail(user.getEmail()).orElse(null));
 		this.allPassengers.flush();
 
 		return new FavoriteRideReturnedDTO(favoriteRide);
@@ -244,7 +244,7 @@ public class RideServiceImpl implements IRideService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Passenger pass = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
 		dto.getPassengers().add(new UserInRideDTO(pass));
-
+		//System.out.println(dto.getPassengers().get(0).getId());
 		if (this.getPendingRideForPassenger(dto.getPassengers().get(0).getId()) != null) {
 			throw new PassengerHasAlreadyPendingRide();
 		}
@@ -267,7 +267,7 @@ public class RideServiceImpl implements IRideService {
 			List<Driver> driversWithNoActiveRide = this.getAllDriversWithNoActiveRide(driversForRide);
 			List<Driver> driversWithActiveRide = new ArrayList<Driver>(driversForRide);
 			driversWithActiveRide.removeAll(driversWithNoActiveRide);
-
+			//System.out.println(driversForRide);
 			boolean availabilityOfDrivers = driversWithNoActiveRide.size() != 0 ? true : false;
 
 			if (availabilityOfDrivers) {
@@ -294,10 +294,10 @@ public class RideServiceImpl implements IRideService {
 				LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
 				LocalDateTime end = startOfToday.plusDays(1);
 
-				List<Ride> passengersRides = this.allRides.getAllScheduledRideForTodayForPassenger(currId, end);
+				List<Ride> passengersRides = this.allRides.getAllScheduledRideForTodayForPassenger(passenger.getId(), end);
 				for (Ride ride : passengersRides) {
-					if (ride.getScheduledTime().plusMinutes(ride.getEstimatedTimeInMinutes())
-							.isAfter(dto.getScheduledTime()) && ride.getScheduledTime().isBefore(dto.getScheduledTime()))
+					if (ride.getScheduledTime().plusMinutes(ride.getEstimatedTimeInMinutes()).isAfter(
+							dto.getScheduledTime()) && ride.getScheduledTime().isBefore(dto.getScheduledTime()))
 						throw new PassengerAlreadyInRideException();
 				}
 			});
@@ -307,11 +307,12 @@ public class RideServiceImpl implements IRideService {
 
 			int bestTime = Integer.MAX_VALUE;
 			for (Driver driver : driversWithNoUpcomingRide) {
+				System.out.println(newRideDuration);
 				double workingHoursWithNewRide = this.workingHoursService
 						.getWorkedHoursForTodayWithNewRide(driver.getId(), newRideDuration);
 				double workingHoursOfScheduledRides = this.getWorkingHoursOfAllScheduledRideForDay(driver.getId());
 				double totalWorkingHours = workingHoursOfScheduledRides + workingHoursWithNewRide;
-
+				System.out.println(totalWorkingHours);
 				if (totalWorkingHours < 8 && totalWorkingHours < bestTime) {
 					bestTime = (int) totalWorkingHours;
 					driverForRide = driver;
@@ -319,7 +320,7 @@ public class RideServiceImpl implements IRideService {
 			}
 		}
 
-		if (driverForRide == null)
+		if (driverForRide.getId() == 0)
 			throw new NoAvailableDriversException();
 
 		Ride wantedRide = this.createWantedRide(dto, driverForRide);
@@ -341,9 +342,14 @@ public class RideServiceImpl implements IRideService {
 			LocalDateTime startOfDrivingToDeparture = LocalDateTime.now();
 			int timeForNewRideDepartureArrival = 0;
 
-			if (availability)
+			if (availability) {
 				timeForNewRideDepartureArrival = this.rideEstimationService
-						.getEstimatedTime(rideDTO.getDepartureLocation(), driver.getVehicleLocation());
+						.getEstimatedTimeForVehicleLocation(rideDTO.getDepartureLocation(), driver.getVehicle());
+				//System.out.println(rideDTO.getDepartureLocation());
+				//System.out.println(driver.getVehicleLocation());
+				//System.out.println("Hashcode :       "+driver.getVehicleLocation().hashCode());
+				System.out.println(timeForNewRideDepartureArrival);
+			}
 			else {
 				RideReturnedDTO currentRide = this.getActiveRideForDriver(driver.getId());
 				
@@ -357,17 +363,14 @@ public class RideServiceImpl implements IRideService {
 				
 				timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(
 						rideDTO.getDepartureLocation(), currentRide.getLocations().get(0).getDestination());
+				System.out.println(timeForNewRideDepartureArrival);
 			}
 
 			Ride nextRide = this.allRides.getFirstUpcomingRideForDriver(driver.getId());
 
 			int timeFromStartOfNewToStartOfNext = timeForNewRideDepartureArrival + newRideDuration;
 
-			int timeForUpcomingRideDepartureArrival = 0;
 			if (nextRide != null) {
-				timeForUpcomingRideDepartureArrival = this.rideEstimationService.getEstimatedTime(
-						rideDTO.getDepartureLocation(), new LocationNoIdDTO(nextRide.getDepartureLocation()));
-				timeFromStartOfNewToStartOfNext += timeForUpcomingRideDepartureArrival;
 
 				if (startOfDrivingToDeparture.plusMinutes(timeFromStartOfNewToStartOfNext)
 						.isAfter(nextRide.getScheduledTime())) {
@@ -379,12 +382,12 @@ public class RideServiceImpl implements IRideService {
 			int totalTimeForDepartureArrival = timeForNewRideDepartureArrival;
 			if (!availability)
 				totalTimeForDepartureArrival += this.getMinutesUntilEndOfCurrentRideForDriver(driver);
-
+			
 			double workingHoursWithNewRide = this.workingHoursService.getWorkedHoursForTodayWithNewRide(driver.getId(),
 					timeFromStartOfNewToStartOfNext);
 			double workingHorusOfScheduledRides = this.getWorkingHoursOfAllScheduledRideForDay(driver.getId());
 			double totalWorkingHours = workingHorusOfScheduledRides + workingHoursWithNewRide;
-
+			
 			if (!availability)
 				totalWorkingHours += this.getMinutesUntilEndOfCurrentRideForDriver(driver) / 60;
 
@@ -402,7 +405,7 @@ public class RideServiceImpl implements IRideService {
 
 		ride.setStartTime(null);
 		ride.setEndTime(null);
-		
+
 		ride.setScheduledTime(rideDTO.getScheduledTime());
 
 		ride.setPetTransport(rideDTO.isPetTransport());
@@ -417,7 +420,7 @@ public class RideServiceImpl implements IRideService {
 		ride.setDriver(driver);
 
 		ride.setReviews(null);
-		VehicleType vehicleType = this.allVehicleTypes.getByName(rideDTO.getVehicleType());
+		VehicleType vehicleType = this.vehicleTypeService.getByName(rideDTO.getVehicleType());
 
 		ride.setVehicleType(vehicleType);
 		ride.setDepartureLocation(new Location(rideDTO.getDepartureLocation()));
@@ -438,7 +441,7 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	private double calculatePrice(double distance, String vehicleTypeName) {
-		VehicleType vehicleType = this.allVehicleTypes
+		VehicleType vehicleType = this.vehicleTypeService
 				.getByName(VehicleTypeName.valueOf(VehicleTypeName.class, vehicleTypeName));
 		return vehicleType.getPricePerKm() * distance;
 	}
@@ -455,8 +458,10 @@ public class RideServiceImpl implements IRideService {
 		LocalDateTime end = startOfToday.plusDays(1);
 		List<Ride> scheduledRides = this.allRides.getAllScheduledRideForTodayForDriver(driverId, end);
 		int minutes = 0;
-		for (Ride ride : scheduledRides) {
-			minutes += ride.getEstimatedTimeInMinutes();
+		if (scheduledRides != null) {
+			for (Ride ride : scheduledRides) {
+				minutes += ride.getEstimatedTimeInMinutes();
+			}
 		}
 
 		DecimalFormat df = new DecimalFormat("#.##");
@@ -465,14 +470,24 @@ public class RideServiceImpl implements IRideService {
 
 	@Override
 	public RideReturnedDTO getActiveRideForPassenger(int id) {
+		Passenger passenger = this.allPassengers.findById(id).orElse(null);
+		
+		if (passenger == null)
+			throw new UserNotFoundException();
+		
 		Ride activeRide = this.allRides.getActiveRideForPassenger(id);
 		if (activeRide == null)
 			throw new NoActivePassengerRideException();
 		return new RideReturnedDTO(activeRide);
 	}
-
+	
 	@Override
 	public RideReturnedDTO getPendingRideForPassenger(int id) {
+		Passenger passenger = this.allPassengers.findById(id).orElse(null);
+		System.out.println(id);
+		if (passenger == null)
+			throw new UserNotFoundException();
+		
 		Ride pendingRide = this.allRides.getPendingRideForPassenger(id);
 		if (pendingRide != null) {
 			return new RideReturnedDTO(pendingRide);
@@ -520,8 +535,11 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	private Ride getRideIfExists(int id) {
-		return this.allRides.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ride does not exist!"));
+		Optional<Ride> ret = this.allRides.findById(id);
+		if (ret.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ride does not exist!");
+		}
+		return ret.get();
 	}
 
 	private Ride changeRideStatus(Ride ride, RideStatus status) {
@@ -558,27 +576,27 @@ public class RideServiceImpl implements IRideService {
 		User user = allUsers.findByEmail(authentication.getName()).orElse(null);
 
 		Panic panic = new Panic(LocalDateTime.now(), reason.getReason(), user, ride);
-		Panic savedPanic = this.allPanics.save(panic);
+		this.allPanics.save(panic);
 		this.allPanics.flush();
 
-		return new PanicRideDTO(savedPanic);
+		return new PanicRideDTO(panic);
 	}
 
 	@Override
-	public RideReturnedDTO startRide(int id) { 
+	public RideReturnedDTO startRide(int id) {
 		Ride ride = this.getRideIfExists(id);
 
 		if (ride.getStatus() != RideStatus.ACCEPTED) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Cannot start a ride that is not in status ACCEPTED!"); 
+					"Cannot start a ride that is not in status ACCEPTED!");
 		}
 
-		ride.setStartTime(LocalDateTime.now()); 
+		ride.setStartTime(LocalDateTime.now());
 		Ride savedRide = this.changeRideStatus(ride, RideStatus.STARTED);
 
-		return new RideReturnedDTO(savedRide); 
-	}  
- 
+		return new RideReturnedDTO(savedRide);
+	}
+
 	@Override
 	public RideReturnedDTO acceptRide(int id) {
 		Ride ride = this.getRideIfExists(id);
@@ -592,11 +610,11 @@ public class RideServiceImpl implements IRideService {
 
 		return new RideReturnedDTO(savedRide);
 	}
- 
+
 	@Override
-	public RideReturnedDTO finishRide(int id) {  
+	public RideReturnedDTO finishRide(int id) {
 		Ride ride = this.getRideIfExists(id);
- 
+
 		if (ride.getStatus() != RideStatus.STARTED) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					"Cannot end a ride that is not in status STARTED!");
@@ -626,63 +644,10 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	@Override
-	public AllPanicRidesDTO getAllPanicRides() {
-		List<Panic> panics = allPanics.findAll();
-		return new AllPanicRidesDTO(panics);
-	}
-
-	@Override
-	public AllPassengerRidesDTO getAllPassengerRidesPaginated(int id, int page, int size, String sort, String from,
-			String to) {
-		Pageable pageable = PageRequest.of(page, size);
-
-		Optional<Passenger> passenger = this.allPassengers.findById(id);
-		if (passenger.isEmpty()) {
-			throw new UserNotFoundException();
-		}
-
-		List<Ride> rides = this.allRides.getAllPassengerRidesPaginated(id, pageable);
-		return new AllPassengerRidesDTO(rides);
-	}
-
-	@Override
-	public AllPassengerRidesDTO getAllPassengerRides(int id) {
-		Optional<Passenger> passenger = this.allPassengers.findById(id);
-		if (passenger.isEmpty()) {
-			throw new UserNotFoundException();
-		}
-
-		List<Ride> rides = this.allRides.getAllPassengerRides(id);
-		return new AllPassengerRidesDTO(rides);
-	}
-
-	@Override
-	public AllPassengerRidesDTO getAllDriverRidesPaginated(int id, int page, int size, String sort, String from,
-			String to) {
-		driverService.getById(id);
-		Pageable pageable = PageRequest.of(page, size);
-		List<Ride> rides = this.allRides.findAllByDriverId(id, pageable);
-		return new AllPassengerRidesDTO(rides);
-	}
-
-	@Override
-	public AllPassengerRidesDTO getAllDriverRides(int id) {
-		driverService.getById(id);
-		List<Ride> rides = this.allRides.findAllByDriverId(id);
-		return new AllPassengerRidesDTO(rides);
-	}
-
-	@Override
 	public Double getRideSugestionPrice(UnregisteredRideSuggestionDTO dto) {
 		VehicleType vehicleType = this.allVehicleTypes
 				.getByName(VehicleTypeName.valueOf(VehicleTypeName.class, dto.getVehicleTypeName()));
 		return vehicleType.getPricePerKm() * dto.getDistance();
-	}
-
-	@Override
-	public RideReturnedDTO changeRideStatus(int id, RideStatus status) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -693,28 +658,40 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public RideReturnedDTO startRideToDeparture(int id) {
 		Ride ride = this.getRideIfExists(id);
+		
+		if (ride.getStatus() != RideStatus.ACCEPTED) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot start ride to departure, status must be ACCEPTED!");
+		}
+		
+		if (ride.getScheduledTime() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Cannot start ride to departure, scheduled time must not be null!");
+		}
+		
 		ride.setScheduledTime(null);
 		Ride savedRide = this.allRides.save(ride);
 		this.allRides.flush();
-		return new RideReturnedDTO(savedRide); 
+		return new RideReturnedDTO(savedRide);
 	}
 
 	@Override
 	public List<RideReturnedDTO> getScheduledRidesForUser(int userId) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User user = allUsers.findByEmail(authentication.getName()).orElse(null);
-		
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> userOptional = allUsers.findById(userId);
+		if (userOptional.isEmpty())
+			throw new UserNotFoundException();
+		User user = userOptional.get();
 		List<Ride> rides;
 		if (user.getRole() == Role.DRIVER) {
 			rides = this.allRides.getScheduledRidesForDriver(userId);
 		} else {
 			rides = this.allRides.getScheduledRidesForPassenger(userId);
 		}
-		
+
 		List<RideReturnedDTO> res = new ArrayList<RideReturnedDTO>();
 		for (Ride ride : rides) {
-			if (ride.getScheduledTime().isAfter(LocalDateTime.now()))
-				res.add(new RideReturnedDTO(ride));
+			res.add(new RideReturnedDTO(ride));
 		}
 		return res;
 	}

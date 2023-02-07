@@ -47,7 +47,7 @@ public class ReviewController {
 	private IReviewService reviewService;      
 	
 
-	@PostMapping(value="{rideId}/complete-review", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value="/{rideId}/complete-review", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> addReview(@PathVariable @Min(value = 0, message = "Field rideId must be greater than 0.") int rideId, @Valid @RequestBody List<ReviewDTO> reviews) {
 		try {

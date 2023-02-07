@@ -45,6 +45,10 @@ public class UserDTO {
 		this.profilePicture = profilePicture;
 	}
 
+	public UserDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getName() {
 		return name;
 	}

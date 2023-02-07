@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.P
 
 import com.hopin.HopIn.dtos.ActiveVehicleDTO;
 import com.hopin.HopIn.dtos.AllHoursDTO;
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
@@ -13,6 +14,7 @@ import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.RideDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.UserDTOOld;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -83,8 +85,10 @@ public interface IDriverService {
 	
 	public Driver getByEmail(String email);
 
+	public AllPassengerRidesDTO getAllDriverRides(int id);
 
+	public AllPassengerRidesDTO getAllDriverRidesPaginated(int driverId, int page, int size, String sort, String from,
+			String to);
 
-
-
+	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to);
 }

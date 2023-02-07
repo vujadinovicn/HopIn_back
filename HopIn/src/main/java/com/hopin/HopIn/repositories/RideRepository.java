@@ -7,9 +7,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 
 import com.hopin.HopIn.entities.Ride;
 
+@Repository
 public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndSortingRepository<Ride, Integer> {
 	
 	@Query(value = "select * from \"rides\" where \"start_time\" between :from and :to order by \"start_time\"", nativeQuery=true)
@@ -34,10 +36,10 @@ public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndS
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and (\"status\" = 6 or (\"status\" = 1 and \"scheduled_time\" is null))", nativeQuery=true)
 	public Ride getActiveRideForDriver(int id);
 		
-	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and (\"status\" = 6 or (\"status\" = 1 and \"scheduled_time\" is not null))", nativeQuery=true)
+	@Query(value = "select * from \"rides\" where \"driver_id\" = :id and (\"status\" = 1 and \"scheduled_time\" is not null)", nativeQuery=true)
 	public List<Ride> getScheduledRidesForDriver(int id);
 	
-	@Query(value = "select * from \"rides\" where (\"status\" = 6 or (\"status\" = 1 and \"scheduled_time\" is not null)) and "
+	@Query(value = "select * from \"rides\" where (\"status\" = 1 and \"scheduled_time\" is not null) and "
 			+ "\"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :id)", nativeQuery=true)
 	public List<Ride> getScheduledRidesForPassenger(int id);
 	
@@ -60,7 +62,6 @@ public interface RideRepository extends JpaRepository<Ride, Integer>, PagingAndS
 	
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :driverId and \"status\" = 1 and \"scheduled_time\" is not null and \"scheduled_time\" < :tomorrow", nativeQuery=true)
 	public List<Ride> getAllScheduledRideForTodayForDriver(int driverId, LocalDateTime tomorrow);
-	
 
 	@Query(value = "select * from \"rides\" where \"driver_id\" = :userId or \"id\" in (select \"ride_id\" from \"rides_passengers\" where \"passengers_id\" = :userId order by \"start_time\")", nativeQuery=true)
 	public List<Ride> getAllUserRides(int userId, Pageable pageable);

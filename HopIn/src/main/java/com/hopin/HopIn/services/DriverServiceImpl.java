@@ -1,6 +1,10 @@
 package com.hopin.HopIn.services;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +22,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.hopin.HopIn.dtos.ActiveVehicleDTO;
 import com.hopin.HopIn.dtos.AllHoursDTO;
+import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.DocumentDTO;
 import com.hopin.HopIn.dtos.DocumentReturnedDTO;
 import com.hopin.HopIn.dtos.DriverReturnedDTO;
 import com.hopin.HopIn.dtos.RideDTO;
+import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
 import com.hopin.HopIn.dtos.VehicleDTO;
@@ -36,6 +42,7 @@ import com.hopin.HopIn.entities.DriverAccountUpdateInfoRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdatePasswordRequest;
 import com.hopin.HopIn.entities.DriverAccountUpdateVehicleRequest;
 import com.hopin.HopIn.entities.Location;
+import com.hopin.HopIn.entities.Ride;
 import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.enums.DocumentOperationType;
 import com.hopin.HopIn.enums.Role;
@@ -455,5 +462,43 @@ public class DriverServiceImpl implements IDriverService {
 	@Override
 	public Driver getByEmail(String email) {
 		return (Driver) this.userService.getByEmail(email);
+	}
+	
+	@Override
+	public AllPassengerRidesDTO getAllDriverRidesPaginated(int id, int page, int size, String sort, String from,
+			String to) {
+		this.getById(id);
+		Pageable pageable = PageRequest.of(page, size);
+		List<Ride> rides = this.allRides.findAllByDriverId(id, pageable);
+		return new AllPassengerRidesDTO(rides);
+	}
+	
+	@Override
+	public AllPassengerRidesDTO getAllDriverRides(int id) {
+		this.getById(id);
+		List<Ride> rides = this.allRides.findAllByDriverId(id);
+		Collections.sort(rides, new Comparator<Ride>() {
+		    @Override
+		    public int compare(Ride lhs, Ride rhs) {
+		        // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+		        if (lhs.getEndTime().isAfter(rhs.getEndTime()))
+		        	return -1;
+		        else
+		        	return 1;
+		    }
+		});
+		return new AllPassengerRidesDTO(rides);
+	}
+	
+	@Override
+	public List<RideForReportDTO> getAllDriverRidesBetweenDates(int id, String from, String to) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		List<Ride> rides = allRides.getAllDriverRidesBetweenDates(id, LocalDate.parse(from, formatter).atStartOfDay(),
+				LocalDate.parse(to, formatter).atStartOfDay());
+		List<RideForReportDTO> res = new ArrayList<RideForReportDTO>();
+		for (Ride ride : rides) {
+			res.add(new RideForReportDTO(ride));
+		}
+		return res;
 	}
 } 

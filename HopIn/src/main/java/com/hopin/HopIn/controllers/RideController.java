@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopin.HopIn.dtos.FavoriteRideDTO;
 import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
@@ -36,13 +33,13 @@ import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.exceptions.NoActiveDriverRideException;
-import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
 import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
 import com.hopin.HopIn.exceptions.NoRideAfterFiveHoursException;
 import com.hopin.HopIn.exceptions.PassengerAlreadyInRideException;
 import com.hopin.HopIn.exceptions.PassengerHasAlreadyPendingRide;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
+import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.services.interfaces.IRideService;
 import com.hopin.HopIn.services.interfaces.ITokenService;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -67,7 +64,7 @@ public class RideController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> add(@Valid @RequestBody(required = false) RideDTO dto) {
+	public ResponseEntity<?> add(@Valid @RequestBody RideDTO dto) {
 		System.out.println(dto.getVehicleType());
 		ResponseEntity<ExceptionDTO> res;
 
@@ -125,7 +122,7 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/driver/{driverId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getActiveRideForDriver(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
@@ -136,7 +133,7 @@ public class RideController {
 	}
 
 	@GetMapping(value = "/driver/{driverId}/pending", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getPendingRideForDriver(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
@@ -151,16 +148,25 @@ public class RideController {
 	@PreAuthorize("hasRole('DRIVER')" + " || " + "hasRole('PASSENGER')")
 	public ResponseEntity<?> getScheduledRidesForUser(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int userId) {
-		List<RideReturnedDTO> rides = service.getScheduledRidesForUser(userId);
-		System.out.println(rides);
-		return new ResponseEntity<List<RideReturnedDTO>>(rides, HttpStatus.OK);
+		try {
+			List<RideReturnedDTO> rides = service.getScheduledRidesForUser(userId);
+			return new ResponseEntity<List<RideReturnedDTO>>(rides, HttpStatus.OK);
+		} catch (UserNotFoundException e){
+			return new ResponseEntity<String>("User not found", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping(value = "/passenger/{passengerId}/active", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getActiveRideForPassenger(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int passengerId) {
-		RideReturnedDTO ride = service.getPendingRideForPassenger(passengerId);
+		RideReturnedDTO ride;
+		try {
+			ride = service.getPendingRideForPassenger(passengerId);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("Passenger doesn't exist!", HttpStatus.BAD_REQUEST);
+		}
+		
 		if (ride != null)
 			return new ResponseEntity<RideReturnedDTO>(service.getPendingRideForPassenger(passengerId), HttpStatus.OK);
 		else
@@ -187,8 +193,7 @@ public class RideController {
 	@PreAuthorize("hasRole('PASSENGER')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> panicRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@Valid @RequestBody(required = false) ReasonDTO dto) {
-		System.out.println("PANIC " + id + " " + dto.getReason());
+			@Valid @RequestBody(required = true) ReasonDTO dto) {
 		PanicRideDTO ride = service.panicRide(id, dto);
 		if (ride == null) {
 			return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
@@ -262,8 +267,7 @@ public class RideController {
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> rejectRide(
 			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@Valid @RequestBody(required = false) ReasonDTO dto) {
-		System.out.println("REJECT " + dto.getReason());
+			@Valid @RequestBody(required = true) ReasonDTO dto) {
 		try {
 			RideReturnedDTO ride = service.rejectRide(id, dto);
 			this.simpMessagingTemplate.convertAndSend("/topic/ride-cancel", ride.getDriver().getId());
@@ -283,19 +287,20 @@ public class RideController {
 	}
 
 	@PostMapping(value = "/price", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody UnregisteredRideSuggestionDTO dto) {
+	public ResponseEntity<Double> getRideSugestionPrice(@RequestBody @Valid UnregisteredRideSuggestionDTO dto) {
 		return new ResponseEntity<Double>(service.getRideSugestionPrice(dto), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/favorites", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> addFavoriteRide(@Valid @RequestBody(required = false) FavoriteRideDTO dto) {
-		System.out.println("neca");
 		try {
 			return new ResponseEntity<FavoriteRideReturnedDTO>(this.service.insertFavoriteRide(dto), HttpStatus.OK);
 		} catch (FavoriteRideException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Number of favorite rides cannot exceed 10!"),
 					HttpStatus.BAD_REQUEST);
+		} catch (ResponseStatusException e) {
+			return new ResponseEntity<String>(e.getReason(),HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -320,10 +325,14 @@ public class RideController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "/date/range", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@RequestParam String from,
+	public ResponseEntity<?> getAllRidesBetweenDates(@RequestParam String from,
 			@RequestParam String to) {
-		return new ResponseEntity<List<RideForReportDTO>>(this.service.getAllRidesBetweenDates(from, to),
-				HttpStatus.OK);
+		try {
+			return new ResponseEntity<List<RideForReportDTO>>(this.service.getAllRidesBetweenDates(from, to),
+					HttpStatus.OK);
+		} catch (ResponseStatusException e) {
+			return new ResponseEntity<String>(e.getReason(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PostMapping(value = "/driver-took-off/{rideId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -341,7 +350,7 @@ public class RideController {
 			if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
 				return new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
 			} else {
-				return new ResponseEntity<String>("Something bad happened", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getReason()), HttpStatus.BAD_REQUEST);
 			}
 		}
 	}

@@ -44,6 +44,10 @@ public class FavoriteRideDTO {
 		this.babyTransport = babyTransport;
 	}
 
+	public FavoriteRideDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getFavoriteName() {
 		return favoriteName;
 	}
