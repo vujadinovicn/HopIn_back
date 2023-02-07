@@ -244,7 +244,7 @@ public class RideServiceImpl implements IRideService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Passenger pass = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
 		dto.getPassengers().add(new UserInRideDTO(pass));
-
+		//System.out.println(dto.getPassengers().get(0).getId());
 		if (this.getPendingRideForPassenger(dto.getPassengers().get(0).getId()) != null) {
 			throw new PassengerHasAlreadyPendingRide();
 		}
@@ -267,7 +267,7 @@ public class RideServiceImpl implements IRideService {
 			List<Driver> driversWithNoActiveRide = this.getAllDriversWithNoActiveRide(driversForRide);
 			List<Driver> driversWithActiveRide = new ArrayList<Driver>(driversForRide);
 			driversWithActiveRide.removeAll(driversWithNoActiveRide);
-
+			//System.out.println(driversForRide);
 			boolean availabilityOfDrivers = driversWithNoActiveRide.size() != 0 ? true : false;
 
 			if (availabilityOfDrivers) {
@@ -294,7 +294,7 @@ public class RideServiceImpl implements IRideService {
 				LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
 				LocalDateTime end = startOfToday.plusDays(1);
 
-				List<Ride> passengersRides = this.allRides.getAllScheduledRideForTodayForPassenger(currId, end);
+				List<Ride> passengersRides = this.allRides.getAllScheduledRideForTodayForPassenger(passenger.getId(), end);
 				for (Ride ride : passengersRides) {
 					if (ride.getScheduledTime().plusMinutes(ride.getEstimatedTimeInMinutes()).isAfter(
 							dto.getScheduledTime()) && ride.getScheduledTime().isBefore(dto.getScheduledTime()))
@@ -307,11 +307,12 @@ public class RideServiceImpl implements IRideService {
 
 			int bestTime = Integer.MAX_VALUE;
 			for (Driver driver : driversWithNoUpcomingRide) {
+				System.out.println(newRideDuration);
 				double workingHoursWithNewRide = this.workingHoursService
 						.getWorkedHoursForTodayWithNewRide(driver.getId(), newRideDuration);
 				double workingHoursOfScheduledRides = this.getWorkingHoursOfAllScheduledRideForDay(driver.getId());
 				double totalWorkingHours = workingHoursOfScheduledRides + workingHoursWithNewRide;
-
+				System.out.println(totalWorkingHours);
 				if (totalWorkingHours < 8 && totalWorkingHours < bestTime) {
 					bestTime = (int) totalWorkingHours;
 					driverForRide = driver;
@@ -319,7 +320,7 @@ public class RideServiceImpl implements IRideService {
 			}
 		}
 
-		if (driverForRide == null)
+		if (driverForRide.getId() == 0)
 			throw new NoAvailableDriversException();
 
 		Ride wantedRide = this.createWantedRide(dto, driverForRide);
@@ -341,26 +342,28 @@ public class RideServiceImpl implements IRideService {
 			LocalDateTime startOfDrivingToDeparture = LocalDateTime.now();
 			int timeForNewRideDepartureArrival = 0;
 
-			if (availability)
+			if (availability) {
 				timeForNewRideDepartureArrival = this.rideEstimationService
-						.getEstimatedTime(rideDTO.getDepartureLocation(), driver.getVehicleLocation());
+						.getEstimatedTimeForVehicleLocation(rideDTO.getDepartureLocation(), driver.getVehicle());
+				//System.out.println(rideDTO.getDepartureLocation());
+				//System.out.println(driver.getVehicleLocation());
+				//System.out.println("Hashcode :       "+driver.getVehicleLocation().hashCode());
+				System.out.println(timeForNewRideDepartureArrival);
+			}
 			else {
 				RideReturnedDTO currentRide = this.getActiveRideForDriver(driver.getId());
 				startOfDrivingToDeparture = currentRide.getStartTime()
 						.plusMinutes(currentRide.getEstimatedTimeInMinutes());
 				timeForNewRideDepartureArrival = this.rideEstimationService.getEstimatedTime(
 						rideDTO.getDepartureLocation(), currentRide.getLocations().get(0).getDestination());
+				System.out.println(timeForNewRideDepartureArrival);
 			}
 
 			Ride nextRide = this.allRides.getFirstUpcomingRideForDriver(driver.getId());
 
 			int timeFromStartOfNewToStartOfNext = timeForNewRideDepartureArrival + newRideDuration;
 
-			int timeForUpcomingRideDepartureArrival = 0;
 			if (nextRide != null) {
-				timeForUpcomingRideDepartureArrival = this.rideEstimationService.getEstimatedTime(
-						rideDTO.getDepartureLocation(), new LocationNoIdDTO(nextRide.getDepartureLocation()));
-				timeFromStartOfNewToStartOfNext += timeForUpcomingRideDepartureArrival;
 
 				if (startOfDrivingToDeparture.plusMinutes(timeFromStartOfNewToStartOfNext)
 						.isAfter(nextRide.getScheduledTime())) {
@@ -372,12 +375,12 @@ public class RideServiceImpl implements IRideService {
 			int totalTimeForDepartureArrival = timeForNewRideDepartureArrival;
 			if (!availability)
 				totalTimeForDepartureArrival += this.getMinutesUntilEndOfCurrentRideForDriver(driver);
-
+			
 			double workingHoursWithNewRide = this.workingHoursService.getWorkedHoursForTodayWithNewRide(driver.getId(),
 					timeFromStartOfNewToStartOfNext);
 			double workingHorusOfScheduledRides = this.getWorkingHoursOfAllScheduledRideForDay(driver.getId());
 			double totalWorkingHours = workingHorusOfScheduledRides + workingHoursWithNewRide;
-
+			
 			if (!availability)
 				totalWorkingHours += this.getMinutesUntilEndOfCurrentRideForDriver(driver) / 60;
 
@@ -410,7 +413,7 @@ public class RideServiceImpl implements IRideService {
 		ride.setDriver(driver);
 
 		ride.setReviews(null);
-		VehicleType vehicleType = this.allVehicleTypes.getByName(rideDTO.getVehicleType());
+		VehicleType vehicleType = this.vehicleTypeService.getByName(rideDTO.getVehicleType());
 
 		ride.setVehicleType(vehicleType);
 		ride.setDepartureLocation(new Location(rideDTO.getDepartureLocation()));
@@ -431,7 +434,7 @@ public class RideServiceImpl implements IRideService {
 	}
 
 	private double calculatePrice(double distance, String vehicleTypeName) {
-		VehicleType vehicleType = this.allVehicleTypes
+		VehicleType vehicleType = this.vehicleTypeService
 				.getByName(VehicleTypeName.valueOf(VehicleTypeName.class, vehicleTypeName));
 		return vehicleType.getPricePerKm() * distance;
 	}
@@ -448,8 +451,10 @@ public class RideServiceImpl implements IRideService {
 		LocalDateTime end = startOfToday.plusDays(1);
 		List<Ride> scheduledRides = this.allRides.getAllScheduledRideForTodayForDriver(driverId, end);
 		int minutes = 0;
-		for (Ride ride : scheduledRides) {
-			minutes += ride.getEstimatedTimeInMinutes();
+		if (scheduledRides != null) {
+			for (Ride ride : scheduledRides) {
+				minutes += ride.getEstimatedTimeInMinutes();
+			}
 		}
 
 		DecimalFormat df = new DecimalFormat("#.##");
@@ -472,7 +477,7 @@ public class RideServiceImpl implements IRideService {
 	@Override
 	public RideReturnedDTO getPendingRideForPassenger(int id) {
 		Passenger passenger = this.allPassengers.findById(id).orElse(null);
-		
+		System.out.println(id);
 		if (passenger == null)
 			throw new UserNotFoundException();
 		

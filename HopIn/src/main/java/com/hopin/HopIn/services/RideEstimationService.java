@@ -19,6 +19,7 @@ import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.services.interfaces.IRideEstimationService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
@@ -112,5 +113,10 @@ public class RideEstimationService implements IRideEstimationService{
 			}
 		}
 		return closestDriver;
+	}
+
+	@Override
+	public int getEstimatedTimeForVehicleLocation(LocationNoIdDTO departureLocation, Vehicle vehicle) {
+		return this.getEstimatedTime(departureLocation, new LocationNoIdDTO(vehicle.getCurrentLocation()));
 	}
 }

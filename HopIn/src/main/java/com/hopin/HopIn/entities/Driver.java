@@ -28,6 +28,7 @@ public class Driver extends User {
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<WorkingHours> workingHours = new HashSet<WorkingHours>();
 
+	
 	public Driver() {
 	}
 
