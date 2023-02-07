@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopin.HopIn.dtos.FavoriteRideDTO;
 import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
@@ -36,7 +33,6 @@ import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.exceptions.FavoriteRideException;
 import com.hopin.HopIn.exceptions.NoActiveDriverException;
 import com.hopin.HopIn.exceptions.NoActiveDriverRideException;
-import com.hopin.HopIn.exceptions.NoActivePassengerRideException;
 import com.hopin.HopIn.exceptions.NoAvailableDriversException;
 import com.hopin.HopIn.exceptions.NoDriverWithAppropriateVehicleForRideException;
 import com.hopin.HopIn.exceptions.NoRideAfterFiveHoursException;
@@ -68,7 +64,7 @@ public class RideController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> add(@Valid @RequestBody(required = false) RideDTO dto) {
+	public ResponseEntity<?> add(@Valid @RequestBody RideDTO dto) {
 		System.out.println(dto.getVehicleType());
 		ResponseEntity<ExceptionDTO> res;
 

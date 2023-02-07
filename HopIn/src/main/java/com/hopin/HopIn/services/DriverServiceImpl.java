@@ -3,6 +3,8 @@ package com.hopin.HopIn.services;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -475,6 +477,16 @@ public class DriverServiceImpl implements IDriverService {
 	public AllPassengerRidesDTO getAllDriverRides(int id) {
 		this.getById(id);
 		List<Ride> rides = this.allRides.findAllByDriverId(id);
+		Collections.sort(rides, new Comparator<Ride>() {
+		    @Override
+		    public int compare(Ride lhs, Ride rhs) {
+		        // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+		        if (lhs.getEndTime().isAfter(rhs.getEndTime()))
+		        	return -1;
+		        else
+		        	return 1;
+		    }
+		});
 		return new AllPassengerRidesDTO(rides);
 	}
 	

@@ -391,7 +391,8 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	
 	@Test
 	public void shouldThrowForbiddenException_ForAdminRole_RejectRide() {
-		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/cancel", HttpMethod.PUT, makeJwtHeader(TOKEN_ADMIN), String.class);
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/cancel", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson("reason"), TOKEN_ADMIN), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.FORBIDDEN);
 	}
 	 /*GET_RIDE*/
 	@Test
@@ -411,6 +412,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_RejectRide() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + "s" + "/cancel", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	public void shouldThrowJSONExceptionWhenGettingRideWithInvalidRideId() {
@@ -426,7 +428,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	
 	@Test
 	public void shouldThrowJSONException_ForInvalidReason_RejectRide() {
-		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/cancel", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson("reason"), TOKEN_DRIVER), String.class);
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/cancel", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson(""), TOKEN_DRIVER), String.class);
 		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
 	}
 	
@@ -699,6 +701,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_PanicRide() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + "S" + "/panic", HttpMethod.PUT, makeJwtHeaderWithRequestBody(convertReasonDTOToJson("reason"), TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	public void shouldThrowJSONExceptionWhenDeletingFavoriteRideWithInvalidFavoriteRideId() {
@@ -709,6 +712,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldThrowJSONException_ForNullReason_PanicRide() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/" + PENDING_RIDE_ID + "/panic", HttpMethod.PUT, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	public void shouldThrowFavoriteRideNotFoundExceptionWhenDeletingFavoriteRideForNonExistingFavoriteRide() {
@@ -821,6 +825,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldThrowForbiddenException_ForPassengerRole_GetPendingRideForDriver() {
 		ResponseEntity<?> res = restTemplate.exchange("/api/ride/driver/" + DRIVER_ID + "/pending", HttpMethod.GET, makeJwtHeader(TOKEN_PASSENGER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.FORBIDDEN);
 	}
 	
 	public void shouldThrowBadRequestExceptionWhenAcceptingRideWithInvalidStatus() {
@@ -871,6 +876,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	@Test
 	public void shouldThrowMethodArgumentTypeMismatchException_ForInvalidPathParam_GetPendingRideForDriver() {
 		ResponseEntity<String> res = restTemplate.exchange("/api/ride/driver/" + "S" + "/pending", HttpMethod.GET, makeJwtHeader(TOKEN_DRIVER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	public void shouldThrowJSONExceptionWhenCancelingRideWithInvalidRideId() {
