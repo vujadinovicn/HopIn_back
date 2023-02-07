@@ -29,12 +29,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopin.HopIn.dtos.CredentialsDTO;
 import com.hopin.HopIn.dtos.FavoriteRideDTO;
 import com.hopin.HopIn.dtos.FavoriteRideReturnedDTO;
+import com.hopin.HopIn.dtos.LocationDTO;
+import com.hopin.HopIn.dtos.LocationNoIdDTO;
 import com.hopin.HopIn.dtos.PanicRideDTO;
 import com.hopin.HopIn.dtos.ReasonDTO;
+import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UnregisteredRideSuggestionDTO;
 import com.hopin.HopIn.dtos.UserInRideDTO;
+import com.hopin.HopIn.entities.Location;
 import com.hopin.HopIn.entities.VehicleType;
 import com.hopin.HopIn.enums.RideStatus;
 import com.hopin.HopIn.enums.VehicleTypeName;
@@ -85,6 +89,7 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 	private final static double DISTANCE = 1.0;
 	private final static double CAR_VEHICLE_PRICE = 60;
 	
+	private static RideDTO rideDTO;
 	
 	@Autowired
     private TestRestTemplate restTemplate;
@@ -99,6 +104,14 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		
 		ResponseEntity<TokenDTO> tokenResAdmin = restTemplate.postForEntity("/api/user/login", new CredentialsDTO(USERNAME_ADMIN, PASSWORD_ADMIN), TokenDTO.class);
 		TOKEN_ADMIN = tokenResAdmin.getBody().getAccessToken();
+	
+		Location departure = new Location(3, "Jirecekova 1", 45.32, 24.3);
+		Location destination = new Location(4, "Promenada", 45.32, 24.3);
+		List<LocationDTO> locationsDTO = new ArrayList<LocationDTO>();
+		locationsDTO.add(new LocationDTO(new LocationNoIdDTO(departure), new LocationNoIdDTO(destination)));
+		List<UserInRideDTO> usersDTO = new ArrayList<UserInRideDTO>();
+		rideDTO = new RideDTO(locationsDTO, usersDTO, VehicleTypeName.CAR, true, true);
+	
 	}
 	
 	private HttpEntity<String> makeJwtHeader(String token) {
@@ -1029,4 +1042,95 @@ public class RideControllerTest extends AbstractTestNGSpringContextTests {
 		assertEquals(res.getStatusCode(), HttpStatus.OK);
 		assertTrue(res.getBody().size() <= 1);
 	}
+	
+	@Test
+	private String convertRideDTOToJson(RideDTO rideDTO) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.findAndRegisterModules(); 
+		String jsonString = null;
+		
+		try {
+			jsonString = mapper.writeValueAsString(rideDTO);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return jsonString;
+	}
+	
+	@Test
+	public void shouldThrowUnathorisedException_ForNoToken_Add() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride", HttpMethod.POST, null, String.class);
+		assertEquals(HttpStatus.UNAUTHORIZED, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldThrowForbiddenException_ForWrongRole_Add() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeaderWithRequestBody(convertRideDTOToJson(rideDTO), TOKEN_ADMIN), String.class);
+		assertEquals(HttpStatus.FORBIDDEN, res.getStatusCode());
+	}
+	
+	@Test
+	public void shouldThrowJSONException_ForInvalidRideDTO_Add() {
+		rideDTO.setBabyTransport(null);
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeaderWithRequestBody(convertRideDTOToJson(rideDTO), TOKEN_DRIVER), String.class);
+		assertNotEquals(res.getStatusCode(), HttpStatus.OK);
+	}
+	
+	@Test
+	public void shouldThrowJSONException_ForNullRideDTO_Add() {
+		ResponseEntity<String> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeader(TOKEN_PASSENGER), String.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+	}
+	
+//	@Test
+//	public void shouldThrowNoActiveDriverException_ForNoActiveDrivers_Add() {
+//		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeaderWithRequestBody(convertRideDTOToJson(rideDTO), TOKEN_PASSENGER), ExceptionDTO.class);
+//		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+//		assertEquals(res.getBody().getMessage(), "There are no any active drivers!");
+//	}
+	
+	@Test
+	public void shouldThrowNoDriverWithAppropriateVehicleForRideException_ForDriversWithNoApproprateVehicle_Add() {
+		rideDTO.setVehicleType(VehicleTypeName.LUXURY);
+		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeaderWithRequestBody(convertRideDTOToJson(rideDTO), TOKEN_PASSENGER), ExceptionDTO.class);
+		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+		assertEquals(res.getBody().getMessage(), "There are no drivers with requested vehicle!");
+	}
+	
+//	@Test
+//	public void shouldThrowPassengerHasAlreadyPendingRide_ForPassengerAlreadyInRide_Add() {
+//		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeaderWithRequestBody(convertRideDTOToJson(rideDTO), TOKEN_PASSENGER), ExceptionDTO.class);
+//		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+//		assertEquals(res.getBody().getMessage(), "Cannot create a ride while you have one already pending!");
+//	}
+	
+//	@Test
+//	public void shouldThrowNoRideAfterFiveHoursException_ForRideScheduledLaterThanFiveHours_Add() {
+//		rideDTO.setScheduledTime(LocalDateTime.now().plusHours(6));
+//		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeaderWithRequestBody(convertRideDTOToJson(rideDTO), TOKEN_PASSENGER_ORDERING_RIDE), ExceptionDTO.class);
+//		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+//		assertEquals(res.getBody().getMessage(), "Cannot create a ride while you have one already pending!");
+//	}
+	
+//	@Test
+//	public void shouldThrowPassengerAlreadyInRideException_ForPassengerAlreadyInRide_Add() {
+//		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeaderWithRequestBody(convertRideDTOToJson(rideDTO), TOKEN_PASSENGER_ORDERING_RIDE), ExceptionDTO.class);
+//		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+//		assertEquals(res.getBody().getMessage(), "Passenger already in drive!");
+//	}
+	
+//	@Test 
+//	public void shouldThrowNoAvailableDriversException_ForNoAvailableDrivers_Add() {
+//		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeaderWithRequestBody(convertRideDTOToJson(rideDTO), TOKEN_PASSENGER), ExceptionDTO.class);
+//		assertEquals(res.getStatusCode(), HttpStatus.BAD_REQUEST);
+//		assertEquals(res.getBody().getMessage(), "No available drivers!");
+//	}
+	
+//	@Test 
+//	public void shouldCreateRide_ForValidDataBase_Add() {
+//		ResponseEntity<ExceptionDTO> res = restTemplate.exchange("/api/ride", HttpMethod.POST, makeJwtHeaderWithRequestBody(convertRideDTOToJson(rideDTO), restTemplate.postForEntity("/api/user/login", new CredentialsDTO("laza@gmail.com", "123"), TokenDTO.class).getBody().getAccessToken()), ExceptionDTO.class);
+//		assertEquals(res.getStatusCode(), HttpStatus.OK);
+//		assertEquals(res.getBody().getMessage(), "No available drivers!");
+//	
+//	}
 }
