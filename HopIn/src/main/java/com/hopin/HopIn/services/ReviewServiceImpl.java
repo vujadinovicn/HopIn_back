@@ -2,11 +2,14 @@ package com.hopin.HopIn.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,6 +20,7 @@ import com.hopin.HopIn.dtos.ReviewReturnedDTO;
 import com.hopin.HopIn.entities.Passenger;
 import com.hopin.HopIn.entities.Review;
 import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.enums.ReviewType;
 import com.hopin.HopIn.repositories.PassengerRepository;
 import com.hopin.HopIn.repositories.ReviewRepository;
@@ -24,6 +28,9 @@ import com.hopin.HopIn.repositories.RideRepository;
 import com.hopin.HopIn.repositories.VehicleRepository;
 import com.hopin.HopIn.services.interfaces.IDriverService;
 import com.hopin.HopIn.services.interfaces.IReviewService;
+import com.hopin.HopIn.services.interfaces.IUserService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ReviewServiceImpl implements IReviewService{
@@ -42,6 +49,9 @@ public class ReviewServiceImpl implements IReviewService{
 	
 	@Autowired
 	private IDriverService driverService;
+	
+	@Autowired
+	private IUserService userService;
 	
 	Map<Integer, ArrayList<Review>> allVehicleReviews = new HashMap<Integer, ArrayList<Review>>();
 	Map<Integer, ArrayList<Review>> allDriverReviews = new HashMap<Integer, ArrayList<Review>>();
@@ -82,13 +92,26 @@ public class ReviewServiceImpl implements IReviewService{
 	@Override
 	public ReviewReturnedDTO addReview(int rideId, ReviewDTO reviewDTO, ReviewType type) {
 		Ride ride = this.getRideIfExists(rideId);
+		User user = this.userService.getCurrentUser();
+		
 		
 		if (ride.getDriver() == null || ride.getDriver().getVehicle() == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist!");
 		
+		
+		   
+		for (Review r : ride.getReviews()) {
+			if (r.getPassenger().getId() == user.getId() && r.getType() == type) {
+				ride.getReviews().remove(r);
+				allRides.save(ride);
+				break;
+			}
+		}
+		
 		Review review = this.dtoToReview(reviewDTO);
 		review.setType(type);
 		review.setRide(ride);
+		System.out.println(review);
 		Review savedReview = allReviews.save(review);
 		allReviews.flush();
 		
@@ -103,15 +126,11 @@ public class ReviewServiceImpl implements IReviewService{
 	private Review dtoToReview(ReviewDTO reviewDTO) {
 		Review review = new Review();
 		review.setComment(reviewDTO.getComment());
-		review.setPassenger(null);
 		review.setRating(reviewDTO.getRating());
-		review.setType(ReviewType.VEHICLE);
 		
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//		Passenger passenger = allPassengers.findPassengerByEmail(authentication.getName()).orElse(null);
-//		review.setPassenger(passenger);
-		
-		review.setPassenger(allPassengers.findById(1).orElse(null));
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Passenger passenger = allPassengers.findPassengerByEmail("mika@gmail.com").orElse(null);
+		review.setPassenger(passenger);
 		
 		return review;
 	}
@@ -119,8 +138,9 @@ public class ReviewServiceImpl implements IReviewService{
 	@Override
 	public ArrayList<CompleteRideReviewDTO> getRideReviews(int rideId) {
 		Ride ride = getRideIfExists(rideId);
-		System.out.println(ride.getReviews().size());
-		return this.extractReviewFromRide(ride);
+		ArrayList<CompleteRideReviewDTO> res = this.extractReviewFromRide(ride);
+		System.out.println(res);
+		return res;
 	}
 
 	public ArrayList<Review> getByDriver(int driverId){
@@ -136,6 +156,7 @@ public class ReviewServiceImpl implements IReviewService{
 		ReviewReturnedDTO vehicleReview = null;
 		ArrayList<CompleteRideReviewDTO> ret = new ArrayList<CompleteRideReviewDTO>();
 		
+		System.out.println(ride.getReviews());
 		for (Passenger passenger : ride.getPassengers()) {
 			for (Review review : ride.getReviews()) {
 				if (passenger == review.getPassenger() && review.getType() == ReviewType.DRIVER) {
@@ -154,4 +175,11 @@ public class ReviewServiceImpl implements IReviewService{
 		
 		return ret;
 	}
-}
+
+	@Transactional
+	@Override
+	public void addCompleteReview(int rideId, List<ReviewDTO> reviews) {
+		this.addReview(rideId, reviews.get(0), ReviewType.DRIVER);
+		this.addReview(rideId, reviews.get(1), ReviewType.VEHICLE);
+	}
+} 

@@ -28,4 +28,11 @@ public class CompleteRideReviewDTO {
 	public void setDriverReview(ReviewReturnedDTO driverReview) {
 		this.driverReview = driverReview;
 	}
+
+	@Override
+	public String toString() {
+		return "CompleteRideReviewDTO [vehicleReview=" + vehicleReview + ", driverReview=" + driverReview + "]";
+	}
+	
+	
 }

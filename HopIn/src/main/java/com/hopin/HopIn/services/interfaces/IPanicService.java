@@ -1,5 +1,9 @@
 package com.hopin.HopIn.services.interfaces;
 
-public interface IPanicService {
+import com.hopin.HopIn.dtos.AllPanicRidesDTO;
 
+public interface IPanicService {
+	
+	public AllPanicRidesDTO getAllPanicRides();
+	
 }

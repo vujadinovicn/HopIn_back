@@ -9,7 +9,12 @@ public class UserInPanicRideDTO {
 	private String telephoneNumber;
 	private String email;
 	private String address;
+	private String role;
 	
+	public UserInPanicRideDTO() {
+		
+	}
+
 	public UserInPanicRideDTO(String name, String surname, String email, String address, String telephoneNumber,
 			String profilePicture) {
 		super();
@@ -21,6 +26,18 @@ public class UserInPanicRideDTO {
 		this.profilePicture = profilePicture;
 	}
 
+	public UserInPanicRideDTO(String name, String surname, String profilePicture, String telephoneNumber, String email,
+			String address, String role) {
+		super();
+		this.name = name;
+		this.surname = surname;
+		this.profilePicture = profilePicture;
+		this.telephoneNumber = telephoneNumber;
+		this.email = email;
+		this.address = address;
+		this.role = role;
+	}
+
 	public UserInPanicRideDTO(User user) {
 		super();
 		this.name = user.getName();
@@ -29,6 +46,7 @@ public class UserInPanicRideDTO {
 		this.address = user.getAddress();
 		this.telephoneNumber = user.getTelephoneNumber();
 		this.profilePicture = user.getProfilePicture();
+		this.role = user.getRole().toString();
 	}
 
 	public String getName() {
@@ -78,4 +96,13 @@ public class UserInPanicRideDTO {
 	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 }

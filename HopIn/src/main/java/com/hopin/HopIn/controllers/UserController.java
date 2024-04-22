@@ -1,10 +1,10 @@
 package com.hopin.HopIn.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,10 +29,10 @@ import org.springframework.web.server.ResponseStatusException;
 import com.hopin.HopIn.dtos.AllMessagesDTO;
 import com.hopin.HopIn.dtos.AllNotesDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
-import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.ChangePasswordDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
+import com.hopin.HopIn.dtos.InboxReturnedDTO;
 import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
@@ -40,13 +40,9 @@ import com.hopin.HopIn.dtos.NoteReturnedDTO;
 import com.hopin.HopIn.dtos.ResetPasswordDTO;
 import com.hopin.HopIn.dtos.TokenDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
-import com.hopin.HopIn.entities.User;
 import com.hopin.HopIn.exceptions.BlockedUserException;
 import com.hopin.HopIn.exceptions.RideNotFoundException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
-
-import com.hopin.HopIn.services.WorkingHoursServiceImpl;
-
 import com.hopin.HopIn.services.interfaces.IUserService;
 import com.hopin.HopIn.util.TokenUtils;
 import com.hopin.HopIn.validations.ExceptionDTO;
@@ -70,7 +66,7 @@ public class UserController {
 
 	private HashMap<String, String> refreshTokens = new HashMap<String, String>();
 
-	@PreAuthorize("hasRole('ADMIN')")
+//	@PreAuthorize("hasRole('ADMIN')"
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserReturnedDTO> getById(@PathVariable int id) {
 		System.out.println("USAO SAMMMM");
@@ -97,7 +93,7 @@ public class UserController {
 		} catch (BadCredentialsException e) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Wrong username or password!"), HttpStatus.BAD_REQUEST);
 		} catch (Exception ex) {
-			System.out.println(ex.getStackTrace());
+			ex.printStackTrace();
 			return new ResponseEntity<TokenDTO>(HttpStatus.UNAUTHORIZED);
 		}
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -175,11 +171,9 @@ public class UserController {
 	@GetMapping(value = "{id}/note", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getNotes(
-			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id,
-			@RequestParam @Min(value = 0, message = "Field page must be greater than 0.") int page,
-			@RequestParam @Min(value = 1, message = "Field size must be greater than 1.") int size) {
+			@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
-			AllNotesDTO all = userService.getNotes(id, page, size);
+			AllNotesDTO all = userService.getNotes(id);
 			System.out.println(all);
 			return new ResponseEntity<AllNotesDTO>(all, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
@@ -190,7 +184,6 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
 	@PostMapping(value="{id}/message", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> sendMessage(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody MessageDTO message){
-		System.out.println("EVOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 		try {
 			MessageReturnedDTO mess = userService.sendMessage(id, message);
 			System.out.println(mess);
@@ -213,24 +206,57 @@ public class UserController {
 			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
+	@GetMapping(value = "{id}/inbox/all", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getInboxes(@PathVariable int id) {
+		try {
+			List<InboxReturnedDTO> all = userService.getInboxes(id);
+			System.out.println(all);
+			return new ResponseEntity<List<InboxReturnedDTO>>(all, HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
+	@GetMapping(value = "{id}/inbox", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getInboxById(@PathVariable int id) {
+		try {
+			return new ResponseEntity<InboxReturnedDTO>(userService.getInboxById(id), HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
+	@GetMapping(value = "{id}/inbox/ride/{rideId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getInboxByRideId(@PathVariable int id, @PathVariable int rideId) {
+		try {
+			return new ResponseEntity<InboxReturnedDTO>(userService.getInboxByRideId(id, rideId), HttpStatus.OK);
+		} catch (ResponseStatusException ex) {
+			return new ResponseEntity<String>(ex.getReason(), HttpStatus.NOT_FOUND);
+		}
+	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')"+ " || " + "hasRole('DRIVER')")
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getRides(@PathVariable int id, @RequestParam int page,
+	public ResponseEntity<?> getRidesPaginated(@PathVariable int id, @RequestParam int page,
 			@RequestParam int size, @RequestParam(required = false) String sort, @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-		return new ResponseEntity<AllPassengerRidesDTO>(userService.getRides(id, page, size, sort, from, to),
+		return new ResponseEntity<AllPassengerRidesDTO>(userService.getRidesPaginated(id, page, size, sort, from, to),
 				HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
 		}
 	}
+
 	
 //	@PreAuthorize("hasRole('ANONYMOUS')")
 	@GetMapping(value = "{id}/resetPassword")
 	public ResponseEntity<?> resetPassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
-		System.out.println("TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
 		try {
+			System.out.println("siso si mi kurac");
 			this.userService.sendResetPasswordMail(id);
 			return new ResponseEntity<String>("Email with reset code has been sent!", HttpStatus.NO_CONTENT);
 		} catch (UserNotFoundException e) {
@@ -239,10 +265,24 @@ public class UserController {
 		
 	}
 	
+	@GetMapping(value = "{email}/resetPasswordEmail")
+	public ResponseEntity<?> resetPassword(@PathVariable String email) {
+		System.out.println("tu");
+		try {
+			
+			this.userService.sendResetPasswordMail(email);
+			System.out.println("ev");
+			return new ResponseEntity<String>("Email with reset code has been sent!", HttpStatus.NO_CONTENT);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
+		}
+		
+	}
+
+	
 //	@PreAuthorize("hasRole('ANONYMOUS')")
 	@PutMapping(value = "{id}/resetPassword", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> resetPassword(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id, @Valid @RequestBody ResetPasswordDTO dto) {
-		System.out.println("TUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
 		try {
 			this.userService.resetPassword(id, dto);
 			return new ResponseEntity<String>("Password successfully changed!", HttpStatus.NO_CONTENT);

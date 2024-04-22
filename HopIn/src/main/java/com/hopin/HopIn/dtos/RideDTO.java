@@ -34,6 +34,9 @@ public class RideDTO {
 	private Double price;
 	
 	private LocalDateTime scheduledTime;
+	
+	private String durationFormatted;
+	private String distanceFormatted;
 
 	public RideDTO() {
 	}
@@ -61,6 +64,28 @@ public class RideDTO {
 		this.duration = duration;
 		this.price = price;
 		this.scheduledTime = scheduledTime;
+	}
+	
+	
+
+	public RideDTO(@Valid @NotNull(message = "is required") List<LocationDTO> locations,
+			@Valid @NotNull(message = "is required") List<UserInRideDTO> passengers,
+			@NotNull(message = "is required") VehicleTypeName vehicleType,
+			@NotNull(message = "is required") Boolean babyTransport,
+			@NotNull(message = "is required") Boolean petTransport, Double distance, Double duration, Double price,
+			LocalDateTime scheduledTime, String durationFormatted, String distanceFormatted) {
+		super();
+		this.locations = locations;
+		this.passengers = passengers;
+		this.vehicleType = vehicleType;
+		this.babyTransport = babyTransport;
+		this.petTransport = petTransport;
+		this.distance = distance;
+		this.duration = duration;
+		this.price = price;
+		this.scheduledTime = scheduledTime;
+		this.durationFormatted = durationFormatted;
+		this.distanceFormatted = distanceFormatted;
 	}
 
 	public List<LocationDTO> getLocations() {
@@ -159,4 +184,31 @@ public class RideDTO {
 	public String getDestinationLocationLng() {
 		return Double.toString(this.getDestinationLocation().getLongitude());
 	}
+
+	public String getDurationFormatted() {
+		return durationFormatted;
+	}
+
+	public void setDurationFormatted(String durationFormatted) {
+		this.durationFormatted = durationFormatted;
+	}
+
+	public String getDistanceFormatted() {
+		return distanceFormatted;
+	}
+
+	public void setDistanceFormatted(String distanceFormatted) {
+		this.distanceFormatted = distanceFormatted;
+	}
+
+	@Override
+	public String toString() {
+		return "RideDTO [locations=" + locations  + ", vehicleType=" + vehicleType
+				+ ", babyTransport=" + babyTransport + ", petTransport=" + petTransport + ", distance=" + distance
+				+ ", duration=" + duration + ", price=" + price + ", scheduledTime=" + scheduledTime
+				+ ", durationFormatted=" + durationFormatted + ", distanceFormatted=" + distanceFormatted + "]";
+	}
+
+	
+	
 }

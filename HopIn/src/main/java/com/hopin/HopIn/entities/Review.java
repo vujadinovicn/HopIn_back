@@ -71,7 +71,7 @@ public class Review {
 		this.passenger = passenger;
 	}
 
-	public ReviewType getType() {
+	public ReviewType getType() { 
 		return type;
 	}
 
@@ -86,5 +86,13 @@ public class Review {
 	public void setRide(Ride ride) {
 		this.ride = ride;
 	}
+
+	@Override
+	public String toString() {
+		return "Review [id=" + id + ", rating=" + rating + ", comment=" + comment + ", type=" + type + ", passenger="
+				+ passenger.getId() + ", ride=" + ride.getId() + "]";
+	}
+	
+	
 
 }

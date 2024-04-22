@@ -1,5 +1,7 @@
 package com.hopin.HopIn.services.interfaces;
 
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -10,6 +12,7 @@ import com.hopin.HopIn.dtos.AllUserRidesReturnedDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
 import com.hopin.HopIn.dtos.ChangePasswordDTO;
 import com.hopin.HopIn.dtos.CredentialsDTO;
+import com.hopin.HopIn.dtos.InboxReturnedDTO;
 import com.hopin.HopIn.dtos.MessageDTO;
 import com.hopin.HopIn.dtos.MessageReturnedDTO;
 import com.hopin.HopIn.dtos.NoteDTO;
@@ -23,26 +26,26 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 public interface IUserService {
-	
+
 	public User getById(int userId);
-	
+
 	public AllUsersDTO getAll(int page, int size);
-	
+
 	public TokenDTO login(CredentialsDTO credentials);
 
 	public void block(int userId);
-	
+
 	public void unblock(int userId);
-	
+
 	public NoteReturnedDTO addNote(int userId, NoteDTO note);
-	
-	public AllNotesDTO getNotes(int userId, int page, int size);
-	
+
+	public AllNotesDTO getNotes(int userId);
+
 	public MessageReturnedDTO sendMessage(int userId, MessageDTO sentMessage);
-	
+
 	public AllMessagesDTO getMessages(int userId);
-	
-	public AllPassengerRidesDTO getRides(int userId, int page, int size, String sort, String from, String to);
+
+	public AllPassengerRidesDTO getRidesPaginated(int userId, int page, int size, String sort, String from, String to);
 
 	public UserReturnedDTO getUser(int id);
 
@@ -62,6 +65,14 @@ public interface IUserService {
 
 	public void resetPassword(int id, ResetPasswordDTO dto);
 
-	public void changePassword(int id,ChangePasswordDTO dto);
+	public void changePassword(int id, ChangePasswordDTO dto);
+
+	public void sendResetPasswordMail(String email);
+
+	public List<InboxReturnedDTO> getInboxes(int id);
+
+	public InboxReturnedDTO getInboxById(int id);
+
+	public InboxReturnedDTO getInboxByRideId(int firstUserId, int rideId);
 
 }

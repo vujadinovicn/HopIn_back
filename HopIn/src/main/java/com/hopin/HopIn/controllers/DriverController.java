@@ -6,7 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hopin.HopIn.dtos.ActiveVehicleDTO;
 import com.hopin.HopIn.dtos.AllHoursDTO;
 import com.hopin.HopIn.dtos.AllPassengerRidesDTO;
 import com.hopin.HopIn.dtos.AllUsersDTO;
@@ -67,9 +74,11 @@ public class DriverController {
 	
 	@Autowired
 	private IWorkingHoursService workingHoursService;
+	
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> getById(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			return new ResponseEntity<DriverReturnedDTO>(service.getById(id), HttpStatus.OK);
@@ -87,6 +96,12 @@ public class DriverController {
 			@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		return new ResponseEntity<AllUsersDTO>(service.getAllPaginated(page, size), HttpStatus.OK);
 	}
+	
+	@GetMapping(value="/all", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<AllUsersDTO> getAll() {
+		return new ResponseEntity<AllUsersDTO>(service.getAll(), HttpStatus.OK);
+	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')")
@@ -100,7 +115,7 @@ public class DriverController {
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> update(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId, @Valid @RequestBody UserDTO newData) {
 		try {
 			return new ResponseEntity<UserReturnedDTO>(service.update(driverId, newData), HttpStatus.OK);
@@ -136,10 +151,20 @@ public class DriverController {
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>("Document does not exist!", HttpStatus.NOT_FOUND);
 		}
+	} 
+	
+	@GetMapping(value="/active-vehicles", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getAllVehicles(){
+		try {
+			return new ResponseEntity<List<ActiveVehicleDTO>>(service.getAllVehicles(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("Error happened", HttpStatus.BAD_REQUEST);
+		}   
 	}
 
 	@GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+//	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+//	@PreAuthorize("hasRole('ANONYMOUS')")
 	public ResponseEntity<?> getVehicle(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId) {
 		try {
 			return new ResponseEntity<VehicleReturnedDTO>(service.getVehicle(driverId), HttpStatus.OK);
@@ -149,7 +174,7 @@ public class DriverController {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Vehicle is not assigned!"), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+	      
 	@PostMapping(value = "/{id}/vehicle", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
 	public ResponseEntity<?> insertVehicle(@PathVariable("id") int driverId, @Valid @RequestBody VehicleDTO vehicle) {
@@ -168,17 +193,27 @@ public class DriverController {
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 		}
-	}
+	}  
 	
 	@GetMapping(value="/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
-	public ResponseEntity<?> getAllRides(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam(required = false) String sort, 
+	public ResponseEntity<?> getAllRidesPaginated(@PathVariable("id") int driverId, @RequestParam  int page, @RequestParam int size, @RequestParam(required = false) String sort, 
 			@RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-			return new ResponseEntity<AllPassengerRidesDTO>(rideService.getAllDriverRides(driverId, page, size, sort, from, to), HttpStatus.OK);
+			return new ResponseEntity<AllPassengerRidesDTO>(service.getAllDriverRidesPaginated(driverId, page, size, sort, from, to), HttpStatus.OK);
 		} catch (UserNotFoundException ex) {
 			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping(value="/{id}/all/rides", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('DRIVER')")
+	public ResponseEntity<?> getAllRides(@PathVariable("id") int driverId) {
+		try {
+			return new ResponseEntity<AllPassengerRidesDTO>(service.getAllDriverRides(driverId), HttpStatus.OK);
+		} catch (UserNotFoundException ex) {
+			return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
+		} 
 	}
 	
 	@GetMapping(value="/{id}/working-hour", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -206,6 +241,11 @@ public class DriverController {
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> addWorkingHours(@PathVariable("id") @Min(value = 0, message = "Field id must be greater than 0.") int driverId, @Valid @RequestBody WorkingHoursStartDTO dto) {
 		try {     
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.findAndRegisterModules(); 
+			// Java object to JSON string 
+			String jsonString = mapper.writeValueAsString(driverId);
+			this.simpMessagingTemplate.convertAndSend("/topic/vehicle/activation", jsonString);
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.addWorkingHours(driverId, dto), HttpStatus.OK);
 		} catch (ResponseStatusException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO(ex.getMessage()), HttpStatus.NOT_FOUND);
@@ -215,13 +255,24 @@ public class DriverController {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Shift already ongoing!"), HttpStatus.BAD_REQUEST);
 		} catch (NoVehicleException ex) { 
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot start shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
-		} 
-	}  
+		} catch (JsonProcessingException e) {
+			return new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
+		}
+	}     
 	
 	@PutMapping(value = "/working-hour/{working-hour-id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('DRIVER')")
 	public ResponseEntity<?> updateWorkingHours(@PathVariable("working-hour-id") @Min(value = 0, message = "Field id must be greater than 0.") int hoursId, @Valid @RequestBody WorkingHoursEndDTO dto) {
 		try { 
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.findAndRegisterModules(); 
+			
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			System.out.println(authentication.getName());
+			int driverId = this.service.getByEmail(authentication.getName()).getId();
+			String jsonString = mapper.writeValueAsString(driverId);
+			
+			this.simpMessagingTemplate.convertAndSend("/topic/vehicle/deactivation", jsonString);
 			return new ResponseEntity<WorkingHoursDTO>(workingHoursService.updateWorkingHours(hoursId, dto), HttpStatus.OK);
 		} catch (BadIdFormatException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Working hour does not exist!"), HttpStatus.BAD_REQUEST);
@@ -231,12 +282,14 @@ public class DriverController {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("No shift is ongoing!"), HttpStatus.BAD_REQUEST);
 		} catch (NoVehicleException ex) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("Cannot end shift because the vehicle is not defined!"), HttpStatus.BAD_REQUEST);
-		}	
+		}  catch (JsonProcessingException e) {
+			return new ResponseEntity<ExceptionDTO>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id, @RequestParam String from, @RequestParam String to) {
-		return new ResponseEntity<List<RideForReportDTO>>(this.rideService.getAllDriverRidesBetweenDates(id, from, to), HttpStatus.OK);
+		return new ResponseEntity<List<RideForReportDTO>>(this.service.getAllDriverRidesBetweenDates(id, from, to), HttpStatus.OK);
 	}
 }

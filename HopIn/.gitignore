@@ -1,5 +1,6 @@
 HELP.md
 target/
+test-output/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -23,6 +24,8 @@ target/
 /nbproject/private/
 /nbbuild/
 /dist/
+.test-output/
+/target/
 /nbdist/
 /.nb-gradle/
 build/

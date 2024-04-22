@@ -19,6 +19,7 @@ import com.hopin.HopIn.dtos.RideDTO;
 import com.hopin.HopIn.dtos.RideReturnedDTO;
 import com.hopin.HopIn.entities.Driver;
 import com.hopin.HopIn.entities.Ride;
+import com.hopin.HopIn.entities.Vehicle;
 import com.hopin.HopIn.services.interfaces.IRideEstimationService;
 import com.hopin.HopIn.services.interfaces.IRideService;
 
@@ -70,6 +71,7 @@ public class RideEstimationService implements IRideEstimationService{
 			} else if (query == "distance") {
 				JSONObject distance = elements.getJSONObject(0).getJSONObject("distance");
 				queryResponse = distance.getString("text");
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -79,6 +81,7 @@ public class RideEstimationService implements IRideEstimationService{
 		return queryResponse;
 	}
 
+	
 	private String setDistanceMatrixUrl(String firstLocationLat, String firstLocationLng, String secondLocationLat, String secondLocationLng) {
 		String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" +
 				firstLocationLat + "," + firstLocationLng +
@@ -110,5 +113,10 @@ public class RideEstimationService implements IRideEstimationService{
 			}
 		}
 		return closestDriver;
+	}
+
+	@Override
+	public int getEstimatedTimeForVehicleLocation(LocationNoIdDTO departureLocation, Vehicle vehicle) {
+		return this.getEstimatedTime(departureLocation, new LocationNoIdDTO(vehicle.getCurrentLocation()));
 	}
 }

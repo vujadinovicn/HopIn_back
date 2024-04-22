@@ -7,17 +7,17 @@ public class ReviewReturnedDTO {
 	int id;
 	int rating;
 	String comment;
-	UserInRideDTO passenger;
+	UserReturnedDTO passenger;
 	
 	public ReviewReturnedDTO(Review review) {
 		super();
 		this.id = review.getId();
 		this.rating = review.getRating();
 		this.comment = review.getComment();
-		this.passenger = new UserInRideDTO(review.getPassenger());
+		this.passenger = new UserReturnedDTO(review.getPassenger());
 	}
 
-	public ReviewReturnedDTO(int id, int rating, String comment, UserInRideDTO passenger) {
+	public ReviewReturnedDTO(int id, int rating, String comment, UserReturnedDTO passenger) {
 		super();
 		this.id = id;
 		this.rating = rating;
@@ -49,12 +49,20 @@ public class ReviewReturnedDTO {
 		this.comment = comment;
 	}
 
-	public UserInRideDTO getPassenger() {
+	public UserReturnedDTO getPassenger() {
 		return passenger;
 	}
 
-	public void setPassenger(UserInRideDTO passenger) {
+	public void setPassenger(UserReturnedDTO passenger) {
 		this.passenger = passenger;
 	}
+
+	@Override
+	public String toString() {
+		return "ReviewReturnedDTO [id=" + id + ", rating=" + rating + ", comment=" + comment + ", passenger="
+				+ passenger.getId() + "]";
+	}
+
+	
 
 }

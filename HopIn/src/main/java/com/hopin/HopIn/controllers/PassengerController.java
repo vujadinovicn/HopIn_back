@@ -26,6 +26,7 @@ import com.hopin.HopIn.dtos.RideForReportDTO;
 import com.hopin.HopIn.dtos.RouteDTO;
 import com.hopin.HopIn.dtos.UserDTO;
 import com.hopin.HopIn.dtos.UserReturnedDTO;
+import com.hopin.HopIn.entities.Route;
 import com.hopin.HopIn.exceptions.EmailAlreadyInUseException;
 import com.hopin.HopIn.exceptions.UserNotFoundException;
 import com.hopin.HopIn.services.interfaces.IPassengerService;
@@ -34,7 +35,6 @@ import com.hopin.HopIn.validations.ExceptionDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.websocket.server.PathParam;
 
 @Validated
 @CrossOrigin(origins = "http://localhost:4200")
@@ -49,7 +49,7 @@ public class PassengerController {
 	private IRideService rideService;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('PASSENGER')")
+	@PreAuthorize("hasRole('PASSENGER')" + " || " +"hasRole('ADMIN')")
 	public ResponseEntity<AllUsersDTO> getPassengers() {
 		AllUsersDTO passengers = this.passengerService.getAll();
 		return new ResponseEntity<AllUsersDTO>(passengers, HttpStatus.OK);
@@ -57,6 +57,7 @@ public class PassengerController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> insertPassenger(@Valid @RequestBody UserDTO dto) {
+		System.out.println(dto);
 		UserReturnedDTO passenger = passengerService.insert(dto);
 		if (passenger == null) {
 			return new ResponseEntity<ExceptionDTO>(new ExceptionDTO("User with that email already exists!"), HttpStatus.BAD_REQUEST);
@@ -66,7 +67,7 @@ public class PassengerController {
 
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('PASSENGER')" + " || " +"hasRole('ADMIN')")
+	@PreAuthorize("hasRole('PASSENGER')" + " || " +"hasRole('ADMIN')" + " || " +"hasRole('DRIVER')")
 	public ResponseEntity<?> getPassenger(@PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
 		try {
 			return new ResponseEntity<UserReturnedDTO>(passengerService.getById(id), HttpStatus.OK);
@@ -89,7 +90,6 @@ public class PassengerController {
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
 	public ResponseEntity<?> update(@Valid @RequestBody UserDTO dto, @PathVariable @Min(value = 0, message = "Field id must be greater than 0.") int id) {
-		System.out.println("USAO");
 		try {
 			UserReturnedDTO passenger = passengerService.update(id, dto);
 			return new ResponseEntity<UserReturnedDTO>(passenger, HttpStatus.OK);
@@ -103,14 +103,31 @@ public class PassengerController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(value = "{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('PASSENGER')")
-	public ResponseEntity<?> getAllRides(@PathVariable int id, @RequestParam int page,
+	public ResponseEntity<?> getAllRidesPaginated(@PathVariable int id, @RequestParam int page,
 			@RequestParam int size, @RequestParam(required = false) String sort, @RequestParam(required = false) String from, @RequestParam(required = false) String to) {
 		try {
-			AllPassengerRidesDTO rides = this.rideService.getAllPassengerRides(id, page, size, sort, from, to);
+			AllPassengerRidesDTO rides = this.passengerService.getAllPassengerRidesPaginated(id, page, size, sort, from, to);
 			for (PassengerRideDTO ride: rides.getResults()) {
 				System.out.println(ride);
 			}
 			return new ResponseEntity<AllPassengerRidesDTO>(
+					rides , HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
+		}
+		
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "{id}/all/rides", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')")
+	public ResponseEntity<?> getAllRides(@PathVariable int id) {
+		try {
+			AllPassengerRidesDTO rides = this.passengerService.getAllPassengerRides(id);
+			for (PassengerRideDTO ride: rides.getResults()) {
+				System.out.println(ride);
+			}
+			return new ResponseEntity<AllPassengerRidesDTO>( 
 					rides , HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			return new ResponseEntity<String>("Passenger does not exist!", HttpStatus.NOT_FOUND);
@@ -129,34 +146,58 @@ public class PassengerController {
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
+	@PreAuthorize("hasRole('ADMIN')" + " || " + "hasRole('PASSENGER')")
 	@GetMapping(value = "{id}/ride/date", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<RideForReportDTO>> getAllRidesBetweenDates(@PathVariable int id,
 			@RequestParam String from, @RequestParam String to) {
 		return new ResponseEntity<List<RideForReportDTO>>(
-				this.rideService.getAllPassengerRidesBetweenDates(id, from, to), HttpStatus.OK);
+				this.passengerService.getAllPassengerRidesBetweenDates(id, from, to), HttpStatus.OK);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping(value = "{rideId}/is-favourite/route")
+	public ResponseEntity<?> isFavouriteRoute(@PathVariable int rideId) {
+		try {
+			return new ResponseEntity<Boolean>(this.passengerService.isFavouriteRoute(rideId), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("User or ride not found.", HttpStatus.NOT_FOUND);
+		}
+		
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
+	@PreAuthorize("hasRole('PASSENGER')")
 	@PostMapping(value = "{passengerId}/remove/route")
 	public ResponseEntity<Void> removeFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
 		if (passengerService.removeFavouriteRoute(passengerId, routeId)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
-		}
+		} 
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
-	@PostMapping(value = "{passengerId}/add/route")
-	public ResponseEntity<Void> addFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
-		if (passengerService.addFavouriteRoute(passengerId, routeId)) {
+	@PreAuthorize("hasRole('PASSENGER')")
+	@PostMapping(value = "{passengerId}/return/route")
+	public ResponseEntity<Void> returnFavouriteRoute(@PathVariable int passengerId, @RequestParam int routeId) {
+		if (passengerService.returnFavouriteRoute(passengerId, routeId)) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PreAuthorize("hasRole('PASSENGER')")
+	@PostMapping(value = "{passengerId}/add/route")
+	public ResponseEntity<?> addFavouriteRoute(@PathVariable int passengerId, @RequestBody RouteDTO route) {
+		Route newRoute = passengerService.addFavouriteRoute(passengerId, route);
+		if (newRoute != null) {
+			return new ResponseEntity<Route>(newRoute, HttpStatus.OK);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping(value = "activate/{activationId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> verifyRegistration(@PathVariable("activationId") String verificationCode) {
-		System.out.println(verificationCode);
 		try {
 			Boolean verified = this.passengerService.verifyRegistration(verificationCode);
 			if (verified) {
